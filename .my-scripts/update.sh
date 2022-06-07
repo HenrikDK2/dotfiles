@@ -8,6 +8,6 @@ done
 
 sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
-
+rm -rf ~/.cache/yay/*
 
 exec ~/.my-scripts/tkg.sh
