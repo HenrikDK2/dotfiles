@@ -17,7 +17,6 @@ alias remove='yay -Rsn'
 PS1="\[\e[32;1m\]\w\[\e[0m\] \$ "
 
 if [ -z $DISPLAY ] && [ "$(tty)" = "/dev/tty1" ]; then
-    eval $(gnome-keyring-daemon --start)
     export SSH_AUTH_SOCK
 
 	## Env Variables
