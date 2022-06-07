@@ -5,8 +5,8 @@ name=$(whoami)
 # Add bootloader entries
 clear
 while true; do
-    echo "Only for systemd-boot!"
-    read -p "Do you want to add TKG bootloader entry? [y/n] " yn
+    echo ""
+    read -p "Only for systemd-boot! - Do you want to add TKG bootloader entry? [y/n] " yn
     case $yn in
         [Yy]* ) source ~/.my-scripts/init/bootloader.sh; break;;
         [Nn]* ) break;;
@@ -98,8 +98,7 @@ makepkg -si
 # Mesa-git
 clear
 while true; do
-    echo "Do you have an AMD gpu?"
-    read -p "Do you want to use mesa-git? [y/n] " yn
+    read -p "Do you have an AMD gpu? [y/n] " yn
     case $yn in
         [Yy]* ) yay -Syu mesa-git lib32-mesa-git; break;;
         [Nn]* ) break;;
