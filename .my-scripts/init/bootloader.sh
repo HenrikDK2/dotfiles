@@ -43,11 +43,13 @@ clear
 get_uuid
 sudo cp -r ~/.my-scripts/init/entries/tmp/. /boot/loader/entries
 rm -rf ~/.my-scripts/init/entries/tmp/
+clear
 while true; do
 	echo "Remember that you need to modify tkg.sh for your system."
     read -p "Do you wish to install the TKG-kernel now? [y/n] " yn
     if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		exec ~/.my-scripts/tkg.sh 
+		clear
 		read -p "Do you want to add TKG-kernel to the bootloader? [y/n] " yn
 		if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 			if sudo grep -Rq "default" /boot/loader/loader.conf

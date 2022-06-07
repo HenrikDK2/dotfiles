@@ -3,6 +3,7 @@
 name=$(whoami)
 
 # Add bootloader entries
+clear
 while true; do
     echo "Only for systemd-boot!"
     read -p "Do you want to add TKG bootloader entry? [y/n] " yn
