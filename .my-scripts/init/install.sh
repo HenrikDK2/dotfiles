@@ -163,7 +163,7 @@ sudo chmod -x /usr/lib/evolution-data-server/evolution-alarm-notify
 # Other
 mkdir /home/$name/Screenshots
 
-#
+# Optimized Firefox profile
 clear
 while true; do
     echo "Do you wish use an optimized Firefox profile?"
