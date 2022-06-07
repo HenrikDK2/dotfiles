@@ -2,7 +2,9 @@
 
 name=$(whoami)
 
+# Add bootloader entries
 while true; do
+    echo "Only for systemd-boot!"
     read -p "Do you want to add TKG bootloader entry? [y/n] " yn
     case $yn in
         [Yy]* ) source ~/.my-scripts/init/bootloader.sh; break;;
@@ -11,6 +13,7 @@ while true; do
     esac
 done
 
+# Ultrawide gaps on workspace 1
 clear
 while true; do
     echo "Do you have a 5120x1440 ultrawide monitor,"
@@ -91,6 +94,18 @@ sudo chmod 777 -R ./yay-git
 cd yay-git
 makepkg -si
 
+# Mesa-git
+clear
+while true; do
+    echo "Do you have an AMD gpu?"
+    read -p "Do you want to use mesa-git? [y/n] " yn
+    case $yn in
+        [Yy]* ) yay -Syu mesa-git lib32-mesa-git; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 # General packages
 yay -Syu gamemode lib32-gamemode vulkan-tools wireplumber cmst libpipewire02 qt5-wayland swaylock-fancy mako man-db swayidle xdg-desktop-portal gnome-keyring polkit-gnome seahorse libsecret xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk swaybg xorg-xwayland bash-completion rofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa pipewire-pulse swappy grim
 
@@ -147,9 +162,11 @@ sudo chmod -x /usr/lib/evolution-data-server/evolution-alarm-notify
 # Other
 mkdir /home/$name/Screenshots
 
+#
 clear
 while true; do
-    read -p "Do you wish to replace your firefox profile and add tweaks? [y/n] " yn
+    echo "Do you wish use an optimized Firefox profile?"
+    read -p "This will reset your current profile? [y/n] " yn
     case $yn in
         [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my-scripts/init/.mozilla ~/.mozilla; break;;
         [Nn]* ) break;;

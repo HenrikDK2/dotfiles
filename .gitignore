@@ -32,6 +32,7 @@
 !.config/micro
 !.config/micro/**
 .config/micro/buffers
+.config/micro/backups
 
 !.config/gtk-*
 !.config/gtk-*/**

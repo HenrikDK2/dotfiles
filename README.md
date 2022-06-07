@@ -10,6 +10,10 @@ This is for personally usage, but you may gladly use it as well. It includes all
 
 - You should have sudo and git installed on your system. 
 
-This project only considers my usage on an AMD machine, you might need to do some tweaking to get it working on your machine.
+- The scripts only work with systemd-boot.
+
+This project only considers my usage on an AMD machine, you might need to do some tweaking to get it working on your machine. 
+
+If you want to use the automatic TKG-kernel installer script you would have to reconfigure it for your system. Like enabling CUDA/NvEnc on Nvidia you would have to make this the opposite `s/_numadisable="false"/_numadisable="true"/g`. 
 
 Clone this project to your home folder. Run `~/.my-scripts/init/install.sh` and follow the procedures, once done reboot the computer and pray to god that it runs :) 
