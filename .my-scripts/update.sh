@@ -8,6 +8,8 @@ done
 
 sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
-rm -rf ~/.cache/yay/*
+sudo pacman -Scc --noconfirm
+sudo yay -Scc --noconfirm
+clear
 
 exec ~/.my-scripts/tkg.sh
