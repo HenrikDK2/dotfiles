@@ -13,5 +13,3 @@ This is for personally usage, but you may gladly use it as well. It includes all
 This project only considers my usage on an AMD machine, you might need to do some tweaking to get it working on your machine.
 
 Clone this project to your home folder. Run `~/.my-scripts/init/install.sh` and follow the procedures, once done reboot the computer and pray to god that it runs :) 
-
-**Note: My monitor is a ultrawide, so you might need to tweak the sway config to remove the horizontal gap on workspace 1, I just like having a 1440p center window on workspace 1.**

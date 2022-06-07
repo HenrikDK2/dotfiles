@@ -11,6 +11,30 @@ while true; do
     esac
 done
 
+clear
+while true; do
+    echo "Do you have a 5120x1440 ultrawide monitor,"
+    read -p "and do you want to have a 1440p window in the center on workspace 1? [y/n] " yn
+    if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+        if ! grep -Rq "workspace 1 gaps horizontal 1280" ~/.config/sway/config
+        then
+            sed '/^#Workspace 1 gaps$/r'<(
+                echo "workspace 1 gaps inner 0"
+                echo "workspace 1 gaps horizontal 1280"
+                echo "workspace 1 gaps top 0"
+            ) -i -- ~/.config/sway/config
+        fi
+        break;
+    elif [[ "$yn" =~ ^([nN])$ ]]; then
+        sed -i '/workspace 1 gaps inner 0/d' ~/.config/sway/config
+        sed -i '/workspace 1 gaps horizontal 1280/d' ~/.config/sway/config
+        sed -i '/workspace 1 gaps top 0/d' ~/.config/sway/config
+        break;
+    else
+       echo "Please answer yes or no."
+    fi
+done
+
 # Enable multilib pacman and ParallelDownloads
 multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"

@@ -154,6 +154,8 @@ default_border pixel 2
 default_floating_border pixel 2
 gaps inner 20
 gaps top 38
+
+#Workspace 1 gaps
 workspace 1 gaps inner 0
 workspace 1 gaps horizontal 1280
 workspace 1 gaps top 0
