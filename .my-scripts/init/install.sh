@@ -166,7 +166,7 @@ mkdir /home/$name/Screenshots
 # Optimized Firefox profile
 clear
 while true; do
-    echo "Do you wish use an optimized Firefox profile?"
+    echo "Do you wish to use an optimized Firefox profile?"
     read -p "This will reset your current profile? [y/n] " yn
     case $yn in
         [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my-scripts/init/.mozilla ~/.mozilla; break;;
