@@ -71,14 +71,14 @@ then
 fi
 
 # fstab tweaks
-if ! sudo grep -Rq "rw,discard,noatime,nodiratime" /etc/fstab
+if ! sudo grep -Rq "rw,noatime" /etc/fstab
 then
     clear
     while true; do
         echo "Do you wish to add sdd/hdd tweaks to fstab?"
         read -p "Drive failures will cause loss of data, will you continue? [y/n] " yn
         case $yn in
-            [Yy]* ) sudo sed -i "s/rw,/rw,discard,noatime,nodiratime,/g" /etc/fstab; break;;
+            [Yy]* ) sudo sed -i "s/rw,/rw,noatime,nodiratime,discard,/g" /etc/fstab; break;;
             [Nn]* ) break;;
             * ) echo "Please answer yes or no.";;
         esac
