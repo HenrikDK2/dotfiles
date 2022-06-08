@@ -93,7 +93,7 @@ cd /opt
 sudo git clone https://aur.archlinux.org/yay-git.git
 sudo chmod 777 -R ./yay-git
 cd yay-git
-makepkg -si
+makepkg -si --noconfirm
 
 # Mesa-git
 clear
@@ -107,10 +107,11 @@ while true; do
 done
 
 # General packages
-yay -Syu gamemode lib32-gamemode vulkan-tools wireplumber cmst libpipewire02 qt5-wayland swaylock-fancy mako man-db swayidle xdg-desktop-portal gnome-keyring polkit-gnome seahorse libsecret xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk swaybg xorg-xwayland bash-completion rofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa pipewire-pulse irqbalance swappy grim
+sudo pacman -S profile-sync-daemon --noconfirm
+yay -Syu gamemode lib32-gamemode vulkan-tools wireplumber cmst libpipewire02 qt5-wayland swaylock-fancy mako man-db swayidle xdg-desktop-portal gnome-keyring polkit-gnome seahorse libsecret xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk swaybg xorg-xwayland bash-completion rofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa pipewire-pulse irqbalance swappy grim --noconfirm
 
 # Fonts
-yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto ttf-ms-win11-auto-japanese ttf-ms-win11-auto-korean ttf-ms-win11-auto-other ttf-ms-win11-auto-sea ttf-ms-win11-auto-thai ttf-ms-win11-auto-zh_cn ttf-ms-win11-auto-zh_tw 
+yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto ttf-ms-win11-auto-japanese ttf-ms-win11-auto-korean ttf-ms-win11-auto-other ttf-ms-win11-auto-sea ttf-ms-win11-auto-thai ttf-ms-win11-auto-zh_cn ttf-ms-win11-auto-zh_tw --noconfirm
 
 # If username isn't the same as Henrik, replace name in these files
 if [ "$name" != "henrik" ]; then
@@ -172,6 +173,17 @@ while true; do
     read -p "This will reset your current profile? [y/n] " yn
     case $yn in
         [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my-scripts/init/.mozilla ~/.mozilla; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
+# Sync browser to ram
+clear
+while true; do
+    read -p "Do you want to sync browser dirs to ram? This will improve browsers responsiveness. [y/n] " yn
+    case $yn in
+        [Yy]* ) systemctl --user enable psd; break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
