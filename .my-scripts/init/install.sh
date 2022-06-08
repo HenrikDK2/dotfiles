@@ -62,6 +62,7 @@ then
 	echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/free-os-cache.sh" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/kill-user.sh" | sudo tee -a /etc/sudoers
+	echo "%wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper" | sudo tee -a /etc/sudoers
 fi
 
 # Allow users to change niceness to negative (Gamemode)
@@ -179,15 +180,8 @@ while true; do
 done
 
 # Sync browser to ram
-clear
-while true; do
-    read -p "Do you want to sync browser dirs to ram? This will improve browsers responsiveness. [y/n] " yn
-    case $yn in
-        [Yy]* ) systemctl --user enable psd; break;;
-        [Nn]* ) systemctl --user disable psd; break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+sudo systemctl --user enable psd
+
 
 # Reboot
 clear
