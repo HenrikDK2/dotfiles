@@ -163,6 +163,9 @@ xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 # Copy polkit rules
 sudo cp -R ~/.my-scripts/init/polkit-1/* /etc/polkit-1
 
+# Copy network rules
+sudo cp -R ~/.my-scripts/init/sysctl.d/* /etc/sysctl.d
+
 # Irqbalance
 sudo systemctl enable --now irqbalance 
 
