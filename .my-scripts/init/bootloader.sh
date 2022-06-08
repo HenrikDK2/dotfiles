@@ -9,11 +9,11 @@ function microcode {
 	read CPU
 	
 	if [ "$CPU" == "amd" ]; then
-		sudo pacman -S amd-ucode
+		sudo pacman -S amd-ucode --no-confirm
 		sed -i '3 i initrd /amd-ucode.img' ~/.my-scripts/init/entries/tmp/tkg.conf
 		sed -i '3 i initrd /amd-ucode.img' ~/.my-scripts/init/entries/tmp/arch.conf
 	elif [ "$CPU" == "intel" ]; then
-		sudo pacman -S intel-ucode
+		sudo pacman -S intel-ucode --no-confirm
 		sed -i '3 i initrd /intel-ucode.img' ~/.my-scripts/init/entries/tmp/tkg.conf
 		sed -i '3 i initrd /intel-ucode.img' ~/.my-scripts/init/entries/tmp/arch.conf
 	else

@@ -184,7 +184,7 @@ while true; do
     read -p "Do you want to sync browser dirs to ram? This will improve browsers responsiveness. [y/n] " yn
     case $yn in
         [Yy]* ) systemctl --user enable psd; break;;
-        [Nn]* ) break;;
+        [Nn]* ) systemctl --user disable psd; break;;
         * ) echo "Please answer yes or no.";;
     esac
 done
