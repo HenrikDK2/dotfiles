@@ -18,6 +18,12 @@ sudo sed -i 's/-O2/-O3/g' /etc/makepkg.conf
 # Disable faillock - Annoying
 sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
 
+# Copy polkit rules
+sudo cp -R ~/.my-scripts/init/polkit-1/* /etc/polkit-1
+
+# Copy network tweaks
+sudo cp -R ~/.my-scripts/init/sysctl.d/* /etc/sysctl.d
+
 # Sudo tweaks
 if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/free-os-cache.sh" /etc/sudoers
 then
@@ -159,12 +165,6 @@ gsettings set org.cinnamon.desktop.default-applications.terminal exec kitty
 gsettings set org.gnome.desktop.background show-desktop-icons true
 xdg-settings set default-web-browser firefox.desktop
 xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
-
-# Copy polkit rules
-sudo cp -R ~/.my-scripts/init/polkit-1/* /etc/polkit-1
-
-# Copy network rules
-sudo cp -R ~/.my-scripts/init/sysctl.d/* /etc/sysctl.d
 
 # Irqbalance
 sudo systemctl enable --now irqbalance 
