@@ -101,7 +101,7 @@ clear
 while true; do
     read -p "Do you have an AMD gpu? [y/n] " yn
     case $yn in
-        [Yy]* ) yay -Syu mesa-git lib32-mesa-git; break;;
+        [Yy]* ) yay -Syu mesa-git lib32-mesa-git --no-confirm; break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
