@@ -18,8 +18,8 @@ ionice -c 3 -n 7 -p $(pidof lxqt-policykit-agent)
 renice -n 20 -p $(pidof polkit-dumb-agent)
 ionice -c 3 -n 7 -p $(pidof polkit-dumb-agent)
 
-renice -n 20 -p $(pidof discord)
-ionice -c 3 -n 7 -p $(pidof discord)
+renice -n 10 -p $(pidof Discord)
+ionice -c 3 -n 7 -p $(pidof Discord)
 
 renice -n 20 -p $(pidof thunderbird)
 ionice -c 3 -n 7 -p $(pidof thunderbird)
