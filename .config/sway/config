@@ -6,6 +6,7 @@ set $right l
 set $term kitty
 
 output DP-1 max_render_time 1
+output DP-1 render_bit_depth 10
 
 #GTK Fix
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
