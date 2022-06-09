@@ -37,7 +37,7 @@ window {
 }
 
 #entry {
-  margin: 5px;
+  margin: 5px 0;
   background-color: #2e3440;
 }
 #entry:selected {
