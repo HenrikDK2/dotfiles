@@ -5,7 +5,7 @@ set $up k
 set $right l
 set $term kitty
 
-output DP-1 max_render_time 1
+output DP-1 max_render_time 2
 output DP-1 render_bit_depth 10
 
 #GTK Fix
