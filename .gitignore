@@ -43,8 +43,8 @@
 !.config/sway
 !.config/sway/**
 
-!.config/rofi
-!.config/rofi/**
+!.config/wofi
+!.config/wofi/**
 
 !.config/waybar
 !.config/waybar/**
