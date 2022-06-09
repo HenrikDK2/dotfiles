@@ -48,7 +48,7 @@ window {
   margin: 5px;
 }
 #img:selected {
-  background-color: #44475a;
+  background-color: #434c5e;
 }
 
 #text {
@@ -57,5 +57,5 @@ window {
   color: #f8f8f2;
 }
 #text:selected {
-  background-color: #44475a;
+  background-color: #434c5e;
 }
