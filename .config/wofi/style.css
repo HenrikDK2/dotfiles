@@ -37,11 +37,13 @@ window {
 }
 
 #entry {
+  border-radius: 12px;
   margin: 5px 0;
   background-color: #2e3440;
+  border: 2px solid transparent;
 }
+
 #entry:selected {
-  border-radius: 12px;
   background-color: #434c5e;
   border: 2px solid #88c0d0;
 }
