@@ -5,6 +5,8 @@ set $up k
 set $right l
 set $term kitty
 
+output DP-1 max_render_time 1
+
 #GTK Fix
 exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
 output * bg ~/wallpaper.jpg center
