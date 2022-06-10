@@ -18,10 +18,10 @@ If you want to use the automatic TKG-kernel installer script you would have to r
 
 Clone this project to your home folder. Run `~/.my-scripts/init/install.sh` and follow the procedures, once done reboot the computer and pray to god that it runs :)
 
-## Preview dotfiles
+## Preview
 
-[1](https://i.imgur.com/RDyzWD3.jpg)
+This might be subject to change
 
-[2](https://i.imgur.com/bou7DsT.jpg)
+[![1.jpg](https://i.postimg.cc/WzJG0jpL/1.jpg)](https://postimg.cc/1VsVZkNJ)
 
-[Ultrawide](https://i.imgur.com/BdaHsRS.jpg)
+[![w.png](https://i.postimg.cc/QM1kBjM2/w.png)](https://postimg.cc/1gRN2hwB)
