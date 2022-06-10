@@ -123,6 +123,18 @@ while true; do
     fi
 done
 
+# Optimized Firefox profile
+clear
+while true; do
+    echo "Do you wish to use an optimized Firefox profile?"
+    read -p "This will reset your current profile? [y/n] " yn
+    case $yn in
+        [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my-scripts/init/.mozilla ~/.mozilla; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 # Mesa-git
 clear
 while true; do
@@ -137,18 +149,6 @@ done
 # Sync browser to ram
 sudo pacman -S profile-sync-daemon --noconfirm
 sudo systemctl --user enable psd
-
-# Optimized Firefox profile
-clear
-while true; do
-    echo "Do you wish to use an optimized Firefox profile?"
-    read -p "This will reset your current profile? [y/n] " yn
-    case $yn in
-        [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my-scripts/init/.mozilla ~/.mozilla; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
 
 # General packages
 yay -Syu gamemode lib32-gamemode vulkan-tools wireplumber cmst libpipewire02 qt5-wayland swaylock-fancy mako man-db swayidle xdg-desktop-portal gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk swaybg xorg-xwayland bash-completion wofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa pipewire-pulse irqbalance swappy grim --noconfirm
