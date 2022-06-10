@@ -26,6 +26,9 @@
 # .CONFIG
 !.config
 
+!.config/swappy
+!.config/swappy/**
+
 !.config/psd/
 !.config/psd/psd.conf
 
