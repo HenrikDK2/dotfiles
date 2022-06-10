@@ -2,7 +2,7 @@
 
 This is for personally usage, but you may gladly use it as well. It includes all of my configuration files, but also tweaks for system files which I always include on my system for either responsiveness or gaming tweaks when I have to do fresh installs on new systems.
 
-**Any usage of my configuration files falls in no ways or form under my liability**
+**Any usage of my system/configuration files falls in no ways or form under my liability**
 
 ## Install
 
