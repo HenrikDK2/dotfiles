@@ -46,6 +46,7 @@ window {
 #entry:selected {
   background-color: #434c5e;
   border: 2px solid #88c0d0;
+  outline: none;
 }
 
 #img {
