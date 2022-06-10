@@ -22,6 +22,5 @@ Clone this project to your home folder. Run `~/.my-scripts/init/install.sh` and 
 
 This might be subject to change
 
-[![1.jpg](https://i.postimg.cc/WzJG0jpL/1.jpg)](https://postimg.cc/1VsVZkNJ)
-
+[![20220611-012136.png](https://i.postimg.cc/PxRXHBwP/20220611-012136.png)](https://postimg.cc/9Ry5tg1h)
 [![w.png](https://i.postimg.cc/QM1kBjM2/w.png)](https://postimg.cc/1gRN2hwB)
