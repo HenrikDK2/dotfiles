@@ -27,9 +27,7 @@ window {
 #scroll {
   background-color: #2e3440;
   font-size: 16px;
-  margin: -2px 0px;
   color: #f8f8f2;
-  border: none !important;
 }
 
 #scroll label {
