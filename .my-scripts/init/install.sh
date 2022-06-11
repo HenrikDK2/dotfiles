@@ -11,7 +11,7 @@ sudo sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 10/g" /etc/pacman.conf
 
 # Makepkg tweaks - Optimize compiled code
 sudo sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
-sudo sed -i 's/-O2/-⁠Ofast/g' /etc/makepkg.conf
+sudo sed -i 's/-O2/-⁠Ofast -fopenmp/g' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
 sudo sed -i 's/-mtune=generic //' /etc/makepkg.conf
 sudo sed -i 's/LDFLAGS="-Wl,-01,/LDFLAGS="-Wl,-⁠Ofast,/' /etc/makepkg.conf
