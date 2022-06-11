@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo bootctl install
+sudo pacman -Syu linux-zen
 mkdir ~/.my-scripts/init/entries/tmp
 cp ~/.my-scripts/init/entries/* ~/.my-scripts/init/entries/tmp
 
