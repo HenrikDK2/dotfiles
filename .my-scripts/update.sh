@@ -1,6 +1,7 @@
 #!/bin/sh
 
 yay -Syu --noconfirm
+yay -Scc --noconfirm
 
 while ! [ "$(pacman -Qdtq)" = "" ]; do
 	sudo pacman -Rn $(pacman -Qdtq) --noconfirm
