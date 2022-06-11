@@ -190,6 +190,10 @@ sudo chmod -x /usr/lib/evolution-data-server/evolution-alarm-notify
 # Other
 mkdir /home/$name/Screenshots
 
+while ! [ "$(pacman -Qdtq)" = "" ]; do
+	sudo pacman -Rn $(pacman -Qdtq) --noconfirm
+done
+
 # Reboot
 clear
 while true; do
@@ -201,3 +205,4 @@ while true; do
     esac
 done
 clear
+
