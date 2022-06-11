@@ -17,7 +17,9 @@ reconfigure () {
 	sed -i 's/_timer_freq=""/_timer_freq="1000"/g' ~/.my-scripts/linux-tkg/customization.cfg
 	sed -i 's/_lto_mode=""/_lto_mode="full"/g' ~/.my-scripts/linux-tkg/customization.cfg
 	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="tkg-pds"/g' ~/.my-scripts/linux-tkg/customization.cfg
-	sed -i 's/-O2/-OFast/g' ~/.my-scripts/linux-tkg/PKGBUILD
+	sed -i 's/-O2/-Ofast -flto/g' ~/.my-scripts/linux-tkg/PKGBUILD
+	sed -i 's/_disable "CC_OPTIMIZE_FOR_PERFORMANCE_O3"/_enable "CC_OPTIMIZE_FOR_PERFORMANCE_O3"/g' ~/.my-scripts/linux-tkg/linux-tkg-config/prepare
+	sed -i 's/_disable "CC_OPTIMIZE_HARDER"/_enable "CC_OPTIMIZE_HARDER"/g' ~/.my-scripts/linux-tkg/linux-tkg-config/prepare
 }
 
 if [ -f "/boot/loader/entries/tkg.conf" ]; then
