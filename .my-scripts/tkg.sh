@@ -17,7 +17,7 @@ reconfigure () {
 	sed -i 's/_timer_freq=""/_timer_freq="1000"/g' ~/.my-scripts/linux-tkg/customization.cfg
 	sed -i 's/_lto_mode=""/_lto_mode="full"/g' ~/.my-scripts/linux-tkg/customization.cfg
 	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="tkg-pds"/g' ~/.my-scripts/linux-tkg/customization.cfg
-	sed -i 's/-O2/-O4/g' ~/.my-scripts/linux-tkg/PKGBUILD
+	sed -i 's/-O2/-OFast/g' ~/.my-scripts/linux-tkg/PKGBUILD
 }
 
 if [ -f "/boot/loader/entries/tkg.conf" ]; then
