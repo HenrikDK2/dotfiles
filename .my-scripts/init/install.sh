@@ -76,8 +76,9 @@ then
     clear
 fi
 
+
 # Install building tools
-sudo pacman -S base-devel --noconfirm
+sudo pacman -Syu base-devel --noconfirm
 
 # Install yay
 cd /opt
@@ -85,6 +86,9 @@ sudo git clone https://aur.archlinux.org/yay-git.git
 sudo chmod 777 -R ./yay-git
 cd yay-git
 makepkg -si --noconfirm
+
+# Clear cache
+yay -Scc --noconfirm
 
 # Add bootloader entries, and install kernel
 clear
