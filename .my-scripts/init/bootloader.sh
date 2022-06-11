@@ -11,10 +11,12 @@ function microcode {
 	if [ "$CPU" == "amd" ]; then
 		sudo pacman -S amd-ucode --noconfirm
 		sed -i '3 i initrd /amd-ucode.img' ~/.my-scripts/init/entries/tmp/tkg.conf
+		sed -i '3 i initrd /amd-ucode.img' ~/.my-scripts/init/entries/tmp/zen.conf
 		sed -i '3 i initrd /amd-ucode.img' ~/.my-scripts/init/entries/tmp/arch.conf
 	elif [ "$CPU" == "intel" ]; then
 		sudo pacman -S intel-ucode --noconfirm
 		sed -i '3 i initrd /intel-ucode.img' ~/.my-scripts/init/entries/tmp/tkg.conf
+		sed -i '3 i initrd /intel-ucode.img' ~/.my-scripts/init/entries/tmp/zen.conf
 		sed -i '3 i initrd /intel-ucode.img' ~/.my-scripts/init/entries/tmp/arch.conf
 	else
 		echo "CPU needs to be either AMD or INTEL"
@@ -34,6 +36,16 @@ function get_uuid {
 	else
 		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my-scripts/init/entries/tmp/tkg.conf
 		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my-scripts/init/entries/tmp/arch.conf
+		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my-scripts/init/entries/tmp/zen.conf
+	fi
+}
+
+function change_default {
+	if sudo grep -Rq "default" /boot/loader/loader.conf
+	then
+		sudo sed -i "s/default .*/default $1/" /boot/loader/loader.conf
+	else
+		echo "default $1" | sudo tee -a /boot/loader/loader.conf
 	fi
 }
 
@@ -43,28 +55,31 @@ clear
 get_uuid
 sudo cp -r ~/.my-scripts/init/entries/tmp/. /boot/loader/entries
 rm -rf ~/.my-scripts/init/entries/tmp/
+change_default arch.conf
+
 clear
 while true; do
 	echo "Remember that you need to modify tkg.sh for your system."
-    read -p "Do you wish to install the TKG-kernel now? [y/n] " yn
+    read -p "Do you wish to install the TKG-kernel? [y/n] " yn
     if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		exec ~/.my-scripts/tkg.sh 
 		clear
 		read -p "Do you want to add TKG-kernel to the bootloader? [y/n] " yn
 		if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-			if sudo grep -Rq "default" /boot/loader/loader.conf
-			then
-				sudo sed -i "s/default .*/default tkg.conf/" /boot/loader/loader.conf
-			else
-				echo "default tkg.conf" | sudo tee -a /boot/loader/loader.conf
-			fi
+			change_default tkg.conf
 		fi
 		break;
     elif [[ "$yn" =~ ^([nN])$ ]]; then
+		clear
+		read -p "Do you wish to make Zen the default kernel? [y/n] " yn
+		if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			change_default zen.conf
+		fi
 		break;
     else
        echo "Please answer yes or no."
     fi
 done
-clear
+
+
 

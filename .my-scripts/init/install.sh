@@ -94,7 +94,7 @@ yay -Scc --noconfirm
 clear
 while true; do
     echo ""
-    read -p "Only for systemd-boot! - Do you want to add TKG bootloader entry? [y/n] " yn
+    read -p "Only for systemd-boot! - Add bootloader entries with tweaks? [y/n] " yn
     case $yn in
         [Yy]* ) source ~/.my-scripts/init/bootloader.sh; break;;
         [Nn]* ) break;;
