@@ -71,6 +71,7 @@ while true; do
 		fi
 		break;
     elif [[ "$yn" =~ ^([nN])$ ]]; then
+		sudo rm -rf /boot/loader/entries/tkg.conf
 		clear
 		read -p "Do you wish to make Zen the default kernel? [y/n] " yn
 		if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
@@ -81,6 +82,4 @@ while true; do
        echo "Please answer yes or no."
     fi
 done
-
-
-
+clear
