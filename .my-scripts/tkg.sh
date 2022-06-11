@@ -26,6 +26,7 @@ if [ -f "/boot/loader/entries/tkg.conf" ]; then
 	if [ -d "$HOME/.my-scripts/linux-tkg" ];
 	then
 		cd ~/.my-scripts/linux-tkg
+		rm -rf *.zx *.patch logs pkg kernelconfig.new config.x86_64 cleanup BIG_UGLY_FROGMINER
 		git fetch origin master
 		git reset --hard origin/master
 		reconfigure
