@@ -128,7 +128,7 @@ while true; do
     fi
 done
 
-# Optimized Firefox profile
+# Autologin
 clear
 while true; do
     read -p "Do you wish autologin to your current user? [y/n] " yn
