@@ -60,6 +60,7 @@ fi
 if [ "$name" != "henrik" ]; then
 	sudo sed -i "s/henrik/$name/g" /etc/sudoers
 	sed -i "s/henrik/$name/g" ~/.config/gamemode.ini
+	sed -i "s/henrik/$name/g" ~/.my-scripts/init/getty@tty1.service.d/autologin.conf
 fi
 
 # Seahorse keyring
@@ -125,6 +126,17 @@ while true; do
     else
        echo "Please answer yes or no."
     fi
+done
+
+# Optimized Firefox profile
+clear
+while true; do
+    read -p "Do you wish autologin to your current user? [y/n] " yn
+    case $yn in
+        [Yy]* ) sudo cp -r ~/.my-scripts/init/getty@tty1.service.d /etc/systemd/system/; sudo systemctl enable getty@tty1.service; break;;
+        [Nn]* ) sudo systemctl disable getty@tty1.service; break;;
+        * ) echo "Please answer yes or no.";;
+    esac
 done
 
 # Optimized Firefox profile
