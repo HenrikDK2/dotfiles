@@ -131,7 +131,7 @@ done
 # Autologin
 clear
 while true; do
-    read -p "Do you wish autologin to your current user? [y/n] " yn
+    read -p "Do you wish to autologin into your current user? [y/n] " yn
     case $yn in
         [Yy]* ) sudo cp -r ~/.my-scripts/init/getty@tty1.service.d /etc/systemd/system/; sudo systemctl enable getty@tty1.service; break;;
         [Nn]* ) sudo systemctl disable getty@tty1.service; break;;
