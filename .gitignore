@@ -67,6 +67,7 @@
 
 !.local/share/icons
 !.local/share/icons/**
+.local/share/icons/hicolor
 
 !.local/share/nemo
 !.local/share/nemo/**
