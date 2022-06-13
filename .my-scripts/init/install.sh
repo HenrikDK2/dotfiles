@@ -183,6 +183,10 @@ gsettings set org.gnome.desktop.background show-desktop-icons true
 xdg-settings set default-web-browser firefox.desktop
 xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 
+# Clock sync
+sudo timedatectl set-ntp true
+sudo systemctl enable --now systemd-timesyncd.service
+
 # Irqbalance
 sudo systemctl enable --now irqbalance 
 

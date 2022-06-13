@@ -66,10 +66,13 @@ while true; do
 		exec ~/.my-scripts/tkg.sh 
 		clear
 		read -p "Do you want to add TKG-kernel to the bootloader? [y/n] " yn
-		if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+		if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; 
+		then
 			change_default tkg.conf
+			break;
+		else
+			break;
 		fi
-		break;
     elif [[ "$yn" =~ ^([nN])$ ]]; then
 		sudo rm -rf /boot/loader/entries/tkg.conf
 		clear
