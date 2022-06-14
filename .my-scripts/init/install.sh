@@ -14,6 +14,7 @@ sudo sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
 sudo sed -i 's/-mtune=generic //' /etc/makepkg.conf
 
+clear
 while true; do
     echo "Do you want to add Link Time Optimization (LTO) to all compiled packages?"
     read -p "This might increase runtime performance, but at the cost of compile speed [y/n] " yn
