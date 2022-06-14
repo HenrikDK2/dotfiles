@@ -208,7 +208,6 @@ sudo systemctl mask connman-vpn
 systemctl --user mask --now evolution-addressbook-factory
 systemctl --user mask --now at-spi-dbus-bus
 sudo chmod -x /usr/lib/goa-daemon
-sudo chmod -x /usr/lib/upowerd
 sudo chmod -x /usr/lib/goa-identity-service
 sudo chmod -x /usr/lib/evolution-data-server/evolution-alarm-notify
 
