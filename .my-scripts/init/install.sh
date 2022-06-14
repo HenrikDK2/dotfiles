@@ -12,7 +12,7 @@ sudo sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 10/g" /etc/pacman.conf
 # Makepkg tweaks - Optimize compiled code
 sudo sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
-sudo sed -i 's/-mtune=generic //' /etc/makepkg.conf
+sudo sed -i 's/-mtune=generic/-mtune=native/' /etc/makepkg.conf
 
 clear
 while true; do
@@ -165,7 +165,7 @@ clear
 while true; do
     read -p "Do you have an AMD gpu? [y/n] " yn
     case $yn in
-        [Yy]* ) yay -Syu mesa-git lib32-mesa-git --noconfirm; break;;
+        [Yy]* ) yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon --noconfirm; break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
