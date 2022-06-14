@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sudo ntpd
+
 sleep 1
 
 corectrl & discord & evolution & mako & waybar &
