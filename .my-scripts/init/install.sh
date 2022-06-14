@@ -204,8 +204,12 @@ sudo systemctl mask systemd-journald
 sudo systemctl mask connman-vpn
 
 # Disable processes
-systemctl --user mask --now evolution-addressbook-factory
-systemctl --user mask --now at-spi-dbus-bus
+systemctl --user mask evolution-addressbook-factory
+systemctl --user mask at-spi-dbus-bus
+sudo systemctl mask ldconfig.service
+sudo systemctl mask systemd-journal-catalog-update
+sudo systemctl mask upower
+sudo systemctl disable --now systemd-timesyncd
 sudo chmod -x /usr/lib/goa-daemon
 sudo chmod -x /usr/lib/goa-identity-service
 sudo chmod -x /usr/lib/evolution-data-server/evolution-alarm-notify
