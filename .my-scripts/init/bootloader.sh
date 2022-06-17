@@ -48,6 +48,13 @@ function change_default {
 	else
 		echo "default $1" | sudo tee -a /boot/loader/loader.conf
 	fi
+
+	if sudo grep -Rq "timeout" /boot/loader/loader.conf
+	then
+		sudo sed -i "s/timeout .*/timeout 3/" /boot/loader/loader.conf
+	else
+		echo "timeout 3" | sudo tee -a /boot/loader/loader.conf
+	fi
 }
 
 clear
@@ -63,16 +70,8 @@ while true; do
 	echo "Remember that you need to modify tkg.sh for your system."
     read -p "Do you wish to install the TKG-kernel? [y/n] " yn
     if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+		change_default tkg.conf
 		exec ~/.my-scripts/tkg.sh 
-		clear
-		read -p "Do you want to add TKG-kernel to the bootloader? [y/n] " yn
-		if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; 
-		then
-			change_default tkg.conf
-			break;
-		else
-			break;
-		fi
     elif [[ "$yn" =~ ^([nN])$ ]]; then
 		sudo rm -rf /boot/loader/entries/tkg.conf
 		clear
