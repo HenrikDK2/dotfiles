@@ -22,7 +22,7 @@ if [ -z $DISPLAY ] && [ "$(tty)" = "/dev/tty1" ]; then
 	## Env Variables
 	export XDG_SESSION_TYPE=wayland
 	export XDG_CURRENT_DESKTOP=sway
-	export QT_QPA_PLATFORM=wayland
+	export QT_QPA_PLATFORM="wayland;xcb"
     export MOZ_ENABLE_WAYLAND=1
     export MOZ_WEBRENDER=1
 	export MICRO_TRUECOLOR=1
