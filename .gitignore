@@ -42,6 +42,7 @@
 
 !.config/gtk-*
 !.config/gtk-*/**
+.config/gtk-*/bookmarks
 
 !.config/sway
 !.config/sway/**

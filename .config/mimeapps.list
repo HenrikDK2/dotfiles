@@ -17,6 +17,7 @@ x-scheme-handler/unknown=firefox.desktop
 application/x-gnome-saved-search=nemo.desktop
 image/png=imv.desktop
 image/jpeg=imv.desktop
+application/xml=code-oss.desktop
 
 [Added Associations]
 application/x-shellscript=code-oss-url-handler.desktop;
@@ -30,3 +31,4 @@ image/gif=imv.desktop;
 image/tiff=imv.desktop;
 image/raw=imv.desktop;
 image/raw=webp.desktop;
+application/xml=code-oss.desktop;
