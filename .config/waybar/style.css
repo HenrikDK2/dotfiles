@@ -26,8 +26,7 @@ window {
 }
 
 #workspaces button,
-#button-lock,
-# {
+#button-lock {
   background-color: @nord1;
   padding: 0px 4px;
   color: @nord6;
