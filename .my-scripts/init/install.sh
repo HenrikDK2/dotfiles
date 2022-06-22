@@ -185,6 +185,7 @@ yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto t
 gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
 gsettings set org.gnome.desktop.wm.preferences theme "Nordic"
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 # Applications - Standard
 gsettings set org.cinnamon.desktop.default-applications.terminal exec kitty
