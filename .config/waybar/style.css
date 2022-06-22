@@ -1,8 +1,8 @@
 @import "nord.css";
 
 window {
-	background-color: transparent;
-	padding: 0 20px;
+  background-color: transparent;
+  padding: 0 20px;
 }
 
 * {
@@ -20,11 +20,14 @@ window {
   padding: 0px 6px;
 }
 
-#workspaces button, #custom-lock {
-    margin-left: 8px;
+#workspaces button,
+#custom-lock {
+  margin-left: 8px;
 }
 
-#workspaces button, #button-lock, # {
+#workspaces button,
+#button-lock,
+# {
   background-color: @nord2;
   padding: 0px 4px;
   color: @nord6;
@@ -33,7 +36,7 @@ window {
 
 #workspaces button.focused {
   color: @nord0;
-  background-color: @nord8;
+  background-color: @nord4;
 }
 
 #window {
@@ -42,7 +45,7 @@ window {
   padding: 0px 5px;
 }
 
-#custom-space{
+#custom-space {
   margin-right: 12px;
 }
 
@@ -50,22 +53,27 @@ window {
   margin-left: 20px;
 }
 
-#custom-lock, #custom-sign-out {
+#custom-lock,
+#custom-sign-out {
   border-radius: 5px;
 }
 
-#pulseaudio, #battery, #tray, #clock, #network {
-    border-radius: 5px;
-    margin-right: 8px;
+#pulseaudio,
+#battery,
+#tray,
+#clock,
+#network {
+  border-radius: 5px;
+  margin-right: 8px;
 }
 
 #memory {
-    border-radius: 0 5px 5px 0;
-    margin-right: 8px;
+  border-radius: 0 5px 5px 0;
+  margin-right: 8px;
 }
 
 #cpu {
-    border-radius: 5px 0 0 5px;
+  border-radius: 5px 0 0 5px;
 }
 
 #pulseaudio,
@@ -83,7 +91,7 @@ window {
 }
 
 #pulseaudio {
-    background-color: @nord2;
+  background-color: @nord2;
 }
 
 #pulseaudio.muted {

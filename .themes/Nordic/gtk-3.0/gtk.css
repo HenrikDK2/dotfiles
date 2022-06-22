@@ -2975,16 +2975,7 @@ scrolledwindow viewport.frame {
   border-style: none;
 }
 scrolledwindow overshoot.top {
-  background-image: -gtk-gradient(
-      radial,
-      center top,
-      0,
-      center top,
-      0.5,
-      to(#0a0b0e),
-      to(rgba(10, 11, 14, 0))
-    ),
-    -gtk-gradient(radial, center top, 0, center top, 0.6, from(rgba(216, 222, 233, 0.13)), to(rgba(216, 222, 233, 0)));
+  background-image: transparent;
   background-size: 100% 5%, 100% 100%;
   background-repeat: no-repeat;
   background-position: center top;
@@ -2993,15 +2984,7 @@ scrolledwindow overshoot.top {
   box-shadow: none;
 }
 scrolledwindow overshoot.top:backdrop {
-  background-image: -gtk-gradient(
-    radial,
-    center top,
-    0,
-    center top,
-    0.5,
-    to(#22262f),
-    to(rgba(34, 38, 47, 0))
-  );
+  background-image: transparent;
   background-size: 100% 5%;
   background-repeat: no-repeat;
   background-position: center top;
@@ -3010,16 +2993,7 @@ scrolledwindow overshoot.top:backdrop {
   box-shadow: none;
 }
 scrolledwindow overshoot.bottom {
-  background-image: -gtk-gradient(
-      radial,
-      center bottom,
-      0,
-      center bottom,
-      0.5,
-      to(#0a0b0e),
-      to(rgba(10, 11, 14, 0))
-    ),
-    -gtk-gradient(radial, center bottom, 0, center bottom, 0.6, from(rgba(216, 222, 233, 0.13)), to(rgba(216, 222, 233, 0)));
+  background-image: transparent;
   background-size: 100% 5%, 100% 100%;
   background-repeat: no-repeat;
   background-position: center bottom;
@@ -3028,15 +3002,7 @@ scrolledwindow overshoot.bottom {
   box-shadow: none;
 }
 scrolledwindow overshoot.bottom:backdrop {
-  background-image: -gtk-gradient(
-    radial,
-    center bottom,
-    0,
-    center bottom,
-    0.5,
-    to(#22262f),
-    to(rgba(34, 38, 47, 0))
-  );
+  background-image: transparent;
   background-size: 100% 5%;
   background-repeat: no-repeat;
   background-position: center bottom;
@@ -3045,16 +3011,7 @@ scrolledwindow overshoot.bottom:backdrop {
   box-shadow: none;
 }
 scrolledwindow overshoot.left {
-  background-image: -gtk-gradient(
-      radial,
-      left center,
-      0,
-      left center,
-      0.5,
-      to(#0a0b0e),
-      to(rgba(10, 11, 14, 0))
-    ),
-    -gtk-gradient(radial, left center, 0, left center, 0.6, from(rgba(216, 222, 233, 0.13)), to(rgba(216, 222, 233, 0)));
+  background-image: transparent;
   background-size: 5% 100%, 100% 100%;
   background-repeat: no-repeat;
   background-position: left center;
@@ -3063,15 +3020,7 @@ scrolledwindow overshoot.left {
   box-shadow: none;
 }
 scrolledwindow overshoot.left:backdrop {
-  background-image: -gtk-gradient(
-    radial,
-    left center,
-    0,
-    left center,
-    0.5,
-    to(#22262f),
-    to(rgba(34, 38, 47, 0))
-  );
+  background-image: transparent;
   background-size: 5% 100%;
   background-repeat: no-repeat;
   background-position: left center;
@@ -3080,16 +3029,7 @@ scrolledwindow overshoot.left:backdrop {
   box-shadow: none;
 }
 scrolledwindow overshoot.right {
-  background-image: -gtk-gradient(
-      radial,
-      right center,
-      0,
-      right center,
-      0.5,
-      to(#0a0b0e),
-      to(rgba(10, 11, 14, 0))
-    ),
-    -gtk-gradient(radial, right center, 0, right center, 0.6, from(rgba(216, 222, 233, 0.13)), to(rgba(216, 222, 233, 0)));
+  background-image: transparent;
   background-size: 5% 100%, 100% 100%;
   background-repeat: no-repeat;
   background-position: right center;
@@ -3098,15 +3038,7 @@ scrolledwindow overshoot.right {
   box-shadow: none;
 }
 scrolledwindow overshoot.right:backdrop {
-  background-image: -gtk-gradient(
-    radial,
-    right center,
-    0,
-    right center,
-    0.5,
-    to(#22262f),
-    to(rgba(34, 38, 47, 0))
-  );
+  background-image: transparent;
   background-size: 5% 100%;
   background-repeat: no-repeat;
   background-position: right center;

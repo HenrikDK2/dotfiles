@@ -179,9 +179,9 @@ for_window [class="steam_app_1252330"] floating enable
 font pango:Cantarell Bold 12
 
 # class                 border  backgr. text    indicator child_border                                                                     
-client.focused_inactive #0d1010 #212121 #d9d9d9 #0d1010 #063340                                                                            
-client.unfocused        #0d1010 #212121 #d9d9d9 #424242 #063340                                                                             
-client.focused          #88c0d0 #434c5e #fafafa #88c0d0 #88c0d0     
+client.focused_inactive #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                            
+client.unfocused        #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                             
+client.focused          #8fbbba #434c5e #fafafa #8fbbba #8fbbba     
 
 exec ~/.my-scripts/login.sh
 exec --no-startup-id /usr/bin/polkit-dumb-agent
