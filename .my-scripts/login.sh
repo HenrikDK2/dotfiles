@@ -4,7 +4,7 @@ sudo ntpd
 
 sleep 1
 
-corectrl & discord & evolution & mako & waybar &
+corectrl & discord & steam & evolution & mako & waybar &
 
 sleep 30
 
