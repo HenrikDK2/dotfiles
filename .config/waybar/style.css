@@ -9,7 +9,7 @@ window {
   font-family: "Cantarell", "Font Awesome 6 Free";
   font-size: 14px;
   font-weight: 600;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 #mode {
@@ -28,8 +28,8 @@ window {
 #workspaces button,
 #button-lock {
   background-color: @nord1;
-  padding: 0px 4px;
-  color: @nord6;
+  padding: 0px 4px 4px;
+  color: @nord3;
   margin-top: 0;
 }
 
@@ -39,9 +39,9 @@ window {
 }
 
 #window {
-  color: @nord6;
+  color: @nord3;
   font-weight: bold;
-  padding: 0px 5px;
+  padding: 0px 5px 4px 10px;
 }
 
 #custom-space {
@@ -86,7 +86,7 @@ window {
 #tray {
   background-color: @nord1;
   padding: 0px 8px;
-  color: @nord6;
+  color: @nord3;
 }
 
 #pulseaudio {
@@ -112,6 +112,10 @@ window {
 #battery.critical {
   background-color: @nord11;
   color: @nord0;
+}
+
+#tray {
+  padding-bottom: 4px;
 }
 
 #tray menu {

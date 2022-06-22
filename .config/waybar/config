@@ -1,5 +1,5 @@
 {
-    "height": 35,
+    "height": 40,
     "modules-left": [
         "custom/sign-out",
         "custom/lock",

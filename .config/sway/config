@@ -155,7 +155,7 @@ hide_edge_borders --i3 smart
 default_border pixel 2
 default_floating_border pixel 2
 gaps inner 20
-gaps top 38
+gaps top 34
 
 #Workspace 1 gaps
 workspace 1 gaps inner 0
