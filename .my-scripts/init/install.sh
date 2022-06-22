@@ -202,7 +202,6 @@ sudo systemctl enable --now irqbalance
 # Mask services
 sudo systemctl mask rtkit-daemon
 sudo systemctl mask systemd-journald
-sudo systemctl mask connman-vpn
 
 # Disable processes
 systemctl --user mask evolution-addressbook-factory
