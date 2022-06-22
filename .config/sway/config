@@ -169,8 +169,8 @@ assign [class="discord"] workspace 2
 assign [app_id="corectrl"] workspace 9
 assign [class="Spotify"] workspace 2
 assign [class="Steam"] workspace 2
-assign [class="steam_app_*"] workspace 1
-assign [class="gamescope"] workspace 1
+assign [class="steam_app_*"] workspace 3
+assign [class="gamescope"] workspace 3
 
 for_window [class="Steam" title="Friends List"] floating enable
 for_window [app_id="lxqt-policykit-agent"] floating enable
