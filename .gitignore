@@ -16,8 +16,10 @@
 # All files in these folders
 !.themes
 !.themes/**
+
 !.icons
 !.icons/**
+
 !.my-scripts
 !.my-scripts/**
 .my-scripts/linux-tkg
@@ -43,6 +45,12 @@
 !.config/gtk-*
 !.config/gtk-*/**
 .config/gtk-*/bookmarks
+
+!.config/Code - OSS
+!.config/Code - OSS/User
+!.config/Code - OSS/User/settings.json
+!.config/Code - OSS/User/snippets
+!.config/Code - OSS/User/snippets/**
 
 !.config/sway
 !.config/sway/**
