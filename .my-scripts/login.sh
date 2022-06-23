@@ -32,6 +32,9 @@ ionice -c 3 -n 7 -p $(pidof waybar)
 renice -n 20 -p $(pidof evolution)
 ionice -c 3 -n 7 -p $(pidof evolution)
 
+renice -n 20 -p $(pidof steam)
+ionice -c 3 -n 7 -p $(pidof steam)
+
 renice -n 20 -p $(pidof swayidle)
 ionice -c 3 -n 7 -p $(pidof swayidle)
 
