@@ -53,6 +53,10 @@
 !.config/waybar
 !.config/waybar/**
 
+!.config/fish
+!.config/fish/config.fish
+!.config/fish/fish_variables
+
 !.config/mako
 !.config/mako/**
 

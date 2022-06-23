@@ -176,10 +176,14 @@ sudo pacman -S profile-sync-daemon --noconfirm
 sudo systemctl --user enable psd
 
 # General packages
-yay -Syu gamemode lib32-gamemode vulkan-tools wireplumber cmst libpipewire02 qt5-wayland qt6-wayland swaylock-fancy mako man-db swayidle xdg-desktop-portal gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk xorg-xwayland bash-completion wofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa wayland-protocols pipewire-pulse irqbalance swappy grim --noconfirm
+yay -Syu gamemode lib32-gamemode vulkan-tools wireplumber cmst libpipewire02 qt5-wayland qt6-wayland fish swaylock-fancy mako man-db swayidle xdg-desktop-portal gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk xorg-xwayland wofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa wayland-protocols pipewire-pulse irqbalance swappy grim --noconfirm
 
 # Fonts
 yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto ttf-ms-win11-auto-japanese ttf-ms-win11-auto-korean ttf-ms-win11-auto-other ttf-ms-win11-auto-sea ttf-ms-win11-auto-thai ttf-ms-win11-auto-zh_cn ttf-ms-win11-auto-zh_tw --noconfirm
+
+# Change default shell to fish
+sudo chsh -s /bin/fish
+set --erase fish_greeting
 
 # Theme
 gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
