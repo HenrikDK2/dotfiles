@@ -183,7 +183,6 @@ yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto t
 
 # Change default shell to fish
 sudo chsh -s /bin/fish
-set --erase fish_greeting
 
 # Theme
 gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
