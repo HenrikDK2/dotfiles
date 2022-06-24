@@ -22,5 +22,6 @@ Clone this project to your home folder. Run `~/.my-scripts/init/install.sh` and 
 
 This might be subject to change
 
-[![20220611-012136.png](https://i.postimg.cc/PxRXHBwP/20220611-012136.png)](https://postimg.cc/9Ry5tg1h)
-[![w.png](https://i.postimg.cc/QM1kBjM2/w.png)](https://postimg.cc/1gRN2hwB)
+[![20220624-235335.png](https://i.postimg.cc/RZf1vgzY/20220624-235335.png)](https://postimg.cc/DSv4gd0Q)
+[![20220624-235321.png](https://i.postimg.cc/c4vMbsk0/20220624-235321.png)](https://postimg.cc/JGWkyWW2)
+[![20220624-235435.png](https://i.postimg.cc/HsF4GfF5/20220624-235435.png)](https://postimg.cc/YhfmYyrq)
