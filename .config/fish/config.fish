@@ -9,7 +9,6 @@ set -x XDG_DOWNLOAD_DIR "$HOME/Downloads"
 
 # Alias
 alias dev 'npm run dev'
-alias test 'npm run test'
 alias build 'npm run build'
 alias start 'npm run start'
 alias serve 'npm run serve'
