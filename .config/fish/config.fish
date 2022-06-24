@@ -6,6 +6,7 @@ set -x MOZ_ENABLE_WAYLAND 1
 set -x MOZ_WEBRENDER 1
 set -x MICRO_TRUECOLOR 1
 set -x XDG_DOWNLOAD_DIR "$HOME/Downloads"
+set -x PATH "$HOME/.local/bin:$PATH"
 
 # Alias
 alias dev 'npm run dev'
