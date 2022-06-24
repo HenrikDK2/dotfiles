@@ -9,13 +9,14 @@ set -x XDG_DOWNLOAD_DIR "$HOME/Downloads"
 
 # Alias
 alias dev 'npm run dev'
+alias test 'npm run test'
 alias build 'npm run build'
 alias start 'npm run start'
 alias serve 'npm run serve'
 alias clean 'npm run clean'
 alias update '~/.my-scripts/update.sh'
 alias install 'yay -Syu'
-alias remove 'yay -Rsn'
+alias uninstall 'yay -Rsn'
 alias NVM_DIR "$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -26,5 +27,3 @@ if status is-interactive;
      	exec sway
     end
 end
-
-
