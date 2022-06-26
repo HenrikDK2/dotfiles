@@ -15,5 +15,9 @@
     "redhat.telemetry.enabled": false,
     "[json]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "editor.formatOnSave": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "liveServer.settings.donotShowInfoMsg": true,
+    "javascript.updateImportsOnFileMove.enabled": "always"
 }
