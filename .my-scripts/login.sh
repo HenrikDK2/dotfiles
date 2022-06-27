@@ -41,7 +41,7 @@ ionice -c 3 -n 7 -p $(pidof swayidle)
 renice -n 20 -p $(pidof swaybg)
 ionice -c 3 -n 7 -p $(pidof swaybg)
 
-renice -n -5 -p $(pidof pipewire)
-renice -n -5 -p $(pidof pipewire-pulse)
+renice -n -18 -p $(pidof pipewire)
+renice -n -18 -p $(pidof pipewire-pulse)
 
 sudo ~/.my-scripts/free-os-cache.sh
