@@ -18,6 +18,8 @@ application/x-gnome-saved-search=nemo.desktop
 image/png=imv.desktop
 image/jpeg=imv.desktop
 application/xml=code-oss.desktop
+x-scheme-handler/quaver=Quaver-scheme-handler.desktop
+x-scheme-handler/discord-376180410490552320=discord-376180410490552320.desktop
 
 [Added Associations]
 application/x-shellscript=code-oss-url-handler.desktop;
