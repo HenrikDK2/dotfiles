@@ -19,9 +19,6 @@ alias clean 'npm run clean'
 alias update '~/.my-scripts/update.sh'
 alias install 'yay -Syu'
 alias uninstall 'yay -Rsn'
-alias NVM_DIR "$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Execute WM
 if status is-interactive;
