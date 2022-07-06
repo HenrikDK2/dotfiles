@@ -10,6 +10,7 @@ sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
 sudo pacman -Scc --noconfirm
 sudo yay -Scc --noconfirm
+rm -rf ~/.cache/yay/*
 clear
 
 exec ~/.my-scripts/tkg.sh
