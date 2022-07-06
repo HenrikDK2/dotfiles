@@ -177,6 +177,7 @@ for_window [app_id="lxqt-policykit-agent"] floating enable
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="sysmontask"] floating enable
 for_window [app_id="nemo"] floating enable
+for_window [app_id="python3"] floating enable
 for_window [class="steam_app_1252330"] floating enable
 
 font pango:Cantarell Bold 12
