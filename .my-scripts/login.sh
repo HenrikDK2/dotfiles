@@ -6,7 +6,7 @@ sleep 1
 
 corectrl & discord & steam & evolution & mako & waybar &
 
-sleep 30
+sleep 60
 
 renice -n 20 -p $(pidof corectrl)
 ionice -c idle -p $(pidof corectrl)
