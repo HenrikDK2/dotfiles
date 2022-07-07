@@ -10,6 +10,7 @@ window {
   font-size: 14px;
   font-weight: 600;
   margin-top: 4px;
+  transition: all .2s ease;
 }
 
 #mode {
@@ -20,22 +21,27 @@ window {
   padding: 0px 6px;
 }
 
-#workspaces button,
 #custom-lock {
   margin-left: 8px;
+  padding: 0px 4px 4px;
 }
 
 #workspaces button,
 #button-lock {
   background-color: @nord1;
-  padding: 0px 4px 4px;
   color: @nord3;
   margin-top: 0;
 }
 
+#workspaces button{
+	margin-left: 8px;
+	border-bottom: 2px solid transparent;
+	padding: 0px 4px 4px;
+}
+
 #workspaces button.focused {
-  color: @nord0;
-  background-color: @nord4;
+	background-color: rgba(59, 66, 82, .8);
+	border-bottom: 2px solid @nord4;
 }
 
 #window {

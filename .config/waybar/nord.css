@@ -1,6 +1,6 @@
-@define-color nord0 #2e3440;
-@define-color nord1 #3b4252;
-@define-color nord2 #424b5d;
+@define-color nord0 rgba(46, 52, 64, .5);
+@define-color nord1 rgba(59, 66, 82, .5);
+@define-color nord2 rgba(66, 75, 93, .5);
 @define-color nord3 #e5eaf0;
 @define-color nord4 #8fbbba;
 @define-color nord7 #8fbcbb;
