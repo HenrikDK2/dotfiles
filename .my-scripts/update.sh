@@ -1,5 +1,10 @@
 #!/bin/sh
 
+pid=$(sh -c 'echo "$PPID"')
+renice -n 20 "$pid"
+ionice -c idle -p "$pid"
+clear
+
 yay -Syu --noconfirm
 
 while ! [ "$(pacman -Qdtq)" = "" ]; do
