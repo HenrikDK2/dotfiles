@@ -13,8 +13,8 @@ done
 
 sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
-sudo pacman -Scc --noconfirm
-sudo yay -Scc --noconfirm
+sudo pacman -Sc --noconfirm
+sudo yay -Sc --noconfirm
 rm -rf ~/.cache/yay/*
 clear
 
