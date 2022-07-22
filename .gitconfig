@@ -8,3 +8,5 @@
 	directory = /home/henrik/auto/linux-tkg
 	directory = /home/henrik/auto/linux-tkg
 	directory = *
+[pull]
+	rebase = false
