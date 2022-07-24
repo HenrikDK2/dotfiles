@@ -41,7 +41,6 @@ then
 	echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/free-os-cache.sh" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/kill-user.sh" | sudo tee -a /etc/sudoers
-	echo "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/login.sh" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper" | sudo tee -a /etc/sudoers
 fi
 

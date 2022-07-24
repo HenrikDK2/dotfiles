@@ -20,9 +20,13 @@ alias update '~/.my-scripts/update.sh'
 alias install 'yay -Syu'
 alias uninstall 'yay -Rsn'
 
-# Execute WM
-if status is-interactive;
-    if test -z "$DISPLAY"; and test (tty) = /dev/tty1;
-     	exec sway
+# On login
+if status is-interactive
+    if test -z "$DISPLAY"; and test (tty) = /dev/tty1
+        # Sync time
+        sudo ntpd &
+
+        # Execute VM
+        sway &
     end
 end
