@@ -21,9 +21,13 @@ window {
   padding: 0px 6px;
 }
 
-#custom-lock {
+#custom-suspend {
   margin-left: 8px;
   padding: 0px 4px 4px;
+}
+
+#custom-reboot{
+  margin-left: 8px;
 }
 
 #workspaces button,
@@ -58,8 +62,9 @@ window {
   margin-left: 20px;
 }
 
-#custom-lock,
-#custom-shutdown {
+#custom-suspend,
+#custom-shutdown,
+#custom-reboot {
   border-radius: 5px;
 }
 
@@ -87,8 +92,9 @@ window {
 #memory,
 #battery,
 #clock,
-#custom-lock,
+#custom-suspend,
 #custom-shutdown,
+#custom-reboot,
 #tray {
   background-color: @nord1;
   padding: 0px 8px;
