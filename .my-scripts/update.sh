@@ -1,8 +1,8 @@
 #!/bin/sh
 
-pid=$(sh -c 'echo "$PPID"')
-renice -n 20 "$pid"
-ionice -c idle -p "$pid"
+# Reduce priority of this script
+renice -n 20 $$
+ionice -c idle -p $$
 clear
 
 yay -Syu --noconfirm

@@ -26,6 +26,10 @@ launch evolution
 launch mako
 launch waybar 
 
+# Reduce priority of this script
+renice -n 20 $$
+ionice -c idle -p $$
+
 # Priority of processes (name, niceness, ionice class)
 while true; do
     set_prio corectrl 20 idle
@@ -34,6 +38,7 @@ while true; do
     set_prio polkit-gnome-authentication-agent-1 20 idle
     set_prio Discord 10 idle
     set_prio steam 20 idle
+    set_prio steamwebhelper 20 idle
     set_prio waybar 20 idle
     set_prio evolution 20 idle
     set_prio swayidle 20 idle
