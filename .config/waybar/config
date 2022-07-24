@@ -28,7 +28,7 @@
   },
   "custom/sign-out": {
     "format": "",
-    "on-click": "sudo ~/.config/waybar/kill-user.sh",
+    "on-click": "shutdown now",
     "tooltip": false
   },
   "custom/lock": {
