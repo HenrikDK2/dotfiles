@@ -1,117 +1,117 @@
 {
-    "height": 40,
-    "modules-left": [
-        "custom/sign-out",
-        "custom/lock",
-        "sway/workspaces",
-        "sway/mode",
-        "sway/window"
-    ],
-    "modules-center": [],
-    "exclusive": false,
-    "modules-right": [
-        "pulseaudio",
-        "backlight",
-        "network",
-        "cpu",
-        "memory",
-        "battery",
-        "clock",
-        "tray",
-        "custom/space"
-    ],
-    "sway/mode": {
-        "format": "<span style=\"italic\">{}</span>"
+  "height": 40,
+  "modules-left": [
+    "custom/sign-out",
+    "custom/lock",
+    "sway/workspaces",
+    "sway/mode",
+    "sway/window"
+  ],
+  "modules-center": [],
+  "exclusive": false,
+  "modules-right": [
+    "pulseaudio",
+    "backlight",
+    "network",
+    "cpu",
+    "memory",
+    "battery",
+    "clock",
+    "tray",
+    "custom/space"
+  ],
+  "sway/mode": {
+    "format": "<span style=\"italic\">{}</span>"
+  },
+  "sway/window": {
+    "max-length": 50
+  },
+  "custom/sign-out": {
+    "format": "",
+    "on-click": "sudo ~/.config/waybar/kill-user.sh",
+    "tooltip": false
+  },
+  "custom/lock": {
+    "format": "",
+    "on-click": "swaylock-fancy",
+    "tooltip": false
+  },
+  "custom/space": {
+    "format": "<span></span>"
+  },
+  "tray": {
+    "spacing": 10
+  },
+  "clock": {
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "format": "  {:%Y-%m-%d   %H:%M}"
+  },
+  "cpu": {
+    "format": "  {usage}%",
+    "tooltip": false
+  },
+  "memory": {
+    "format": "  {percentage}%",
+    "on-click": "sudo ~/.my-scripts/free-os-cache.sh"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
     },
-    "sway/window": {
-        "max-length": 50
+    "format": "{icon}  {capacity}%",
+    "format-charging": "  {capacity}%",
+    "format-plugged": "  {capacity}%",
+    "format-alt": "{time} {icon}",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "network": {
+    "format-wifi": "  {signalStrength}%",
+    "format-ethernet": "  {ipaddr}",
+    "on-click": "cmst",
+    "format-linked": "  {ifname} (No IP)",
+    "format-disconnected": "⚠  Disconnected"
+  },
+  "backlight": {
+    "format": "",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%      {format_source}",
+    "format-bluetooth": "{icon}  {volume}%  {format_source}",
+    "format-bluetooth-muted": "  {icon}  {format_source}",
+    "format-muted": "   {format_source}",
+    "format-source": "  {volume}%",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        "",
+        ""
+      ]
     },
-    "custom/sign-out": {
-        "format": "",
-        "on-click": "sudo ~/.my-scripts/kill-user.sh",
-        "tooltip": false
-    },
-    "custom/lock": {
-        "format": "",
-        "on-click": "swaylock-fancy",
-        "tooltip": false
-    },
-    "custom/space": {
-        "format": "<span></span>"
-    },
-    "tray": {
-        "spacing": 10
-    },
-    "clock": {
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "  {:%Y-%m-%d   %H:%M}"
-    },
-    "cpu": {
-        "format": "  {usage}%",
-        "tooltip": false
-    },
-    "memory": {
-        "format": "  {percentage}%",
-        "on-click": "sudo ~/.my-scripts/free-os-cache.sh"
-    },
-    "battery": {
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
-        "format": "{icon}  {capacity}%",
-        "format-charging": "  {capacity}%",
-        "format-plugged": "  {capacity}%",
-        "format-alt": "{time} {icon}",
-        "format-icons": [
-            "",
-            "",
-            "",
-            "",
-            ""
-        ]
-    },
-    "network": {
-        "format-wifi": "  {signalStrength}%",
-        "format-ethernet": "  {ipaddr}",
-        "on-click": "cmst",
-        "format-linked": "  {ifname} (No IP)",
-        "format-disconnected": "⚠  Disconnected"
-    },
-    "backlight": {
-        "format": "",
-        "format-icons": [
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-        ]
-    },
-    "pulseaudio": {
-        "format": "{icon}  {volume}%      {format_source}",
-        "format-bluetooth": "{icon}  {volume}%  {format_source}",
-        "format-bluetooth-muted": "  {icon}  {format_source}",
-        "format-muted": "   {format_source}",
-        "format-source": "  {volume}%",
-        "format-source-muted": "",
-        "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": [
-                "",
-                "",
-                ""
-            ]
-        },
-        "on-click": "pavucontrol"
-    }
+    "on-click": "pavucontrol"
+  }
 }
