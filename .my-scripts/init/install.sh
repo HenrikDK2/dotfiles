@@ -205,7 +205,10 @@ sudo timedatectl set-ntp true
 # Irqbalance
 sudo systemctl enable --now irqbalance 
 
-q# Disable services
+# Disable services
+sudo sed -i 's/Exec=/Exec=#/' /usr/share/dbus-1/services/org.gnome.OnlineAccounts.service
+sudo sed -i 's/Exec=/Exec=#/' /etc/xdg/autostart/org.gnome.Evolution-alarm-notify.desktop
+sudo sed -i 's/Exec=/Exec=#/' /usr/share/applications/org.gnome.Evolution-alarm-notify.desktop
 systemctl --user mask evolution-addressbook-factory
 systemctl --user mask at-spi-dbus-bus
 sudo systemctl mask rtkit-daemon
@@ -214,7 +217,9 @@ sudo systemctl mask ldconfig.service
 sudo systemctl mask systemd-journal-catalog-update
 sudo systemctl mask upower
 sudo systemctl disable --now systemd-timesyncd
-sudo sed -i 's/Exec=/Exec=#/' /usr/share/dbus-1/services/org.gnome.OnlineAccounts.service
+sudo chmod -x /usr/share/applications/org.gnome.Evolution-alarm-notify.desktop
+sudo chmod -x /etc/xdg/autostart/org.gnome.Evolution-alarm-notify.desktop
+sudo chmod -x /usr/lib/evolution-data-server/evolution-alarm-notify
 
 # Other
 mkdir /home/$name/Screenshots
