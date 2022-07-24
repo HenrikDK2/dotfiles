@@ -188,7 +188,7 @@ client.unfocused        #2d333f #212121 #d9d9d9 #2d333f #2d333f
 client.focused          #8fbbba #434c5e #fafafa #8fbbba #8fbbba     
 
 exec ~/.my-scripts/login.sh
-exec --no-startup-id /usr/bin/polkit-dumb-agent
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 workspace 1
 

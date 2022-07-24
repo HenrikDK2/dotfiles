@@ -205,20 +205,16 @@ sudo timedatectl set-ntp true
 # Irqbalance
 sudo systemctl enable --now irqbalance 
 
-# Mask services
-sudo systemctl mask rtkit-daemon
-sudo systemctl mask systemd-journald
-
-# Disable processes
+q# Disable services
 systemctl --user mask evolution-addressbook-factory
 systemctl --user mask at-spi-dbus-bus
+sudo systemctl mask rtkit-daemon
+sudo systemctl mask systemd-journald
 sudo systemctl mask ldconfig.service
 sudo systemctl mask systemd-journal-catalog-update
 sudo systemctl mask upower
 sudo systemctl disable --now systemd-timesyncd
-sudo chmod -x /usr/lib/goa-daemon
-sudo chmod -x /usr/lib/goa-identity-service
-sudo chmod -x /usr/lib/evolution-data-server/evolution-alarm-notify
+sudo sed -i 's/Exec=/Exec=#/' /usr/share/dbus-1/services/org.gnome.OnlineAccounts.service
 
 # Other
 mkdir /home/$name/Screenshots
