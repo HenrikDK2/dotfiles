@@ -10,7 +10,7 @@ window {
   font-size: 14px;
   font-weight: 600;
   margin-top: 4px;
-  transition: all .2s ease;
+  transition: all 0.2s ease;
 }
 
 #mode {
@@ -33,15 +33,15 @@ window {
   margin-top: 0;
 }
 
-#workspaces button{
-	margin-left: 8px;
-	border-bottom: 2px solid transparent;
-	padding: 0px 4px 4px;
+#workspaces button {
+  margin-left: 8px;
+  border-bottom: 2px solid transparent;
+  padding: 0px 4px 4px;
 }
 
 #workspaces button.focused {
-	background-color: rgba(59, 66, 82, .8);
-	border-bottom: 2px solid @nord4;
+  background-color: rgba(59, 66, 82, 0.8);
+  border-bottom: 2px solid @nord4;
 }
 
 #window {
@@ -54,12 +54,12 @@ window {
   margin-right: 12px;
 }
 
-#custom-sign-out {
+#custom-shutdown {
   margin-left: 20px;
 }
 
 #custom-lock,
-#custom-sign-out {
+#custom-shutdown {
   border-radius: 5px;
 }
 
@@ -88,7 +88,7 @@ window {
 #battery,
 #clock,
 #custom-lock,
-#custom-sign-out,
+#custom-shutdown,
 #tray {
   background-color: @nord1;
   padding: 0px 8px;

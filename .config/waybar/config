@@ -1,7 +1,7 @@
 {
   "height": 40,
   "modules-left": [
-    "custom/sign-out",
+    "custom/shutdown",
     "custom/lock",
     "sway/workspaces",
     "sway/mode",
@@ -26,8 +26,8 @@
   "sway/window": {
     "max-length": 50
   },
-  "custom/sign-out": {
-    "format": "",
+  "custom/shutdown": {
+    "format": "",
     "on-click": "shutdown now",
     "tooltip": false
   },
