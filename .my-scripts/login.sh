@@ -19,7 +19,6 @@ launch () {
 
 # Sync time
 sudo ntpd
-
 sleep 1
 
 # Programs to lauch at login (executable)
@@ -30,6 +29,11 @@ launch evolution
 launch mako
 launch waybar 
 disown -a
+
+# Reduce priority of this script
+pid=$(sh -c 'echo "$PPID"')
+renice -n 20 "$pid"
+ionice -c idle -p "$pid"
 
 # Priority of processes (name, niceness, ionice class)
 while true; do
@@ -44,5 +48,5 @@ while true; do
     set_prio swaybg 20 idle
     set_prio pipewire -18
     set_prio pipewire-pulse -18
-    sleep 20
+    sleep 30
 done
