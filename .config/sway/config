@@ -37,7 +37,7 @@ exec swayidle -w \
     bindsym $mod+d kill
 
     # Start your launcher
-    bindsym $mod+space exec wofi --show drun -a
+    bindsym $mod+space exec ~/.config/sway/wofi.sh
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
