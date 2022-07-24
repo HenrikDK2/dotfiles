@@ -13,7 +13,7 @@ set_prio () {
 launch () {
     uppercase=${1^}
     if [ -z "$(pidof $1)" ] && [ -z "$(pidof $uppercase)" ]; then
-        $1 &
+        $1 > /dev/null 2>&1 &
     fi
 }
 
@@ -42,6 +42,7 @@ while true; do
     set_prio mako 20 idle
     set_prio polkit-gnome-authentication-agent-1 20 idle
     set_prio Discord 10 idle
+    set_prio steam 20 idle
     set_prio waybar 20 idle
     set_prio evolution 20 idle
     set_prio swayidle 20 idle
