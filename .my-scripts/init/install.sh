@@ -175,7 +175,7 @@ sudo pacman -S profile-sync-daemon --noconfirm
 sudo systemctl --user enable psd
 
 # General packages
-yay -Syu gamemode lib32-gamemode vulkan-tools wireplumber cmst libpipewire02 openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative qt5-wayland qt6-wayland fish swaylock-fancy mako man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk xorg-xwayland wofi lxtask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa wayland-protocols pipewire-pulse irqbalance swappy grim --noconfirm
+yay -Syu gamemode lib32-gamemode ufw vulkan-tools wireplumber cmst libpipewire02 openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative qt5-wayland qt6-wayland fish swaylock-fancy mako man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk xorg-xwayland wofi lxtask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa wayland-protocols pipewire-pulse irqbalance swappy grim --noconfirm
 
 # Install vscode plugins
 ~/.my-scripts/init/code-extensions.sh
@@ -185,6 +185,16 @@ yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto t
 
 # Change default shell to fish
 sudo chsh -s /bin/fish
+
+# Enable UFW and add firewall rules
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh/tcp
+sudo ufw allow ftp/tcp
+sudo ufw allow http/tcp
+sudo ufw allow https/tcp
+sudo systemctl enable --now ufw
+sudo ufw enable
 
 # Theme
 gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
