@@ -105,6 +105,7 @@
     "format-muted": "   {format_source}",
     "format-source": "  {volume}%",
     "format-source-muted": "",
+    "scroll-step": 5,
     "format-icons": {
       "headphone": "",
       "hands-free": "",
