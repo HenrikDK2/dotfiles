@@ -44,7 +44,7 @@ window {
 }
 
 #workspaces button.focused {
-  background-color: rgba(59, 66, 82, 0.8);
+  background-color: rgba(59, 66, 82, 1);
   border-bottom: 2px solid @nord4;
 }
 
