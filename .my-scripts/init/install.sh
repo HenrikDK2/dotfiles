@@ -189,7 +189,8 @@ sudo chsh -s /bin/fish
 # Enable UFW and add firewall rules
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow ssh/tcp
+sudo sed -i 's/#Port 22/Port 1065/' /etc/ssh/sshd_config
+sudo ufw allow 1065/tcp
 sudo ufw allow ftp/tcp
 sudo ufw allow http/tcp
 sudo ufw allow https/tcp
