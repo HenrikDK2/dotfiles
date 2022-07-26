@@ -225,6 +225,7 @@ sudo sed -i 's/Exec=/Exec=#/' /etc/xdg/autostart/org.gnome.Evolution-alarm-notif
 sudo sed -i 's/Exec=/Exec=#/' /usr/share/applications/org.gnome.Evolution-alarm-notify.desktop
 systemctl --user mask evolution-addressbook-factory
 systemctl --user mask at-spi-dbus-bus
+systemctl --user mask gvfs-metadata
 sudo systemctl mask rtkit-daemon
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower
