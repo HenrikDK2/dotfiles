@@ -213,6 +213,9 @@ xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 # Clock sync
 sudo timedatectl set-ntp true
 
+# Disable Journald writing to disk
+sudo sed -i 's/#Storage=auto/Storage=none/' /etc/systemd/journald.conf
+
 # Irqbalance
 sudo systemctl enable --now irqbalance 
 
@@ -223,9 +226,7 @@ sudo sed -i 's/Exec=/Exec=#/' /usr/share/applications/org.gnome.Evolution-alarm-
 systemctl --user mask evolution-addressbook-factory
 systemctl --user mask at-spi-dbus-bus
 sudo systemctl mask rtkit-daemon
-sudo systemctl mask systemd-journald
 sudo systemctl mask ldconfig.service
-sudo systemctl mask systemd-journal-catalog-update
 sudo systemctl mask upower
 sudo systemctl disable --now systemd-timesyncd
 sudo chmod -x /usr/share/applications/org.gnome.Evolution-alarm-notify.desktop
