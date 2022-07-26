@@ -169,7 +169,8 @@ assign [class="discord"] workspace 2
 assign [app_id="corectrl"] workspace 9
 assign [class="Spotify"] workspace 2
 assign [class="Steam"] workspace 2
-assign [class="steam_app_*"] workspace 3
+assign [class="steam_*"] workspace 3
+assign [class="Steam_*"] workspace 3
 assign [class="gamescope"] workspace 3
 
 for_window [app_id="lxqt-policykit-agent"] floating enable
@@ -179,6 +180,7 @@ for_window [app_id="python3"] floating enable
 for_window [class="Steam" title="Friends List"] floating enable
 for_window [class="Lxtask"] floating enable, resize set 1000 800
 for_window [class="steam_app_1252330"] floating enable
+for_window [class="steam_app_1328670"] floating enable
 
 font pango:Cantarell Bold 12
 
