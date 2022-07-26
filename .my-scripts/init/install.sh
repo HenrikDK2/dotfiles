@@ -194,6 +194,7 @@ sudo ufw allow 1065/tcp
 sudo ufw allow ftp/tcp
 sudo ufw allow http/tcp
 sudo ufw allow https/tcp
+sudo ufw logging off
 sudo systemctl enable --now ufw
 sudo ufw enable
 
