@@ -213,7 +213,9 @@ xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 # Clock sync
 sudo timedatectl set-ntp true
 
-# Disable Journald writing to disk
+# Disable Journald
+sudo systemctl mask systemd-journald
+sudo systemctl mask systemd-journal-catalog-update
 sudo sed -i 's/#Storage=auto/Storage=none/' /etc/systemd/journald.conf
 
 # Irqbalance
