@@ -22,6 +22,6 @@ set_prio swaybg 20 idle
 set_prio pipewire -18
 
 # Steam Games
-set_prio steamapps -15
+set_prio steamapps -15 
 
 sleep 30
