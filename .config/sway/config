@@ -180,6 +180,8 @@ for_window [app_id="python3"] floating enable
 for_window [app_id="sysmontask"] floating enable, resize set 1000 800
 for_window [class="Steam" title="Friends List"] floating enable
 for_window [class="Lxtask"] floating enable, resize set 1000 800
+for_window [title="Choose ONE of the audio conference options"] floating enable
+for_window [title="zoom" app_id="zoom"] floating enable
 
 font pango:Cantarell Bold 12
 
