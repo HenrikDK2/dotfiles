@@ -21,7 +21,7 @@ set_prio swayidle 20 idle
 set_prio swaybg 20 idle
 set_prio pipewire -18
 
-# Steam Games
+# Steam Games - Same priority as gamemode
 set_prio steamapps -15 
 
 sleep 30

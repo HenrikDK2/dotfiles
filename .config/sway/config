@@ -8,7 +8,7 @@ set $term kitty
 output * render_bit_depth 10 max_render_time 6
 
 #GTK Fix
-exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 output * bg ~/wallpaper.png center
 input "type:keyboard" {
     xkb_layout dk

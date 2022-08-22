@@ -11,7 +11,6 @@ launch () {
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 launch corectrl
 launch discord
-launch steam
 launch evolution
 launch mako
 launch waybar 
