@@ -159,12 +159,12 @@ while true; do
     esac
 done
 
-# Mesa-git
+# Mesa drivers
 clear
 while true; do
     read -p "Do you have an AMD gpu? [y/n] " yn
     case $yn in
-        [Yy]* ) yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon --noconfirm; break;;
+        [Yy]* ) yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm; break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
