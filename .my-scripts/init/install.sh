@@ -159,7 +159,7 @@ while true; do
     esac
 done
 
-# Mesa drivers
+# Mesa drivers for AMD
 clear
 while true; do
     read -p "Do you have an AMD gpu? [y/n] " yn
