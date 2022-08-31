@@ -81,6 +81,9 @@ user_pref("app.shield.optoutstudies.enabled", false);
 user_pref("app.normandy.enabled", false);
 user_pref("app.normandy.api_url", "");
 
+user_pref("media.ffmpeg.vaapi.enabled", true);
+user_pref("media.ffmpeg.vaapi-drm-display.enabled", true);
+
 user_pref("loop.enabled", false);
 user_pref("beacon.enabled", false);
 user_pref("telemetry.hybridContent", false);
@@ -89,3 +92,4 @@ user_pref("alerts.disableSlidingEffect", false);
 user_pref("nglayout.initialpaint.delay", 0);
 user_pref("reader.parse-on-load.enabled", false);
 user_pref("dom.security.unexpected_system_load_telemetry_enabled", false);
+
