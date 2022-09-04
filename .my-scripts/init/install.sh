@@ -85,7 +85,6 @@ then
     clear
 fi
 
-
 # Install building tools
 sudo pacman -Syu base-devel --noconfirm
 
@@ -102,7 +101,6 @@ yay -Scc --noconfirm
 # Add bootloader entries, and install kernel
 clear
 while true; do
-    echo ""
     read -p "Only for systemd-boot! - Add bootloader entries with tweaks? [y/n] " yn
     case $yn in
         [Yy]* ) source ~/.my-scripts/init/bootloader.sh; break;;
@@ -174,8 +172,16 @@ done
 sudo pacman -S profile-sync-daemon --noconfirm
 sudo systemctl --user enable psd
 
+# Pipewire
+yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse --noconfirm
+systemctl --user --now enable wireplumber
+
 # General packages
-yay -Syu gamemode lib32-gamemode ufw vulkan-tools wireplumber cmst libpipewire02 openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative qt5-wayland qt6-wayland fish swaylock-fancy mako man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo slurp sway deluge deluge-gtk xorg-xwayland wofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews pipewire pipewire-alsa wayland-protocols pipewire-pulse irqbalance swappy grim --noconfirm
+yay -Syu gamemode lib32-gamemode ufw vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative qt5-wayland qt6-wayland fish swaylock-fancy mako man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox gvfs gvfs-mtp gvfs-gphoto2 code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols --noconfirm
+
+# Screenshot (Printscreen)
+yay -Syu slurp swappy grim --noconfirm
+mkdir /home/$name/Screenshots
 
 # Install vscode plugins
 ~/.my-scripts/init/code-extensions.sh
@@ -219,6 +225,7 @@ sudo systemctl mask systemd-journal-catalog-update
 sudo sed -i 's/#Storage=auto/Storage=none/' /etc/systemd/journald.conf
 
 # Irqbalance
+yay -Syu irqbalance --noconfirm
 sudo systemctl enable --now irqbalance 
 
 # Disable services
@@ -232,12 +239,7 @@ sudo systemctl mask rtkit-daemon
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower
 sudo systemctl disable --now systemd-timesyncd
-sudo chmod -x /usr/share/applications/org.gnome.Evolution-alarm-notify.desktop
-sudo chmod -x /etc/xdg/autostart/org.gnome.Evolution-alarm-notify.desktop
-sudo chmod -x /usr/lib/evolution-data-server/evolution-alarm-notify
 
-# Other
-mkdir /home/$name/Screenshots
 
 while ! [ "$(pacman -Qdtq)" = "" ]; do
 	sudo pacman -Rn $(pacman -Qdtq) --noconfirm
@@ -254,4 +256,3 @@ while true; do
     esac
 done
 clear
-
