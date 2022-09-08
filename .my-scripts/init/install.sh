@@ -205,10 +205,10 @@ sudo systemctl enable --now ufw
 sudo ufw enable
 
 # Theme
-gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
-gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
-gsettings set org.gnome.desktop.wm.preferences theme "Nordic"
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface gtk-theme "Nordic-darker"
+gsettings set org.gnome.desktop.interface icon-theme "Tela-nord-dark"
+gsettings set org.gnome.desktop.wm.preferences theme "Nordic-darker"
+gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
 
 # Applications - Standard
 gsettings set org.cinnamon.desktop.default-applications.terminal exec kitty
