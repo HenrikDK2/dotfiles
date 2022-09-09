@@ -13,9 +13,7 @@ done
 
 sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
-sudo pacman -Sc --noconfirm
-sudo yay -Sc --noconfirm
-rm -rf ~/.cache/yay/*
+rm -rf ~/.cache/*
 clear
 
 exec ~/.my-scripts/tkg.sh
