@@ -14,6 +14,8 @@ done
 sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
 rm -rf ~/.cache/*
+rm -rf ~/.local/share/applications/wine/Programs/*.desktop
+rm -rf ~/.local/share/applications/*.desktop
 clear
 
 exec ~/.my-scripts/tkg.sh
