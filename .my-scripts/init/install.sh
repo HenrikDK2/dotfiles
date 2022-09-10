@@ -207,6 +207,9 @@ xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 # Clock sync
 sudo timedatectl set-ntp true
 
+# Replace tty issue
+cat ~/.my-scripts/init/issue.txt | sudo tee /etc/issue
+
 # Disable Journald
 sudo systemctl mask systemd-journald
 sudo systemctl mask systemd-journal-catalog-update
