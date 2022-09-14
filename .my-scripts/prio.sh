@@ -10,22 +10,19 @@ set_prio () {
 
 # ps ax -o pid,ni,cmd
 # You can use the cmd output to match the specfic process.
-set_prio "corectrl" 20 idle
-set_prio "mako" 20 idle
-set_prio "polkit-gnome" 20 idle
-set_prio "waybar" 20 idle
-set_prio "evolution" 20 idle
-set_prio "swayidle" 20 idle
-set_prio "swaybg" 20 idle
-set_prio "discord" 10 idle
-set_prio "steamwebhelper" 10 idle
-set_prio "Origin" 10 idle
-set_prio "/opt/Heroic/heroic --" 10 idle
-
-set_prio "pipewire" -18
+set_prio "corectrl" 20 3
+set_prio "mako" 20 3
+set_prio "polkit-gnome" 20 3
+set_prio "waybar" 20 3
+set_prio "evolution" 20 3
+set_prio "swayidle" 20 3
+set_prio "swaybg" 20 3
+set_prio "discord" 10 3
+set_prio "steamwebhelper" 10 3
+set_prio "Origin" 10 3
+set_prio "/opt/Heroic/heroic --" 10 3
 
 # Games - Same priority as gamemode
-set_prio "steamapps" -15
-set_prio ".exe" -15 
+set_prio "steamapps" -15 1
 
 sleep 30
