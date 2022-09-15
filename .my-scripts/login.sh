@@ -10,10 +10,11 @@ launch () {
 # Programs to lauch at login (executable)
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 launch corectrl
-launch discord
-launch evolution
 launch mako
 launch waybar 
+sleep 20
+launch evolution
+launch discord
 
 # Reduce priority of this script
 renice -n 20 $$
