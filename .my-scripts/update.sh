@@ -16,6 +16,7 @@ rm -rf ~/.local/share/Trash/*
 rm -rf ~/.cache/*
 rm -rf ~/.local/share/applications/wine/Programs/*.desktop
 rm -rf ~/.local/share/applications/*.desktop
+rm -rf ~/.local/share/applications/wine/Programs/Games/**/*.desktop
 clear
 
 exec ~/.my-scripts/tkg.sh
