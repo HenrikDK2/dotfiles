@@ -26,7 +26,7 @@ set_prio "Origin" 10 3
 set_prio "/opt/Heroic/heroic --" 10 3
 
 # Games - Same priority as gamemode
-set_prio "steamapps" -15 1
+set_prio "steamapps" -10 1
 
 # Clear RAM
 sudo sh -c 'echo 3 >  /proc/sys/vm/drop_caches'  
