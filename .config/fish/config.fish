@@ -27,9 +27,9 @@ alias uninstall 'yay -Rsn'
 if status is-interactive
     if test -z "$DISPLAY"; and test (tty) = /dev/tty1
         # Sync time
-        sudo ntpd &
+        sudo ntpd
 
         # Execute VM
-        sway &
+        sway
     end
 end
