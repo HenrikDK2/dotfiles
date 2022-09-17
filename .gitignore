@@ -21,10 +21,10 @@
 !.icons
 !.icons/**
 
-!.my-scripts
-!.my-scripts/**
-.my-scripts/linux-tkg
-.my-scripts/init/entries/tmp
+!.my_scripts
+!.my_scripts/**
+.my_scripts/linux-tkg
+.my_scripts/init/entries/tmp
 
 # .CONFIG
 !.config

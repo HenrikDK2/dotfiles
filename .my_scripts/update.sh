@@ -19,4 +19,4 @@ rm -rf ~/.local/share/applications/*.desktop
 rm -rf ~/.local/share/applications/wine/Programs/Games/**/*.desktop
 clear
 
-exec ~/.my-scripts/tkg.sh
+exec ~/.my_scripts/tkg.sh

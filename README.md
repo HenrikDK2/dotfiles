@@ -16,4 +16,4 @@ This project only considers my usage on an AMD machine, you might need to do som
 
 If you want to use the automatic TKG-kernel installer script you would have to reconfigure it for your system.
 
-Clone this project to your home folder. Run `~/.my-scripts/init/install.sh` and follow the procedures, once done reboot the computer and pray to god that it runs :)
+Clone this project to your home folder. Run `~/.my_scripts/init/install.sh` and follow the procedures, once done reboot the computer and pray to god that it runs :)

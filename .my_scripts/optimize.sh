@@ -11,7 +11,6 @@ set_prio () {
 # Clear RAM
 sudo sh -c 'echo 3 >  /proc/sys/vm/drop_caches'  
 
-
 # ps ax -o pid,ni,cmd
 # You can use the cmd output to match the specfic process.
 set_prio "corectrl" 20 3

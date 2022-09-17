@@ -58,7 +58,7 @@
   },
   "memory": {
     "format": "  {percentage}%",
-    "on-click": "sudo ~/.my-scripts/optimize.sh"
+    "on-click": "sudo ~/.my_scripts/optimize.sh"
   },
   "battery": {
     "states": {

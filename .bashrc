@@ -13,7 +13,7 @@ alias build='npm run build'
 alias start='npm run start'
 alias serve='npm run serve'
 alias clean='npm run clean'
-alias update='~/.my-scripts/update.sh'
+alias update='~/.my_scripts/update.sh'
 alias install='yay -Syu'
 alias remove='yay -Rsn'
 

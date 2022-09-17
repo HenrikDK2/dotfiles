@@ -143,7 +143,7 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-bindsym $mod+u exec kitty ~/.my-scripts/update.sh
+bindsym $mod+u exec kitty ~/.my_scripts/update.sh
 bindsym print exec slurp | grim -g - - | swappy -f -
 bindsym ctrl+alt+delete exec sysmontask
 bindsym $mod+escape exec killall -u henrik
@@ -188,7 +188,7 @@ client.unfocused        #2d333f #212121 #d9d9d9 #2d333f #2d333f
 client.focused          #8fbbba #434c5e #fafafa #8fbbba #8fbbba     
 
 exec "systemctl --user import-environment"
-exec ~/.my-scripts/login.sh
+exec ~/.my_scripts/login.sh
 
 workspace 1
 

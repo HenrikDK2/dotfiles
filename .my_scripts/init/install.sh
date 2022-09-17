@@ -20,21 +20,21 @@ sudo sed -i 's/LDFLAGS="-Wl,-01,/LDFLAGS="-Wl,-O3,-flto,/' /etc/makepkg.conf
 sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
 
 # Copy polkit rules
-sudo cp -R ~/.my-scripts/init/polkit-1/* /etc/polkit-1
+sudo cp -R ~/.my_scripts/init/polkit-1/* /etc/polkit-1
 
 # Copy gaming/network tweaks
 totalMem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 minFreeKbytes=$(echo |awk "{ print $totalMem*0.025}")
-sed -i "s/#MEM/$minFreeKbytes/" ~/.my-scripts/init/tmpfiles.d/tweaks.conf
-sudo cp -R ~/.my-scripts/init/tmpfiles.d/* /etc/tmpfiles.d
-sed -i "s/$minFreeKbytes/#MEM/" ~/.my-scripts/init/tmpfiles.d/tweaks.conf
+sed -i "s/#MEM/$minFreeKbytes/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
+sudo cp -R ~/.my_scripts/init/tmpfiles.d/* /etc/tmpfiles.d
+sed -i "s/$minFreeKbytes/#MEM/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
 
 # Sudo tweaks
-if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/optimize.sh" /etc/sudoers
+if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$name/.my_scripts/optimize.sh" /etc/sudoers
 then
 	echo "Defaults env_reset,passwd_tries=10,timestamp_timeout=120" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers
-	echo "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/optimize.sh" | sudo tee -a /etc/sudoers
+	echo "%wheel ALL = NOPASSWD: /home/$name/.my_scripts/optimize.sh" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper" | sudo tee -a /etc/sudoers
 fi
 
@@ -97,7 +97,7 @@ clear
 while true; do
     read -p "Only for systemd-boot! - Add bootloader entries with tweaks? [y/n] " yn
     case $yn in
-        [Yy]* ) source ~/.my-scripts/init/bootloader.sh; break;;
+        [Yy]* ) source ~/.my_scripts/init/bootloader.sh; break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
@@ -134,7 +134,7 @@ while true; do
     echo "Do you wish to use an optimized Firefox profile?"
     read -p "This will reset your current profile? [y/n] " yn
     case $yn in
-        [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my-scripts/init/.mozilla ~/.mozilla; break;;
+        [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my_scripts/init/.mozilla ~/.mozilla; break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
@@ -167,7 +167,7 @@ yay -Syu slurp swappy grim --noconfirm
 mkdir /home/$name/Screenshots
 
 # Install vscode plugins
-~/.my-scripts/init/code-extensions.sh
+~/.my_scripts/init/code-extensions.sh
 
 # Fonts
 yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto ttf-ms-win11-auto-japanese ttf-ms-win11-auto-korean ttf-ms-win11-auto-other ttf-ms-win11-auto-sea ttf-ms-win11-auto-thai ttf-ms-win11-auto-zh_cn ttf-ms-win11-auto-zh_tw --noconfirm
@@ -203,7 +203,7 @@ xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 sudo timedatectl set-ntp true
 
 # Replace tty issue
-cat ~/.my-scripts/init/issue.txt | sudo tee /etc/issue
+cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Disable Journald
 sudo systemctl mask systemd-journald
