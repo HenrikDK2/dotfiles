@@ -30,11 +30,11 @@ sudo cp -R ~/.my-scripts/init/tmpfiles.d/* /etc/tmpfiles.d
 sed -i "s/$minFreeKbytes/#MEM/" ~/.my-scripts/init/tmpfiles.d/tweaks.conf
 
 # Sudo tweaks
-if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/free-os-cache.sh" /etc/sudoers
+if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/optimize.sh" /etc/sudoers
 then
 	echo "Defaults env_reset,passwd_tries=10,timestamp_timeout=120" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers
-	echo "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/free-os-cache.sh" | sudo tee -a /etc/sudoers
+	echo "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/optimize.sh" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper" | sudo tee -a /etc/sudoers
 fi
 
@@ -225,7 +225,6 @@ sudo systemctl mask rtkit-daemon
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower
 sudo systemctl disable --now systemd-timesyncd
-
 
 while ! [ "$(pacman -Qdtq)" = "" ]; do
 	sudo pacman -Rn $(pacman -Qdtq) --noconfirm

@@ -58,7 +58,7 @@
   },
   "memory": {
     "format": "  {percentage}%",
-    "on-click": "sudo ~/.my-scripts/free-os-cache.sh"
+    "on-click": "sudo ~/.my-scripts/optimize.sh"
   },
   "battery": {
     "states": {

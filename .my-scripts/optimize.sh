@@ -8,6 +8,9 @@ set_prio () {
     fi
 }
 
+# Delay - Wait until game is launched, I'm guessing 60 seconds.
+sleep 60
+
 # ps ax -o pid,ni,cmd
 # You can use the cmd output to match the specfic process.
 set_prio "corectrl" 20 3
@@ -25,4 +28,5 @@ set_prio "/opt/Heroic/heroic --" 10 3
 # Games - Same priority as gamemode
 set_prio "steamapps" -15 1
 
-sleep 30
+# Clear RAM
+sudo sh -c 'echo 3 >  /proc/sys/vm/drop_caches'  
