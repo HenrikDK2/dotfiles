@@ -6,10 +6,8 @@ set $right ae
 set $term kitty
 
 output * render_bit_depth 10 max_render_time 6
-
-#GTK Fix
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 output * bg ~/wallpaper.png center
+
 input "type:keyboard" {
     xkb_layout dk
 }
@@ -189,8 +187,10 @@ client.focused_inactive #2d333f #212121 #d9d9d9 #2d333f #2d333f
 client.unfocused        #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                             
 client.focused          #8fbbba #434c5e #fafafa #8fbbba #8fbbba     
 
+exec "systemctl --user import-environment"
 exec ~/.my-scripts/login.sh
 
 workspace 1
 
 include @sysconfdir@/sway/config.d/*
+
