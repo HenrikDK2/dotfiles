@@ -2,7 +2,6 @@
 
 name=$(whoami)
 
-
 # Enable multilib pacman and ParallelDownloads
 multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"
@@ -23,15 +22,12 @@ sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
 # Copy polkit rules
 sudo cp -R ~/.my-scripts/init/polkit-1/* /etc/polkit-1
 
-# Copy network tweaks
-sudo cp -R ~/.my-scripts/init/sysctl.d/* /etc/sysctl.d
-
-# Copy tmpfiles for gaming responsive tweaks
+# Copy gaming/network tweaks
 totalMem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 minFreeKbytes=$(echo |awk "{ print $totalMem*0.025}")
-sed -i "s/#MEM/$minFreeKbytes/" ~/.my-scripts/init/tmpfiles.d/response-time-for-gaming.conf
+sed -i "s/#MEM/$minFreeKbytes/" ~/.my-scripts/init/tmpfiles.d/tweaks.conf
 sudo cp -R ~/.my-scripts/init/tmpfiles.d/* /etc/tmpfiles.d
-sed -i "s/$minFreeKbytes/#MEM/" ~/.my-scripts/init/tmpfiles.d/response-time-for-gaming.conf
+sed -i "s/$minFreeKbytes/#MEM/" ~/.my-scripts/init/tmpfiles.d/tweaks.conf
 
 # Sudo tweaks
 if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$name/.my-scripts/free-os-cache.sh" /etc/sudoers
