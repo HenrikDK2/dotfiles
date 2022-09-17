@@ -15,3 +15,7 @@ launch waybar
 sleep 20
 launch evolution
 launch discord
+
+# Launch Optimization script for priorities
+sleep 10
+sudo ~/.my_scripts/optimize.sh
