@@ -28,4 +28,3 @@ set_prio "/opt/Heroic/heroic --" 10 3
 # Games - Same priority as gamemode
 sleep 30
 set_prio "steamapps" -10 1
-
