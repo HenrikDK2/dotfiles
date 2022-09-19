@@ -26,9 +26,6 @@ alias uninstall 'yay -Rsn'
 # On login
 if status is-interactive
     if test -z "$DISPLAY"; and test (tty) = /dev/tty1
-        # Sync time
-        sudo ntpd
-
         # Execute VM
         sway
     end
