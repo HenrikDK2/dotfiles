@@ -209,6 +209,11 @@ cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 yay -Syu irqbalance --noconfirm
 sudo systemctl enable --now irqbalance 
 
+# Disable Journald
+sudo systemctl mask systemd-journald
+sudo systemctl mask systemd-journal-catalog-update
+sudo sed -i 's/#Storage=auto/Storage=none/' /etc/systemd/journald.conf
+
 # Disable services
 sudo sed -i 's/Exec=/Exec=#/' /usr/share/dbus-1/services/org.gnome.OnlineAccounts.service
 sudo sed -i 's/Exec=/Exec=#/' /etc/xdg/autostart/org.gnome.Evolution-alarm-notify.desktop
@@ -216,6 +221,7 @@ sudo sed -i 's/Exec=/Exec=#/' /usr/share/applications/org.gnome.Evolution-alarm-
 systemctl --user mask evolution-addressbook-factory
 systemctl --user mask at-spi-dbus-bus
 systemctl --user mask gvfs-metadata
+sudo systemctl mask rtkit-daemon
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower
 sudo systemctl disable --now systemd-timesyncd
