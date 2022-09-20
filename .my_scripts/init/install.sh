@@ -205,9 +205,7 @@ sudo timedatectl set-ntp true
 # Replace tty issue
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
-# Disable Journald
-sudo systemctl mask systemd-journald
-sudo systemctl mask systemd-journal-catalog-update
+# Disable Journald saving to disk
 sudo sed -i 's/#Storage=auto/Storage=none/' /etc/systemd/journald.conf
 
 # Irqbalance
@@ -221,7 +219,7 @@ sudo sed -i 's/Exec=/Exec=#/' /usr/share/applications/org.gnome.Evolution-alarm-
 systemctl --user mask evolution-addressbook-factory
 systemctl --user mask at-spi-dbus-bus
 systemctl --user mask gvfs-metadata
-sudo systemctl mask rtkit-daemon
+
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower
 sudo systemctl disable --now systemd-timesyncd
