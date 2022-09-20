@@ -164,7 +164,6 @@ assign [class="Thunderbird"] workspace 2
 assign [app_id="evolution"] workspace 2 
 assign [class="BlueMail"] workspace 2 
 assign [class="discord"] workspace 2 
-assign [app_id="corectrl"] workspace 9
 assign [class="Spotify"] workspace 2
 assign [class="Steam"] workspace 2
 assign [class="steam_*"] workspace 3
