@@ -12,7 +12,6 @@ exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 launch corectrl
 launch mako
 launch waybar 
-sleep 20
 launch evolution
 launch discord
 
