@@ -216,9 +216,6 @@ sudo sed -i 's/#Storage=auto/Storage=none/' /etc/systemd/journald.conf
 
 # Disable services
 sudo sed -i 's/Exec=/Exec=#/' /usr/share/dbus-1/services/org.gnome.OnlineAccounts.service
-sudo sed -i 's/Exec=/Exec=#/' /etc/xdg/autostart/org.gnome.Evolution-alarm-notify.desktop
-sudo sed -i 's/Exec=/Exec=#/' /usr/share/applications/org.gnome.Evolution-alarm-notify.desktop
-systemctl --user mask evolution-addressbook-factory
 systemctl --user mask at-spi-dbus-bus
 systemctl --user mask gvfs-metadata
 sudo systemctl mask rtkit-daemon

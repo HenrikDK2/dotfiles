@@ -22,6 +22,7 @@ x-scheme-handler/quaver=Quaver-scheme-handler.desktop
 x-scheme-handler/discord-376180410490552320=discord-376180410490552320.desktop
 application/x-wine-extension-ini=code-oss.desktop
 application/json=code-oss.desktop
+x-scheme-handler/etcher=balena-etcher-electron.desktop
 
 [Added Associations]
 application/x-shellscript=code-oss-url-handler.desktop;
