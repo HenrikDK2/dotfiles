@@ -219,6 +219,7 @@ sudo sed -i 's/#Storage=auto/Storage=none/' /etc/systemd/journald.conf
 sudo sed -i 's/Exec=/Exec=#/' /usr/share/dbus-1/services/org.gnome.OnlineAccounts.service
 systemctl --user mask at-spi-dbus-bus
 systemctl --user mask gvfs-metadata
+systemctl --user mask evolution-addressbook-factory
 sudo systemctl mask rtkit-daemon
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower

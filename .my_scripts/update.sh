@@ -13,7 +13,6 @@ done
 
 sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
-rm -rf ~/.cache/*
 rm -rf ~/.local/share/applications/
 clear
 
