@@ -204,6 +204,7 @@ sudo timedatectl set-ntp true
 
 # Replace tty issue
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
+clear
 
 # Irqbalance
 yay -Syu irqbalance --noconfirm
