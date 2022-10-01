@@ -15,51 +15,32 @@ input "type:pointer" {
 	accel_profile "flat"
 }
 
-seat seat0 xcursor_theme Sunity-cursors 24
-
 ### Key bindings
 #
 # Basics:
 #
-    # Start a terminal
     bindsym $mod+Return exec kitty
-
-    # Kill focused window
     bindsym $mod+d kill
-
-    # Start your launcher
     bindsym $mod+space exec ~/.config/sway/wofi.sh
-
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
-    # Despite the name, also works for non-floating windows.
-    # Change normal to inverse to use left mouse button for resizing and right
-    # mouse button for dragging.
     floating_modifier $mod normal
-
-    # Reload the configuration file
     bindsym $mod+home reload
 
 #
 # Moving around:
 #
-    # Move your focus around
     bindsym $mod+$left focus left
     bindsym $mod+$down focus down
     bindsym $mod+$up focus up
     bindsym $mod+$right focus right
-    # Or use $mod+[up|down|left|right]
     bindsym $mod+Left focus left
     bindsym $mod+Down focus down
     bindsym $mod+Up focus up
     bindsym $mod+Right focus right
 
-    # Move the focused window with the same, but add Shift
     bindsym $mod+Shift+$left move left
     bindsym $mod+Shift+$down move down
     bindsym $mod+Shift+$up move up
     bindsym $mod+Shift+$right move right
-    # Ditto, with arrow keys
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
@@ -89,42 +70,24 @@ seat seat0 xcursor_theme Sunity-cursors 24
     bindsym $mod+Shift+8 move container to workspace number 8
     bindsym $mod+Shift+9 move container to workspace number 9
     bindsym $mod+Shift+0 move container to workspace number 10
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
 #
 # Layout stuff:
 #
-    # You can "split" the current object of your focus with
-    # $mod+b or $mod+v, for horizontal and vertical splits
-    # respectively.
     bindsym $mod+b splith
     bindsym $mod+v splitv
-
-    # Switch the current container between different layout styles
     bindsym $mod+s layout stacking
     bindsym $mod+w layout tabbed
     bindsym $mod+e layout toggle split
-
-    # Make the current focus fullscreen
     bindsym $mod+f fullscreen
-
-    # Toggle the current focus between tiling and floating mode
     bindsym $mod+Shift+space floating toggle
-
-    # Move focus to the parent container
     bindsym $mod+a focus parent
 
 mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
     bindsym $left resize shrink width 10px
     bindsym $down resize grow height 10px
     bindsym $up resize shrink height 10px
     bindsym $right resize grow width 10px
 
-    # Ditto, with arrow keys
     bindsym Left resize shrink width 10px
     bindsym Down resize grow height 10px
     bindsym Up resize shrink height 10px
@@ -172,12 +135,16 @@ for_window [class="Lxtask"] floating enable, resize set 1000 800
 for_window [title="Choose ONE of the audio conference options"] floating enable
 for_window [title="zoom" app_id="zoom"] floating enable
 
-font pango:Cantarell Bold 12
-
 # class                 border  backgr. text    indicator child_border                                                                     
 client.focused_inactive #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                            
 client.unfocused        #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                             
 client.focused          #8fbbba #434c5e #fafafa #8fbbba #8fbbba
+
+# Font
+font pango:Cantarell Bold 12
+
+# XWayland
+seat seat0 xcursor_theme Sunity-cursors 24
 
 exec {
     systemctl --user import-environment
