@@ -3,7 +3,6 @@ set $left j
 set $down k
 set $up l
 set $right ae
-set $term kitty
 
 output * render_bit_depth 10 max_render_time 6
 output * bg ~/wallpaper.png center
@@ -16,20 +15,15 @@ input "type:pointer" {
 	accel_profile "flat"
 }
 set $gnome-schema org.gnome.desktop.interface
-
 seat seat0 xcursor_theme Sunity-cursors 24
-exec_always gsettings set $gnome-schema cursor-theme "Sunity-cursors"
 
-exec swayidle -w \
-	before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
-	lock 'swaylock-fancy'
 
 ### Key bindings
 #
 # Basics:
 #
     # Start a terminal
-    bindsym $mod+Return exec $term
+    bindsym $mod+Return exec kitty
 
     # Kill focused window
     bindsym $mod+d kill
@@ -186,12 +180,22 @@ client.focused_inactive #2d333f #212121 #d9d9d9 #2d333f #2d333f
 client.unfocused        #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                             
 client.focused          #8fbbba #434c5e #fafafa #8fbbba #8fbbba
 
+exec {
+    systemctl --user import-environment
+    ~/.my_scripts/login.sh
+    swayidle -w \
+        before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
+        lock 'swaylock-fancy'
+}
+
 exec_always {
 	# Theme
 	gsettings set org.gnome.desktop.interface gtk-theme "Nordic-darker"
 	gsettings set org.gnome.desktop.interface icon-theme "Tela-nord-dark"
 	gsettings set org.gnome.desktop.wm.preferences theme "Nordic-darker"
 	gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+	gsettings set org.gnome.desktop.interface cursor-theme "Sunity-cursors"
+	gsettings set org.gnome.desktop.interface text-scaling-factor 1.0
 
 	# Applications - Standard
 	gsettings set org.cinnamon.desktop.default-applications.terminal exec kitty
@@ -199,9 +203,6 @@ exec_always {
 	xdg-settings set default-web-browser firefox.desktop
 	xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 }
-
-exec "systemctl --user import-environment"
-exec ~/.my_scripts/login.sh
 
 workspace 1
 
