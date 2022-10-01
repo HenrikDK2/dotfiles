@@ -100,7 +100,7 @@ bindsym $mod+r mode "resize"
 bindsym $mod+u exec kitty ~/.my_scripts/update.sh
 bindsym print exec slurp | grim -g - - | swappy -f -
 bindsym ctrl+alt+delete exec sysmontask
-bindsym $mod+escape exec killall -u henrik
+bindsym $mod+escape exec killall -u $USER
 bindsym $mod+pause exec scrolllock
 
 hide_edge_borders --i3 smart
