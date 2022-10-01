@@ -187,18 +187,6 @@ sudo ufw logging off
 sudo systemctl enable --now ufw
 sudo ufw enable
 
-# Theme
-gsettings set org.gnome.desktop.interface gtk-theme "Nordic-darker"
-gsettings set org.gnome.desktop.interface icon-theme "Tela-nord-dark"
-gsettings set org.gnome.desktop.wm.preferences theme "Nordic-darker"
-gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
-
-# Applications - Standard
-gsettings set org.cinnamon.desktop.default-applications.terminal exec kitty
-gsettings set org.gnome.desktop.background show-desktop-icons true
-xdg-settings set default-web-browser firefox.desktop
-xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
-
 # Clock sync
 sudo timedatectl set-ntp true
 

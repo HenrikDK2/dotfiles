@@ -184,7 +184,21 @@ font pango:Cantarell Bold 12
 # class                 border  backgr. text    indicator child_border                                                                     
 client.focused_inactive #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                            
 client.unfocused        #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                             
-client.focused          #8fbbba #434c5e #fafafa #8fbbba #8fbbba     
+client.focused          #8fbbba #434c5e #fafafa #8fbbba #8fbbba
+
+exec_always {
+	# Theme
+	gsettings set org.gnome.desktop.interface gtk-theme "Nordic-darker"
+	gsettings set org.gnome.desktop.interface icon-theme "Tela-nord-dark"
+	gsettings set org.gnome.desktop.wm.preferences theme "Nordic-darker"
+	gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+
+	# Applications - Standard
+	gsettings set org.cinnamon.desktop.default-applications.terminal exec kitty
+	gsettings set org.gnome.desktop.background show-desktop-icons true
+	xdg-settings set default-web-browser firefox.desktop
+	xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+}
 
 exec "systemctl --user import-environment"
 exec ~/.my_scripts/login.sh
