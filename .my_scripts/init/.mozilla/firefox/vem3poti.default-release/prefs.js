@@ -17,6 +17,10 @@ user_pref("toolkit.telemetry.hybridContent.enabled", false);
 user_pref("toolkit.cosmeticAnimations.enabled", false);
 
 user_pref("browser.fullscreen.animateUp", false);
+user_pref("browser.download.animateNotifications", false);
+user_pref("browser.preferences.animateFadeIn", false);
+user_pref("browser.fullscreen.animate", 0);
+user_pref("security.dialog_enable_delay", 0);
 user_pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
 user_pref("browser.newtabpage.activity-stream.telemetry", false);
 user_pref("browser.newtabpage.activity-stream.telemetry.ut.events", false);
