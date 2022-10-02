@@ -10,7 +10,7 @@ This is for personal usage, but you may gladly use it as well. It includes all o
 
 - You should have sudo and git installed on your system.
 
-- The scripts only work with systemd-boot.
+- The bootloader script only work with systemd-boot.
 
 This project only considers my usage on an AMD machine, you might need to do some tweaking to get it working on your machine.
 
