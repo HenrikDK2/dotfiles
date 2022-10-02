@@ -1,7 +1,5 @@
 #!/bin/sh
 
-name=$(whoami)
-
 # Enable multilib pacman and ParallelDownloads
 multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"
@@ -30,11 +28,11 @@ sudo cp -R ~/.my_scripts/init/tmpfiles.d/* /etc/tmpfiles.d
 sed -i "s/$minFreeKbytes/#MEM/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
 
 # Sudo tweaks
-if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$name/.my_scripts/optimize.sh" /etc/sudoers
+if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$USER/.my_scripts/optimize.sh" /etc/sudoers
 then
 	echo "Defaults env_reset,passwd_tries=10,timestamp_timeout=120" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers
-	echo "%wheel ALL = NOPASSWD: /home/$name/.my_scripts/optimize.sh" | sudo tee -a /etc/sudoers
+	echo "%wheel ALL = NOPASSWD: /home/$USER/.my_scripts/optimize.sh" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper" | sudo tee -a /etc/sudoers
 fi
 
@@ -60,9 +58,9 @@ then
 fi
 
 # If username isn't the same as Henrik, replace name in these files
-if [ "$name" != "henrik" ]; then
-	sudo sed -i "s/henrik/$name/g" /etc/sudoers
-	sed -i "s/henrik/$name/g" ~/.config/gamemode.ini
+if [ "$USER" != "henrik" ]; then
+	sudo sed -i "s/henrik/$USER/g" /etc/sudoers
+	sed -i "s/henrik/$USER/g" ~/.config/gamemode.ini
 fi
 
 # Seahorse keyring
@@ -164,7 +162,7 @@ yay -Syu gamemode lib32-gamemode ufw vulkan-tools cmst openvr lib32-gtk2 lib32-l
 
 # Screenshot (Printscreen)
 yay -Syu slurp swappy grim --noconfirm
-mkdir /home/$name/Screenshots
+mkdir ~/Screenshots
 
 # Install vscode plugins
 ~/.my_scripts/init/code-extensions.sh
