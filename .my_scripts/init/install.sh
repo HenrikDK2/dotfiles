@@ -130,6 +130,7 @@ done
 clear
 while true; do
     echo "Do you wish to use an optimized Firefox profile?"
+    echo "It disables telemetry, animations and more for privacy and performance."
     read -p "This will reset your current profile? [y/n] " yn
     case $yn in
         [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my_scripts/init/.mozilla ~/.mozilla; break;;
