@@ -196,24 +196,17 @@ clear
 yay -Syu irqbalance --noconfirm
 sudo systemctl enable --now irqbalance 
 
-# Disable Journald
-sudo systemctl mask systemd-journald
-sudo systemctl mask systemd-journal-catalog-update
-sudo sed -i 's/#Storage=auto/Storage=none/' /etc/systemd/journald.conf
-
 # Disable services
 sudo sed -i 's/Exec=/Exec=#/' /usr/share/dbus-1/services/org.gnome.OnlineAccounts.service
 systemctl --user mask at-spi-dbus-bus
 systemctl --user mask gvfs-metadata
 systemctl --user mask evolution-addressbook-factory
+sudo systemctl mask systemd-journald
+sudo systemctl mask systemd-journal-catalog-update
 sudo systemctl mask rtkit-daemon
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower
 sudo systemctl disable --now systemd-timesyncd
-
-while ! [ "$(pacman -Qdtq)" = "" ]; do
-	sudo pacman -Rn $(pacman -Qdtq) --noconfirm
-done
 
 # Reboot
 clear
