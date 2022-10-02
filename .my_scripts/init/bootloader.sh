@@ -11,12 +11,10 @@ function microcode {
 	
 	if [ "$CPU" == "amd" ]; then
 		sudo pacman -S amd-ucode --noconfirm
-		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/tkg.conf
 		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/zen.conf
 		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/arch.conf
 	elif [ "$CPU" == "intel" ]; then
 		sudo pacman -S intel-ucode --noconfirm
-		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/tkg.conf
 		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/zen.conf
 		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/arch.conf
 	else
@@ -35,7 +33,6 @@ function get_uuid {
 		echo "Couldn't find drive, try again"
 		get_uuid
 	else
-		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my_scripts/init/entries/tmp/tkg.conf
 		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my_scripts/init/entries/tmp/arch.conf
 		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my_scripts/init/entries/tmp/zen.conf
 	fi
@@ -63,25 +60,5 @@ clear
 get_uuid
 sudo cp -r ~/.my_scripts/init/entries/tmp/. /boot/loader/entries
 rm -rf ~/.my_scripts/init/entries/tmp/
-change_default arch.conf
-
-clear
-while true; do
-	echo "Remember that you need to modify tkg.sh for your system."
-    read -p "Do you wish to install the TKG-kernel? [y/n] " yn
-    if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-		change_default tkg.conf
-		exec ~/.my_scripts/tkg.sh 
-    elif [[ "$yn" =~ ^([nN])$ ]]; then
-		sudo rm -rf /boot/loader/entries/tkg.conf
-		clear
-		read -p "Do you wish to make Zen the default kernel? [y/n] " yn
-		if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-			change_default zen.conf
-		fi
-		break;
-    else
-       echo "Please answer yes or no."
-    fi
-done
+change_default zen.conf
 clear
