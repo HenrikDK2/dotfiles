@@ -11,12 +11,10 @@ function microcode {
 	
 	if [ "$CPU" == "amd" ]; then
 		sudo pacman -S amd-ucode --noconfirm
-		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/zen.conf
-		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/arch.conf
+		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
 	elif [ "$CPU" == "intel" ]; then
 		sudo pacman -S intel-ucode --noconfirm
-		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/zen.conf
-		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/arch.conf
+		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
 	else
 		echo "CPU needs to be either AMD or INTEL"
 		microcode
@@ -33,8 +31,7 @@ function get_uuid {
 		echo "Couldn't find drive, try again"
 		get_uuid
 	else
-		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my_scripts/init/entries/tmp/arch.conf
-		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my_scripts/init/entries/tmp/zen.conf
+		sudo sed -i "s/#UUID/$fs_uuid/g" ~/.my_scripts/init/entries/tmp/*.conf
 	fi
 }
 
