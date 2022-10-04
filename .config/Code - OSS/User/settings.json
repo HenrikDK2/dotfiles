@@ -32,5 +32,6 @@
   },
   "css.lint.unknownAtRules": "ignore",
   "security.workspace.trust.untrustedFiles": "newWindow",
-  "workbench.preferredLightColorTheme": "Default Dark+"
+  "workbench.preferredLightColorTheme": "Default Dark+",
+  "git.ignoreRebaseWarning": true
 }
