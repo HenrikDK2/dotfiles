@@ -3,6 +3,7 @@
   "git.confirmSync": false,
   "git.autofetch": true,
   "git.enableSmartCommit": true,
+  "security.workspace.trust.enabled": false,
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
