@@ -17,6 +17,7 @@ alias update='~/.my_scripts/update.sh'
 alias install='yay -Syu'
 alias uninstall='yay -Rsn'
 
+export EDITOR="micro"
 export XDG_CURRENT_DESKTOP=sway
 export DESKTOP_SESSION=sway
 export XDG_SESSION_TYPE=wayland

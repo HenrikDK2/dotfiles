@@ -1,4 +1,5 @@
 # Env Variables
+set -x EDITOR micro
 set -x XDG_CURRENT_DESKTOP sway
 set -x DESKTOP_SESSION sway
 set -x XDG_SESSION_TYPE wayland
