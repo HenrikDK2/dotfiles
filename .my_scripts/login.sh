@@ -9,7 +9,6 @@ launch () {
 
 # Programs to lauch at login (executable)
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-launch corectrl
 launch mako
 launch waybar 
 launch evolution
