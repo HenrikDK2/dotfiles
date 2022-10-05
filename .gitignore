@@ -36,6 +36,7 @@
 !.config/psd/psd.conf
 
 !.config/electron17-flags.conf
+!.config/electron12-flags.conf
 !.config/electron-flags.conf
 
 !.config/micro
