@@ -156,9 +156,9 @@ exec {
 }
 
 exec_always {
-	dbus-update-activation-environment --systemd DISPLAY SWAYSOCK WAYLAND_DISPLAY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP=sway
+    systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP	
 	
-	# Theme
+    # Theme
 	gsettings set org.gnome.desktop.interface gtk-theme "Nordic-darker"
 	gsettings set org.gnome.desktop.interface icon-theme "Tela-nord-dark"
 	gsettings set org.gnome.desktop.wm.preferences theme "Nordic-darker"
