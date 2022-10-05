@@ -25,6 +25,7 @@ export QT_QPA_PLATFORM="wayland;xcb"
 export MOZ_ENABLE_WAYLAND=1
 export MOZ_WEBRENDER=1
 export MICRO_TRUECOLOR=1
+export RTC_USE_PIPEWIRE=true
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export PATH="$HOME/.local/bin:$PATH"
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1

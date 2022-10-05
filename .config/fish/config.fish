@@ -7,6 +7,7 @@ set -x QT_QPA_PLATFORM "wayland;xcb"
 set -x MOZ_ENABLE_WAYLAND 1
 set -x MOZ_WEBRENDER 1
 set -x MICRO_TRUECOLOR 1
+set -x RTC_USE_PIPEWIRE true
 set -x XDG_DOWNLOAD_DIR "$HOME/Downloads"
 set -x PATH "$HOME/.local/bin:$PATH"
 set -x DOTNET_SYSTEM_GLOBALIZATION_INVARIANT 1
