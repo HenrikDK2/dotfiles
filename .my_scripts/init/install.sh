@@ -155,7 +155,7 @@ sudo pacman -S profile-sync-daemon --noconfirm
 sudo systemctl --user enable psd
 
 # Pipewire
-yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse --noconfirm
+yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm
 systemctl --user --now enable wireplumber
 
 # General packages
