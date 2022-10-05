@@ -4,8 +4,7 @@ set $down k
 set $up l
 set $right ae
 
-output * {
-    render_bit_depth 10
+output * {   
     max_render_time 6
     bg ~/wallpaper.png center
 }
@@ -156,8 +155,10 @@ exec {
 }
 
 exec_always {
-    systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP	
-	
+    systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+    dbus-update-activation-environment 2>/dev/null && \
+        dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+    
     # Theme
 	gsettings set org.gnome.desktop.interface gtk-theme "Nordic-darker"
 	gsettings set org.gnome.desktop.interface icon-theme "Tela-nord-dark"
