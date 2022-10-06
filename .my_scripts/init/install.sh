@@ -28,8 +28,7 @@ sudo cp -R ~/.my_scripts/init/tmpfiles.d/* /etc/tmpfiles.d
 sed -i "s/$minFreeKbytes/#MEM/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
 
 # Sudo tweaks
-if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$USER/.my_scripts/optimize.sh" /etc/sudoers
-then
+if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$USER/.my_scripts/optimize.sh" /etc/sudoers; then
 	echo "Defaults env_reset,passwd_tries=10,timestamp_timeout=120" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers
 	echo "%wheel ALL = NOPASSWD: /home/$USER/.my_scripts/optimize.sh" | sudo tee -a /etc/sudoers
@@ -37,14 +36,12 @@ then
 fi
 
 # Allow users to change niceness to negative (Gamemode)
-if ! sudo grep -Rq "@wheel - nice -20" /etc/security/limits.conf
-then
+if ! sudo grep -Rq "@wheel - nice -20" /etc/security/limits.conf; then
   echo "@wheel - nice -20" | sudo tee -a /etc/security/limits.conf > /dev/null
 fi
 
 # fstab tweaks
-if ! sudo grep -Rq "rw,noatime" /etc/fstab
-then
+if ! sudo grep -Rq "rw,noatime" /etc/fstab; then
     clear
     while true; do
         echo "Do you wish to add sdd/hdd tweaks to fstab?"
@@ -64,15 +61,13 @@ if [ "$USER" != "henrik" ]; then
 fi
 
 # Seahorse keyring
-if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/login
-then
+if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/login; then
 	echo "auth	optional	pam_gnome_keyring.so" | sudo tee -a /etc/pam.d/login
 	echo "session    optional pam_gnome_keyring.so     auto_start" | sudo tee -a /etc/pam.d/login
     clear
 fi
 
-if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd
-then
+if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd; then
 	echo "password	optional	pam_gnome_keyring.so" | sudo tee -a /etc/pam.d/passwd
     clear
 fi
@@ -105,21 +100,13 @@ done
 clear
 while true; do
     echo "Do you have a 5120x1440 ultrawide monitor,"
-    read -p "and do you want to have a 1440p window in the center on workspace 1? [y/n] " yn
+    read -p "and do you want to have a 1440p window in the center of workspace 1? [y/n] " yn
     if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        if ! grep -Rq "workspace 1 gaps horizontal 1280" ~/.config/sway/config
-        then
-            sed '/^#Workspace 1 gaps$/r'<(
-                echo "workspace 1 gaps inner 0"
-                echo "workspace 1 gaps horizontal 1280"
-                echo "workspace 1 gaps top 0"
-            ) -i -- ~/.config/sway/config
-        fi
+        mkdir cp ~/.config/sway/config.d
+        cp ~/.my_scripts/init/config.d/workspace-gaps ~/.config/sway/config.d/workspace-gaps 
         break;
     elif [[ "$yn" =~ ^([nN])$ ]]; then
-        sed -i '/workspace 1 gaps inner 0/d' ~/.config/sway/config
-        sed -i '/workspace 1 gaps horizontal 1280/d' ~/.config/sway/config
-        sed -i '/workspace 1 gaps top 0/d' ~/.config/sway/config
+        rm -rf ~/.config/sway/config.d/workspace-gaps 
         break;
     else
        echo "Please answer yes or no."

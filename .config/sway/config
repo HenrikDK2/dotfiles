@@ -111,11 +111,6 @@ default_floating_border pixel 2
 gaps inner 20
 gaps top 34
 
-#Workspace 1 gaps
-workspace 1 gaps inner 0
-workspace 1 gaps horizontal 1280
-workspace 1 gaps top 0
-
 assign [class="Thunderbird"] workspace 2 
 assign [app_id="evolution"] workspace 2 
 assign [class="BlueMail"] workspace 2 
