@@ -5,10 +5,10 @@ multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"
 sudo sed -i "${multilibLine}s|#||" /etc/pacman.conf
 sudo sed -i "${multilibIncludeLine}s|#||" /etc/pacman.conf
-sudo sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 10/g" /etc/pacman.conf
+sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
 
 # Makepkg tweaks - Optimize compiled code
-sudo sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
+sudo sed -i '/MAKEFLAGS=/c\MAKEFLAGS="-j$(nproc)"' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
 sudo sed -i 's/-mtune=generic/-mtune=native/' /etc/makepkg.conf
 sudo sed -i 's/-O2/-O3 -flto=$(nproc)/g' /etc/makepkg.conf
