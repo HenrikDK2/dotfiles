@@ -131,11 +131,13 @@ clear
 while true; do
     read -p "Do you have an AMD gpu? [y/n] " yn
     case $yn in
-        [Yy]* ) yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm; break;;
+        [Yy]* ) 
+        		yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm;
+        		sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf;
+                sudo mkinitcpio -P ;;
         [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
+        * ) echo "Please answer yes or no." ;;
     esac
-done
 
 # Sync browser to ram
 sudo pacman -S profile-sync-daemon --noconfirm
