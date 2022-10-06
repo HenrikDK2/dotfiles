@@ -57,6 +57,7 @@
 
 !.config/sway
 !.config/sway/**
+.config/sway/config.d
 
 !.config/wofi
 !.config/wofi/**
