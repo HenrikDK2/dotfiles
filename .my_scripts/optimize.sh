@@ -35,6 +35,8 @@ set_prio "/opt/Heroic/heroic --" 20 3
 set_prio "/usr/bin/lutris" 20 3
 set_prio "discord" 10 3
 
+sleep 30
+
 # Games - Same priority as gamemode
 set_prio "steamapps" -10 1 0
 set_prio "/*[.]exe" -10 1 0
