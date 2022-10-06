@@ -28,16 +28,12 @@ set_prio "waybar" 20 3
 set_prio "evolution" 20 3
 set_prio "swayidle" 20 3
 set_prio "swaybg" 20 3
+set_prio "polkit-gnome" 20 3
+set_prio "bottles" 20 3
 set_prio "discord" 10 3
 set_prio "steamwebhelper" 10 3
-set_prio "Origin" 10 3
 set_prio "/opt/Heroic/heroic --" 10 3
 
 # Games - Same priority as gamemode
-sleep 60
 set_prio "steamapps" -10 1 0
 set_prio "/*[.]exe" -10 1 0
-
-# Game launchers run through Lutris
-set_prio 'GalaxyClient' 20 3
-set_prio 'GalaxyCommunication.exe' 20 3
