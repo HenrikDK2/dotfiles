@@ -14,4 +14,5 @@ done
 sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
 rm -rf ~/.local/share/applications/
+sudo yay -Scc --noconfirm
 clear
