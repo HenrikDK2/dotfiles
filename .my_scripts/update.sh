@@ -15,5 +15,3 @@ sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
 rm -rf ~/.local/share/applications/
 clear
-
-exec ~/.my_scripts/tkg.sh
