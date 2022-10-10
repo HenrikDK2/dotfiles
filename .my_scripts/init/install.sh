@@ -188,7 +188,6 @@ yay -Syu irqbalance --noconfirm
 sudo systemctl enable --now irqbalance 
 
 # Disable services
-sudo sed -i 's/Exec=/Exec=#/' /usr/share/dbus-1/services/org.gnome.OnlineAccounts.service
 systemctl --user mask at-spi-dbus-bus
 systemctl --user mask gvfs-metadata
 systemctl --user mask evolution-addressbook-factory
