@@ -167,7 +167,7 @@ sudo chsh -s /bin/fish
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo sed -i 's/#Port 22/Port 1065/' /etc/ssh/sshd_config
-sudo ufw allow 1065/tcp
+sudo ufw limit 1065/tcp
 sudo ufw allow ftp/tcp
 sudo ufw allow http/tcp
 sudo ufw allow https/tcp
