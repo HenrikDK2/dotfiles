@@ -163,9 +163,10 @@ yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto t
 # Change default shell to fish
 sudo chsh -s /bin/fish
 
-# Enable UFW and add firewall rules
+### Enable UFW and add firewall rules
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
+sudo sed -i 's/-A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT/-A ufw-before-input -p icmp --icmp-type echo-request -j DROP/' /etc/ufw/before.rules
 sudo sed -i 's/#Port 22/Port 1065/' /etc/ssh/sshd_config
 sudo ufw limit 1065/tcp
 sudo ufw allow ftp/tcp
