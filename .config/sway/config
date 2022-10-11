@@ -162,7 +162,7 @@ exec_always {
 
 	# Applications - Standard
 	gsettings set org.cinnamon.desktop.default-applications.terminal exec kitty
-	xdg-settings set default-web-browser firefox.desktop
+	xdg-settings set default-web-browser firefoxdeveloperedition.desktop
 	xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 	gsettings set org.gnome.desktop.background show-desktop-icons false
     gsettings set org.nemo.desktop show-desktop-icons true
