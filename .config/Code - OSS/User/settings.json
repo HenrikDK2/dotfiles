@@ -34,5 +34,6 @@
   "css.lint.unknownAtRules": "ignore",
   "security.workspace.trust.untrustedFiles": "newWindow",
   "workbench.preferredLightColorTheme": "Default Dark+",
+  "window.titleBarStyle": "custom",
   "git.ignoreRebaseWarning": true
 }
