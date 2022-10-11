@@ -6,7 +6,7 @@ set $right ae
 
 output * {   
     max_render_time 6
-    bg ~/wallpaper.png center
+    bg ~/Wallpapers/1.png center
 }
 
 input * {
@@ -144,7 +144,7 @@ exec {
     ~/.my_scripts/login.sh
     swayidle -w \
         before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
-        lock 'swaylock-fancy'
+        lock 'gtklock'
 }
 
 exec_always {

@@ -1,0 +1,24 @@
+window {
+  background-image: url("../../Wallpapers/1_blur.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: white;
+}
+
+#clock-label {
+  color: white;
+}
+
+button {
+	opacity: 0;
+}
+
+#input-label {
+	opacity: 0;
+	margin-right: -50px;
+}
+
+#error-label {
+	margin-right: 220px;
+}

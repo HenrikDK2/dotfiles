@@ -15,6 +15,9 @@
 !README.md
 
 # All files in these folders
+!Wallpapers
+!Wallpapers/**
+
 !.themes
 !.themes/**
 
@@ -35,6 +38,9 @@
 
 !.config/psd/
 !.config/psd/psd.conf
+
+!.config/gtklock/
+!.config/gtklock/**
 
 !.config/electron17-flags.conf
 !.config/electron12-flags.conf
