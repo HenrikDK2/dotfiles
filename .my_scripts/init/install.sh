@@ -159,7 +159,7 @@ mkdir ~/Screenshots
 ~/.my_scripts/init/code-extensions.sh
 
 # Fonts
-yay -Syu otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-win11-auto ttf-ms-win11-auto-japanese ttf-ms-win11-auto-korean ttf-ms-win11-auto-other ttf-ms-win11-auto-sea ttf-ms-win11-auto-thai ttf-ms-win11-auto-zh_cn ttf-ms-win11-auto-zh_tw --noconfirm
+yay -Syu adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --noconfirm
 
 # Change default shell to fish
 sudo chsh -s /bin/fish
