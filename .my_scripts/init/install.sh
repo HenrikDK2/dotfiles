@@ -151,6 +151,9 @@ systemctl --user --now enable wireplumber
 # General packages
 yay -Syu gamemode lib32-gamemode ufw vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative qt5-wayland qt6-wayland fish gtklock mako man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols --noconfirm
 
+# OBS with game capture
+yay -Syu obs-studio obs-vkcapture obs-gstreamer
+
 # Screenshot (Printscreen)
 yay -Syu slurp swappy grim --noconfirm
 mkdir ~/Screenshots

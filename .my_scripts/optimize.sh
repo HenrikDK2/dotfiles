@@ -41,3 +41,5 @@ sleep 30
 # Games - Same priority as gamemode
 set_prio "steamapps" -10 1 0
 set_prio "/*[.]exe" -10 1 0
+set_prio "obs" -10 1 0
+
