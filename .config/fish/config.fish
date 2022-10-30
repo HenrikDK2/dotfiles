@@ -8,6 +8,7 @@ set -x MOZ_ENABLE_WAYLAND 1
 set -x MOZ_WEBRENDER 1
 set -x MICRO_TRUECOLOR 1
 set -x RTC_USE_PIPEWIRE true
+set -x MICRO_CONFIG_HOME "$HOME/.config/micro"
 set -x XDG_DOWNLOAD_DIR "$HOME/Downloads"
 set -x OBS_VKCAPTURE 1
 set -x PATH "$HOME/.local/bin:$PATH"
