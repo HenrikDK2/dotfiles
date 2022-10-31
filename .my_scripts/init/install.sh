@@ -141,7 +141,7 @@ while true; do
 done
 
 # Sync browser to ram
-sudo pacman -S profile-sync-daemon --noconfirm
+sudo pacman -S profile-sync-daemon glib2 --noconfirm
 sudo systemctl --user enable psd
 
 # Pipewire
