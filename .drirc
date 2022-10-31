@@ -1,6 +1,7 @@
 <driconf>
   <device screen="0" driver="radeonsi">
     <application name="Default">
+      <option name="vblank_mode" value="0" />
       <option name="force_glsl_extensions_warn" value="false" />
       <option name="mesa_no_error" value="true" />
       <option name="radeonsi_assume_no_z_fights" value="true" />
