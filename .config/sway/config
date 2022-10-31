@@ -19,6 +19,7 @@ input * {
 # Basics:
 #
     bindsym $mod+Return exec kitty
+    bindsym $mod+n exec nemo
     bindsym $mod+d kill
     bindsym $mod+space exec ~/.config/sway/wofi.sh
     floating_modifier $mod normal
