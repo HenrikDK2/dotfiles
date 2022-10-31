@@ -111,15 +111,10 @@ default_floating_border pixel 2
 gaps inner 20
 gaps top 34
 
-assign [class="Thunderbird"] workspace 2 
 assign [app_id="evolution"] workspace 2 
-assign [class="BlueMail"] workspace 2 
 assign [class="discord"] workspace 2 
 assign [class="Spotify"] workspace 2
 assign [class="Steam"] workspace 2
-assign [class="steam_*"] workspace 3
-assign [class="Steam_*"] workspace 3
-assign [class="gamescope"] workspace 3
 
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="python3"] floating enable
