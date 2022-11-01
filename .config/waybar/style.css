@@ -1,138 +1,93 @@
-@import "nord.css";
-
-window {
-  background-color: transparent;
-  padding: 0 20px;
-}
+@define-color nord0 rgba(46, 52, 64, .7);
+@define-color nord1 rgba(59, 66, 82, .7);
+@define-color nord2 #e5eaf0;
+@define-color nord3 #8fbbba;
+@define-color nord-critical #bf616a;
+@define-color nord-warning #ebcb8b;
 
 * {
   font-family: "Cantarell", "Font Awesome 6 Free";
   font-size: 14px;
   font-weight: 600;
-  margin-top: 4px;
   transition: all 0.2s ease;
+  background-color: transparent;
+  color: @nord2;
 }
 
-#mode {
-  color: @nord0;
-  background-color: @nord13;
-  margin-left: 8px;
-  border-radius: 5px;
-  padding: 0px 6px;
+.modules-left {
+  margin-left: 20px;
 }
 
-#custom-suspend {
-  margin-left: 8px;
-  padding: 0px 4px 4px;
+.modules-right {
+  margin-right: 20px;
 }
 
-#custom-reboot{
-  margin-left: 8px;
-}
-
-#workspaces button,
-#button-lock {
+button, #tray {
   background-color: @nord1;
-  color: @nord3;
-  margin-top: 0;
+  margin: 0 4px;
+  padding: 0 12px;
+  border-radius: 4px;
+}
+
+.modules-left button {
+  padding: 0 8px;
 }
 
 #workspaces button {
-  margin-left: 8px;
-  border-bottom: 2px solid transparent;
-  padding: 0px 4px 4px;
+  border-bottom: 2px solid @nord1;
+  padding: 0 6px;
 }
 
 #workspaces button.focused {
   background-color: rgba(59, 66, 82, 1);
-  border-bottom: 2px solid @nord4;
-}
-
-#window {
-  color: @nord3;
-  font-weight: bold;
-  padding: 0px 5px 4px 10px;
-}
-
-#custom-space {
-  margin-right: 12px;
-}
-
-#custom-shutdown {
-  margin-left: 20px;
-}
-
-#custom-suspend,
-#custom-shutdown,
-#custom-reboot {
-  border-radius: 5px;
-}
-
-#pulseaudio,
-#battery,
-#tray,
-#clock,
-#network {
-  border-radius: 5px;
-  margin-right: 8px;
+  border-bottom: 2px solid @nord3;
 }
 
 #memory {
-  border-radius: 0 5px 5px 0;
-  margin-right: 8px;
+  border-radius: 0 4px 4px 0;
+  margin: 0 4px 0 -4px;
 }
 
 #cpu {
-  border-radius: 5px 0 0 5px;
+  border-radius: 4px 0 0 4px;
+  margin: 0 -4px 0 4px;
 }
 
-#pulseaudio,
-#network,
-#cpu,
-#memory,
-#battery,
-#clock,
-#custom-suspend,
-#custom-shutdown,
-#custom-reboot,
+#custom-shutdown{
+  margin: 0 4px 0 0;
+}
+
 #tray {
-  background-color: @nord1;
-  padding: 0px 8px;
-  color: @nord3;
+  margin: 0 0 0 4px;
 }
 
-#pulseaudio {
+#tray menu {
   background-color: @nord1;
+  padding: 10px 5px;
+  border: 2px solid @nord1;
+}
+
+label#window{
+  margin-left: 6px;
 }
 
 #pulseaudio.muted {
-  background-color: @nord13;
+  background-color: @nord-warning;
   color: @nord1;
 }
 
 #network.disabled,
 #network.disconnected {
-  background-color: @nord13;
+  background-color: @nord-warning;
   color: @nord0;
 }
 
 #battery.warning {
-  background-color: @nord13;
+  background-color: @nord-warning;
   color: @nord0;
 }
 
 #battery.critical {
-  background-color: @nord11;
+  background-color: @nord-critical;
   color: @nord0;
-}
-
-#tray {
-  padding-bottom: 4px;
-}
-
-#tray menu {
-  background-color: @nord1;
-  color: @nord4;
-  padding: 10px 5px;
-  border: 2px solid @nord1;
 }

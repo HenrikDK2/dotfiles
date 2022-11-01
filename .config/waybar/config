@@ -1,5 +1,6 @@
 {
-  "height": 40,
+  "height": 30,
+  "margin": "8px 0 0 0",
   "modules-left": [
     "custom/shutdown",
     "custom/reboot",
@@ -18,8 +19,7 @@
     "memory",
     "battery",
     "clock",
-    "tray",
-    "custom/space"
+    "tray"
   ],
   "sway/mode": {
     "format": "<span style=\"italic\">{}</span>"
@@ -41,9 +41,6 @@
     "format": "",
     "on-click": "systemctl suspend",
     "tooltip": false
-  },
-  "custom/space": {
-    "format": "<span></span>"
   },
   "tray": {
     "spacing": 10
