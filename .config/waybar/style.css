@@ -73,18 +73,10 @@ label#window{
   margin-left: 6px;
 }
 
-#pulseaudio.muted {
-  background-color: @nord-warning;
-  color: @nord1;
-}
-
 #network.disabled,
-#network.disconnected {
-  background-color: @nord-warning;
-  color: @nord0;
-}
-
-#battery.warning {
+#network.disconnected,
+#battery.warning,
+#pulseaudio.muted {
   background-color: @nord-warning;
   color: @nord0;
 }
