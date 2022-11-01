@@ -21,6 +21,10 @@ button, #tray {
   border-radius: 4px;
 }
 
+tooltip {
+  background-color: @nord1;
+}
+
 .modules-left button {
   padding: 0 8px;
 }
