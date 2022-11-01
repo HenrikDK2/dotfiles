@@ -14,14 +14,6 @@
   color: @nord2;
 }
 
-.modules-left {
-  margin-left: 20px;
-}
-
-.modules-right {
-  margin-right: 20px;
-}
-
 button, #tray {
   background-color: @nord1;
   margin: 0 4px;
