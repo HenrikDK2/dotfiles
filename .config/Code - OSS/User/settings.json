@@ -35,5 +35,9 @@
   "security.workspace.trust.untrustedFiles": "newWindow",
   "workbench.preferredLightColorTheme": "Default Dark+",
   "window.titleBarStyle": "custom",
-  "git.ignoreRebaseWarning": true
+  "git.ignoreRebaseWarning": true,
+  "reactSnippets.settings.prettierEnabled": true,
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

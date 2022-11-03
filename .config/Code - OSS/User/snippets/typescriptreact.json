@@ -1,0 +1,17 @@
+{
+  "Typescript React Arrow Function": {
+    "prefix": "raf",
+    "body": [
+      "import React from 'react'",
+      "",
+      "interface ${0:component}Props {",
+      "  children?: React.ReactNode;",
+      "}",
+      "",
+      "export const ${0:component}: React.FC<${0:component}Props> = (props) => {",
+      "  return <div></div>",
+      "}"
+    ],
+    "description": "Typescript react arrow function"
+  }
+}
