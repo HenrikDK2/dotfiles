@@ -1,5 +1,5 @@
-@define-color nord0 #313848;
-@define-color nord1 #3b4252;
+@define-color nord0 #3b4252;
+@define-color nord1 #2e3440;
 @define-color nord2 #e5eaf0;
 @define-color nord3 #8fbbba;
 @define-color nord-critical #bf616a;
@@ -36,7 +36,7 @@ tooltip {
 }
 
 #workspaces button.focused {
-  background-color: #434c5e;
+  background-color: @nord0;
   border-bottom: 2px solid @nord3;
 }
 
