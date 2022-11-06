@@ -1,5 +1,5 @@
-@define-color nord0 rgba(46, 52, 64, .7);
-@define-color nord1 rgba(59, 66, 82, .7);
+@define-color nord0 #313848;
+@define-color nord1 #3b4252;
 @define-color nord2 #e5eaf0;
 @define-color nord3 #8fbbba;
 @define-color nord-critical #bf616a;
@@ -14,7 +14,8 @@
   color: @nord2;
 }
 
-button, #tray {
+button,
+#tray {
   background-color: @nord1;
   margin: 0 4px;
   padding: 0 12px;
@@ -35,7 +36,7 @@ tooltip {
 }
 
 #workspaces button.focused {
-  background-color: rgba(59, 66, 82, 1);
+  background-color: #434c5e;
   border-bottom: 2px solid @nord3;
 }
 
@@ -51,7 +52,7 @@ tooltip {
   margin: 0 0 0 4px;
 }
 
-#custom-shutdown{
+#custom-shutdown {
   margin: 0 4px 0 0;
 }
 
@@ -65,7 +66,7 @@ tooltip {
   border: 2px solid @nord1;
 }
 
-label#window{
+label#window {
   margin-left: 6px;
 }
 
