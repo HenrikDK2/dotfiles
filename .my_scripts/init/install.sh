@@ -24,8 +24,9 @@ sudo cp -r ~/.my_scripts/init/sudoers.d/* /etc/sudoers.d
 sudo cp -R ~/.my_scripts/init/polkit-1/* /etc/polkit-1
 
 # Only allow root to read and write
-sudo chown root:root ~/.my_scripts/gamemode
-sudo chmod -wr ~/.my_scripts/gamemode
+sudo chown root:root ~/.my_scripts/gamemode/*
+sudo chmod +wrx ~/.my_scripts/gamemode/*
+sudo chmod o+xr-w ~/.my_scripts/gamemode/*
 
 # Copy gaming/network tweaks
 totalMem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
