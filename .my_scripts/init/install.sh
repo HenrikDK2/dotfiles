@@ -17,8 +17,15 @@ sudo sed -i 's/LDFLAGS="-Wl,-01,/LDFLAGS="-Wl,-O3,-flto,/' /etc/makepkg.conf
 # Disable faillock - Annoying
 sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
 
+# Copy sudo rules
+sudo cp -r ~/.my_scripts/init/sudoers.d/* /etc/sudoers.d
+
 # Copy polkit rules
 sudo cp -R ~/.my_scripts/init/polkit-1/* /etc/polkit-1
+
+# Only allow root to read and write
+sudo chown root:root ~/.my_scripts/gamemode
+sudo chmod -wr ~/.my_scripts/gamemode
 
 # Copy gaming/network tweaks
 totalMem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
@@ -26,14 +33,6 @@ minFreeKbytes=$(echo |awk "{ print $totalMem*0.025}")
 sed -i "s/#MEM/$minFreeKbytes/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
 sudo cp -R ~/.my_scripts/init/tmpfiles.d/* /etc/tmpfiles.d
 sed -i "s/$minFreeKbytes/#MEM/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
-
-# Sudo tweaks
-if ! sudo grep -Rq "%wheel ALL = NOPASSWD: /home/$USER/.my_scripts/optimize.sh" /etc/sudoers; then
-	echo "Defaults env_reset,passwd_tries=10,timestamp_timeout=120" | sudo tee -a /etc/sudoers
-	echo "%wheel ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers
-	echo "%wheel ALL = NOPASSWD: /home/$USER/.my_scripts/optimize.sh" | sudo tee -a /etc/sudoers
-	echo "%wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper" | sudo tee -a /etc/sudoers
-fi
 
 # Allow users to change niceness to negative (Gamemode)
 if ! sudo grep -Rq "@wheel - nice -20" /etc/security/limits.conf; then
@@ -56,7 +55,7 @@ fi
 
 # If username isn't the same as Henrik, replace name in these files
 if [ "$USER" != "henrik" ]; then
-	sudo sed -i "s/henrik/$USER/g" /etc/sudoers
+	sudo sed -i "s/henrik/$USER/g" /etc/sudoers.d/config
 	sed -i "s/henrik/$USER/g" ~/.config/gamemode.ini
 fi
 
@@ -195,8 +194,6 @@ sudo systemctl enable --now irqbalance
 systemctl --user mask at-spi-dbus-bus
 systemctl --user mask gvfs-metadata
 systemctl --user mask evolution-addressbook-factory
-sudo systemctl mask systemd-journald
-sudo systemctl mask systemd-journal-catalog-update
 sudo systemctl mask rtkit-daemon
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower

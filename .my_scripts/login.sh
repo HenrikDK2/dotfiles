@@ -16,4 +16,4 @@ launch discord
 
 # Launch optimization script for priorities
 sleep 10
-sudo ~/.my_scripts/optimize.sh
+sudo ~/.my_scripts/gamemode/optimize.sh
