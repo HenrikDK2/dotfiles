@@ -54,8 +54,8 @@ if ! sudo grep -Rq "rw,noatime" /etc/fstab; then
     done
 fi
 
-# If username isn't the same as Henrik, replace name in these files
-if [ "$USER" != "henrik" ]; then
+# If home directory is not my default, replace it
+if [ "$HOME" != "/home/henrik" ]; then
 	sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
 	sed -i "s|/home/henrik|$HOME|g" ~/.config/gamemode.ini
 fi
