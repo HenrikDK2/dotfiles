@@ -56,8 +56,8 @@ fi
 
 # If username isn't the same as Henrik, replace name in these files
 if [ "$USER" != "henrik" ]; then
-	sudo sed -i "s/henrik/$USER/g" /etc/sudoers.d/config
-	sed -i "s/henrik/$USER/g" ~/.config/gamemode.ini
+	sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
+	sed -i "s|/home/henrik|$HOME|g" ~/.config/gamemode.ini
 fi
 
 # Seahorse keyring
