@@ -149,7 +149,7 @@ yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewir
 systemctl --user --now enable wireplumber
 
 # General packages
-yay -Syu gamemode lib32-gamemode ufw vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative qt5-wayland qt6-wayland fish gtklock mako man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols --noconfirm
+yay -Syu gamemode lib32-gamemode ufw vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi sysmontask scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols --noconfirm
 
 # OBS with game capture
 yay -Syu obs-studio obs-vkcapture obs-gstreamer --noconfirm
@@ -163,6 +163,10 @@ mkdir ~/Screenshots
 
 # Fonts
 yay -Syu adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --noconfirm
+
+# Install nvm
+fisher add edc/bass
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
 
 # Change default shell to fish
 sudo chsh -s /bin/fish
