@@ -1,4 +1,5 @@
 # Env Variables
+set fish_greeting
 set -x EDITOR micro
 set -x XDG_CURRENT_DESKTOP sway
 set -x DESKTOP_SESSION sway
