@@ -165,7 +165,7 @@ mkdir ~/Screenshots
 yay -Syu adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --noconfirm
 
 # Install nvm
-fisher add edc/bass
+fisher install edc/bass
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
 
 # Change default shell to fish
