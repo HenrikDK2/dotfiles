@@ -39,5 +39,6 @@
   "reactSnippets.settings.prettierEnabled": true,
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "prettier.printWidth": 120
 }
