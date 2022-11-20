@@ -7,6 +7,10 @@ while [ -n "$(systemctl --state=running | grep "journald")" ]; do
     sudo systemctl stop systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
 done
 
+while [ -n "$(systemctl --state=running | grep "cups")" ]; do
+    sudo systemctl stop cups
+done
+
 # Clear RAM
 sudo sh -c 'echo 3 >  /proc/sys/vm/drop_caches'
 

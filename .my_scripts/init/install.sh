@@ -185,6 +185,10 @@ sudo ufw logging off
 sudo systemctl enable --now ufw
 sudo ufw enable
 
+# CUPS printer
+yay -Syu cups
+sudo systemctl enable cups
+
 # Clock sync
 sudo timedatectl set-ntp true
 
