@@ -1,7 +1,7 @@
 #!/bin/bash
 
 kernel_hardening="slab_nomerge init_on_alloc=1 init_on_free=1 page_alloc.shuffle=1 debugfs=off kernel.yama.ptrace_scope=3 kernel.perf_event_paranoid=3 kernel.unprivileged_userns_clone=0 kernel.kexec_load_disabled=1 vm.unprivileged_userfaultfd=0 dev.tty.ldisc_autoload=0 kernel.unprivileged_bpf_disabled=1 net.core.bpf_jit_harden=2 kernel.kptr_restrict=2 kernel.dmesg_restrict=1"
-kernel_params="$kernel_hardening nowatchdog nmi_watchdog=0 split_lock_detect=off amdgpu.ppfeaturemask=0xffffffff module_blacklist=iTCO_wdt loglevel=3"
+kernel_params="$kernel_hardening tsc=reliable clocksource=tsc nowatchdog nmi_watchdog=0 split_lock_detect=off amdgpu.ppfeaturemask=0xffffffff module_blacklist=iTCO_wdt loglevel=3"
 
 function microcode {
 	echo 'Is this computer using "amd" or an "intel" cpu'
