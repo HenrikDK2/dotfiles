@@ -21,7 +21,7 @@ function microcode {
 
 function add_options {
 	lsblk
-	echo 'Which partition is Linux running on? Example: sda1'
+	echo 'Which partition is the root partition that Linux is running on? Example: sdc3'
 	read UUID
 	fs_uuid=$(sudo blkid -o value -s UUID /dev/$UUID)
 	if [ "$fs_uuid" == "" ]; then
