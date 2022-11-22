@@ -50,8 +50,10 @@ function change_default {
 }
 
 # Install Linux Zen
-sudo pacman -Syu linux-zen --noconfirm
-clear
+if [ -z "$(pacman -Qe | grep 'linux-zen')"]; then
+	sudo pacman -Syu linux-zen --noconfirm
+	clear
+fi
 
 # Create temp kernel entries
 mkdir ~/.my_scripts/init/entries/tmp
