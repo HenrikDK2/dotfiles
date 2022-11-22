@@ -8,7 +8,7 @@
       "  children?: React.ReactNode;",
       "}",
       "",
-      "export const ${0:component}: React.FC<${0:component}Props> = (props) => {",
+      "export const ${0:component}: React.FC<${0:component}Props> = () => {",
       "  return <div></div>",
       "}"
     ],
