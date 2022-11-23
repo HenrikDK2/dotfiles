@@ -79,11 +79,10 @@ fi
 
 # Install yay
 if [ -z "$(pacman -Qe | grep yay)" ]; then
-	cd /opt
-	sudo git clone https://aur.archlinux.org/yay-git.git
-	sudo chmod 777 -R ./yay-git
-	cd yay-git
-	makepkg -si --noconfirm
+	git clone https://aur.archlinux.org/yay.git
+	sudo chmod 777 -R ./yay
+	(cd yay && makepkg -si --noconfirm)
+	rm -rf ./yay
 fi
 
 # Clear cache
