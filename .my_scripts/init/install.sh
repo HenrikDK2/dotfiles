@@ -73,14 +73,18 @@ if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd; then
 fi
 
 # Install building tools
-sudo pacman -Syu base-devel --noconfirm
+if [ -z "$(pacman -Qg | grep base-devel)" ]; then
+	sudo pacman -Syu base-devel --noconfirm
+fi
 
 # Install yay
-cd /opt
-sudo git clone https://aur.archlinux.org/yay-git.git
-sudo chmod 777 -R ./yay-git
-cd yay-git
-makepkg -si --noconfirm
+if [ -z "$(pacman -Qe | grep yay)" ]; then
+	cd /opt
+	sudo git clone https://aur.archlinux.org/yay-git.git
+	sudo chmod 777 -R ./yay-git
+	cd yay-git
+	makepkg -si --noconfirm
+fi
 
 # Clear cache
 yay -Scc --noconfirm
