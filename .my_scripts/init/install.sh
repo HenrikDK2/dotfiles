@@ -186,7 +186,7 @@ sudo systemctl enable --now ufw
 sudo ufw enable
 
 # CUPS printer
-yay -Syu cups
+yay -Syu cups --noconfirm
 sudo systemctl enable cups
 
 # Clock sync
