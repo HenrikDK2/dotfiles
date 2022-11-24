@@ -12,6 +12,7 @@ while [ -n "$(systemctl --state=running | grep "cups")" ]; do
 done
 
 # Clear RAM
+kill $(pgrep chrome_crashpad)
 sudo sh -c 'echo 3 >  /proc/sys/vm/drop_caches'
 
 sleep 60
