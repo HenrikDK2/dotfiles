@@ -15,11 +15,27 @@
 }
 
 button,
-#tray {
+#tray,
+#pulseaudio,
+#backlight,
+#network,
+#cpu,
+#memory,
+#battery,
+#clock,
+#custom-shutdown,
+#custom-reboot,
+#custom-suspend {
   background-color: @nord1;
   margin: 0 4px;
   padding: 0 12px;
   border-radius: 4px;
+}
+
+#custom-shutdown,
+#custom-reboot,
+#custom-suspend{
+  padding: 0 10px;
 }
 
 tooltip {
