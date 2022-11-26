@@ -5,7 +5,7 @@ set -x XDG_CURRENT_DESKTOP sway
 set -x DESKTOP_SESSION sway
 set -x XDG_SESSION_TYPE wayland
 set -x QT_QPA_PLATFORM "wayland;xcb"
-set -x MOZ_ENABLE_WAYLAND 0
+set -x MOZ_ENABLE_WAYLAND 1
 set -x MOZ_WEBRENDER 1
 set -x MICRO_TRUECOLOR 1
 set -x RTC_USE_PIPEWIRE true
