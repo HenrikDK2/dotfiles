@@ -20,11 +20,10 @@ user_pref("browser.fullscreen.animateUp", false);
 user_pref("browser.download.animateNotifications", false);
 user_pref("browser.preferences.animateFadeIn", false);
 user_pref("browser.fullscreen.animate", 0);
-user_pref("security.dialog_enable_delay", 0);
 user_pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
 user_pref("browser.newtabpage.activity-stream.telemetry", false);
 user_pref("browser.newtabpage.activity-stream.telemetry.ut.events", false);
-user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);  
+user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 user_pref("browser.newtabpage.activity-stream.feeds.snippets", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.providers.snippets", "");
@@ -76,7 +75,7 @@ user_pref("datareporting.sessions.current.clean", false);
 user_pref("reader.parse-on-load.enabled", false);
 user_pref("reader.parse-on-load.force-enabled", false);
 
-user_pref("extensions.getAddons.showPane", false); 
+user_pref("extensions.getAddons.showPane", false);
 user_pref("extensions.htmlaboutaddons.discover.enabled", false);
 user_pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 user_pref("extensions.pocket.enabled", false);
@@ -96,4 +95,3 @@ user_pref("alerts.disableSlidingEffect", false);
 user_pref("nglayout.initialpaint.delay", 0);
 user_pref("reader.parse-on-load.enabled", false);
 user_pref("dom.security.unexpected_system_load_telemetry_enabled", false);
-
