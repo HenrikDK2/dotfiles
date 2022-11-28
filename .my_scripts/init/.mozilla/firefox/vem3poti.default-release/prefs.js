@@ -33,6 +33,7 @@ user_pref("browser.safebrowsing.downloads.enabled", false);
 user_pref("browser.safebrowsing.downloads.remote.enabled", false);
 user_pref("browser.startup.homepage", "google.dk");
 user_pref("browser.tabs.animate", false);
+user_pref("browser.compactmode.show", false);
 user_pref("browser.aboutConfig.showWarning", false);
 user_pref("browser.aboutwelcome.enabled", false);
 user_pref("browser.theme.content-theme", 0);
