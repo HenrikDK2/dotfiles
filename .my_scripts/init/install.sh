@@ -100,7 +100,7 @@ while true; do
     echo "Do you have a 5120x1440 ultrawide monitor,"
     read -p "and do you want to have a 1440p window in the center of workspace 1? [y/n] " yn
     if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        mkdir cp ~/.config/sway/config.d
+        mkdir ~/.config/sway/config.d
         cp ~/.my_scripts/init/config.d/workspace-gaps ~/.config/sway/config.d/workspace-gaps 
         break;
     elif [[ "$yn" =~ ^([nN])$ ]]; then
