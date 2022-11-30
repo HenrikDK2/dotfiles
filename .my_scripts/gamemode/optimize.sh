@@ -20,6 +20,9 @@ set_prio () {
 }
 
 # Set priorities
+set_prio "systemd-journald" 20 3
+set_prio "systemd-timesyncd" 20 3
+set_prio "cups" 20 3
 set_prio "corectrl" 20 3
 set_prio "mako" 20 3
 set_prio "polkit-gnome" 20 3
