@@ -186,8 +186,8 @@ cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 sudo systemctl enable ufw
 sudo systemctl enable cups
 sudo systemctl enable irqbalance 
-sudo systemctl --user enable wireplumber
-sudo systemctl --user enable psd
+systemctl --user enable wireplumber
+systemctl --user enable psd
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus
