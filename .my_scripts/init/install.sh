@@ -187,19 +187,12 @@ sudo timedatectl set-ntp true
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Enable services
-sudo systemctl enable ufw
-sudo systemctl enable cups
-sudo systemctl enable irqbalance 
-systemctl --user enable wireplumber
-systemctl --user enable psd
+sudo systemctl enable ufw cups irqbalance
+systemctl --user enable wireplumber psd
 
 # Disable services
-systemctl --user mask at-spi-dbus-bus
-systemctl --user mask gvfs-metadata
-systemctl --user mask evolution-addressbook-factory
-sudo systemctl mask rtkit-daemon
-sudo systemctl mask ldconfig.service
-sudo systemctl mask upower
+systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory
+sudo systemctl mask rtkit-daemon ldconfig.service upower
 
 # Reboot
 clear
