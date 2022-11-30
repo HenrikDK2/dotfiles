@@ -6,12 +6,24 @@ This is for personal usage, but you may gladly use it as well. It includes all o
 
 ## Install
 
+#### What you need to know before installing
+
 - Configuration/system files are only tested on a fresh install of Arch Linux.
 
 - You should have sudo and git installed on your system.
 
-- The bootloader script only work with systemd-boot.
+- The bootloader script only work with systemd-boot (Includes kernel hardening, tweaks, ucode, and unlock access to AMD overclocking).
 
-This project only considers my usage on an AMD machine, you might need to do some tweaking to get it working on your machine.
+- This project only considers my usage on an AMD machine, you might need to do some tweaking to get it working on your machine.
 
-Clone this project to your home folder. Run `~/.my_scripts/init/install.sh` and follow the procedures, once done reboot the computer and pray to god that it runs :)
+#### Installation guide
+
+Go to your home directory in the terminal, and type the following.
+
+```bash
+git init
+git remote add origin https://github.com/HenrikDK2/dotfiles.git
+git pull
+```
+
+Now you're mostly done, you just need to run `~/.my_scripts/init/install.sh`, and follow the simple procedures.
