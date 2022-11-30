@@ -11,19 +11,15 @@ sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
 sudo sed -i '/MAKEFLAGS=/c\MAKEFLAGS="-j$(nproc)"' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
 sudo sed -i 's/-mtune=generic/-mtune=native/' /etc/makepkg.conf
-sudo sed -i 's/-O2/-O3 -flto=$(nproc)/g' /etc/makepkg.conf
-sudo sed -i 's/LDFLAGS="-Wl,-01,/LDFLAGS="-Wl,-O3,-flto,/' /etc/makepkg.conf
 
 # Disable faillock - Annoying
 sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
 
-# Copy sudo rules
+# Copy Sudo and Polkit rules
 sudo cp -r ~/.my_scripts/init/sudoers.d/* /etc/sudoers.d
-
-# Copy polkit rules
 sudo cp -R ~/.my_scripts/init/polkit-1/* /etc/polkit-1
 
-# Only allow root to read and write
+# Only allow root to write gamemode scripts
 sudo chown root:root ~/.my_scripts/gamemode/*
 sudo chmod +wrx ~/.my_scripts/gamemode/*
 sudo chmod o+xr-w ~/.my_scripts/gamemode/*
@@ -64,12 +60,10 @@ fi
 if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/login; then
 	echo "auth	optional	pam_gnome_keyring.so" | sudo tee -a /etc/pam.d/login
 	echo "session    optional pam_gnome_keyring.so     auto_start" | sudo tee -a /etc/pam.d/login
-    clear
 fi
 
 if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd; then
 	echo "password	optional	pam_gnome_keyring.so" | sudo tee -a /etc/pam.d/passwd
-    clear
 fi
 
 # Install building tools
@@ -84,9 +78,6 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	(cd yay && makepkg -si --noconfirm)
 	rm -rf ./yay
 fi
-
-# Clear cache
-yay -Scc --noconfirm
 
 # Add bootloader entries, and install kernel
 clear
@@ -143,16 +134,14 @@ while true; do
     esac
 done
 
+# General packages
+yay -Syu gamemode lib32-gamemode ufw cups irqbalance vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
+
 # Sync browser to ram
-sudo pacman -S profile-sync-daemon glib2 --noconfirm
-sudo systemctl --user enable psd
+sudo pacman -Syu profile-sync-daemon glib2 --noconfirm
 
 # Pipewire
 yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm
-systemctl --user --now enable wireplumber
-
-# General packages
-yay -Syu gamemode lib32-gamemode ufw vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
 
 # OBS with game capture
 yay -Syu obs-studio obs-vkcapture obs-gstreamer --noconfirm
@@ -185,23 +174,20 @@ sudo ufw allow ftp/tcp
 sudo ufw allow http/tcp
 sudo ufw allow https/tcp
 sudo ufw logging off
-sudo systemctl enable --now ufw
 sudo ufw enable
-
-# CUPS printer
-yay -Syu cups --noconfirm
-sudo systemctl enable cups
 
 # Clock sync
 sudo timedatectl set-ntp true
 
 # Replace tty issue
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
-clear
 
-# Irqbalance
-yay -Syu irqbalance --noconfirm
-sudo systemctl enable --now irqbalance 
+# Enable services
+sudo systemctl enable ufw
+sudo systemctl enable cups
+sudo systemctl enable irqbalance 
+sudo systemctl --user enable wireplumber
+sudo systemctl --user enable psd
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus
