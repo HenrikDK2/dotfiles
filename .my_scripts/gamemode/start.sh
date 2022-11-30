@@ -3,13 +3,15 @@
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 source "$parent_path/optimize.sh"
 
-while [ -n "$(systemctl --state=running | grep "journald")" ]; do
-    sudo systemctl stop systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
-done
+stop_service () {
+    while [ -n "$(systemctl --state=running | grep "$1")" ]; do
+        if [ -z "$2" ]; then sudo systemctl stop $1; else sudo systemctl stop $2; fi
+    done
+}
 
-while [ -n "$(systemctl --state=running | grep "cups")" ]; do
-    sudo systemctl stop cups
-done
+stop_service cups
+stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
+stop_service systemd-timesyncd
 
 # Clear RAM
 kill $(pgrep chrome_crashpad)

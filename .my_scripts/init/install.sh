@@ -196,7 +196,6 @@ systemctl --user mask evolution-addressbook-factory
 sudo systemctl mask rtkit-daemon
 sudo systemctl mask ldconfig.service
 sudo systemctl mask upower
-sudo systemctl disable --now systemd-timesyncd
 
 # Reboot
 clear
