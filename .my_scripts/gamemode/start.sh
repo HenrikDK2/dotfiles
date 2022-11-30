@@ -24,7 +24,7 @@ set_prio "steamapps/common/" -10 1 0
 set_prio "/*[.]exe" -10 1 0
 set_prio "obs" -10 1 0
 
-# Lower WINE proccesses
+# Lower priority of WINE proccesses that are unrelated to the game
 set_prio "tabtip.exe" -5 2 0
 set_prio "wineserver" -5 2 0
 set_prio "explorer.exe" -5 2 0
