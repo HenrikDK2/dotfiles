@@ -1,6 +1,6 @@
 # Welcome to my dotfiles
 
-This is for personal usage, but you may gladly use it as well. It includes all of my configuration files, but also tweaks for system files which I always include on my system for either responsiveness or gaming tweaks when I have to do fresh installs on new systems.
+This is for personal usage, but you may gladly use it as well. It includes all of my configuration files, but also tweaks for system files, which I always include on my system for either responsiveness or gaming tweaks when I have to do fresh installations on new systems.
 
 **Any usage of my system/configuration files falls in no way or form under my liability**
 
