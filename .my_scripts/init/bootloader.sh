@@ -3,7 +3,7 @@
 kernel_hardening="slab_nomerge init_on_alloc=1 init_on_free=1 page_alloc.shuffle=1 debugfs=off kernel.yama.ptrace_scope=3 kernel.perf_event_paranoid=3 kernel.unprivileged_userns_clone=0 kernel.kexec_load_disabled=1 vm.unprivileged_userfaultfd=0 dev.tty.ldisc_autoload=0 kernel.unprivileged_bpf_disabled=1 net.core.bpf_jit_harden=2 kernel.kptr_restrict=2 kernel.dmesg_restrict=1"
 kernel_params="$kernel_hardening tsc=reliable clocksource=tsc libahci.ignore_sss=1 nowatchdog nmi_watchdog=0 split_lock_detect=off amdgpu.ppfeaturemask=0xffffffff module_blacklist=iTCO_wdt loglevel=3"
 
-function microcode {
+microcode () {
 	echo 'Is this computer using "amd" or an "intel" cpu'
 	read CPU
 	
@@ -19,21 +19,47 @@ function microcode {
 	fi 
 }
 
-function add_options {
-	lsblk
-	echo 'Which partition is the root partition that Linux is running on? Example: sdc3'
-	read UUID
-	fs_uuid=$(sudo blkid -o value -s UUID /dev/$UUID)
-	if [ "$fs_uuid" == "" ]; then
+enable_hibernation () {
+	sudo sed -i 's/^[ \t]*HOOKS=(base udev autodetect/HOOKS=(base udev resume autodetect/' /etc/mkinitcpio.conf
+	sudo mkinitcpio -p linux-zen
+}
+
+add_options () {
+	get_root_uuid (){
 		clear
-		echo "Couldn't find drive, try again"
-		get_uuid
-	else
-		echo "options root=UUID=$fs_uuid rw $kernel_params" | tee -a ~/.my_scripts/init/entries/tmp/*.conf
+		echo 'Which partition is the root partition that Linux is running on? Example: sdc3'
+		lsblk | grep /
+		if [ -n "$1" ]; then printf "\nCouldn't find drive, try again!\n"; fi
+		read ROOT_DRIVE
+		ROOT_UUID=$(sudo blkid -o value -s UUID /dev/$ROOT_DRIVE)
+		
+		if [ -z $ROOT_UUID ]; then get_root_uuid "error"; fi
+	}
+	
+	get_swap_uuid () {
+		clear
+		echo 'Which partition is the swap partition? Example: sdc2'
+		echo "You can type \"none\" if you don't want to enable hibernation"
+		lsblk | grep SWAP
+		if [ -n "$1" ]; then printf "\nCouldn't find drive, try again!\n"; fi
+		read SWAP_DRIVE
+		SWAP_UUID=$(sudo blkid -o value -s UUID /dev/$SWAP_DRIVE)
+		
+		if [[ -z $SWAP_UUID && "$SWAP_DRIVE" != "none" ]]; then get_swap_uuid "error"; fi
+	}
+
+	get_root_uuid
+	if [ -n "$(lsblk | grep SWAP)" ]; then get_swap_uuid; fi
+
+	if [[ -n $SWAP_UUID && -n $ROOT_UUID ]]; then
+		echo "options root=UUID=$ROOT_UUID resume=UUID=$SWAP_UUID rw $kernel_params" | tee -a ~/.my_scripts/init/entries/tmp/*.conf
+		enable_hibernation
+	elif [[ -z $SWAP_UUID && -n $ROOT_UUID ]]; then
+		echo "options root=UUID=$ROOT_UUID rw $kernel_params" | tee -a ~/.my_scripts/init/entries/tmp/*.conf
 	fi
 }
 
-function change_default {
+change_default () {
 	if sudo grep -Rq "default" /boot/loader/loader.conf
 	then
 		sudo sed -i "s/default .*/default $1/" /boot/loader/loader.conf

@@ -17,7 +17,7 @@ sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
 
 # Copy Sudo and Polkit rules
 sudo cp -r ~/.my_scripts/init/sudoers.d/* /etc/sudoers.d
-sudo cp -R ~/.my_scripts/init/polkit-1/* /etc/polkit-1
+sudo cp -r ~/.my_scripts/init/polkit-1/* /etc/polkit-1
 
 # Only allow root to write gamemode scripts
 sudo chown root:root ~/.my_scripts/gamemode/*
@@ -28,7 +28,7 @@ sudo chmod o+xr-w ~/.my_scripts/gamemode/*
 totalMem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 minFreeKbytes=$(echo |awk "{ print $totalMem*0.025}")
 sed -i "s/#MEM/$minFreeKbytes/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
-sudo cp -R ~/.my_scripts/init/tmpfiles.d/* /etc/tmpfiles.d
+sudo cp -r ~/.my_scripts/init/tmpfiles.d/* /etc/tmpfiles.d
 sed -i "s/$minFreeKbytes/#MEM/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
 
 # Allow users to change niceness to negative (Gamemode)
