@@ -53,8 +53,8 @@ if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd; then
 fi
 
 # Find the fastest mirrors
-#sudo pacman -Syu reflector --noconfirm
-#sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
+sudo pacman -Syu reflector --noconfirm
+sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
 
 # Install building tools
 if [ -z "$(pacman -Qg | grep base-devel)" ]; then
@@ -68,7 +68,6 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	(cd yay && makepkg -si --noconfirm)
 	rm -rf ./yay
 fi
-
 
 # fstab tweaks
 if ! sudo grep -Rq "rw,noatime" /etc/fstab; then
