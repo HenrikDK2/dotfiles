@@ -12,7 +12,7 @@ This is for personal usage, but you may gladly use it as well. It includes all o
 
 - You should have sudo and git installed on your system.
 
-- The bootloader script only work with systemd-boot (Includes kernel hardening, tweaks, ucode, and unlock access to AMD overclocking).
+- systemd-boot is recommended, since that is what I use, and a script depends on it for kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking.
 
 - This project only considers my usage on an AMD machine, you might need to do some tweaking to get it working on your machine.
 

@@ -4,7 +4,7 @@ kernel_hardening="slab_nomerge init_on_alloc=1 init_on_free=1 page_alloc.shuffle
 kernel_params="$kernel_hardening tsc=reliable clocksource=tsc libahci.ignore_sss=1 nowatchdog nmi_watchdog=0 split_lock_detect=off amdgpu.ppfeaturemask=0xffffffff module_blacklist=iTCO_wdt loglevel=3"
 
 microcode () {
-	echo 'Is this computer using "amd" or an "intel" cpu'
+	printf 'Is this computer using "amd" or an "intel" cpu\n\n'
 	read CPU
 	
 	if [ "$CPU" == "amd" ]; then
@@ -14,7 +14,8 @@ microcode () {
 		sudo pacman -S intel-ucode --noconfirm
 		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
 	else
-		echo "CPU needs to be either AMD or INTEL"
+		clear
+		printf "CPU needs to be either AMD or INTEL\n\n"
 		microcode
 	fi 
 }
@@ -27,9 +28,10 @@ enable_hibernation () {
 add_options () {
 	get_root_uuid (){
 		clear
-		echo 'Which partition is the root partition that Linux is running on? Example: sdc3'
+		printf 'Which partition is the root partition that Linux is running on? Example: sdc3\n\n'
 		lsblk | grep /
-		if [ -n "$1" ]; then printf "\nCouldn't find drive, try again!\n"; fi
+		printf "\n"
+		if [ -n "$1" ]; then printf "Couldn't find drive, try again!\n\n"; fi
 		read ROOT_DRIVE
 		ROOT_UUID=$(sudo blkid -o value -s UUID /dev/$ROOT_DRIVE)
 		
@@ -38,10 +40,11 @@ add_options () {
 	
 	get_swap_uuid () {
 		clear
-		echo 'Which partition is the swap partition? Example: sdc2'
-		echo "You can type \"none\" if you don't want to enable hibernation"
+		printf 'Which partition is the swap partition? Example: sdc2\n\n'
+		printf "You can type \"none\", however hibernation will not be enabled\n\n"
 		lsblk | grep SWAP
-		if [ -n "$1" ]; then printf "\nCouldn't find drive, try again!\n"; fi
+		printf "\n"
+		if [ -n "$1" ]; then printf "Couldn't find drive, try again!\n\n"; fi
 		read SWAP_DRIVE
 		SWAP_UUID=$(sudo blkid -o value -s UUID /dev/$SWAP_DRIVE)
 		

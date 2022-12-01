@@ -36,20 +36,6 @@ if ! sudo grep -Rq "@wheel - nice -20" /etc/security/limits.conf; then
   echo "@wheel - nice -20" | sudo tee -a /etc/security/limits.conf > /dev/null
 fi
 
-# fstab tweaks
-if ! sudo grep -Rq "rw,noatime" /etc/fstab; then
-    clear
-    while true; do
-        echo "Do you wish to add sdd/hdd tweaks to fstab?"
-        read -p "Drive failures will cause loss of data, will you continue? [y/n] " yn
-        case $yn in
-            [Yy]* ) sudo sed -i "s/rw,/rw,noatime,nodiratime,discard,/g" /etc/fstab; break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
-fi
-
 # If home directory is not my default, replace it
 if [ "$HOME" != "/home/henrik" ]; then
 	sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
@@ -67,8 +53,8 @@ if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd; then
 fi
 
 # Find the fastest mirrors
-sudo pacman -Syu reflector --noconfirm
-sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
+#sudo pacman -Syu reflector --noconfirm
+#sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
 
 # Install building tools
 if [ -z "$(pacman -Qg | grep base-devel)" ]; then
@@ -83,10 +69,26 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	rm -rf ./yay
 fi
 
+
+# fstab tweaks
+if ! sudo grep -Rq "rw,noatime" /etc/fstab; then
+    clear
+    while true; do
+        printf "Do you wish to add sdd/hdd tweaks to fstab?\n\n"
+        read -p "Drive failures will cause loss of data, will you continue? [y/n] " yn
+        case $yn in
+            [Yy]* ) sudo sed -i "s/rw,/rw,noatime,nodiratime,discard,/g" /etc/fstab; break;;
+            [Nn]* ) break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+fi
+
 # Add bootloader entries, and install kernel
 clear
 while true; do
-    read -p "Only for systemd-boot! - Add bootloader entries with tweaks? [y/n] " yn
+    printf "Only for systemd-boot! - Add bootloader entries?\n\n"
+    read -p "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking [y/n] "  yn
     case $yn in
         [Yy]* ) source ~/.my_scripts/init/bootloader.sh; break;;
         [Nn]* ) break;;
@@ -97,8 +99,8 @@ done
 # Ultrawide gaps on workspace 1
 clear
 while true; do
-    echo "Do you have a 5120x1440 ultrawide monitor,"
-    read -p "and do you want to have a 1440p window in the center of workspace 1? [y/n] " yn
+    printf "Only for 5120x1440 ultrawide monitor!\n\n"
+    read -p "Do you want to have a 1440p window in the center of workspace 1? [y/n] " yn
     if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         mkdir ~/.config/sway/config.d
         cp ~/.my_scripts/init/config.d/workspace-gaps ~/.config/sway/config.d/workspace-gaps 
@@ -114,8 +116,8 @@ done
 # Optimized Firefox profile
 clear
 while true; do
-    echo "Do you wish to use an optimized Firefox profile?"
-    echo "It disables telemetry, animations and more for privacy and performance."
+    printf "Do you wish to use an optimized Firefox profile?\n\n"
+    printf "It disables telemetry, animations and more for privacy and performance.\n\n"
     read -p "This will reset your current profile? [y/n] " yn
     case $yn in
         [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my_scripts/init/.mozilla ~/.mozilla; break;;
