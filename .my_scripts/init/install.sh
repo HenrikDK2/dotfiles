@@ -53,8 +53,10 @@ if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd; then
 fi
 
 # Find the fastest mirrors
-sudo pacman -Syu reflector --noconfirm
-sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
+if [ -z "$(pacman -Qe | grep reflector)" ]; then
+    sudo pacman -Syu reflector --noconfirm
+    sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
+fi
 
 # Install building tools
 if [ -z "$(pacman -Qg | grep base-devel)" ]; then
@@ -125,6 +127,20 @@ while true; do
     esac
 done
 
+# Install Virt-manager
+clear
+while true; do
+    printf "This is for virtual machines.\n\n"
+    read -p "Do you want to install virt-manager? [y/n] " yn
+    case $yn in
+        [Yy]* ) yay -Syu virt-manager qemu-desktop libvirt edk2-ovmf dnsmasq iptables-nft dmidecode --noconfirm;
+				sudo systemctl enable --now libvirtd.service;
+				sudo usermod -a -G libvirt $(whoami);  break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 # Mesa drivers for AMD
 clear
 while true; do
@@ -140,7 +156,7 @@ while true; do
 done
 
 # General packages
-yay -Syu gamemode lib32-gamemode ufw cups irqbalance vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
+yay -Syu gamemode lib32-gamemode ufw cups irqbalance vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
 
 # Sync browser to ram
 sudo pacman -Syu profile-sync-daemon glib2 --noconfirm
@@ -188,8 +204,8 @@ sudo timedatectl set-ntp true
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Enable services
-sudo systemctl enable ufw cups irqbalance
-systemctl --user enable wireplumber psd
+sudo systemctl enable --now ufw cups irqbalance
+systemctl --user enable --now wireplumber psd
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory

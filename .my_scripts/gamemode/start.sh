@@ -12,6 +12,10 @@ stop_service () {
 stop_service cups
 stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
 stop_service systemd-timesyncd
+stop_service systemd-machined
+stop_service dnsmasq
+stop_service virtlogd
+stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
 
 # Clear RAM
 kill $(pgrep chrome_crashpad)
