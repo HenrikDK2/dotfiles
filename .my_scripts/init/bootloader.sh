@@ -4,20 +4,13 @@ kernel_hardening="slab_nomerge init_on_alloc=1 init_on_free=1 page_alloc.shuffle
 kernel_params="$kernel_hardening tsc=reliable clocksource=tsc libahci.ignore_sss=1 nowatchdog nmi_watchdog=0 split_lock_detect=off amdgpu.ppfeaturemask=0xffffffff module_blacklist=iTCO_wdt loglevel=3"
 
 microcode () {
-	printf 'Is this computer using "amd" or an "intel" cpu\n\n'
-	read CPU
-	
-	if [ "$CPU" == "amd" ]; then
+	if [ -n "$(cat /proc/cpuinfo | grep 'AuthenticAMD')" ]; then
 		sudo pacman -S amd-ucode --noconfirm
 		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
-	elif [ "$CPU" == "intel" ]; then
+	elif [ -n "$(cat /proc/cpuinfo | grep 'GenuineIntel')" ]; then
 		sudo pacman -S intel-ucode --noconfirm
 		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
-	else
-		clear
-		printf "CPU needs to be either AMD or INTEL\n\n"
-		microcode
-	fi 
+	fi
 }
 
 enable_hibernation () {
