@@ -17,9 +17,12 @@ user_pref("toolkit.telemetry.hybridContent.enabled", false);
 user_pref("toolkit.cosmeticAnimations.enabled", false);
 
 user_pref("browser.fullscreen.animateUp", false);
+user_pref("browser.fullscreen.animate", 0);
 user_pref("browser.download.animateNotifications", false);
 user_pref("browser.preferences.animateFadeIn", false);
-user_pref("browser.fullscreen.animate", 0);
+user_pref("browser.newtabpage.activity-stream.pocketCta", "");
+user_pref("browser.newtabpage.activity-stream.section.highlights.includePocket", false);
+user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
 user_pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
 user_pref("browser.newtabpage.activity-stream.telemetry", false);
 user_pref("browser.newtabpage.activity-stream.telemetry.ut.events", false);
@@ -83,6 +86,13 @@ user_pref("extensions.getAddons.showPane", false);
 user_pref("extensions.htmlaboutaddons.discover.enabled", false);
 user_pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 user_pref("extensions.pocket.enabled", false);
+user_pref("extensions.pocket.api", "0.0.0.0");
+user_pref("extensions.pocket.loggedOutVariant", "");
+user_pref("extensions.pocket.oAuthConsumerKey", "");
+user_pref("extensions.pocket.onSaveRecs", false);
+user_pref("extensions.pocket.onSaveRecs.locales", "");
+user_pref("extensions.pocket.showHome", false);
+user_pref("extensions.pocket.site", "0.0.0.0");
 
 user_pref("app.shield.optoutstudies.enabled", false);
 user_pref("app.normandy.enabled", false);
@@ -90,6 +100,13 @@ user_pref("app.normandy.api_url", "");
 
 user_pref("media.ffmpeg.vaapi.enabled", true);
 user_pref("media.ffmpeg.vaapi-drm-display.enabled", true);
+
+user_pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.section.highlights.includePocket", false);
+user_pref(
+  "services.sync.prefs.sync-seen.services.sync.prefs.sync.browser.newtabpage.activity-stream.section.highlights.includePocket",
+  false
+);
+user_pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.feeds.section.topstories", false);
 
 user_pref("loop.enabled", false);
 user_pref("beacon.enabled", false);
