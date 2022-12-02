@@ -12,10 +12,14 @@ stop_service () {
 stop_service cups
 stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
 stop_service systemd-timesyncd
-stop_service systemd-machined
-stop_service dnsmasq
-stop_service virtlogd
-stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
+
+# Only stop services related to virt-manager if closed
+if [ -z "$(pgrep virt-manager)" ]; then
+	stop_service systemd-machined
+	stop_service dnsmasq
+	stop_service virtlogd
+	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
+fi
 
 # Clear RAM
 kill $(pgrep chrome_crashpad)
