@@ -141,22 +141,17 @@ while true; do
     esac
 done
 
-# Mesa drivers for AMD
-clear
-while true; do
-    read -p "Do you have an AMD gpu? [y/n] " yn
-    case $yn in
-        [Yy]* ) 
-        		yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm;
-        		sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf;
-                sudo mkinitcpio -P; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no." ;;
-    esac
-done
-
 # General packages
-yay -Syu gamemode lib32-gamemode ufw cups irqbalance vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
+yay -Syu gamemode lib32-gamemode ufw cups irqbalance glxinfo vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
+
+# Mesa drivers
+if [ -n "$(glxinfo | grep 'Vendor: AMD')" ]; then
+	yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm;
+	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf;
+	sudo mkinitcpio -P;
+elif [ -n "$(glxinfo | grep 'Vendor: Intel')" ]
+	yay -Syu mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm;
+fi
 
 # Sync browser to ram
 sudo pacman -Syu profile-sync-daemon glib2 --noconfirm
