@@ -72,7 +72,7 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 fi
 
 # fstab tweaks
-if ! sudo grep -Rq "rw,noatime" /etc/fstab; then
+if ! sudo grep -Rq "rw,noatime,nodiratime,discard" /etc/fstab; then
     clear
     while true; do
         printf "Do you wish to add sdd/hdd tweaks to fstab?\n\n"
@@ -102,16 +102,12 @@ clear
 while true; do
     printf "Only for 5120x1440 ultrawide monitor!\n\n"
     read -p "Do you want to have a 1440p window in the center of workspace 1? [y/n] " yn
-    if [[ "$yn" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-        mkdir ~/.config/sway/config.d
-        cp ~/.my_scripts/init/config.d/workspace-gaps ~/.config/sway/config.d/workspace-gaps 
-        break;
-    elif [[ "$yn" =~ ^([nN])$ ]]; then
-        rm -rf ~/.config/sway/config.d/workspace-gaps 
-        break;
-    else
-       echo "Please answer yes or no."
-    fi
+    case $yn in
+        [Yy]* ) mkdir ~/.config/sway/config.d
+                cp ~/.my_scripts/init/config.d/workspace-gaps ~/.config/sway/config.d/workspace-gaps; break;;
+        [Nn]* ) rm -rf ~/.config/sway/config.d/workspace-gaps; break;;
+        * ) echo "Please answer yes or no.";;
+    esac
 done
 
 # Optimized Firefox profile
@@ -163,8 +159,7 @@ yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewir
 yay -Syu obs-studio obs-vkcapture obs-gstreamer --noconfirm
 
 # Screenshot (Printscreen)
-yay -Syu slurp swappy grim --noconfirm
-mkdir ~/Screenshots
+mkdir ~/Screenshots && yay -Syu slurp swappy grim --noconfirm
 
 # Install vscode plugins
 ~/.my_scripts/init/code-extensions.sh
@@ -212,8 +207,7 @@ while true; do
     read -p "Do you want to reboot? [y/n] " yn
     case $yn in
         [Yy]* ) reboot; break;;
-        [Nn]* ) break;;
+        [Nn]* ) clear; break;; 
         * ) echo "Please answer yes or no.";;
     esac
 done
-clear
