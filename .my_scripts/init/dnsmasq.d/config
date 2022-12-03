@@ -9,6 +9,7 @@ no-resolv
 cache-size=10000
 domain-needed
 bogus-priv
+addn-hosts=/etc/hosts.deny
 
 conf-file=/usr/share/dnsmasq/trust-anchors.conf
 dnssec

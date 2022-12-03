@@ -186,9 +186,13 @@ sudo ufw logging off
 sudo ufw enable
 
 # Setup dnsmasq
-sudo cp -r ~/.my_scripts/init/dnsmasq.d /etc/dnsmasq.d
+sudo cp -r ~/.my_scripts/init/dnsmasq.d/* /etc/dnsmasq.d
 echo "conf-dir=/etc/dnsmasq.d" | sudo tee /etc/dnsmasq.conf
 cat ~/.my_scripts/init/resolv.conf | sudo tee /etc/resolv.conf
+
+# Deny hosts (Get unified hosts file from Ultimate Hosts Blacklist every 6 hours)
+sudo cp ~/.my_scripts/init/denyhosts/denyhosts.service /etc/systemd/system/denyhosts.service
+sudo cp ~/.my_scripts/init/denyhosts/denyhosts.sh /usr/bin/denyhosts.sh
 
 # Clock sync
 sudo timedatectl set-ntp true
@@ -197,7 +201,7 @@ sudo timedatectl set-ntp true
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Enable services
-sudo systemctl enable --now ufw cups irqbalance 
+sudo systemctl enable --now ufw cups irqbalance denyhosts
 systemctl --user enable --now wireplumber psd
 
 # Disable services
