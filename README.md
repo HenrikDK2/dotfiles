@@ -18,12 +18,15 @@ This is for personal usage, but you may gladly use it as well. It includes all o
 
 #### Installation guide
 
-Go to your home directory in the terminal, and type the following.
+**This is a warning!** Doing the following will replace all files with my configuration files.
+
+Go to your home directory in the terminal, and type the following:
 
 ```bash
 git init
 git remote add origin https://github.com/HenrikDK2/dotfiles.git
-git pull
+git fetch --all
+git reset --hard origin/master
 ```
 
 Now you're mostly done, you just need to run `~/.my_scripts/init/install.sh`, and follow the simple procedures.
