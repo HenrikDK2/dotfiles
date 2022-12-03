@@ -6,7 +6,7 @@ set $right ae
 
 output * {   
     max_render_time 6
-    bg ~/Wallpapers/2.png center
+    bg ~/Wallpapers/5.png center
 }
 
 input * {
