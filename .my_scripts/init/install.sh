@@ -169,8 +169,8 @@ yay -Syu adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts
 fisher install edc/bass
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
 
-# Change default shell to fish
-sudo chsh -s /bin/fish
+# Change default, and current user shell to fish
+sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
 
 # Enable UFW and add firewall rules
 sudo ufw default deny incoming
