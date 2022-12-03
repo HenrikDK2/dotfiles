@@ -127,7 +127,7 @@ while true; do
     printf "This is for virtual machines.\n\n"
     read -p "Do you want to install virt-manager? [y/n] " yn
     case $yn in
-        [Yy]* ) yay -Syu virt-manager qemu-desktop libvirt edk2-ovmf dnsmasq iptables-nft dmidecode --noconfirm;
+        [Yy]* ) yay -Syu virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --noconfirm;
 				sudo systemctl enable --now libvirtd virtlogd;
 				sudo usermod -a -G libvirt $(whoami);  break;;
         [Nn]* ) break;;
@@ -136,7 +136,7 @@ while true; do
 done
 
 # General packages
-yay -Syu gamemode lib32-gamemode ufw cups irqbalance glxinfo vulkan-tools cmst openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
+yay -Syu gamemode lib32-gamemode ufw cups irqbalance glxinfo vulkan-tools cmst dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
 
 # Mesa drivers
 if [ -n "$(glxinfo | grep 'Vendor: AMD')" ]; then
@@ -185,6 +185,11 @@ sudo ufw allow https/tcp
 sudo ufw logging off
 sudo ufw enable
 
+# Setup dnsmasq
+sudo cp -r ~/.my_scripts/init/dnsmasq.d /etc/dnsmasq.d
+echo "conf-dir=/etc/dnsmasq.d" | sudo tee /etc/dnsmasq.conf
+cat ~/.my_scripts/init/resolv.conf | sudo tee /etc/resolv.conf
+
 # Clock sync
 sudo timedatectl set-ntp true
 
@@ -192,12 +197,12 @@ sudo timedatectl set-ntp true
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Enable services
-sudo systemctl enable --now ufw cups irqbalance
+sudo systemctl enable --now ufw cups irqbalance 
 systemctl --user enable --now wireplumber psd
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory
-sudo systemctl mask rtkit-daemon ldconfig.service upower
+sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved
 
 # Reboot
 clear

@@ -16,10 +16,8 @@ stop_service systemd-timesyncd
 # Only stop services related to virt-manager if closed
 if [ -z "$(pgrep virt-manager)" ]; then
 	stop_service systemd-machined
-	stop_service dnsmasq
 	stop_service virtlogd
 	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
-	sudo kill $(pgrep dnsmasq)
 fi
 
 # Clear RAM
