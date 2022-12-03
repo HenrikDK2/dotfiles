@@ -130,7 +130,7 @@ while true; do
     read -p "Do you want to install virt-manager? [y/n] " yn
     case $yn in
         [Yy]* ) yay -Syu virt-manager qemu-desktop libvirt edk2-ovmf dnsmasq iptables-nft dmidecode --noconfirm;
-				sudo systemctl enable --now libvirtd.service;
+				sudo systemctl enable --now libvirtd virtlogd;
 				sudo usermod -a -G libvirt $(whoami);  break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
