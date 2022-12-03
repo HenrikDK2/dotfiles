@@ -19,6 +19,7 @@ if [ -z "$(pgrep virt-manager)" ]; then
 	stop_service dnsmasq
 	stop_service virtlogd
 	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
+	kill $(pgrep dnsmasq)
 fi
 
 # Clear RAM
