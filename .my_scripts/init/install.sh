@@ -59,9 +59,7 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 fi
 
 # Install building tools
-if [ -z "$(pacman -Qg | grep base-devel)" ]; then
-	sudo pacman -Syu base-devel --noconfirm
-fi
+sudo pacman -Syu base-devel --noconfirm
 
 # Install yay
 if [ -z "$(pacman -Qe | grep yay)" ]; then
