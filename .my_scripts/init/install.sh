@@ -135,8 +135,14 @@ while true; do
     esac
 done
 
+# Fonts
+yay -Syu adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --noconfirm
+
+# Pipewire
+yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm
+
 # General packages
-yay -Syu gamemode lib32-gamemode ufw cups irqbalance glxinfo vulkan-tools cmst dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
+yay -Syu gamemode lib32-gamemode ufw cups irqbalance glxinfo vulkan-tools cmst dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
 
 # Mesa drivers
 if [ -n "$(glxinfo | grep 'Vendor: AMD')" ]; then
@@ -150,9 +156,6 @@ fi
 # Sync browser to ram
 sudo pacman -Syu profile-sync-daemon glib2 --noconfirm
 
-# Pipewire
-yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm
-
 # OBS with game capture
 yay -Syu obs-studio obs-vkcapture obs-gstreamer --noconfirm
 
@@ -161,9 +164,6 @@ mkdir ~/Screenshots && yay -Syu slurp swappy grim --noconfirm
 
 # Install vscode plugins
 ~/.my_scripts/init/code-extensions.sh
-
-# Fonts
-yay -Syu adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --noconfirm
 
 # Install nvm
 fisher install edc/bass
