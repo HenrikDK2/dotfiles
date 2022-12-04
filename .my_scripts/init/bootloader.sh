@@ -56,16 +56,16 @@ add_options () {
 }
 
 change_default () {
-	if sudo grep -Rq "default" /boot/loader/loader.conf
+	if sudo grep "default" /boot/loader/loader.conf
 	then
-		sudo sed -i "s/default .*/default $1/" /boot/loader/loader.conf
+		sudo sed -i "s/default.*/default $1/" /boot/loader/loader.conf
 	else
 		echo "default $1" | sudo tee -a /boot/loader/loader.conf
 	fi
 
-	if sudo grep -Rq "timeout" /boot/loader/loader.conf
+	if sudo grep "timeout" /boot/loader/loader.conf
 	then
-		sudo sed -i "s/timeout .*/timeout 3/" /boot/loader/loader.conf
+		sudo sed -i 's/#timeout.*/timeout 3/' /boot/loader/loader.conf
 	else
 		echo "timeout 3" | sudo tee -a /boot/loader/loader.conf
 	fi
