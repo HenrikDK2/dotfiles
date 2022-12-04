@@ -142,7 +142,7 @@ yay -Syu adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts
 yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm
 
 # General packages
-yay -Syu gamemode lib32-gamemode ufw cups irqbalance glxinfo vulkan-tools cmst dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
+yay -Syu gamemode lib32-gamemode ufw cups irqbalance mesa-utils vulkan-tools cmst wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
 
 # Mesa drivers
 if [ -n "$(glxinfo | grep 'Vendor: AMD')" ]; then
@@ -166,7 +166,7 @@ mkdir ~/Screenshots && yay -Syu slurp swappy grim --noconfirm
 ~/.my_scripts/init/code-extensions.sh
 
 # Install nvm
-fisher install edc/bass
+fish -c fisher install edc/bass
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
 
 # Change default, and current user shell to fish
@@ -186,6 +186,7 @@ sudo ufw logging off
 sudo ufw enable
 
 # Setup dnsmasq
+sudo mkdir /etc/dnsmasq.d
 sudo cp -r ~/.my_scripts/init/dnsmasq.d/* /etc/dnsmasq.d
 echo "conf-dir=/etc/dnsmasq.d" | sudo tee /etc/dnsmasq.conf
 cat ~/.my_scripts/init/resolv.conf | sudo tee /etc/resolv.conf
@@ -201,12 +202,12 @@ sudo timedatectl set-ntp true
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Enable services
-sudo systemctl enable --now ufw cups irqbalance denyhosts
+sudo systemctl enable --now ufw cups dnsmasq irqbalance denyhosts
 systemctl --user enable --now wireplumber psd
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory
-sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved
+sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved connman-vpn
 
 # Reboot
 clear
