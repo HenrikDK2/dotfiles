@@ -91,8 +91,8 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 fi
 
 # fstab tweaks
+clear
 if ! sudo grep -Rq "rw,noatime,nodiratime,discard" /etc/fstab; then
-    clear
     while true; do
         printf "Do you wish to add sdd/hdd tweaks to fstab?\n\n"
         read -p "Drive failures will cause loss of data, will you continue? [y/n] " yn
@@ -105,8 +105,8 @@ if ! sudo grep -Rq "rw,noatime,nodiratime,discard" /etc/fstab; then
 fi
 
 # Add bootloader entries, and install kernel
+clear
 while true; do
-    clear
     printf "Only for systemd-boot! - Add bootloader entries?\n\n"
     read -p "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking [y/n] "  yn
     case $yn in
@@ -130,8 +130,8 @@ while true; do
 done
 
 # Optimized Firefox profile
+clear
 while true; do
-    clear
     printf "Do you wish to use an optimized Firefox profile?\n\n"
     printf "It disables telemetry, animations and more for privacy and performance.\n\n"
     read -p "This will reset your current profile? [y/n] " yn
@@ -143,8 +143,8 @@ while true; do
 done
 
 # Install Virt-manager
+clear
 while true; do
-    clear
     printf "This is for virtual machines.\n\n"
     read -p "Do you want to install virt-manager? [y/n] " yn
     case $yn in
@@ -230,8 +230,8 @@ systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factor
 sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved connman-vpn
 
 # Reboot
+clear
 while true; do
-    clear
     read -p "Do you want to reboot? [y/n] " yn
     case $yn in
         [Yy]* ) reboot; break;;
