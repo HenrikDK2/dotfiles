@@ -166,7 +166,7 @@ if [ -z $(glxinfo -B | grep 'Vendor: NVIDIA') ]; then
         yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm;
         sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf;
         sudo mkinitcpio -P;
-    elif [ -n "$(glxinfo -B | grep 'Vendor: Intel')" ] && [ -z "$(glxinfo -B | grep 'Vendor: Intel')" ]; then
+    elif [ -n "$(glxinfo -B | grep 'Vendor: Intel')" ] && [ -z "$(glxinfo -B | grep 'Vendor: AMD')" ]; then
         yay -Syu mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm;
     fi
 fi
