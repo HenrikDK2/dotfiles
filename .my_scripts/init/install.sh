@@ -58,7 +58,7 @@ if [ -z "$(git config --global --list | grep -oP '(?<=user.name=).*')" ]; then
 	clear
 	printf "What is your git username? \n\n"
 	read -p "You can type \"none\", if you don't want to set one globally: " name
-	if [ "$name" != "none"  ] && [ -n name ]; then
+	if [ "$name" != "none"  ] && [ -n "$name" ]; then
 		git config --global user.name "$name"
 	fi
 fi
@@ -67,7 +67,7 @@ if [ -z "$(git config --global --list | grep -oP '(?<=user.email=).*')" ]; then
 	clear
 	printf "What is your git email? \n\n"
 	read -p "You can type \"none\", if you don't want to set one globally: " email
-	if [ "$email" != "none"  ] && [ -n email ]; then
+	if [ "$email" != "none"  ] && [ -n "$email" ]; then
 		git config --global user.email "$email"
 	fi
 fi
