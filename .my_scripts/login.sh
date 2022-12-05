@@ -14,6 +14,7 @@ launch waybar
 launch evolution
 launch discord
 
+# Custom bash scripts within ~/.my_scripts/login.d will load at session start
 for script in ~/.my_scripts/login.d/*.sh; do "$script" & done
 
 # Launch optimization script for priorities
