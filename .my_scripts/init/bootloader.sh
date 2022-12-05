@@ -5,10 +5,10 @@ kernel_params="$kernel_hardening tsc=reliable clocksource=tsc libahci.ignore_sss
 
 microcode () {
 	if [ -n "$(cat /proc/cpuinfo | grep 'AuthenticAMD')" ]; then
-		sudo pacman -S amd-ucode --noconfirm
+		sudo pacman -S amd-ucode --noconfirm --needed
 		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
 	elif [ -n "$(cat /proc/cpuinfo | grep 'GenuineIntel')" ]; then
-		sudo pacman -S intel-ucode --noconfirm
+		sudo pacman -S intel-ucode --noconfirm --needed
 		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
 	fi
 }
@@ -73,7 +73,7 @@ change_default () {
 
 # Install Linux Zen
 if [ -z "$(pacman -Qe | grep 'linux-zen')"]; then
-	sudo pacman -Syu linux-zen --noconfirm
+	sudo pacman -Syu linux-zen --noconfirm --needed
 	clear
 fi
 
