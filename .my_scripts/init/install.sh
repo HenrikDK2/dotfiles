@@ -18,6 +18,7 @@ sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
 # Copy Sudo and Polkit rules
 sudo cp -r ~/.my_scripts/init/sudoers.d/* /etc/sudoers.d
 sudo cp -r ~/.my_scripts/init/polkit-1/* /etc/polkit-1
+sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
 
 # Only allow root to write gamemode scripts
 sudo chown root:root ~/.my_scripts/gamemode/*
@@ -56,9 +57,6 @@ if [ -z "$(git config --global --list | grep -oP '(?<=user.email=).*')" ]; then
 		git config --global user.email "$email"
 	fi
 fi
-
-# If home directory is not my default, replace it
-if [ "$HOME" != "/home/henrik" ]; then sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config; fi
 
 # Seahorse keyring
 if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/login; then
