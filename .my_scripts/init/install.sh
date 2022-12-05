@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Install building tools
+sudo pacman -Syu base-devel --noconfirm
+
 # Enable multilib pacman and ParallelDownloads
 multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"
@@ -8,7 +11,7 @@ sudo sed -i "${multilibIncludeLine}s|#||" /etc/pacman.conf
 sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
 
 # Makepkg tweaks - Optimize compiled code
-sudo pacman -Syu pigz pbzip2 --noconfirm
+sudo pacman -S pigz pbzip2 --noconfirm
 sudo sed -i '/MAKEFLAGS=/c\MAKEFLAGS="-j$(nproc)"' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
 sudo sed -i 's/-mtune=generic/-mtune=native/' /etc/makepkg.conf
@@ -75,12 +78,9 @@ fi
 
 # Find the fastest mirrors
 if [ -z "$(pacman -Qe | grep reflector)" ]; then
-    sudo pacman -Syu reflector --noconfirm
+    sudo pacman -S reflector --noconfirm
     sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
 fi
-
-# Install building tools
-sudo pacman -Syu base-devel --noconfirm
 
 # Install yay
 if [ -z "$(pacman -Qe | grep yay)" ]; then
@@ -148,7 +148,7 @@ while true; do
     printf "This is for virtual machines.\n\n"
     read -p "Do you want to install virt-manager? [y/n] " yn
     case $yn in
-        [Yy]* ) yay -Syu virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --noconfirm;
+        [Yy]* ) yay -S virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --noconfirm;
 				sudo systemctl enable --now libvirtd virtlogd;
 				sudo usermod -a -G libvirt $(whoami);  break;;
         [Nn]* ) break;;
@@ -157,33 +157,33 @@ while true; do
 done
 
 # Fonts
-yay -Syu adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --noconfirm
+yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --noconfirm
 
 # Pipewire
-yay -Syu wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm
+yay -S wireplumber libpipewire02 pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm
 
 # General packages
-yay -Syu gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo vulkan-tools cmst wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
+yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo vulkan-tools cmst wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm
 
 # Mesa drivers
 if [ -z $(glxinfo -B | grep 'Vendor: NVIDIA') ]; then
     if [ -n "$(glxinfo -B | grep 'Vendor: AMD')" ] && [ -z "$(glxinfo -B | grep 'Vendor: Intel')" ]; then
-        yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm;
+        yay -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm;
         sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf;
         sudo mkinitcpio -P;
     elif [ -n "$(glxinfo -B | grep 'Vendor: Intel')" ] && [ -z "$(glxinfo -B | grep 'Vendor: AMD')" ]; then
-        yay -Syu mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm;
+        yay -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm;
     fi
 fi
 
 # Sync browser to ram
-sudo pacman -Syu profile-sync-daemon glib2 --noconfirm
+sudo pacman -S profile-sync-daemon glib2 --noconfirm
 
 # OBS with game capture
-yay -Syu obs-studio obs-vkcapture obs-gstreamer --noconfirm
+yay -S obs-studio obs-vkcapture obs-gstreamer --noconfirm
 
 # Screenshot (Printscreen)
-mkdir ~/Screenshots && yay -Syu slurp swappy grim --noconfirm
+mkdir ~/Screenshots && yay -S slurp swappy grim --noconfirm
 
 # Install nvm
 fish -c fisher install edc/bass
