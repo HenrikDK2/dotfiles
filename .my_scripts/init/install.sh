@@ -36,6 +36,27 @@ if ! sudo grep -Rq "@wheel - nice -20" /etc/security/limits.conf; then
   echo "@wheel - nice -20" | sudo tee -a /etc/security/limits.conf > /dev/null
 fi
 
+# Git configuration
+git config --global init.defaultBranch master
+
+if [ -z "$(git config --list | grep -oP '(?<=user.name=).*')" ]; then
+	clear
+	printf "What is your git username? \n\n"
+	read -p "You can type \"none\", if you don't want to set one globally: " name
+	if [ "$name" != "none"  ] && [ -n name ]; then
+		git config --global user.name "$name"
+	fi
+fi
+
+if [ -z "$(git config --list | grep -oP '(?<=user.email=).*')" ]; then
+	clear
+	printf "What is your git email? \n\n"
+	read -p "You can type \"none\", if you don't want to set one globally: " email
+	if [ "$email" != "none"  ] && [ -n email ]; then
+		git config --global user.email "$email"
+	fi
+fi
+
 # If home directory is not my default, replace it
 if [ "$HOME" != "/home/henrik" ]; then
 	sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
