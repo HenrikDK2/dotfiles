@@ -8,9 +8,14 @@ sudo sed -i "${multilibIncludeLine}s|#||" /etc/pacman.conf
 sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
 
 # Makepkg tweaks - Optimize compiled code
+sudo pacman -Syu pigz pbzip2 --noconfirm
 sudo sed -i '/MAKEFLAGS=/c\MAKEFLAGS="-j$(nproc)"' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
 sudo sed -i 's/-mtune=generic/-mtune=native/' /etc/makepkg.conf
+sudo sed -i 's/COMPRESSZST.*/COMPRESSZST=(zstd -c -z -q --threads=0 -)/' /etc/makepkg.conf
+sudo sed -i 's/COMPRESSXZ.*/COMPRESSXZ=(xz -c -z --threads=0 -)/' /etc/makepkg.conf
+sudo sed -i 's/COMPRESSGZ.*/COMPRESSGZ=(pigz -c -f -n)/' /etc/makepkg.conf
+sudo sed -i 's/COMPRESSBZ2.*/COMPRESSBZ2=(pbzip2 -c -f)/' /etc/makepkg.conf
 
 # Disable faillock - Annoying
 sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
