@@ -39,7 +39,7 @@ fi
 # Git configuration
 git config --global init.defaultBranch master
 
-if [ -z "$(git config --list | grep -oP '(?<=user.name=).*')" ]; then
+if [ -z "$(git config --global --list | grep -oP '(?<=user.name=).*')" ]; then
 	clear
 	printf "What is your git username? \n\n"
 	read -p "You can type \"none\", if you don't want to set one globally: " name
@@ -48,7 +48,7 @@ if [ -z "$(git config --list | grep -oP '(?<=user.name=).*')" ]; then
 	fi
 fi
 
-if [ -z "$(git config --list | grep -oP '(?<=user.email=).*')" ]; then
+if [ -z "$(git config --global --list | grep -oP '(?<=user.email=).*')" ]; then
 	clear
 	printf "What is your git email? \n\n"
 	read -p "You can type \"none\", if you don't want to set one globally: " email
@@ -105,8 +105,8 @@ if ! sudo grep -Rq "rw,noatime,nodiratime,discard" /etc/fstab; then
 fi
 
 # Add bootloader entries, and install kernel
-clear
 while true; do
+    clear
     printf "Only for systemd-boot! - Add bootloader entries?\n\n"
     read -p "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking [y/n] "  yn
     case $yn in
@@ -117,8 +117,8 @@ while true; do
 done
 
 # Ultrawide gaps on workspace 1
-clear
 while true; do
+    clear
     printf "Only for 5120x1440 ultrawide monitor!\n\n"
     read -p "Do you want to have a 1440p window in the center of workspace 1? [y/n] " yn
     case $yn in
@@ -130,8 +130,8 @@ while true; do
 done
 
 # Optimized Firefox profile
-clear
 while true; do
+    clear
     printf "Do you wish to use an optimized Firefox profile?\n\n"
     printf "It disables telemetry, animations and more for privacy and performance.\n\n"
     read -p "This will reset your current profile? [y/n] " yn
@@ -143,8 +143,8 @@ while true; do
 done
 
 # Install Virt-manager
-clear
 while true; do
+    clear
     printf "This is for virtual machines.\n\n"
     read -p "Do you want to install virt-manager? [y/n] " yn
     case $yn in
@@ -228,8 +228,8 @@ systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factor
 sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved connman-vpn
 
 # Reboot
-clear
 while true; do
+    clear
     read -p "Do you want to reboot? [y/n] " yn
     case $yn in
         [Yy]* ) reboot; break;;
