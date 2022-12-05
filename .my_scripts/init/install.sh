@@ -58,10 +58,7 @@ if [ -z "$(git config --global --list | grep -oP '(?<=user.email=).*')" ]; then
 fi
 
 # If home directory is not my default, replace it
-if [ "$HOME" != "/home/henrik" ]; then
-	sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
-	sed -i "s|/home/henrik|$HOME|g" ~/.config/gamemode.ini
-fi
+if [ "$HOME" != "/home/henrik" ]; then sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config; fi
 
 # Seahorse keyring
 if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/login; then
