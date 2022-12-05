@@ -28,10 +28,11 @@ sudo cp -r ~/.my_scripts/init/sudoers.d/* /etc/sudoers.d
 sudo cp -r ~/.my_scripts/init/polkit-1/* /etc/polkit-1
 sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
 
-# Only allow root to write gamemode scripts
+# Permissions
 sudo chown root:root ~/.my_scripts/gamemode/*
-sudo chmod +wrx ~/.my_scripts/gamemode/*
 sudo chmod o+xr-w ~/.my_scripts/gamemode/*
+sudo chown root:root /etc/ssh/sshd_config
+sudo chmod og-rwx /etc/sudoers.d/config
 
 # Copy gaming/network tweaks
 totalMem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
