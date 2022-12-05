@@ -8,7 +8,7 @@ clear
 yay -Syu --noconfirm --needed
 
 while ! [ "$(pacman -Qdtq)" = "" ]; do
-	sudo pacman -Rn $(pacman -Qdtq) --noconfirm --needed
+	sudo pacman -Rn $(pacman -Qdtq) --noconfirm
 done
 
 sudo rm -rf /tmp/*
