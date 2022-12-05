@@ -43,7 +43,12 @@ sed -i "s/$minFreeKbytes/#MEM/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
 
 # Allow users to change niceness to negative (Gamemode)
 if ! sudo grep -Rq "@wheel - nice -20" /etc/security/limits.conf; then
-  echo "@wheel - nice -20" | sudo tee -a /etc/security/limits.conf > /dev/null
+  echo "@wheel - nice -20" | sudo tee -a /etc/security/limits.conf
+fi
+
+# Disable core cumps for setuid and setgid programs
+if ! sudo grep -Rq "*  hard  core  0" /etc/security/limits.conf; then
+  echo "*  hard  core  0" | sudo tee -a /etc/security/limits.conf
 fi
 
 # Git configuration
