@@ -26,7 +26,7 @@
 
 !.my_scripts
 !.my_scripts/**
-.my_scripts/oc.sh
+.my_scripts/login.d
 .my_scripts/linux-tkg
 .my_scripts/init/entries/tmp
 

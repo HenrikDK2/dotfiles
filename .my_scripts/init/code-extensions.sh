@@ -18,8 +18,7 @@ plugins=(
     "bmalehorn.vscode-fish"
     )
 
-for plugin in "${plugins[@]}"
-do
+for plugin in "${plugins[@]}"; do
     code --install-extension $plugin
 done
 

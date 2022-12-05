@@ -162,9 +162,6 @@ yay -Syu obs-studio obs-vkcapture obs-gstreamer --noconfirm
 # Screenshot (Printscreen)
 mkdir ~/Screenshots && yay -Syu slurp swappy grim --noconfirm
 
-# Install vscode plugins
-~/.my_scripts/init/code-extensions.sh
-
 # Install nvm
 fish -c fisher install edc/bass
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
