@@ -35,8 +35,5 @@ set_prio "polkit-gnome" 20 3
 set_prio "/usr/lib/polkit-1/polkitd" 20 3
 set_prio "/usr/bin/dbus-daemon" 20 3
 set_prio "bottles" 20 3
-set_prio ".local/share/Steam/ubuntu12_32/steam" 20 3
-set_prio "steamwebhelper" 20 3
 set_prio "/opt/Heroic/heroic --" 20 3
 set_prio "/usr/bin/lutris" 20 3
-set_prio "discord" 10 3
