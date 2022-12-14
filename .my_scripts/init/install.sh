@@ -154,7 +154,7 @@ while true; do
     printf "This is for virtual machines.\n\n"
     read -p "Do you want to install virt-manager? [y/n] " yn
     case $yn in
-        [Yy]* ) yay -S virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --noconfirm --needed;
+        [Yy]* ) yay -S virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --needed;
 				sudo systemctl enable --now libvirtd virtlogd;
 				sudo usermod -a -G libvirt $(whoami);  break;;
         [Nn]* ) break;;
