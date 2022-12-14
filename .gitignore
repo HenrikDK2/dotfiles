@@ -25,6 +25,9 @@
 !.icons
 !.icons/**
 
+!.gnupg
+!.gnupg/gpg.conf
+
 !.my_scripts
 !.my_scripts/**
 .my_scripts/login.d
