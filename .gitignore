@@ -40,6 +40,9 @@
 !.config/swappy
 !.config/swappy/**
 
+!.config/pipewire
+!.config/pipewire/**
+
 !.config/psd/
 !.config/psd/psd.conf
 
