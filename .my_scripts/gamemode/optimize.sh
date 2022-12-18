@@ -38,3 +38,7 @@ set_prio "/usr/bin/dbus-daemon" 20 3
 set_prio "bottles" 20 3
 set_prio "/opt/Heroic/heroic --" 20 3
 set_prio "/usr/bin/lutris" 20 3
+
+# Clear RAM
+kill $(pgrep chrome_crashpad)
+sudo sh -c 'echo 3 >  /proc/sys/vm/drop_caches'

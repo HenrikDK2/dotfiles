@@ -20,10 +20,6 @@ if [ -z "$(pgrep virt-manager)" ]; then
 	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
 fi
 
-# Clear RAM
-kill $(pgrep chrome_crashpad)
-sudo sh -c 'echo 3 >  /proc/sys/vm/drop_caches'
-
 sleep 60
 
 # Games - Same priority as gamemode
