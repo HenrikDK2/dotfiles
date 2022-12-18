@@ -215,8 +215,10 @@ sudo ufw enable
 sudo mkdir /etc/dnsmasq.d
 sudo cp -r ~/.my_scripts/init/dnsmasq.d/* /etc/dnsmasq.d
 echo "conf-dir=/etc/dnsmasq.d" | sudo tee /etc/dnsmasq.conf
-cat ~/.my_scripts/init/resolv.conf | sudo tee /etc/resolv.conf
+echo -e "[main]\ndns=none" | sudo tee /etc/NetworkManager/conf.d/no-dns.conf
 sudo cp -r ~/.my_scripts/init/systemd/* /etc/systemd
+sudo mkdir -p /etc/NetworkManager/conf.d/
+cat ~/.my_scripts/init/resolv.conf | sudo tee /etc/resolv.conf
 
 # Deny hosts (Get unified hosts file from Ultimate Hosts Blacklist every 6 hours)
 sudo cp ~/.my_scripts/init/denyhosts/denyhosts.service /etc/systemd/system/denyhosts.service
