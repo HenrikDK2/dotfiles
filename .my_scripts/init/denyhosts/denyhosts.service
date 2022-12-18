@@ -8,6 +8,7 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=21600
+ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/denyhosts.sh
 
 [Install]
