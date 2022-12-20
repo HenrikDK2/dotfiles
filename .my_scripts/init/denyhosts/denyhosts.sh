@@ -10,7 +10,7 @@ if [[ $? -eq 0 ]]; then
     wget -O "/etc/hosts.deny.new" https://hosts.ubuntu101.co.za/hosts # Ultimate-Hosts-Blacklist
     wget -O - >> "/etc/hosts.deny.new" https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts # StevenBlack hosts
     wget -O - >> "/etc/hosts.deny.new" https://www.github.developerdan.com/hosts/lists/ads-and-tracking-extended.txt # lightswitch05 hosts 
-    wget -O - >> "/etc/hosts.deny.new" https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/hosts.txt # Block Web bitcoin mining
+    wget -O - >> "/etc/hosts.deny.new" https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/hosts.txt # Blocking Web Browser Bitcoin Mining
     wget -O - >> "/etc/hosts.deny.new" https://blocklistproject.github.io/Lists/ads.txt # Blocklist project (ads)
 
     # Remove duplicates and comments
@@ -19,7 +19,7 @@ if [[ $? -eq 0 ]]; then
     sed -i "7d" /etc/hosts.deny.new
 
     # Replace current hosts.deny with new one
-    if [ "$(grep -c ^ /etc/hosts.deny.new)" -ge "850000" ]; then
+    if [ "$(grep -c ^ /etc/hosts.deny.new)" -ge "100" ]; then
         rm -f /etc/hosts.deny
         mv /etc/hosts.deny.new /etc/hosts.deny
         systemctl restart dnsmasq.service
