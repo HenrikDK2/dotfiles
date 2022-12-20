@@ -14,6 +14,7 @@ if [[ $? -eq 0 ]]; then
     # Remove duplicates and comments
     sed -i '/^[[:blank:]]*#/d;s/[[:blank:]]*#.*//' /etc/hosts.deny.new
     awk -i inplace '!seen[$0]++' /etc/hosts.deny.new
+    sed -i "7d" /etc/hosts.deny.new
 
     # Replace current hosts.deny with new one
     if [ "$(grep -c ^ /etc/hosts.deny.new)" -ge "765000" ]; then
