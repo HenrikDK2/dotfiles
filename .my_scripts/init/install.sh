@@ -220,7 +220,7 @@ sudo cp -r ~/.my_scripts/init/systemd/* /etc/systemd
 sudo mkdir -p /etc/NetworkManager/conf.d/
 cat ~/.my_scripts/init/resolv.conf | sudo tee /etc/resolv.conf
 
-# Deny hosts (Get unified hosts file from Ultimate Hosts Blacklist every 6 hours)
+# Denyhosts (Unified hosts file for ads, tracking, malware, ransomware every week or on boot)
 sudo cp ~/.my_scripts/init/denyhosts/denyhosts.service /etc/systemd/system/denyhosts.service
 sudo cp ~/.my_scripts/init/denyhosts/denyhosts.sh /usr/bin/denyhosts.sh
 
