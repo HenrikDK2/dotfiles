@@ -1,9 +1,6 @@
-listen-address=127.0.0.1
+listen-address=::1,127.0.0.1
 port=53
 bind-interfaces
-user=dnsmasq
-group=dnsmasq
-pid-file=/var/run/dnsmasq.pid
 
 no-resolv
 cache-size=10000
