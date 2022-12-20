@@ -7,7 +7,7 @@ StartLimitIntervalSec=0
 [Service]
 Type=simple
 Restart=always
-RestartSec=86400
+RestartSec=604800
 ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/denyhosts.sh
 
