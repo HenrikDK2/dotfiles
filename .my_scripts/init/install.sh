@@ -34,6 +34,10 @@ sudo chmod o+xr-w ~/.my_scripts/gamemode/*
 sudo chown root:root /etc/ssh/sshd_config
 sudo chmod og-rwx /etc/sudoers.d/config
 
+# Systemd timeout
+sudo mkdir -p /etc/systemd/system.conf.d/
+echo -e "[Manager]\nDefaultTimeoutStopSec=10s" | sudo tee /etc/systemd/system.conf.d/system.conf
+
 # Copy gaming/network tweaks
 totalMem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 minFreeKbytes=$(echo |awk "{ print $totalMem*0.025}")

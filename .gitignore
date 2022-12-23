@@ -37,6 +37,9 @@
 # .CONFIG
 !.config
 
+!.config/systemd/
+!.config/systemd/user.conf
+
 !.config/swappy
 !.config/swappy/**
 
