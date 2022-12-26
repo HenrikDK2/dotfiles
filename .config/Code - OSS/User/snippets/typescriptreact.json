@@ -13,5 +13,20 @@
       "}"
     ],
     "description": "Typescript react arrow function"
+  },
+  "Typescript Preact Arrow Function": {
+    "prefix": "paf",
+    "body": [
+      "import { h, ComponentChildren, FunctionComponent } from 'preact';",
+      "",
+      "interface ${0:component}Props {",
+      "  children?: ComponentChildren;",
+      "}",
+      "",
+      "export const ${0:component}: FunctionComponent<${0:component}Props> = () => {",
+      "  return <div></div>",
+      "}"
+    ],
+    "description": "Typescript preact arrow function"
   }
 }
