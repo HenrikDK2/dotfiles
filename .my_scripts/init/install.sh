@@ -29,10 +29,8 @@ sudo cp -r ~/.my_scripts/init/polkit-1/* /etc/polkit-1
 sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
 
 # Permissions
-sudo chown root:root ~/.my_scripts/gamemode/*
-sudo chmod o+xr-w ~/.my_scripts/gamemode/*
-sudo chown root:root /etc/ssh/sshd_config
-sudo chmod og-rwx /etc/sudoers.d/config
+sudo chown root:root ~/.my_scripts/gamemode/* /etc/ssh/sshd_config
+sudo chmod o+xr-w ~/.my_scripts/gamemode/* /etc/sudoers.d/config
 
 # Systemd timeout
 sudo mkdir -p /etc/systemd/system.conf.d/
@@ -227,6 +225,8 @@ cat ~/.my_scripts/init/resolv.conf | sudo tee /etc/resolv.conf
 # Denyhosts (Unified hosts file for ads, tracking, malware, ransomware every week or on boot)
 sudo cp ~/.my_scripts/init/denyhosts/denyhosts.service /etc/systemd/system/denyhosts.service
 sudo cp ~/.my_scripts/init/denyhosts/denyhosts.sh /usr/bin/denyhosts.sh
+sudo chown root:root /usr/bin/denyhosts.sh  /etc/systemd/system/denyhosts.service
+sudo chmod o+xr-w /usr/bin/denyhosts.sh  /etc/systemd/system/denyhosts.service
 
 # Clock sync
 sudo timedatectl set-ntp true
