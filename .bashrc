@@ -33,7 +33,3 @@ export DXVK_ASYNC=1
 export RADV_FORCE_VRS=2x2
 export RADV_DEBUG=novrsflatshading
 export RADV_PERFTEST="nggc,sam"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
