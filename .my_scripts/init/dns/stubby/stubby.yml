@@ -1,3 +1,4 @@
+dnssec_return_status: GETDNS_EXTENSION_TRUE
 upstream_recursive_servers:
   - address_data: 1.1.1.1
     tls_port: 853
