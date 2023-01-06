@@ -172,7 +172,7 @@ yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts t
 yay -S wireplumber libpipewire02 pipewire gst-plugin-pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm --needed
 
 # General packages
-yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo vulkan-tools cmst mpv wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm --needed
+yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo vulkan-tools cmst mpv wget dnsmasq stubby openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng tesseract-data-dan --noconfirm --needed
 
 # Mesa drivers
 if [ -z $(glxinfo -B | grep 'Vendor: NVIDIA') ]; then
@@ -216,14 +216,8 @@ sudo ufw allow https/tcp
 sudo ufw logging off
 sudo ufw enable
 
-# Setup dnsmasq
-sudo mkdir /etc/dnsmasq.d
-sudo cp -r ~/.my_scripts/init/dnsmasq.d/* /etc/dnsmasq.d
-echo "conf-dir=/etc/dnsmasq.d" | sudo tee /etc/dnsmasq.conf
-echo -e "[main]\ndns=none" | sudo tee /etc/NetworkManager/conf.d/no-dns.conf
-sudo cp -r ~/.my_scripts/init/systemd/* /etc/systemd
-sudo mkdir -p /etc/NetworkManager/conf.d/
-cat ~/.my_scripts/init/resolv.conf | sudo tee /etc/resolv.conf
+# Setup DNS (dnsmasq/stubby)
+sudo cp -r ~/.my_scripts/init/dns/* /etc/
 
 # Denyhosts (Unified hosts file for ads, tracking, malware, ransomware every week or on boot)
 sudo cp ~/.my_scripts/init/denyhosts/denyhosts.service /etc/systemd/system/denyhosts.service
@@ -238,7 +232,7 @@ sudo timedatectl set-ntp true
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Enable services
-sudo systemctl enable --now ufw cups dnsmasq irqbalance denyhosts
+sudo systemctl enable --now ufw cups dnsmasq irqbalance denyhosts stubby
 systemctl --user enable --now wireplumber psd
 
 # Disable services

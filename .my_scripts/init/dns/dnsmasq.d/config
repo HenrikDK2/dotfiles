@@ -11,5 +11,4 @@ addn-hosts=/etc/hosts.deny
 conf-file=/usr/share/dnsmasq/trust-anchors.conf
 dnssec
 
-server=1.1.1.1
-server=1.0.0.1
+server=127.0.0.1#53000
