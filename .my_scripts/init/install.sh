@@ -184,6 +184,9 @@ if [ -z $(glxinfo -B | grep 'Vendor: NVIDIA') ]; then
     fi
 fi
 
+# MangoHud
+yay -S mangohud mangohud-common lib32-mangohud --noconfirm --needed
+
 # Sync browser to ram
 sudo pacman -S profile-sync-daemon glib2 --noconfirm --needed
 
