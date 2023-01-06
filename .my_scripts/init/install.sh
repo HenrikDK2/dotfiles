@@ -15,6 +15,7 @@ sudo pacman -S pigz pbzip2 --noconfirm --needed
 sudo sed -i '/MAKEFLAGS=/c\MAKEFLAGS="-j$(nproc)"' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
 sudo sed -i 's/-mtune=generic/-mtune=native/' /etc/makepkg.conf
+sudo sed -i 's/-O2/-O3 -flto/' /etc/makepkg.conf
 sudo sed -i 's/COMPRESSZST.*/COMPRESSZST=(zstd -c -z -q --threads=0 -)/' /etc/makepkg.conf
 sudo sed -i 's/COMPRESSXZ.*/COMPRESSXZ=(xz -c -z --threads=0 -)/' /etc/makepkg.conf
 sudo sed -i 's/COMPRESSGZ.*/COMPRESSGZ=(pigz -c -f -n)/' /etc/makepkg.conf
