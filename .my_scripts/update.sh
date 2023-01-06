@@ -11,8 +11,6 @@ while ! [ "$(pacman -Qdtq)" = "" ]; do
 	sudo pacman -Rsunc $(pacman -Qdtq) --noconfirm
 done
 
-sudo rm -rf /tmp/*
 rm -rf ~/.local/share/Trash/*
 rm -rf ~/.local/share/applications/
 sudo yay -Scc --noconfirm --needed
-clear
