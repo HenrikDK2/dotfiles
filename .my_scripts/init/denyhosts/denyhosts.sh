@@ -14,6 +14,7 @@ update_hosts(){
  		add_source https://raw.githubusercontent.com/DandelionSprout/adfilt/master/Alternate%20versions%20Anti-Malware%20List/AntiMalwareHosts.txt
  		add_source https://raw.githubusercontent.com/HexxiumCreations/threat-list/gh-pages/hosts.txt
 		add_source https://malware-filter.gitlab.io/malware-filter/phishing-filter-hosts.txt
+		add_source https://raw.githubusercontent.com/shreyasminocha/shady-hosts/main/hosts
 		
         # Remove comments and duplicates
         sed -i '/^[[:blank:]]*#/d;s/[[:blank:]]*#.*/!d/' /etc/hosts.deny.new
