@@ -1,9 +1,0 @@
-dnssec_return_status: GETDNS_EXTENSION_TRUE
-upstream_recursive_servers:
-  - address_data: 1.1.1.1
-    tls_port: 853
-    tls_auth_name: "cloudflare-dns.com"
-    
-listen_addresses:
-  - 127.0.0.1@53000
-  -  0::1@53000

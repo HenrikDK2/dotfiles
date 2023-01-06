@@ -7,6 +7,9 @@ cache-size=10000
 domain-needed
 bogus-priv
 addn-hosts=/etc/hosts.deny
-proxy-dnssec
 
-server=127.0.0.1#53000
+conf-file=/usr/share/dnsmasq/trust-anchors.conf
+dnssec
+
+server=1.1.1.1
+server=1.0.0.1
