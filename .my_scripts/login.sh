@@ -1,18 +1,11 @@
 #!/bin/sh
 
-launch () {
-    uppercase=${1^}
-    if [ -z "$(pidof $1)" ] && [ -z "$(pidof $uppercase)" ]; then
-        nohup $1 > /dev/null 2>&1 &
-    fi
-}
-
 # Programs to lauch at login (executable)
-exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-launch mako
-launch waybar 
-launch evolution
-launch discord
+(/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)
+(mako &)
+(waybar &) 
+(evolution &)
+(discord &)
 
 # Custom bash scripts within ~/.my_scripts/login.d will load at session start
 for script in ~/.my_scripts/login.d/*.sh; do "$script" & done
