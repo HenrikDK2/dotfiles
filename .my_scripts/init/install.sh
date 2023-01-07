@@ -220,8 +220,7 @@ sudo ufw enable
 sudo cp -r ~/.my_scripts/init/dns/* /etc/
 
 # Denyhosts (Unified hosts file for ads, tracking, malware, ransomware every week or on boot)
-sudo cp ~/.my_scripts/init/denyhosts/denyhosts.service /etc/systemd/system/denyhosts.service
-sudo cp ~/.my_scripts/init/denyhosts/denyhosts.sh /usr/bin/denyhosts.sh
+sudo cp -r ~/.my_scripts/init/denyhosts/* /
 sudo chown root:root /usr/bin/denyhosts.sh  /etc/systemd/system/denyhosts.service
 sudo chmod o+xr-w /usr/bin/denyhosts.sh  /etc/systemd/system/denyhosts.service
 
