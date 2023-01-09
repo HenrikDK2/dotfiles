@@ -172,7 +172,7 @@ yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts t
 yay -S wireplumber libpipewire02 pipewire gst-plugin-pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --noconfirm --needed
 
 # General packages
-yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo vulkan-tools cmst mpv wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp code wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng --noconfirm --needed
+yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo vulkan-tools cmst mpv wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp visual-studio-code-bin wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng --noconfirm --needed
 
 # Mesa drivers
 if [ -z $(glxinfo -B | grep 'Vendor: NVIDIA') ]; then
@@ -231,8 +231,8 @@ sudo timedatectl set-ntp true
 cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Enable services
-sudo systemctl enable --now ufw cups dnsmasq irqbalance denyhosts
-systemctl --user enable --now wireplumber psd
+sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts
+systemctl --user enable wireplumber psd
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory
