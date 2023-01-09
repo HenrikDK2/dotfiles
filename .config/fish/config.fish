@@ -34,8 +34,15 @@ alias update '~/.my_scripts/update.sh'
 alias install 'yay -Syu'
 alias uninstall 'yay -Rsn'
 
-# On login
+
 if status is-interactive
+    # Install nvm
+    if type -q fisher; and not test -e ~/.config/fish/functions/nvm.fish
+        fisher install jorgebucaran/nvm.fish
+        clear
+    end
+
+    # On login
     if test -z "$DISPLAY"; and test (tty) = /dev/tty1
         # Execute VM
         sway

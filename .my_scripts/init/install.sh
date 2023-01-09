@@ -197,9 +197,6 @@ yay -S obs-studio obs-vkcapture obs-gstreamer --noconfirm --needed
 # Screenshot (Printscreen)
 mkdir ~/Screenshots && yay -S slurp swappy grim --noconfirm --needed
 
-# Install nvm
-fish -c fisher install jorgebucaran/nvm.fish
-
 # Change default, and current user shell to fish
 sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
 
