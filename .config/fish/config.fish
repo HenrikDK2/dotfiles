@@ -20,10 +20,6 @@ set -x RADV_FORCE_VRS 2x2
 set -x RADV_DEBUG novrsflatshading
 set -x RADV_PERFTEST "nggc,sam,ngg_streamout"
 
-# Xanmod kernel envs
-set -x use_tracers n
-set -x use_numa n
-
 # Alias
 alias dev 'npm run dev'
 alias build 'npm run build'
