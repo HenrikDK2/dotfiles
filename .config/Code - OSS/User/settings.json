@@ -4,42 +4,20 @@
   "git.autofetch": true,
   "git.enableSmartCommit": true,
   "security.workspace.trust.enabled": false,
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "redhat.telemetry.enabled": false,
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "typescript.updateImportsOnFileMove.enabled": "always",
   "liveServer.settings.donotShowInfoMsg": true,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "explorer.confirmDragAndDrop": false,
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "editor.formatOnSave": true,
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "css.lint.unknownAtRules": "ignore",
   "security.workspace.trust.untrustedFiles": "newWindow",
   "workbench.preferredLightColorTheme": "Default Dark+",
   "window.titleBarStyle": "custom",
   "git.ignoreRebaseWarning": true,
   "reactSnippets.settings.prettierEnabled": true,
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "prettier.printWidth": 120,
-  "search.followSymlinks": false
+  "search.followSymlinks": false,
+  "workbench.startupEditor": "none"
 }
