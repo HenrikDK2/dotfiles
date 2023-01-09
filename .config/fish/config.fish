@@ -44,7 +44,6 @@ if status is-interactive
 
     # On login
     if test -z "$DISPLAY"; and test (tty) = /dev/tty1
-        # Execute VM
         sway
     end
 end
