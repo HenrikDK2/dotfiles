@@ -3,6 +3,8 @@
 # Install vscode plugins
 plugins=(
     "redhat.vscode-yaml"
+    "aaron-bond.better-comments"
+    "VisualStudioExptTeam.vscodeintellicode"
     "llvm-vs-code-extensions.vscode-clangd"
     "mikestead.dotenv"
     "stylelint.vscode-stylelint"
