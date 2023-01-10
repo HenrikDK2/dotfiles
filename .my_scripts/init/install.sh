@@ -181,13 +181,15 @@ yay -S wireplumber libpipewire02 pipewire gst-plugin-pipewire pipewire-alsa pipe
 yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo vulkan-tools cmst mpv wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp visual-studio-code-bin wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng --noconfirm --needed
 
 # Mesa drivers
-if [ -z $(glxinfo -B | grep 'Vendor: NVIDIA') ]; then
-    if [ -n "$(glxinfo -B | grep 'Vendor: AMD')" ] && [ -z "$(glxinfo -B | grep 'Vendor: Intel')" ]; then
-        yay -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm --needed;
-        sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf;
-        sudo mkinitcpio -P;
-    elif [ -n "$(glxinfo -B | grep 'Vendor: Intel')" ] && [ -z "$(glxinfo -B | grep 'Vendor: AMD')" ]; then
-        yay -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm --needed;
+vendor="$(glxinfo -B | grep -o 'Vendor: [^ ]*')"
+
+if [[ "$vendor" != "Vendor: NVIDIA" ]]; then
+    if [[ "$vendor" == "Vendor: AMD" ]]; then
+        yay -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm --needed
+        sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+        sudo mkinitcpio -P
+    elif [[ "$vendor" == "Vendor: Intel" ]]; then
+        yay -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm --needed
     fi
 fi
 
