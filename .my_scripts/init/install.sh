@@ -21,6 +21,12 @@ sudo sed -i 's/COMPRESSXZ.*/COMPRESSXZ=(xz -c -z --threads=0 -)/' /etc/makepkg.c
 sudo sed -i 's/COMPRESSGZ.*/COMPRESSGZ=(pigz -c -f -n)/' /etc/makepkg.conf
 sudo sed -i 's/COMPRESSBZ2.*/COMPRESSBZ2=(pbzip2 -c -f)/' /etc/makepkg.conf
 
+# Default dconf values
+dconf write /org/nemo/window-state/start-with-menu-bar false
+dconf write /org/gnome/evolution/shell/menubar-visible false
+dconf write /org/gnome/evolution/shell/statusbar-visible false
+dconf write /org/gnome/evolution/shell/toolbar-visible false
+
 # Disable faillock - Annoying
 sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
 
