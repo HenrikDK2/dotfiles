@@ -11,7 +11,7 @@ sudo sed -i "${multilibIncludeLine}s|#||" /etc/pacman.conf
 sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
 
 # Makepkg tweaks - Optimize compiled code
-sudo pacman -S pigz pbzip2 --noconfirm --needed
+sudo pacman -S zstd pigz pbzip2 xz --noconfirm --needed
 sudo sed -i '/MAKEFLAGS=/c\MAKEFLAGS="-j$(nproc)"' /etc/makepkg.conf
 sudo sed -i 's/-march=x86-64/-march=native/' /etc/makepkg.conf
 sudo sed -i 's/-mtune=generic/-mtune=native/' /etc/makepkg.conf
