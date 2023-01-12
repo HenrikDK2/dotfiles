@@ -11,7 +11,7 @@ plugins=(
     "ritwickdey.LiveServer"
     "pkief.material-icon-theme"
     "formulahendry.code-runner"
-    "jpoissonnier.vscode-styled-components"
+    "styled-components.vscode-styled-components"
     "formulahendry.auto-rename-tag"
     "formulahendry.auto-close-tag"
     "esbenp.prettier-vscode"
