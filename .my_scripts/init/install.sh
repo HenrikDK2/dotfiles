@@ -21,6 +21,21 @@ sudo sed -i 's/COMPRESSXZ.*/COMPRESSXZ=(xz -c -z --threads=0 -)/' /etc/makepkg.c
 sudo sed -i 's/COMPRESSGZ.*/COMPRESSGZ=(pigz -c -f -n)/' /etc/makepkg.conf
 sudo sed -i 's/COMPRESSBZ2.*/COMPRESSBZ2=(pbzip2 -c -f)/' /etc/makepkg.conf
 
+# Install yay
+if [ -z "$(pacman -Qe | grep yay)" ]; then
+	git clone https://aur.archlinux.org/yay.git
+	sudo chmod 777 -R ./yay
+	(cd yay && makepkg -si --noconfirm)
+	rm -rf ./yay
+fi
+
+# Use ALHP mirror if supported by the CPU (https://git.harting.dev/ALHP/ALHP.GO)
+if [ -z "$(grep -F '[core-x86-64-v3]' /etc/pacman.conf)" ] && [ -n "$(lscpu | grep 'sse4_2')" ]; then
+	yay -S alhp-keyring alhp-mirrorlist --noconfirm --needed
+	sudo sed -i '/\[core\]/i [core-x86-64-v3]\nInclude = /etc/pacman.d/alhp-mirrorlist\n\n[extra-x86-64-v3]\nInclude = /etc/pacman.d/alhp-mirrorlist\n\n[community-x86-64-v3]\nInclude = /etc/pacman.d/alhp-mirrorlist\n' /etc/pacman.conf
+	sudo pacman -Suy --noconfirm
+fi
+
 # Default dconf values
 dconf write /org/nemo/window-state/start-with-menu-bar false
 dconf write /org/gnome/evolution/shell/menubar-visible false
@@ -95,14 +110,6 @@ fi
 if [ -z "$(pacman -Qe | grep reflector)" ]; then
     sudo pacman -S reflector --noconfirm --needed
     sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
-fi
-
-# Install yay
-if [ -z "$(pacman -Qe | grep yay)" ]; then
-	git clone https://aur.archlinux.org/yay.git
-	sudo chmod 777 -R ./yay
-	(cd yay && makepkg -si --noconfirm)
-	rm -rf ./yay
 fi
 
 # fstab tweaks
