@@ -20,6 +20,10 @@ if [ -z "$(pgrep virt-manager)" ]; then
 	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
 fi
 
+if [[ -z $(sudo docker ps -q) ]]; then
+  stop_service docker
+fi
+
 sleep 60
 
 # Games - Same priority as gamemode

@@ -5,3 +5,4 @@ source "$parent_path/optimize.sh"
 
 sudo systemctl start systemd-journald cups systemd-timesyncd
 sudo systemctl start libvirtd virtlogd
+sudo systemctl start docker
