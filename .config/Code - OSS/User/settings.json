@@ -19,5 +19,8 @@
   "reactSnippets.settings.prettierEnabled": true,
   "prettier.printWidth": 120,
   "search.followSymlinks": false,
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
