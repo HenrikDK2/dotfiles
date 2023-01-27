@@ -17,7 +17,7 @@
   "Typescript Preact Arrow Function": {
     "prefix": "paf",
     "body": [
-      "import { h, ComponentChildren, FunctionComponent } from 'preact';",
+      "import { ComponentChildren, FunctionComponent } from 'preact';",
       "",
       "interface ${0:component}Props {",
       "  children?: ComponentChildren;",
