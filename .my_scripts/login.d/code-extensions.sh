@@ -17,6 +17,7 @@ plugins=(
     "esbenp.prettier-vscode"
     "eamodio.gitlens"
     "dbaeumer.vscode-eslint"
+    "MariusAlchimavicius.json-to-ts"
     "bmalehorn.vscode-fish"
     )
 
