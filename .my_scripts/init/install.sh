@@ -230,6 +230,7 @@ sudo ufw enable
 
 # Setup dnsmasq
 sudo cp -r ~/.my_scripts/init/dns/* /etc/
+echo "conf-dir=/etc/dnsmasq.d" | sudo tee /etc/dnsmasq.conf
 
 # Denyhosts (Unified hosts file for ads, tracking, malware, ransomware every week or on boot)
 sudo cp -r ~/.my_scripts/init/denyhosts/* /
