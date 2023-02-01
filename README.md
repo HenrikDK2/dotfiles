@@ -29,4 +29,4 @@ git fetch --all
 git reset --hard origin/master
 ```
 
-Now you're mostly done, you just need to run `~/.my_scripts/init/install.sh`, and follow the simple procedures.
+Now you're mostly done, you just need to run the install script `~/.my_scripts/init/install.sh` as a normal user, and follow the simple procedures.
