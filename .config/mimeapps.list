@@ -21,7 +21,7 @@ application/xml=code-oss.desktop
 x-scheme-handler/quaver=Quaver-scheme-handler.desktop
 x-scheme-handler/discord-376180410490552320=discord-376180410490552320.desktop
 application/x-wine-extension-ini=code-oss.desktop
-application/json=code-oss.desktop
+application/json=code.desktop
 x-scheme-handler/etcher=balena-etcher-electron.desktop
 text/plain=code-oss.desktop
 
@@ -39,5 +39,5 @@ image/raw=imv.desktop;
 image/raw=webp.desktop;
 application/xml=code-oss.desktop;
 application/x-wine-extension-ini=code-oss.desktop;
-application/json=code-oss.desktop;
+application/json=code-oss.desktop;code.desktop;
 text/plain=code-oss.desktop;
