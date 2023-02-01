@@ -185,30 +185,32 @@ yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts t
 yay -S wireplumber libpipewire02 pipewire gst-plugin-pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --needed
 
 # General packages
-yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo vulkan-tools cmst mpv wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp visual-studio-code-bin wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng --needed
+yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo pciutils vulkan-tools cmst mpv wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp visual-studio-code-bin wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng --needed
 
-# Mesa drivers - AMD
-while true; do
-    read -p "Do you want to install Mesa drivers for AMD? [y/n] " yn
-    case $yn in
-        [Yy]* ) yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils
-        		sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
-        		sudo mkinitcpio -P; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+# Mesa drivers - AMD/Intel
+if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep amdgpu)" ]; then
+    while true; do
+        read -p "Do you want to install Mesa drivers for AMD? [y/n] " yn
+        case $yn in
+            [Yy]* ) yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils
+                    sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+                    sudo mkinitcpio -P; break;;
+            [Nn]* ) break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+fi
 
-# Mesa drivers - Intel
-while true; do
-    read -p "Do you want to install Mesa drivers for Intel? [y/n] " yn
-    case $yn in
-        [Yy]* ) yay -Syu mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
-
+if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep Intel)" ]]; then
+    while true; do
+        read -p "Do you want to install Mesa drivers for Intel? [y/n] " yn
+        case $yn in
+            [Yy]* ) yay -Syu mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver; break;;
+            [Nn]* ) break;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
+fi
 
 # MangoHud
 yay -S mangohud mangohud-common lib32-mangohud --noconfirm --needed
