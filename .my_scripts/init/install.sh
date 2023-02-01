@@ -189,6 +189,7 @@ yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo pciutils v
 
 # Mesa drivers - AMD/Intel
 if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep amdgpu)" ]; then
+    clear
     while true; do
         read -p "Do you want to install Mesa drivers for AMD? [y/n] " yn
         case $yn in
@@ -202,6 +203,7 @@ if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep amdgpu)" ]; then
 fi
 
 if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep Intel)" ]]; then
+    clear
     while true; do
         read -p "Do you want to install Mesa drivers for Intel? [y/n] " yn
         case $yn in
