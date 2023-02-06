@@ -51,19 +51,16 @@ sudo cp -r ~/.my_scripts/init/polkit-1/* /etc/polkit-1
 sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
 
 # Permissions
-sudo chown root:root ~/.my_scripts/gamemode/* /etc/ssh/sshd_config
-sudo chmod o+xr-w ~/.my_scripts/gamemode/* /etc/sudoers.d/config
+sudo chown -R root:root ~/.my_scripts/gamemode /etc/sudoers.d /etc/ssh/sshd_config
+sudo chmod -R o+xr-w ~/.my_scripts/gamemode
+sudo chmod -R 750 /etc/sudoers.d /etc/ssh/sshd_config
 
 # Systemd timeout
 sudo mkdir -p /etc/systemd/system.conf.d/
 echo -e "[Manager]\nDefaultTimeoutStopSec=10s" | sudo tee /etc/systemd/system.conf.d/system.conf
 
 # Copy gaming/network tweaks
-totalMem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-minFreeKbytes=$(echo |awk "{ print $totalMem*0.025}")
-sed -i "s/#MEM/$minFreeKbytes/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
 sudo cp -r ~/.my_scripts/init/tmpfiles.d/* /etc/tmpfiles.d
-sed -i "s/$minFreeKbytes/#MEM/" ~/.my_scripts/init/tmpfiles.d/tweaks.conf
 
 # Allow users to change niceness to negative (Gamemode)
 if ! sudo grep -Rq "@wheel - nice -20" /etc/security/limits.conf; then
