@@ -55,7 +55,7 @@
   },
   "memory": {
     "format": "  {percentage}%",
-    "on-click": "sudo ~/.my_scripts/gamemode/optimize.sh"
+    "on-click": "sudo /usr/local/bin/gamemode/optimize.sh"
   },
   "battery": {
     "states": {
