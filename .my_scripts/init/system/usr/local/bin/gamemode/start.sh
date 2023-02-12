@@ -24,6 +24,8 @@ if [[ -z $(sudo docker ps -q) ]]; then
   stop_service docker
 fi
 
+for script in $parent_path/start.d/*.sh; do "$script" & done
+
 sleep 60
 
 # Games - Same priority as gamemode
