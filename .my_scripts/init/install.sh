@@ -96,12 +96,6 @@ if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd; then
 	echo "password	optional	pam_gnome_keyring.so" | sudo tee -a /etc/pam.d/passwd
 fi
 
-# Find the fastest mirrors
-if [ -z "$(pacman -Qe | grep reflector)" ]; then
-    sudo pacman -S reflector --noconfirm --needed
-    sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
-fi
-
 # fstab tweaks
 clear
 if ! sudo grep -Rq "rw,noatime,nodiratime,discard" /etc/fstab; then

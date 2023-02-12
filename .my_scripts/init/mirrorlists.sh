@@ -17,4 +17,10 @@ if [ -z "$(grep -F '[cachyos-v4]' /etc/pacman.conf)" ] && [ -n "$V4" ]; then
 	sudo sed -i '/\[core-x86-64-v3]/i [cachyos-v4]\nInclude = /etc/pacman.d/cachyos-v4-mirrorlist\n' /etc/pacman.conf
 fi
 
+# Find the fastest mirrors
+if [ -z "$(pacman -Qe | grep reflector)" ]; then
+    sudo pacman -S reflector --noconfirm --needed
+    sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
+fi
+
 sudo pacman -Suy
