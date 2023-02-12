@@ -157,7 +157,7 @@ sudo ufw enable
 sudo timedatectl set-ntp true
 
 # Enable services
-sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts
+sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts optimize-interruptfreq pci-latency
 systemctl --user enable wireplumber psd
 
 # Disable services
