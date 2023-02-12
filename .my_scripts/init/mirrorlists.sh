@@ -20,4 +20,4 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
     sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
 fi
 
-sudo pacman -Suuy
+sudo pacman -Suuy --noconfirm
