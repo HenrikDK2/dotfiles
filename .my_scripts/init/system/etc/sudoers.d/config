@@ -1,0 +1,6 @@
+Defaults env_reset,passwd_tries=10,timestamp_timeout=120
+%wheel ALL=(ALL:ALL) ALL
+%wheel ALL = NOPASSWD: /usr/local/bin/gamemode/optimize.sh
+%wheel ALL = NOPASSWD: /usr/local/bin/gamemode/start.sh
+%wheel ALL = NOPASSWD: /usr/local/bin/gamemode/exit.sh
+%wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper

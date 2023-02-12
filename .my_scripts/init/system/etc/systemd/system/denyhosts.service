@@ -8,7 +8,7 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=604800
-ExecStart=/usr/bin/denyhosts.sh
+ExecStart=/usr/local/bin/denyhosts.sh
 
 [Install]
 WantedBy=multi-user.target

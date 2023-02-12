@@ -10,6 +10,9 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	rm -rf ./yay
 fi
 
+# Copy system files
+sudo cp -r ~/.my_scripts/init/system/* /
+
 # Enable multilib, and ParallelDownloads, and add mirrorlists
 multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"
@@ -34,67 +37,6 @@ dconf write /org/nemo/window-state/start-with-menu-bar false
 dconf write /org/gnome/evolution/shell/menubar-visible false
 dconf write /org/gnome/evolution/shell/statusbar-visible false
 dconf write /org/gnome/evolution/shell/toolbar-visible false
-
-# Disable faillock - Annoying
-sudo sed -i 's/# deny = 3/deny = 0/g' /etc/security/faillock.conf
-
-# Copy Sudo and Polkit rules
-sudo cp -r ~/.my_scripts/init/sudoers.d/* /etc/sudoers.d
-sudo cp -r ~/.my_scripts/init/polkit-1/* /etc/polkit-1
-sudo sed -i "s|/home/henrik|$HOME|g" /etc/sudoers.d/config
-
-# Permissions
-sudo chown -R root:root ~/.my_scripts/gamemode /etc/sudoers.d /etc/ssh/sshd_config
-sudo chmod -R o+xr-w ~/.my_scripts/gamemode
-sudo chmod -R 750 /etc/sudoers.d /etc/ssh/sshd_config
-
-# Systemd timeout
-sudo mkdir -p /etc/systemd/system.conf.d/
-echo -e "[Manager]\nDefaultTimeoutStopSec=10s" | sudo tee /etc/systemd/system.conf.d/system.conf
-
-# Copy gaming/network tweaks
-sudo cp -r ~/.my_scripts/init/tmpfiles.d/* /etc/tmpfiles.d
-
-# Allow users to change niceness to negative (Gamemode)
-if ! sudo grep -Rq "@wheel - nice -20" /etc/security/limits.conf; then
-  echo "@wheel - nice -20" | sudo tee -a /etc/security/limits.conf
-fi
-
-# Disable core cumps for setuid and setgid programs
-if ! sudo grep -Rq "*  hard  core  0" /etc/security/limits.conf; then
-  echo "*  hard  core  0" | sudo tee -a /etc/security/limits.conf
-fi
-
-# Git configuration
-git config --global init.defaultBranch master
-
-if [ -z "$(git config --global --list | grep -oP '(?<=user.name=).*')" ]; then
-	clear
-	printf "What is your git username? \n\n"
-	read -p "You can type \"none\", if you don't want to set one globally: " name
-	if [ "$name" != "none"  ] && [ -n "$name" ]; then
-		git config --global user.name "$name"
-	fi
-fi
-
-if [ -z "$(git config --global --list | grep -oP '(?<=user.email=).*')" ]; then
-	clear
-	printf "What is your git email? \n\n"
-	read -p "You can type \"none\", if you don't want to set one globally: " email
-	if [ "$email" != "none"  ] && [ -n "$email" ]; then
-		git config --global user.email "$email"
-	fi
-fi
-
-# Seahorse keyring
-if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/login; then
-	echo "auth	optional	pam_gnome_keyring.so" | sudo tee -a /etc/pam.d/login
-	echo "session    optional pam_gnome_keyring.so     auto_start" | sudo tee -a /etc/pam.d/login
-fi
-
-if ! sudo grep -Rq "pam_gnome_keyring.so" /etc/pam.d/passwd; then
-	echo "password	optional	pam_gnome_keyring.so" | sudo tee -a /etc/pam.d/passwd
-fi
 
 # fstab tweaks
 clear
@@ -165,11 +107,8 @@ done
 # Fonts
 yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --needed
 
-# Pipewire
-yay -S wireplumber libpipewire02 pipewire gst-plugin-pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 --needed
-
-# General packages
-yay -S gamemode lib32-gamemode ufw cups irqbalance mesa-utils glxinfo pciutils vulkan-tools cmst mpv wget dnsmasq openvr lib32-gtk2 lib32-libva lib32-libvdpau qt5-declarative qt6-declarative curl qt5-wayland qt6-wayland fish fisher gtklock mako btop man-db swayidle swaybg xdg-desktop-portal gperftools lib32-gperftools gnome-keyring polkit polkit-gnome seahorse libsecret imv xdg-desktop-portal-wlr glxinfo sway deluge deluge-gtk xorg-xwayland wofi scrot micro pavucontrol nemo nemo-fileroller npm kitty gamescope firefox-developer-edition gvfs gvfs-mtp visual-studio-code-bin wl-clipboard unrar waybar libappindicator-gtk2 libappindicator-gtk3 unzip evolution evolution-ews wayland-protocols tesseract-data-eng --needed
+# Packages
+yay -S btop cmst cups curl deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 glxinfo glxinfo gnome-keyring gperftools grim gst-plugin-pipewire gtklock gvfs gvfs-mtp imv irqbalance kitty lib32-gamemode lib32-gperftools lib32-gtk2 lib32-libva lib32-libvdpau lib32-mangohud libappindicator-gtk2 libappindicator-gtk3 libpipewire02 libsecret mako man-db mangohud mangohud-common mesa-utils micro mpv nemo nemo-fileroller npm obs-gstreamer obs-studio obs-vkcapture openvr pavucontrol pciutils pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg swayidle tesseract-data-eng ufw unrar unzip visual-studio-code-bin vulkan-tools waybar wayland-protocols wget wireplumber wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
 
 # Mesa drivers - AMD/Intel
 if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep amdgpu)" ]; then
@@ -198,18 +137,6 @@ if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep Intel)" ]]; then
     done
 fi
 
-# MangoHud
-yay -S mangohud mangohud-common lib32-mangohud --noconfirm --needed
-
-# Sync browser to ram
-sudo pacman -S profile-sync-daemon glib2 --noconfirm --needed
-
-# OBS with game capture
-yay -S obs-studio obs-vkcapture obs-gstreamer --noconfirm --needed
-
-# Screenshot (Printscreen)
-mkdir ~/Screenshots && yay -S slurp swappy grim --noconfirm --needed
-
 # Change default, and current user shell to fish
 sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
 
@@ -226,20 +153,8 @@ sudo ufw allow https/tcp
 sudo ufw logging off
 sudo ufw enable
 
-# Setup dnsmasq
-sudo cp -r ~/.my_scripts/init/dns/* /etc/
-echo "conf-dir=/etc/dnsmasq.d" | sudo tee /etc/dnsmasq.conf
-
-# Denyhosts (Unified hosts file for ads, tracking, malware, ransomware every week or on boot)
-sudo cp -r ~/.my_scripts/init/denyhosts/* /
-sudo chown root:root /usr/bin/denyhosts.sh  /etc/systemd/system/denyhosts.service
-sudo chmod o+xr-w /usr/bin/denyhosts.sh  /etc/systemd/system/denyhosts.service
-
 # Clock sync
 sudo timedatectl set-ntp true
-
-# Replace tty issue
-cat ~/.my_scripts/init/issue.txt | sudo tee /etc/issue
 
 # Enable services
 sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts
