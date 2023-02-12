@@ -1,4 +1,5 @@
 #!/bin/bash
+
 kernel_hardening_net="net.ipv4.tcp_syncookies=1 net.ipv4.tcp_rfc1337=1 net.ipv4.conf.all.rp_filter=1 net.ipv4.conf.default.rp_filter=1 net.ipv4.conf.all.accept_redirects=0 net.ipv4.conf.default.accept_redirects=0 net.ipv4.conf.all.secure_redirects=0 net.ipv4.conf.default.secure_redirects=0 net.ipv6.conf.all.accept_redirects=0 net.ipv6.conf.default.accept_redirects=0 net.ipv4.conf.all.send_redirects=0 net.ipv4.conf.default.send_redirects=0 net.ipv4.icmp_echo_ignore_all=1 net.ipv4.conf.all.accept_source_route=0 net.ipv4.conf.default.accept_source_route=0 net.ipv6.conf.all.accept_source_route=0 net.ipv6.conf.default.accept_source_route=0 net.ipv6.conf.all.accept_ra=0 net.ipv6.conf.default.accept_ra=0 net.ipv4.tcp_sack=0 net.ipv4.tcp_dsack=0 net.ipv4.tcp_fack=0"
 kernel_hardening="$kernel_hardening_net vsyscall=none randomize_kstack_offset=on slab_nomerge init_on_alloc=1 init_on_free=1 page_alloc.shuffle=1 debugfs=off kernel.yama.ptrace_scope=3 kernel.perf_event_paranoid=3 kernel.unprivileged_userns_clone=0 kernel.kexec_load_disabled=1 kernel.sysrq=4 vm.unprivileged_userfaultfd=0 dev.tty.ldisc_autoload=0 kernel.unprivileged_bpf_disabled=1 net.core.bpf_jit_harden=2 kernel.kptr_restrict=2 kernel.dmesg_restrict=1 loglevel=3"
 if [ "$(uname -m)" == "x86_64" ]; then kernel_hardening="$kernel_hardening vm.mmap_rnd_bits=32 vm.mmap_rnd_compat_bits=16"; fi
@@ -73,14 +74,14 @@ change_default () {
 }
 
 # Install Linux Zen
-if [ -z "$(pacman -Qe | grep 'linux-zen')"]; then
+if [ -z "$(pacman -Qe | grep 'linux-zen')" ]; then
 	sudo pacman -Syu linux-zen --noconfirm --needed
 	clear
 fi
 
 # Create temp kernel entries
 mkdir ~/.my_scripts/init/entries/tmp
-cp ~/.my_scripts/init/entries/* ~/.my_scripts/init/entries/tmp
+cp ~/.my_scripts/init/entries/*.conf ~/.my_scripts/init/entries/tmp
 clear
 
 # Add Intel or AMD microcode
