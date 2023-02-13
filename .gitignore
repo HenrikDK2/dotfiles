@@ -37,6 +37,9 @@
 # .CONFIG
 !.config
 
+!.config/MangoHud/
+!.config/MangoHud/*
+
 !.config/systemd/
 !.config/systemd/user/
 !.config/systemd/user/*.d/
