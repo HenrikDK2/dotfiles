@@ -24,6 +24,7 @@ application/x-wine-extension-ini=code-oss.desktop
 application/json=code.desktop
 x-scheme-handler/etcher=balena-etcher-electron.desktop
 text/plain=code-oss.desktop
+text/x-log=code.desktop
 
 [Added Associations]
 application/x-shellscript=code-oss-url-handler.desktop;
@@ -41,3 +42,4 @@ application/xml=code-oss.desktop;
 application/x-wine-extension-ini=code-oss.desktop;
 application/json=code-oss.desktop;code.desktop;
 text/plain=code-oss.desktop;
+text/x-log=code.desktop;
