@@ -31,6 +31,7 @@ add_options () {
 		ROOT_UUID=$(sudo blkid -o value -s UUID /dev/$ROOT_DRIVE)
 		
 		if [ -z $ROOT_UUID ]; then get_root_uuid "error"; fi
+		sudo tune2fs -O fast_commit /dev/$ROOT_DRIVE
 	}
 	
 	get_swap_uuid () {
