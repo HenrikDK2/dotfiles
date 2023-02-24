@@ -20,10 +20,10 @@ image/jpeg=imv.desktop
 application/xml=code-oss.desktop
 x-scheme-handler/quaver=Quaver-scheme-handler.desktop
 x-scheme-handler/discord-376180410490552320=discord-376180410490552320.desktop
-application/x-wine-extension-ini=code-oss.desktop
+application/x-wine-extension-ini=code.desktop
 application/json=code.desktop
 x-scheme-handler/etcher=balena-etcher-electron.desktop
-text/plain=code-oss.desktop
+text/plain=code.desktop
 text/x-log=code.desktop
 
 [Added Associations]
@@ -39,7 +39,7 @@ image/tiff=imv.desktop;
 image/raw=imv.desktop;
 image/raw=webp.desktop;
 application/xml=code-oss.desktop;
-application/x-wine-extension-ini=code-oss.desktop;
+application/x-wine-extension-ini=code-oss.desktop;code.desktop;
 application/json=code-oss.desktop;code.desktop;
-text/plain=code-oss.desktop;
+text/plain=code-oss.desktop;code.desktop;
 text/x-log=code.desktop;
