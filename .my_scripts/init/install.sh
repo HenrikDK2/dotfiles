@@ -1,8 +1,15 @@
 #!/bin/sh
 
-# Install building tools, and yay
+# Find the fastest mirrors
+if [ -z "$(pacman -Qe | grep reflector)" ]; then
+    sudo pacman -S reflector --noconfirm --needed
+    sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
+fi
+
+# Install building tools
 sudo pacman -Syu base-devel git sudo --noconfirm --needed
 
+# Install yay
 if [ -z "$(pacman -Qe | grep yay)" ]; then
 	git clone https://aur.archlinux.org/yay.git
 	sudo chmod 777 -R ./yay
@@ -19,7 +26,6 @@ let "multilibIncludeLine = $multilibLine + 1"
 sudo sed -i "${multilibLine}s|#||" /etc/pacman.conf
 sudo sed -i "${multilibIncludeLine}s|#||" /etc/pacman.conf
 sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
-~/.my_scripts/init/mirrorlists.sh
 
 # Makepkg tweaks - Optimize compiled code
 sudo pacman -S zstd pigz pbzip2 xz --noconfirm --needed
