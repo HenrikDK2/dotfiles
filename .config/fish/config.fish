@@ -5,7 +5,6 @@ set -x VISUAL micro
 set -x XDG_CURRENT_DESKTOP sway
 set -x DESKTOP_SESSION sway
 set -x XDG_SESSION_TYPE wayland
-set -x SDL_VIDEODRIVER wayland
 set -x QT_QPA_PLATFORM "wayland;xcb"
 set -x QT_WAYLAND_FORCE_DPI "physical"
 set -x QT_WAYLAND_DISABLE_WINDOWDECORATION 1
