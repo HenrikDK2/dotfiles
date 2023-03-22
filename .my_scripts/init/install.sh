@@ -57,19 +57,6 @@ dconf write /org/gnome/evolution/shell/menubar-visible false
 dconf write /org/gnome/evolution/shell/statusbar-visible false
 dconf write /org/gnome/evolution/shell/toolbar-visible false
 
-# fstab tweaks
-if ! sudo grep -Rq "rw,noatime,nodiratime,discard" /etc/fstab; then
-    while true; do
-        printf "Do you wish to add sdd/hdd tweaks to fstab?\n\n"
-        read -p "Drive failures will cause loss of data, will you continue? [y/n] " yn
-        case $yn in
-            [Yy]* ) sudo sed -i "s/rw,/rw,noatime,nodiratime,discard,/g" /etc/fstab; break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
-fi
-
 # Add bootloader entries, and install kernel
 while true; do
     printf "Only for systemd-boot! - Add bootloader entries?\n\n"
