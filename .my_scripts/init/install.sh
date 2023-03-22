@@ -1,5 +1,17 @@
 #!/bin/sh
 
+# Check if sudo and git are installed
+if [ ! command -v sudo &> /dev/null || ! command -v git &> /dev/null ]; then
+    echo "Sudo and/or Git is not installed"
+    exit 1
+fi
+
+# Check if user has root permissions
+if [[ $EUID -eq 0 ]]; then
+   echo "You shouldn't run this script as root" 
+   exit 1
+fi
+
 # Find the fastest mirrors
 if [ -z "$(pacman -Qe | grep reflector)" ]; then
     sudo pacman -S reflector --noconfirm --needed
@@ -7,7 +19,7 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 fi
 
 # Install building tools
-sudo pacman -Syu base-devel git sudo --noconfirm --needed
+sudo pacman -Syu base-devel --noconfirm --needed
 
 # Install yay
 if [ -z "$(pacman -Qe | grep yay)" ]; then
@@ -39,14 +51,13 @@ sudo sed -i 's/COMPRESSGZ.*/COMPRESSGZ=(pigz -c -f -n)/' /etc/makepkg.conf
 sudo sed -i 's/COMPRESSBZ2.*/COMPRESSBZ2=(pbzip2 -c -f)/' /etc/makepkg.conf
 
 # Default dconf values
-pacman -S dconf --noconfirm --needed 
+sudo pacman -S dconf --noconfirm --needed 
 dconf write /org/nemo/window-state/start-with-menu-bar false
 dconf write /org/gnome/evolution/shell/menubar-visible false
 dconf write /org/gnome/evolution/shell/statusbar-visible false
 dconf write /org/gnome/evolution/shell/toolbar-visible false
 
 # fstab tweaks
-clear
 if ! sudo grep -Rq "rw,noatime,nodiratime,discard" /etc/fstab; then
     while true; do
         printf "Do you wish to add sdd/hdd tweaks to fstab?\n\n"
@@ -60,7 +71,6 @@ if ! sudo grep -Rq "rw,noatime,nodiratime,discard" /etc/fstab; then
 fi
 
 # Add bootloader entries, and install kernel
-clear
 while true; do
     printf "Only for systemd-boot! - Add bootloader entries?\n\n"
     read -p "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking [y/n] "  yn
