@@ -115,7 +115,7 @@ yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts t
 yay -S btop cabextract cmst cups curl dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 glxinfo gnome-keyring gperftools grim gst-plugin-pipewire gtklock gvfs gvfs-mtp imv irqbalance kitty lib32-gamemode lib32-gperftools lib32-gtk2 lib32-libva lib32-libvdpau lib32-mangohud lib32-pipewire libappindicator-gtk2 libappindicator-gtk3 libpipewire libsecret mako man-db mangohud mangohud-common mesa-utils micro mpv nemo nemo-fileroller npm obs-gstreamer obs-studio obs-vkcapture openvr p7zip pavucontrol pciutils pipewire pipewire-alsa pipewire-pulse pipewire-v4l2 polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg swayidle tesseract-data-eng ufw unrar unzip util-linux visual-studio-code-bin vulkan-tools waybar wayland-protocols wget wine wine-gecko wine-mono wireplumber wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
 
 # Mesa drivers - AMD/Intel
-if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep amdgpu)" ]; then
+if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
     clear
     while true; do
         read -p "Do you want to install Mesa drivers for AMD? [y/n] " yn
@@ -129,7 +129,7 @@ if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep amdgpu)" ]; then
     done
 fi
 
-if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep Intel)" ]]; then
+if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
     clear
     while true; do
         read -p "Do you want to install Mesa drivers for Intel? [y/n] " yn
