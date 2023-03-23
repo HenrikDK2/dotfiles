@@ -32,7 +32,7 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Enable multilib, and ParallelDownloads, and add mirrorlists
+# Enable multilib, and ParallelDownloads
 multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"
 sudo sed -i "${multilibLine}s|#||" /etc/pacman.conf
