@@ -17,7 +17,6 @@ set -x XDG_DOWNLOAD_DIR "$HOME/Downloads"
 set -x OBS_VKCAPTURE 1
 set -x PATH "$HOME/.local/bin:$PATH"
 set -x DOTNET_SYSTEM_GLOBALIZATION_INVARIANT 1
-set -x DXVK_ASYNC 1
 set -x RADV_FORCE_VRS 2x2
 set -x RADV_DEBUG novrsflatshading
 set -x AMD_VULKAN_ICD RADV
