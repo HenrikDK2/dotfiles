@@ -37,6 +37,9 @@
 # .CONFIG
 !.config
 
+!.config/discord/
+!.config/discord/settings.json
+
 !.config/MangoHud/
 !.config/MangoHud/*
 
