@@ -2,12 +2,6 @@
 set fish_greeting
 set -x EDITOR micro
 set -x VISUAL micro
-set -x XDG_CURRENT_DESKTOP sway
-set -x DESKTOP_SESSION sway
-set -x XDG_SESSION_TYPE wayland
-set -x QT_QPA_PLATFORM "wayland;xcb"
-set -x QT_WAYLAND_FORCE_DPI "physical"
-set -x QT_WAYLAND_DISABLE_WINDOWDECORATION 1
 set -x MOZ_ENABLE_WAYLAND 1
 set -x MOZ_WEBRENDER 1
 set -x MICRO_TRUECOLOR 1
@@ -33,10 +27,9 @@ alias update '~/.my_scripts/update.sh'
 alias install 'yay -Syu'
 alias uninstall 'yay -Rsn'
 
-
 if status is-interactive
     # Install nvm
-    if type -q fisher; and not test -e ~/.config/fish/functions/nvm.fish
+    if not test -e ~/.config/fish/functions/nvm.fish; and type -q fisher; 
         fisher install jorgebucaran/nvm.fish
         clear
     end
