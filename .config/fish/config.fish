@@ -18,6 +18,7 @@ set -x RADV_PERFTEST "nggc,sam,ngg_streamout"
 
 # Alias
 alias upgraded 'grep -i upgraded /var/log/pacman.log'
+alias installed 'grep -i installed /var/log/pacman.log'
 alias audit "echo -e '\n\e[1mChecking for failed services\e[0m \n'; systemctl --failed; echo -e '\n----------------------------------------------\n\n\e[1mChecking for high priority errors in systemd journal\e[0m \n'; journalctl -p 3 -b"
 alias dev 'npm run dev'
 alias build 'npm run build'
