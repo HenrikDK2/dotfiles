@@ -12,7 +12,7 @@ kernel_hardening=("vsyscall=none"
 "debugfs=off"
 "loglevel=3")
 
-kernel_params=("clearcpuid=514"
+kernel_other=("clearcpuid=514"
 "pti=on"
 "preempt=full"
 "tsc=reliable"
