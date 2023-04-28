@@ -1,31 +1,69 @@
 #!/bin/bash
 
 kernel_hardening=(
+	# Disables the vDSO which can be a potential attack vector for exploits
 	"vsyscall=none"
+
+	# Randomizes the kernel stack offset for each task, making it more difficult for attackers to locate and exploit stack buffer overflows
 	"randomize_kstack_offset=on"
+
+	# Prevent certain types of attacks that target the kernel memory allocation subsystem
 	"slab_nomerge"
+
+	# Disables IPv6, it can help reduce attack surface
 	"ipv6.disable=1"
-	"mce=0"
+
+	# Prevent the loading of malicious or unsigned modules that could be used to exploit the system
 	"modules.sig_enforce=1"
+
+	# Prevent certain types of attacks that rely on uninitialized memory
 	"init_on_alloc=1"
+
+	# Prevent certain types of attacks that rely on accessing freed memory
 	"init_on_free=1"
+
+	# Shuffles the allocation of physical pages by the kernel, making it more difficult for attackers to predict the physical layout of memory
 	"page_alloc.shuffle=1"
+
+	# Disables the debugfs file system, which can be a potential attack vector for exploits
 	"debugfs=off"
+
+	# This can help improve performance and reduce the attack surface of the system by reducing the amount of potentially sensitive information that is logged
 	"loglevel=3"
+
+	# Protect against the Meltdown CPU vulnerability by isolating kernel memory from user processes
+	"pti=on" 
 )
 
 kernel_other=(
-	"clearcpuid=514"
-	"pti=on"
-	"preempt=full"
-	"tsc=reliable"
+	# Fixes Hogwarts Legacy crashing issue (Might resolve other games)
+	"clearcpuid=514" 
+	
+	# Reduces latency
+	"preempt=full" 
+	
+	# Disabling MCEs can help improve system stability and prevent potential data loss
+	"mce=0"
+	
+	# Improve clock_gettime throughput (~50 times higher than other options)
+	"tsc=reliable" 
 	"clocksource=tsc"
+
+	# Improves boot times on harddrives
 	"libahci.ignore_sss=1"
+
+	# Disable watchdog to reduce overhead
 	"nowatchdog"
 	"nmi_watchdog=0"
 	"module_blacklist=iTCO_wdt"
+
+	# Increase CPU performance, but might decrease battery life
 	"processor.ignore_ppc=1"
+
+	# Reduces overhead by disabling split-lock detection
 	"split_lock_detect=off"
+
+	# Enable AMD GPU overclocking
 	"amdgpu.ppfeaturemask=0xffffffff"
 )
 
