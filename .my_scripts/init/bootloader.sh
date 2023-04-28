@@ -1,29 +1,33 @@
 #!/bin/bash
 
-kernel_hardening=("vsyscall=none"
-"randomize_kstack_offset=on"
-"slab_nomerge"
-"ipv6.disable=1"
-"mce=0"
-"modules.sig_enforce=1"
-"init_on_alloc=1"
-"init_on_free=1"
-"page_alloc.shuffle=1"
-"debugfs=off"
-"loglevel=3")
+kernel_hardening=(
+	"vsyscall=none"
+	"randomize_kstack_offset=on"
+	"slab_nomerge"
+	"ipv6.disable=1"
+	"mce=0"
+	"modules.sig_enforce=1"
+	"init_on_alloc=1"
+	"init_on_free=1"
+	"page_alloc.shuffle=1"
+	"debugfs=off"
+	"loglevel=3"
+)
 
-kernel_other=("clearcpuid=514"
-"pti=on"
-"preempt=full"
-"tsc=reliable"
-"clocksource=tsc"
-"libahci.ignore_sss=1"
-"nowatchdog"
-"nmi_watchdog=0"
-"module_blacklist=iTCO_wdt"
-"processor.ignore_ppc=1"
-"split_lock_detect=off"
-"amdgpu.ppfeaturemask=0xffffffff")
+kernel_other=(
+	"clearcpuid=514"
+	"pti=on"
+	"preempt=full"
+	"tsc=reliable"
+	"clocksource=tsc"
+	"libahci.ignore_sss=1"
+	"nowatchdog"
+	"nmi_watchdog=0"
+	"module_blacklist=iTCO_wdt"
+	"processor.ignore_ppc=1"
+	"split_lock_detect=off"
+	"amdgpu.ppfeaturemask=0xffffffff"
+)
 
 kernel_params_str=$(printf "%s " "${kernel_hardening[@]}" "${kernel_other[@]}")
 
