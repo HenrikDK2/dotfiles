@@ -52,6 +52,12 @@ kernel_other=(
 	# Improves boot times on harddrives
 	"libahci.ignore_sss=1"
 
+	# Enables Full Dynamic Tick, reduces the number of timer interrupts and improve system responsiveness
+	"nohz_full=on"
+
+	# Sets the maximum C-state for the CPU to C1, which can help reduce power consumption and improve performance
+	"intel_idle.max_cstate=1"
+
 	# Disable watchdog to reduce overhead
 	"nowatchdog"
 	"nmi_watchdog=0"
