@@ -138,9 +138,6 @@ seat seat0 xcursor_theme Sunity-cursors 24
 
 exec {
     ~/.my_scripts/login.sh
-    swayidle -w \
-        before-sleep 'loginctl lock-session $XDG_SESSION_ID' \
-        lock 'gtklock'
 }
 
 exec_always {
