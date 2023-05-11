@@ -7,6 +7,10 @@
 (evolution &)
 (discord &)
 
+# Reduce priority of this script
+renice -n 20 $$
+ionice -c idle -p $$
+
 # Custom bash scripts within ~/.my_scripts/login.d will load at session start
 for script in ~/.my_scripts/login.d/*.sh; do "$script" & done
 
