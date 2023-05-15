@@ -5,7 +5,7 @@
 (mako &)
 (waybar &) 
 (evolution &)
-(discord &)
+(discord -enable-features=UseOzonePlatform -ozone-platform=wayland &)
 
 # Reduce priority of this script
 renice -n 20 $$
