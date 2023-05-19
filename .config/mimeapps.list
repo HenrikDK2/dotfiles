@@ -26,6 +26,7 @@ x-scheme-handler/etcher=balena-etcher-electron.desktop
 text/plain=code.desktop
 text/x-log=code.desktop
 application/x-ms-dos-executable=wine.desktop
+image/webp=imv.desktop
 
 [Added Associations]
 application/x-shellscript=code-oss-url-handler.desktop;
@@ -45,3 +46,4 @@ application/json=code-oss.desktop;code.desktop;
 text/plain=code-oss.desktop;code.desktop;
 text/x-log=code.desktop;
 application/x-ms-dos-executable=wine.desktop;
+image/webp=imv.desktop;
