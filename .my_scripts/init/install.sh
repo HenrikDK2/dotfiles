@@ -166,7 +166,7 @@ sudo timedatectl set-ntp true
 
 # Enable services
 sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts dbus-broker optimize-interruptfreq pci-latency fstrim.timer
-systemctl --user enable wireplumber psd
+systemctl --user enable wireplumber psd dbus-broker
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory
