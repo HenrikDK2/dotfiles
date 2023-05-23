@@ -15,7 +15,8 @@ fi
 # Find the fastest mirrors
 if [ -z "$(pacman -Qe | grep reflector)" ]; then
     sudo pacman -S reflector --noconfirm --needed
-    sudo reflector --verbose -l 30 -n 5 --sort rate -p https --connection-timeout 3 --download-timeout 3 --save /etc/pacman.d/mirrorlist
+    sudo reflector --verbose --protocol https --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+	sudo systemctl enable reflector.timer # Update mirrorlist weekly
 fi
 
 # Install building tools
