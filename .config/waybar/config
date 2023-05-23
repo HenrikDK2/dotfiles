@@ -39,7 +39,7 @@
   },
   "custom/suspend": {
     "format": "",
-    "on-click": "systemctl suspend",
+    "on-click": "gtklock",
     "tooltip": false
   },
   "tray": {
