@@ -56,6 +56,9 @@ dconf write /org/nemo/window-state/start-with-menu-bar false
 dconf write /org/gnome/evolution/shell/menubar-visible false
 dconf write /org/gnome/evolution/shell/statusbar-visible false
 dconf write /org/gnome/evolution/shell/toolbar-visible false
+dconf write /org/gnome/evolution/mail/show-preview-toolbar false
+dconf write /org/gnome/evolution/shell/buttons-style "'icons'"
+dconf write /org/gnome/evolution/shell/toolbar-icon-size "'small'"
 
 # Add bootloader entries, and install kernel
 while true; do
