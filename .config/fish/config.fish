@@ -15,6 +15,7 @@ set -x RADV_FORCE_VRS 2x2
 set -x RADV_DEBUG novrsflatshading
 set -x AMD_VULKAN_ICD RADV
 set -x RADV_PERFTEST "nggc,sam,ngg_streamout"
+set -g fish_color_autosuggestion 595d5e
 
 # Alias
 alias upgraded 'grep -i upgraded /var/log/pacman.log'
