@@ -117,11 +117,11 @@ assign [app_id="evolution"] workspace 2
 assign [class="discord"] workspace 2 
 assign [app_id="discord"] workspace 2 
 assign [class="Spotify"] workspace 2
-assign [class="steam" instance="steam"] workspace 2
+assign [class="steam" title="Steam"] workspace 2
 
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="python3"] floating enable
-for_window [class="Steam" title="Friends List"] floating enable
+for_window [class="steam" title="Friends List"] floating enable
 for_window [title="Choose ONE of the audio conference options"] floating enable
 for_window [title="zoom" app_id="zoom"] floating enable
 
