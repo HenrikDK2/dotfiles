@@ -10,9 +10,6 @@ kernel_hardening=(
 	# Prevent certain types of attacks that target the kernel memory allocation subsystem
 	"slab_nomerge"
 
-	# Disables IPv6, it can help reduce attack surface
-	"ipv6.disable=1"
-
 	# Prevent the loading of malicious or unsigned modules that could be used to exploit the system
 	"modules.sig_enforce=1"
 
