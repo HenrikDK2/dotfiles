@@ -2,6 +2,7 @@
 set fish_greeting
 set -x EDITOR micro
 set -x VISUAL micro
+set -x DIFFPROG micro
 set -x MOZ_ENABLE_WAYLAND 1
 set -x MOZ_WEBRENDER 1
 set -x MICRO_TRUECOLOR 1
@@ -20,7 +21,7 @@ set -g fish_color_autosuggestion 595d5e
 # Alias
 alias upgraded 'grep -i upgraded /var/log/pacman.log'
 alias installed 'grep -i installed /var/log/pacman.log'
-alias audit "echo -e '\n\e[1mChecking for failed services\e[0m \n'; systemctl --failed; echo -e '\n----------------------------------------------\n\n\e[1mChecking for high priority errors in systemd journal\e[0m \n'; journalctl -p 3 -b"
+alias audit '~/.my_scripts/audit.sh'
 alias dev 'npm run dev'
 alias build 'npm run build'
 alias start 'npm run start'

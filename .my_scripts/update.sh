@@ -7,3 +7,8 @@ while ! [ "$(pacman -Qdtq)" = "" ]; do
 done
 
 sudo yay -Scc --noconfirm --needed
+
+clear
+echo -e "\033[1mBeginning audit.\033[0m\n"
+~/.my_scripts/audit.sh
+read -p "Press enter to continue"
