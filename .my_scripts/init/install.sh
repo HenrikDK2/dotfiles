@@ -60,6 +60,7 @@ dconf write /org/gnome/evolution/shell/buttons-style "'icons'"
 dconf write /org/gnome/evolution/shell/toolbar-icon-size "'small'"
 
 # Add bootloader entries, and install kernel
+clear
 while true; do
     printf "Only for systemd-boot! - Add bootloader entries?\n\n"
     read -p "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking [y/n] "  yn
@@ -71,8 +72,8 @@ while true; do
 done
 
 # Ultrawide gaps on workspace 1
+clear
 while true; do
-    clear
     printf "Only for 5120x1440 ultrawide monitor!\n\n"
     read -p "Do you want to have a 1440p window in the center of workspace 1? [y/n] " yn
     case $yn in
