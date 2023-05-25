@@ -9,7 +9,7 @@ updates_available=$(pacman -Qu --check)
 
 # Check if there are updates available
 if [ -n "$updates_available" ]; then
-	yay -Syu --noconfirm --needed
+	yay -Su --noconfirm --needed
 
 	while ! [ "$(pacman -Qdtq)" = "" ]; do
 		sudo pacman -Rsunc $(pacman -Qdtq) --noconfirm
