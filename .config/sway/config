@@ -125,6 +125,10 @@ for_window [class="steam" title="Friends List"] floating enable
 for_window [title="Choose ONE of the audio conference options"] floating enable
 for_window [title="zoom" app_id="zoom"] floating enable
 
+# Inhibit idle
+for_window [class="steam_app*"] inhibit_idle focus
+for_window [class="gamescope"] inhibit_idle focus
+
 # class                 border  backgr. text    indicator child_border                                                                     
 client.focused_inactive #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                            
 client.unfocused        #2d333f #212121 #d9d9d9 #2d333f #2d333f                                                                             
