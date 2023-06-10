@@ -3,7 +3,7 @@
 ![20230609-162049](https://github.com/HenrikDK2/dotfiles/assets/30632653/f785198b-9339-457e-b58d-5e80eaecf11b)
 ![20230609-162658](https://github.com/HenrikDK2/dotfiles/assets/30632653/5bf760b1-947b-427d-85a9-d53ae10cf21f)
 
-This is for personal usage, but you may gladly use it as well. It includes all of my configuration files, but also tweaks for system files, which I always include on my system for either responsiveness or gaming tweaks when I have to do fresh installations on new systems.
+My dotfiles are intended for personal usage, but feel free to make use of them as well. They include all of my configuration files, along with tweaks for system files. I always incorporate these tweaks on my system to enhance responsiveness, gaming performance, and security, when setting up new systems.
 
 **Any usage of my system/configuration files falls in no way or form under my liability**
 
@@ -33,4 +33,3 @@ git reset --hard origin/master
 ```
 
 Now you're mostly done, you just need to run the install script `~/.my_scripts/init/install.sh` as a normal user, and follow the simple procedures.
-
