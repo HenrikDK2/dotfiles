@@ -5,31 +5,33 @@
 
 My dotfiles are intended for personal usage, but feel free to make use of them as well. They include all of my configuration files, along with tweaks for system files. I always incorporate these tweaks on my system to enhance responsiveness, gaming performance, and security, when setting up new systems.
 
-**Any usage of my system/configuration files falls in no way or form under my liability**
+**Please note that any usage of my system/configuration files is done at your own risk. I am not liable for any consequences that may arise.**
 
 ## Install
 
-#### What you need to know before installing
+### Important considerations before installing
 
-- Configuration/system files are only tested on a fresh install of Arch Linux.
+- These configuration/system files have only been tested on a fresh install of Arch Linux.
 
-- You should have sudo and git installed on your system.
+- Ensure that `sudo` and `git` are already installed on your system.
 
-- systemd-boot is recommended, since that is what I use, and a script depends on it for kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking.
+- I recommend using `systemd-boot` since it's the bootloader I use. Some scripts depend on it for kernel hardening, hibernation, microcode, tweaks, and unlocking access to AMD overclocking.
 
-- This project only considers my usage on an AMD machine, you might need to do some tweaking to get it working on your machine.
+- Keep in mind that this project is tailored to my usage on an AMD machine. You may need to make some adjustments to adapt it to your specific hardware.
 
-#### Installation guide
+### Installation guide
 
-**This is a warning!** Doing the following will replace all files with my configuration files.
+**Warning!** Executing the following steps will replace your existing files with my configuration files.
 
-Go to your home directory in the terminal, and type the following:
+1. Open the terminal and navigate to your home directory.
 
-```bash
-git init
-git remote add origin https://github.com/HenrikDK2/dotfiles.git
-git fetch --all
-git reset --hard origin/master
-```
+2. Run the following commands: 
 
-Now you're mostly done, you just need to run the install script `~/.my_scripts/init/install.sh` as a normal user, and follow the simple procedures.
+    ```
+    git init
+    git remote add origin https://github.com/HenrikDK2/dotfiles.git
+    git fetch --all
+    git reset --hard origin/master
+    ```
+
+3. Now you're almost done! As a normal user, execute the installation script `~/.my_scripts/init/install.sh` and follow the simple instructions to complete the installation process.
