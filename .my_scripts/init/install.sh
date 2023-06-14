@@ -168,7 +168,7 @@ sudo setcap 'cap_sys_nice=eip' /usr/bin/sway
 sudo setcap 'cap_sys_nice=eip' /usr/bin/gamescope
 
 # Enable services
-sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts dbus-broker optimize-interruptfreq pci-latency fstrim.timer
+sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts dbus-broker optimize-interruptfreq fstrim.timer
 systemctl --user enable wireplumber psd dbus-broker
 
 # Disable services
