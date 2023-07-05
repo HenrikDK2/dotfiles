@@ -9,6 +9,8 @@ stop_service () {
     done
 }
 
+killall -9 cmst
+
 stop_service cups
 stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
 stop_service systemd-timesyncd
