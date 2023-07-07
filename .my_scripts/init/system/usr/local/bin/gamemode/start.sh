@@ -9,8 +9,10 @@ stop_service () {
     done
 }
 
+# Kills cmst (Kill the front-end for connman, it usually runs in the background, but is not needed)
 killall -9 cmst
 
+# Stop services using memory while not needed
 stop_service cups
 stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
 stop_service systemd-timesyncd
@@ -22,6 +24,14 @@ if [ -z "$(pgrep virt-manager)" ]; then
 	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
 fi
 
+# Check if the bluetooth has any devices connected, and kill bluez front-end
+bluetooth_output=$(bluetoothctl devices Connected)
+
+if [[ -z "$bluetooth_output" ]]; then
+    killall -9 blueman-applet blueman-tray
+fi
+
+# Stop docker if no containers are running
 if [[ -z $(sudo docker ps -q) ]]; then
   stop_service docker
 fi
