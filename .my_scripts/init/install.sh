@@ -111,6 +111,19 @@ while true; do
     esac
 done
 
+# Setup bluetooth
+clear
+while true; do
+	printf "This is for bluetooth.\n\n"
+    read -p "Do you want to install blueman? [y/n] " yn
+    case $yn in
+        [Yy]* ) sudo pacman -S blueman --needed --noconfirm;
+        		sudo systemctl enable --now bluetooth.service; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 # Mesa drivers - AMD/Intel
 if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
     clear
