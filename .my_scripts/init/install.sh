@@ -13,9 +13,11 @@ if [[ $EUID -eq 0 ]]; then
 fi
 
 # Reflector - Find the fastest mirrors
-sudo pacman -S reflector --noconfirm --needed
-sudo reflector --verbose --protocol https --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-sudo systemctl enable reflector.timer # Update mirrorlist weekly
+if [ -z "$(pacman -Qe | grep reflector)" ]; then
+	sudo pacman -S reflector --noconfirm --needed
+	sudo reflector --verbose --protocol https --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+	sudo systemctl enable reflector.timer # Update mirrorlist weekly
+fi
 
 # Install building tools
 sudo pacman -Syu base-devel --noconfirm --needed
