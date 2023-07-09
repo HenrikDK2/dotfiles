@@ -11,7 +11,7 @@ rule = {
   },
   apply_properties = {
       ["resample.quality"]       = 10,
-    --["resample.disable"]       = false,
+      ["resample.disable"]       = true,
     --["audio.channels"]         = 2,
     --["audio.format"]           = "S32LE",
     --["audio.rate"]             = 44100,
