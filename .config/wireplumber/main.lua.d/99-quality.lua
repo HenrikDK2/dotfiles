@@ -6,13 +6,14 @@ rule = {
     },
   },
   apply_properties = {
-      ["resample.quality"]       = 10,
-      ["resample.disable"]       = true,
+      ["resample.quality"] = 10,
+      ["resample.disable"] = true,
       ["session.suspend-timeout-seconds"] = 0,
+      ["api.alsa.headroom"] = 0,
+      ["audio.allowed-rates"]    = "44100,48000,88200,96000,192000,352800,384000,768000",
     --["audio.channels"]         = 2,
     --["audio.format"]           = "S32LE",
     --["audio.rate"]             = 44100,
-      ["audio.allowed-rates"]    = "44100,48000,88200,96000,192000,352800,384000,768000",
   },
 }
 
