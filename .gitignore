@@ -53,8 +53,8 @@
 !.config/swappy
 !.config/swappy/**
 
-!.config/pipewire
-!.config/pipewire/**
+!.config/wireplumber
+!.config/wireplumber/**
 
 !.config/psd/
 !.config/psd/psd.conf
