@@ -12,6 +12,7 @@ rule = {
   apply_properties = {
       ["resample.quality"]       = 10,
       ["resample.disable"]       = true,
+      ["session.suspend-timeout-seconds"] = 0,
     --["audio.channels"]         = 2,
     --["audio.format"]           = "S32LE",
     --["audio.rate"]             = 44100,
