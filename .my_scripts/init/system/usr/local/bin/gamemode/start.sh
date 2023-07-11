@@ -25,11 +25,7 @@ if [ -z "$(pgrep virt-manager)" ]; then
 fi
 
 # Check if the bluetooth has any devices connected, and kill bluez front-end
-bluetooth_output=$(bluetoothctl devices Connected)
-
-if [[ -z "$bluetooth_output" ]]; then
-    killall -9 blueman-applet blueman-tray
-fi
+killall -9 blueman-applet blueman-manager blueman-tray
 
 # Stop docker if no containers are running
 if [[ -z $(sudo docker ps -q) ]]; then
