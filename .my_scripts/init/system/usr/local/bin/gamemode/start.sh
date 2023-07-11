@@ -24,7 +24,7 @@ if [ -z "$(pgrep virt-manager)" ]; then
 	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
 fi
 
-# Check if the bluetooth has any devices connected, and kill bluez front-end
+# Kill bluez front-end
 killall -9 blueman-applet blueman-manager blueman-tray
 
 # Stop docker if no containers are running
