@@ -33,10 +33,6 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Add user to pipewire group (RLIMITs)
-sudo groupadd -f pipewire
-sudo usermod -a -G pipewire $(whoami)
-
 # Enable multilib, and ParallelDownloads
 multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"
