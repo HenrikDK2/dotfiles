@@ -111,8 +111,8 @@ user_pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.feeds.sec
 user_pref("loop.enabled", false);
 user_pref("beacon.enabled", false);
 user_pref("telemetry.hybridContent", false);
+user_pref("media.webspeech.synth.enabled", false);
 user_pref("config.trim_on_minimize", true);
 user_pref("alerts.disableSlidingEffect", false);
 user_pref("nglayout.initialpaint.delay", 0);
-user_pref("reader.parse-on-load.enabled", false);
 user_pref("dom.security.unexpected_system_load_telemetry_enabled", false);
