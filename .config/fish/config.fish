@@ -4,7 +4,6 @@ set -x EDITOR micro
 set -x VISUAL micro
 set -x DIFFPROG micro
 set -x MOZ_ENABLE_WAYLAND 1
-set -x MOZ_WEBRENDER 1
 set -x MICRO_TRUECOLOR 1
 set -x RTC_USE_PIPEWIRE true
 set -x MICRO_CONFIG_HOME "$HOME/.config/micro"
