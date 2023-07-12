@@ -20,6 +20,7 @@ set_prio () {
 }
 
 # Set priorities
+set_prio "pipewire*" -19 3
 set_prio "systemd-journald" 20 3
 set_prio "systemd-timesyncd" 20 3
 set_prio "cups" 20 3
