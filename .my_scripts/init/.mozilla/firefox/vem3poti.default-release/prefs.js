@@ -15,6 +15,7 @@ user_pref("toolkit.telemetry.enabled", false);
 user_pref("toolkit.telemetry.pioneer-new-studies-available", false);
 user_pref("toolkit.telemetry.hybridContent.enabled", false);
 user_pref("toolkit.cosmeticAnimations.enabled", false);
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 
 user_pref("browser.fullscreen.animateUp", false);
 user_pref("browser.fullscreen.animate", 0);
