@@ -104,7 +104,7 @@ bindsym $mod+u exec kitty --hold ~/.my_scripts/update.sh
 bindsym print exec slurp | grim -g - - | swappy -f -
 bindsym $mod+print exec ~/.my_scripts/ocr_clipboard.sh
 bindsym ctrl+alt+delete exec kitty btop
-bindsym $mod+escape exec killall -u $USER
+bindsym $mod+escape exec systemctl soft-reboot
 bindsym $mod+pause exec scrolllock
 
 hide_edge_borders --i3 smart
