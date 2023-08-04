@@ -29,3 +29,7 @@ if [ -n "$updates_available" ]; then
 else
 	echo "No updates available"
 fi
+
+printf "\n"
+read -p "Press enter to continue"
+
