@@ -176,7 +176,7 @@ sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo sed -i 's/-A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT/-A ufw-before-input -p icmp --icmp-type echo-request -j DROP/' /etc/ufw/before.rules
-sudo sed -i 's/#Port 22/Port 1065/' /etc/ssh/sshd_config
+echo "Port 1065" | sudo tee /etc/ssh/sshd_config.d/99-port.conf
 sudo ufw limit 1065/tcp #SSH
 sudo ufw allow 631/tcp #CUPS (printer)
 sudo ufw allow ftp/tcp
