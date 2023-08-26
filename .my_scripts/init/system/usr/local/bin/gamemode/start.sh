@@ -12,7 +12,11 @@ stop_service () {
 # Kills cmst (Kill the front-end for connman, it usually runs in the background, but is not needed)
 killall -9 cmst
 
+# Kill bluez front-end
+killall -9 blueman-applet blueman-manager blueman-tray
+
 # Stop services using memory while not needed
+stop_service upower
 stop_service cups
 stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
 stop_service systemd-timesyncd
@@ -23,9 +27,6 @@ if [ -z "$(pgrep virt-manager)" ]; then
 	stop_service virtlogd
 	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
 fi
-
-# Kill bluez front-end
-killall -9 blueman-applet blueman-manager blueman-tray
 
 # Stop docker if no containers are running
 if [[ -z $(sudo docker ps -q) ]]; then
