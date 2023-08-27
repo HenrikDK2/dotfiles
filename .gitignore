@@ -50,6 +50,9 @@
 !.config/systemd/user/*.d/*
 !.config/systemd/user.conf
 
+!.config/mpv/
+!.config/mpv/mpv.conf
+
 !.config/swappy
 !.config/swappy/**
 
