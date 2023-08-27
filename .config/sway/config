@@ -142,12 +142,7 @@ font pango:Cantarell Bold 12
 seat seat0 xcursor_theme Sunity-cursors 24
 
 exec {
-    ~/.my_scripts/login.sh
-	swayidle -w \
-		timeout 300 'gtklock' \
-		timeout 500 'swaymsg "output * dpms off"' \
-			resume 'swaymsg "output * dpms on"' \
-		before-sleep 'gtklock'
+   exec ~/.my_scripts/login.sh &
 }
 
 exec_always {

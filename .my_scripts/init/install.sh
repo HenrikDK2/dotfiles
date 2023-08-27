@@ -168,7 +168,6 @@ yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts t
 # Packages
 sudo pacman -S mangohud lib32-mangohud --noconfirm --needed
 yay -S btop cabextract fuse cmst cups curl dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 glxinfo gnome-keyring gperftools grim gtklock gvfs gvfs-mtp imv steam discord irqbalance kitty lib32-gamemode pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber lib32-gperftools lib32-gtk2 lib32-libva lib32-libvdpau libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm obs-gstreamer obs-studio obs-vkcapture openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg swayidle tesseract-data-eng ufw unrar unzip util-linux code vulkan-tools waybar wayland-protocols wget wine wine-gecko wine-mono wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
-
 # Change default, and current user shell to fish
 sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
 
