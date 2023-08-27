@@ -141,7 +141,7 @@ if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
     while true; do
         read -p "Do you want to install Mesa drivers for AMD? [y/n] " yn
         case $yn in
-            [Yy]* ) yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils
+            [Yy]* ) yay -Syu mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver gstreamer-vaapi libva-utils
                     sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
                     sudo mkinitcpio -P; break;;
             [Nn]* ) break;;
