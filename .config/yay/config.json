@@ -1,0 +1,5 @@
+{
+  "sudobin": "sudo",
+  "sudoflags": "",
+  "sudoloop": true
+}

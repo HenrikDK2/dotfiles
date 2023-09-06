@@ -41,6 +41,9 @@
 !.config/discord/
 !.config/discord/settings.json
 
+!.config/yay/
+!.config/yay/config.json
+
 !.config/MangoHud/
 !.config/MangoHud/*
 
