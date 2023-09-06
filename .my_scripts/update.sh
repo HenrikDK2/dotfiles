@@ -9,6 +9,11 @@ updates_available=$(pacman -Qu --check)
 
 # Check if there are updates available
 if [ -n "$updates_available" ]; then
+	## Reduce priority of script
+	renice 20 $$
+	ionice -c 3 -p $$
+	clear
+
 	# Updating
 	echo -e "\033[1mUpdating packages.\033[0m\n"
 	yay -Su --noconfirm --needed
