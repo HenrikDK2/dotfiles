@@ -18,6 +18,13 @@ if ! ping -c 1 google.com >/dev/null 2>&1; then
   exit 1
 fi
 
+# Add CachyOS repository
+sudo pacman -S wget --noconfirm --needed
+wget https://mirror.cachyos.org/cachyos-repo.tar.xz
+tar xvf cachyos-repo.tar.xz
+sudo ./cachyos-repo/cachyos-repo.sh
+rm -rf ./cachyos-repo*
+
 # Reflector - Find the fastest mirrors
 if [ -z "$(pacman -Qe | grep reflector)" ]; then
 	sudo pacman -S reflector --noconfirm --needed
