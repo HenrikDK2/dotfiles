@@ -25,6 +25,8 @@ if [ -n "$updates_available" ]; then
 		sudo pacman -Rsunc $(pacman -Qdtq) --noconfirm
 	done
 
+	yay -Scc --noconfirm --needed
+
 	# Audit
 	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 	echo -e "\033[1mBeginning audit.\033[0m\n"
