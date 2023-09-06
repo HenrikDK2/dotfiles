@@ -131,6 +131,3 @@
 
 !.local/share/nemo
 !.local/share/nemo/**
-
-!.local/share/rofi
-!.local/share/rofi/**
