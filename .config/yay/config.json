@@ -1,6 +1,5 @@
 {
   "sudobin": "sudo",
   "sudoflags": "",
-  "sudoloop": true,
-  "devel": true
+  "sudoloop": true
 }
