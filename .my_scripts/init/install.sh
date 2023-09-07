@@ -141,7 +141,7 @@ if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
     while true; do
         read -p "Do you want to install Mesa drivers for AMD? [y/n] " yn
         case $yn in
-            [Yy]* ) yay -Syu mesa-amdonly-gaming-git lib32-mesa-amdonly-gaming-git
+            [Yy]* ) yay -Syu mesa-amdonly-gaming-git lib32-mesa-amdonly-gaming-git --needed --noconfirm
                     sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
                     sudo mkinitcpio -P; break;;
             [Nn]* ) break;;
