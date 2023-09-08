@@ -1,3 +1,6 @@
+# Number of CPU threads for MAKEFLAGS
+set cpu_threads (nproc)
+
 # Env Variables
 set fish_greeting
 set -x EDITOR micro
@@ -17,6 +20,19 @@ set -x RADV_DEBUG novrsflatshading
 set -x AMD_VULKAN_ICD RADV
 set -x RADV_PERFTEST "nggc,sam,ngg_streamout"
 set -g fish_color_autosuggestion 595d5e
+
+## Makepkg tweaks
+set -x CFLAGS "-march=native -O3 -pipe -fgraphite-identity -floop-strip-mine -floop-nest-optimize -fno-semantic-interposition -fipa-pta -flto -fdevirtualize-at-ltrans -flto-partition=one"
+set -x CXXFLAGS "$CFLAGS"
+set -x MAKEFLAGS "-j $cpu_threads"
+set -x LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now,-fuse-ld=mold"
+set -x RUSTFLAGS="-C opt-level=3 -C target-cpu=native -C link-arg=-fuse-ld=mold"
+
+## Compression flags
+set -x COMPRESSZST "zstd -c -z -q --threads=0 -"
+set -x COMPRESSXZ "xz -c -z --threads=0 -"
+set -x COMPRESSGZ "pigz -c -f -n"
+set -x COMPRESSBZ2 "pbzip2 -c -f"
 
 # Alias
 alias upgraded 'grep -i upgraded /var/log/pacman.log'
@@ -45,7 +61,6 @@ if status is-interactive
         clear
     end
    
-
     # On login
     if test -z "$DISPLAY"; and test (tty) = /dev/tty1
         sway
