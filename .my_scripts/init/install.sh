@@ -180,10 +180,6 @@ sudo ufw enable
 # Clock sync
 sudo timedatectl set-ntp true
 
-# Improve scheduling in Sway and Gamescope
-sudo setcap 'cap_sys_nice=eip' /usr/bin/sway
-sudo setcap 'cap_sys_nice=eip' /usr/bin/gamescope
-
 # Enable services
 sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts dbus-broker optimize-interruptfreq fstrim.timer
 systemctl --user enable wireplumber psd dbus-broker

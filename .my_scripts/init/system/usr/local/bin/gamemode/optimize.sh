@@ -19,6 +19,10 @@ set_prio () {
     fi
 }
 
+# Improve scheduling in Sway and Gamescope
+sudo setcap 'cap_sys_nice=eip' /usr/bin/sway
+sudo setcap 'cap_sys_nice=eip' /usr/bin/gamescope
+
 # Set priorities
 set_prio "pipewire*" -19 3
 set_prio "systemd-journald" 20 3
