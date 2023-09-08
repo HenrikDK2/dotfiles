@@ -25,8 +25,8 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 	sudo systemctl enable reflector.timer # Update mirrorlist weekly
 fi
 
-# Install building tools
-sudo pacman -Syu base-devel --noconfirm --needed
+# Install building tools and awk
+sudo pacman -Syu base-devel gawk --noconfirm --needed
 
 # Install yay
 if [ -z "$(pacman -Qe | grep yay)" ]; then
