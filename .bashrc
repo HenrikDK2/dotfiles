@@ -7,36 +7,5 @@
 
 PS1="\[\e[32;1m\]\w\[\e[0m\] \$ "
 
-alias ls='ls --color=auto'
-alias dev='npm run dev'
-alias build='npm run build'
-alias start='npm run start'
-alias serve='npm run serve'
-alias clean='npm run clean'
-alias update='~/.my_scripts/update.sh'
-alias install='yay -Syu'
-alias uninstall='yay -Rsn'
-
-export EDITOR=micro
-export VISUAL=micro
-export XDG_CURRENT_DESKTOP=sway
-export DESKTOP_SESSION=sway
-export XDG_SESSION_TYPE=wayland
-export SDL_VIDEODRIVER=wayland
-export QT_QPA_PLATFORM="wayland;xcb"
-export QT_WAYLAND_FORCE_DPI="physical"
-export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-export MOZ_ENABLE_WAYLAND=1
-export MOZ_WEBRENDER=1
-export MICRO_TRUECOLOR=1
-export RTC_USE_PIPEWIRE=true
-export MICRO_CONFIG_HOME="$HOME/.config/micro"
-export XDG_DOWNLOAD_DIR="$HOME/Downloads"
-export OBS_VKCAPTURE=1
-export PATH="$HOME/.local/bin:$PATH"
-export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-export DXVK_ASYNC=1
-export RADV_FORCE_VRS=2x2
-export RADV_DEBUG=novrsflatshading
-export AMD_VULKAN_ICD=RADV
-export RADV_PERFTEST="nggc,sam,ngg_streamout"
+# Source shared shell config
+source ~/.my_scripts/shared_shell_config.sh
