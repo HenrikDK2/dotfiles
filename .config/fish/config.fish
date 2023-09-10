@@ -25,8 +25,8 @@ set -g fish_color_autosuggestion 595d5e
 set -x CFLAGS "-march=native -O3 -pipe -fgraphite-identity -floop-strip-mine -floop-nest-optimize -fno-semantic-interposition -fipa-pta -flto -fdevirtualize-at-ltrans -flto-partition=one"
 set -x CXXFLAGS "$CFLAGS"
 set -x MAKEFLAGS "-j $cpu_threads"
-set -x LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now,-fuse-ld=mold"
-set -x RUSTFLAGS="-C opt-level=3 -C target-cpu=native -C link-arg=-fuse-ld=mold"
+set -x LDFLAGS "-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now,-fuse-ld=mold"
+set -x RUSTFLAGS "-C opt-level=3 -C target-cpu=native -C link-arg=-fuse-ld=mold"
 
 ## Compression flags
 set -x COMPRESSZST "zstd -c -z -q --threads=0 -"
