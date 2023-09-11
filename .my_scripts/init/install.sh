@@ -49,7 +49,7 @@ sudo sed -i "${multilibLine}s|#||" /etc/pacman.conf
 sudo sed -i "${multilibIncludeLine}s|#||" /etc/pacman.conf
 sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
 
-# Makepkg related packages (Flags in fish config)
+# Makepkg related packages (Flags in ~/.makepkg.conf)
 sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
 
 # Default dconf values

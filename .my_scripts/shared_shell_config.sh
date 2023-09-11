@@ -21,20 +21,6 @@ export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export OBS_VKCAPTURE=1
 export PATH="$HOME/.local/bin:$PATH"
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
-export GITFLAGS="--filter=tree:0"
-
-## Makepkg tweaks
-export CFLAGS="-march=native -O3 -pipe -fomit-frame-pointer -fgraphite-identity -floop-strip-mine -floop-nest-optimize -fno-semantic-interposition -fipa-pta -flto -fdevirtualize-at-ltrans -flto-partition=one"
-export CXXFLAGS="$CFLAGS"
-export MAKEFLAGS="-j$(nproc)"
-export LDFLAGS="-Wl,--lto-O3,--sort-common,--as-needed,-z,relro,-z,now,-fuse-ld=mold"
-export RUSTFLAGS="-C debuginfo=0 -C opt-level=3 -C target-cpu=native -C link-arg=-fuse-ld=mold"
-
-## Compression flags
-export COMPRESSZST="zstd -c -z -q --threads=0 -"
-export COMPRESSXZ="xz -c -z --threads=0 -"
-export COMPRESSGZ="pigz -c -f -n"
-export COMPRESSBZ2="pbzip2 -c -f"
 
 # Alias
 alias upgraded='grep -i upgraded /var/log/pacman.log'
