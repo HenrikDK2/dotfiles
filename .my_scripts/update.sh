@@ -8,7 +8,7 @@ clear
 updates_available=$(pacman -Qu --check)
 
 # Check if there are updates available
-if [ -n "$updates_available" ]; then
+if [ -n "$updates_available" ] || [ ! -f "~/.cache/git-update-last" ]; then
 	# Reduce priority of script
 	renice 20 $$
 	ionice -c 3 -p $$
