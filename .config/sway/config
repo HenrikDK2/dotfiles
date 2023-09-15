@@ -127,6 +127,8 @@ for_window [title="zoom" app_id="zoom"] floating enable
 
 # Inhibit idle
 for_window [class="steam_app*"] inhibit_idle focus
+for_window [class="*.exe"] inhibit_idle focus
+for_window [class="heroic"] inhibit_idle focus
 for_window [class="gamescope"] inhibit_idle focus
 
 # class                 border  backgr. text    indicator child_border                                                                     
