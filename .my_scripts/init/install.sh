@@ -39,9 +39,6 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Realtime privileges (Helps with audio crackling)
-sudo pacman -S realtime-privileges --noconfirm --needed && sudo usermod -a -G realtime $USER
-
 # Enable multilib, and ParallelDownloads
 multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
 let "multilibIncludeLine = $multilibLine + 1"
