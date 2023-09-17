@@ -1,7 +1,7 @@
 #!/bin/bash
 
 connected(){
-	echo '{"text": "Connected", "tooltip": "VPN status is connected", "class": "connected", "percentage": 100}'
+	echo '{"text": "Connected", "tooltip": "VPN status: connected", "class": "connected", "percentage": 100}'
 	exit 0
 }
 
@@ -14,4 +14,4 @@ if [ -d /proc/sys/net/ipv4/conf/tun0 ]; then connected; fi
 # Check if the ppp0 interface exists
 if [ -d /proc/sys/net/ipv4/conf/ppp0 ]; then connected; fi
 
-echo '{"text": "Disconnected", "tooltip": "VPN status is disconnected", "class" :"disconnected", "percentage" :0}'
+echo '{"text": "Disconnected", "tooltip": "VPN status: disconnected", "class" :"disconnected", "percentage" :0}'
