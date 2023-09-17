@@ -29,7 +29,7 @@
     "max-length": 50
   },
   "custom/vpn": {
-    "format": "|     {}",
+    "format": "|      {}",
     "tooltip-format": "{icon}",
     "exec": "~/.config/waybar/modules/vpn.sh",
     "return-type": "json",
