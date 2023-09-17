@@ -49,16 +49,6 @@ sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
 # Makepkg related packages (Flags in ~/.makepkg.conf)
 sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
 
-# Default dconf values
-sudo pacman -S dconf --noconfirm --needed 
-dconf write /org/nemo/window-state/start-with-menu-bar false
-dconf write /org/gnome/evolution/shell/menubar-visible false
-dconf write /org/gnome/evolution/shell/statusbar-visible false
-dconf write /org/gnome/evolution/shell/toolbar-visible false
-dconf write /org/gnome/evolution/mail/show-preview-toolbar false
-dconf write /org/gnome/evolution/shell/buttons-style "'icons'"
-dconf write /org/gnome/evolution/shell/toolbar-icon-size "'small'"
-
 # Add bootloader entries, and install kernel
 clear
 while true; do
@@ -151,12 +141,12 @@ if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
     done
 fi
 
-# Fonts
-yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --needed
-
 # Packages
+sudo pacman -S pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber --noconfirm --needed
 sudo pacman -S mangohud lib32-mangohud --noconfirm --needed
-yay -S btop cabextract fuse cmst cups curl dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 glxinfo gnome-keyring gperftools grim gtklock gvfs gvfs-mtp imv steam discord irqbalance kitty linux-firmware lib32-gamemode pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber lib32-gperftools lib32-gtk2 lib32-libva lib32-libvdpau libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm obs-gstreamer obs-studio obs-vkcapture openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg swayidle tesseract-data-eng ufw unrar unzip util-linux code vulkan-tools waybar wayland-protocols wget wine wine-gecko wine-mono wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
+
+yay -S adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-google-fonts-git ttf-ms-fonts --needed
+yay -S btop cabextract fuse cmst cups curl dconf dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 glxinfo gnome-keyring gperftools grim gtklock gvfs gvfs-mtp imv steam discord irqbalance kitty linux-firmware lib32-gamemode lib32-gperftools lib32-gtk2 lib32-libva lib32-libvdpau libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm obs-gstreamer obs-studio obs-vkcapture openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg swayidle tesseract-data-eng ufw unrar unzip util-linux code vulkan-tools waybar wayland-protocols wget wine wine-gecko wine-mono wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
 
 # Change default, and current user shell to fish
 sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)

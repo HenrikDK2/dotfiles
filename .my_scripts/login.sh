@@ -1,7 +1,18 @@
 #!/bin/sh
 
-# Programs to lauch at login (executable)
+# First login (Post-install)
+if [ ! -f .config/fish/.post-install ]; then
+	dconf write /org/nemo/window-state/start-with-menu-bar false
+	dconf write /org/gnome/evolution/shell/menubar-visible false
+	dconf write /org/gnome/evolution/shell/statusbar-visible false
+	dconf write /org/gnome/evolution/shell/toolbar-visible false
+	dconf write /org/gnome/evolution/mail/show-preview-toolbar false
+	dconf write /org/gnome/evolution/shell/buttons-style "'icons'"
+	dconf write /org/gnome/evolution/shell/toolbar-icon-size "'small'"
+	touch .config/fish/.post-install
+fi
 
+# Programs to lauch at login (executable)
 (exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)
 (exec /usr/local/bin/swayidle.sh &)
 (exec mako &)
