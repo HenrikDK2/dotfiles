@@ -36,6 +36,11 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	rm -rf ./yay
 fi
 
+# Dnsmasq
+if ! grep -Fxq "conf-dir=/etc/dnsmasq.d" /etc/dnsmasq.conf; then
+  echo -e "\nconf-dir=/etc/dnsmasq.d" | sudo tee -a /etc/dnsmasq.conf;
+fi
+
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
