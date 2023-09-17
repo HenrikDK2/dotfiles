@@ -12,6 +12,9 @@ if [ ! -f .config/fish/.post-install ]; then
 	touch .config/fish/.post-install
 fi
 
+# Custom bash scripts within ~/.my_scripts/login.d will load at session start
+for script in ~/.my_scripts/login.d/*.sh; do (exec "$script" &) done
+
 # Programs to lauch at login (executable)
 (exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)
 (exec /usr/local/bin/swayidle.sh &)
