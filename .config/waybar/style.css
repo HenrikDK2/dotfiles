@@ -2,6 +2,7 @@
 @define-color nord1 #353c4a;
 @define-color nord2 #e5eaf0;
 @define-color nord3 #8fbbba;
+@define-color nord-safe #53b500;
 @define-color nord-critical #bf616a;
 @define-color nord-warning #ebcb8b;
 
@@ -25,7 +26,8 @@ button,
 #clock,
 #custom-shutdown,
 #custom-reboot,
-#custom-suspend {
+#custom-suspend,
+#custom-vpn {
   background-color: @nord1;
   margin: 0 4px;
   padding: 0 12px;
@@ -34,7 +36,7 @@ button,
 
 #custom-shutdown,
 #custom-reboot,
-#custom-suspend{
+#custom-suspend {
   padding: 0 10px;
 }
 
@@ -56,13 +58,15 @@ tooltip {
   border-bottom: 2px solid @nord3;
 }
 
-#memory {
+#memory,
+#custom-vpn {
   border-radius: 0 4px 4px 0;
   margin: 0 4px 0 0;
   padding: 0 12px 0 6px;
 }
 
-#cpu {
+#cpu,
+#network {
   border-radius: 4px 0 0 4px;
   padding: 0 6px 0 12px;
   margin: 0 0 0 4px;
@@ -95,6 +99,5 @@ label#window {
 }
 
 #battery.critical {
-  background-color: @nord-critical;
   color: @nord0;
 }

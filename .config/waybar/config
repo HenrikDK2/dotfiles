@@ -15,6 +15,7 @@
     "pulseaudio",
     "backlight",
     "network",
+    "custom/vpn",
     "cpu",
     "memory",
     "battery",
@@ -26,6 +27,14 @@
   },
   "sway/window": {
     "max-length": 50
+  },
+  "custom/vpn": {
+    "format": "|     {}",
+    "tooltip-format": "{icon}",
+    "exec": "~/.config/waybar/modules/vpn.sh",
+    "return-type": "json",
+    "tooltip": true,
+    "interval": 5
   },
   "custom/shutdown": {
     "format": "",
