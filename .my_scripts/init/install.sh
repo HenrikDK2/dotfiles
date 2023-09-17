@@ -21,9 +21,9 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Enable multilib, and ParallelDownloads
+# Enable multilib and ParallelDownloads 
 sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
-sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
+sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 20" /etc/pacman.conf
 
 # Reflector - Find the fastest mirrors
 if [ -z "$(pacman -Qe | grep reflector)" ]; then
