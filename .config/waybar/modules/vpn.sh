@@ -8,6 +8,9 @@ connected(){
 # Check if Mullvad VPN is active based on the status
 if [[ "$(mullvad status)" == *"Connected to"* ]]; then connected; fi
 
+# Check if NordVPN is active
+if nordvpn status | grep -q "Status: Connected"; then connected fi
+
 # Check if the tun0 interface exists
 if [ -d /proc/sys/net/ipv4/conf/tun0 ]; then connected; fi
 
