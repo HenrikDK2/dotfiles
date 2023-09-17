@@ -18,6 +18,13 @@ if ! ping -c 1 google.com >/dev/null 2>&1; then
   exit 1
 fi
 
+# Copy system files
+sudo cp -r ~/.my_scripts/init/system/* /
+
+# Enable multilib, and ParallelDownloads
+sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
+
 # Reflector - Find the fastest mirrors
 if [ -z "$(pacman -Qe | grep reflector)" ]; then
 	sudo pacman -S reflector --noconfirm --needed
@@ -26,7 +33,10 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 fi
 
 # Install building tools and awk
-sudo pacman -Syu base-devel gawk --noconfirm --needed
+sudo pacman -S base-devel gawk --noconfirm --needed
+
+# Makepkg related packages (Flags in ~/.makepkg.conf)
+sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
 
 # Install yay
 if [ -z "$(pacman -Qe | grep yay)" ]; then
@@ -40,19 +50,6 @@ fi
 if ! grep -Fxq "conf-dir=/etc/dnsmasq.d" /etc/dnsmasq.conf; then
   echo -e "\nconf-dir=/etc/dnsmasq.d" | sudo tee -a /etc/dnsmasq.conf;
 fi
-
-# Copy system files
-sudo cp -r ~/.my_scripts/init/system/* /
-
-# Enable multilib, and ParallelDownloads
-multilibLine=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d":" -f1)
-let "multilibIncludeLine = $multilibLine + 1"
-sudo sed -i "${multilibLine}s|#||" /etc/pacman.conf
-sudo sed -i "${multilibIncludeLine}s|#||" /etc/pacman.conf
-sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
-
-# Makepkg related packages (Flags in ~/.makepkg.conf)
-sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
 
 # Add bootloader entries, and install kernel
 clear
