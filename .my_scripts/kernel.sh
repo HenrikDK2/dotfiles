@@ -6,18 +6,29 @@ config=$kernel_folder/customization.cfg
 
 # Define a list of extra modules to add to the kernel
 modules=(
+	ahci
+	btrfs
+	btusb
+	cifs
+	ds4drv
+	efivarfs
 	ext4
 	fat
-	vfat
-	loop
+	hci_uart
+	hid-generic
 	isofs
-	cifs
-	efivarfs
 	joydev
+	loop
+	md
 	ntfs
 	ntfs3
+	nvme
+	raid
+	snd_usb_audio
 	usb_storage
+	usbcore
 	usbhid
+	vfat
 	xhci_pci
 	xpad
 )
