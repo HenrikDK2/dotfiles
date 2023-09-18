@@ -4,6 +4,24 @@ db_file=~/.config/modprobed.db
 kernel_folder=~/.my_scripts/linux-tkg
 config=$kernel_folder/customization.cfg
 
+# Define the list of extra modules to add to the kernel
+modules=(
+	ext4
+	fat
+	vfat
+	loop
+	isofs
+	cifs
+	efivarfs
+	joydev
+	ntfs
+	ntfs3
+	usb_storage
+	usbhid
+	xhci_pci
+	xpad
+)
+
 # Build directly from ram (Faster)
 total_free_mem_bytes=$(free -b | awk '/^Mem/ { mem = $4 } /^Swap/ { swap = $4 } END { print mem + swap }')
 min_required_mem_bytes=$((24 * 1024 * 1024 * 1024)) # 24GB
@@ -17,37 +35,20 @@ fi
 if [ ! -f "$db_file" ]; then
 	yay -S modprobe-db --needed --noconfirm 
 
-	# Define the list of extra modules to add
-	modules=(
-	    ext4
-	    fat
-	    vfat
-	    loop
-	    isofs
-	    cifs
-	    efivarfs
-	    joydev
-	    usb_storage
-	    usbhid
-	    xhci_pci
-	    xpad
-	)
-
 	# Create new DB
 	modprobed-db
-
-	# Add extra modules defined in modules list
-	for module in "${modules[@]}"; do
-		echo "$module" >> "$db_file"
-	done
-
-	# Sort list and remove duplicates
-	sort -u $db_file
 fi
 
 # Store loaded modules
 modprobed-db storesilent
-clear
+
+# Add extra modules defined in modules list
+for module in "${modules[@]}"; do
+	echo "$module" >> "$db_file"
+done
+
+# Sort list and remove duplicates
+sort -u $db_file
 
 # Get latest kernel
 if [ ! -d "$kernel_folder" ]; then
