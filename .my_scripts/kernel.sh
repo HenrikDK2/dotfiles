@@ -4,7 +4,7 @@ db_file=~/.config/modprobed.db
 kernel_folder=~/.my_scripts/linux-tkg
 config=$kernel_folder/customization.cfg
 
-# Define the list of extra modules to add to the kernel
+# Define a list of extra modules to add to the kernel
 modules=(
 	ext4
 	fat
@@ -22,55 +22,17 @@ modules=(
 	xpad
 )
 
-# Build directly from ram (Faster)
-total_free_mem_bytes=$(free -b | awk '/^Mem/ { mem = $4 } /^Swap/ { swap = $4 } END { print mem + swap }')
-min_required_mem_bytes=$((24 * 1024 * 1024 * 1024)) # 24GB
-
-## Check if there is enough free memory
-if ((total_free_mem_bytes >= min_required_mem_bytes)); then
-    export BUILDDIR=/tmp/makepkg
-fi
-
-# If no db file, create a new db
-if [ ! -f "$db_file" ]; then
-	yay -S modprobe-db --needed --noconfirm 
-
-	# Create new DB
-	modprobed-db
-fi
-
-# Store loaded modules
-modprobed-db storesilent
-
-# Add extra modules defined in modules list
-for module in "${modules[@]}"; do
-	echo "$module" >> "$db_file"
-done
-
-# Sort list and remove duplicates
-sort -u $db_file
-
-# Get latest kernel
-if [ ! -d "$kernel_folder" ]; then
-	git clone --depth 1 https://github.com/Frogging-Family/linux-tkg $kernel_folder
-fi
-
-# Go to kernel folder directory
-cd $kernel_folder
-
-current_commit=$(git rev-parse HEAD)
-latest_commit=$(git rev-parse origin/master) 
-
-if [ "$current_commit" != "$latest_commit" ]; then
+install_latest_kernel(){
+	cd $kernel_folder
 	git pull --force
 
-	# Change pkgname to linux-tkg
+	# Modify package name to 'linux-tkg'
 	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="linux-tkg"/' $config
 
-	# Change CPU scheduler to eevdf
+    # Set CPU scheduler to 'eevdf'
 	sed -i 's/_cpusched=""/_cpusched="eevdf"/' $config
 
-	# Compiler optimizations (-O3)
+	# Enable compiler optimizations (-O3)
 	sed -i 's/_compileroptlevel="1"/_compileroptlevel="2"/' $config 
 
 	# Enable modprobeddb
@@ -79,7 +41,7 @@ if [ "$current_commit" != "$latest_commit" ]; then
 	# Tickless idle
 	sed -i 's/_tickless=""/_tickless="2"/' $config 
 
-	# Timer freq
+	# Set timer frequency to 1000
 	sed -i 's/_timer_freq=""/_timer_freq="1000"/' $config 
 
 	# Disable ftrace
@@ -88,33 +50,68 @@ if [ "$current_commit" != "$latest_commit" ]; then
 	# Disable debugging
 	sed -i 's/_debugdisable="false"/_debugdisable="true"/' $config 
 
-	 # Enable acs override
+	# Enable ACS override
 	sed -i 's/_acs_override=""/_acs_override="true"/' $config
 
-	# Enable android modules for Waydroid
+	# Enable Android modules for Waydroid
 	sed -i 's/_waydroid=""/_waydroid="true"/' $config 
 
-	# Disable menu config
+	# Disable menuconfig
 	sed -i 's/_menunconfig=""/_menunconfig="0"/' $config 
 
-	# Enable full LTO
+	# Enable full LTO and use the LLVM compiler
 	sed -i 's/_lto_mode=""/_lto_mode="full"/' $config 
 	sed -i 's/_compiler=""/_compiler="llvm"/' $config
 
-	# Compile for native CPU
+	# Compile for the native CPU architecture
 	if grep -q "vendor_id\s*:\s*GenuineIntel" /proc/cpuinfo; then
 	  sed -i 's/_processor_opt=""/_processor_opt="native_intel"/' $config
 	elif grep -q "vendor_id\s*:\s*AuthenticAMD" /proc/cpuinfo; then
 	  sed -i 's/_processor_opt=""/_processor_opt="native_amd"/' $config
 	fi
 
-	# If no NVIDIA GPU disable numa
+	# If no NVIDIA GPU is present, disable NUMA
 	if (! lspci | grep -q -i 'NVIDIA Corporation'); then
 	  sed -i 's/_numadisable="false"/_numadisable="true"/' $config
 	fi
 
 	makepkg -si --noconfirm
 	sudo sed -i "s/default.*/default tkg.conf/" /boot/loader/loader.conf
-else
-	echo "Already on latest kernel"
+	exit 0
+}
+
+# If the modprobed database file doesn't exist, create it
+if [ ! -f "$db_file" ]; then
+	yay -S modprobe-db --needed --noconfirm 
+
+	modprobed-db
+fi
+
+# Store currently loaded modules in the database
+modprobed-db storesilent
+
+# Add extra modules defined in the modules list to the database
+for module in "${modules[@]}"; do
+	echo "$module" >> "$db_file"
+done
+
+# Sort the list and remove duplicates in the database
+sort -u $db_file
+clear
+
+# If the linux-tkg folder doesn't exist, clone it and install the latest kernel
+if [ ! -d "$kernel_folder" ]; then
+	git clone --depth 1 https://github.com/Frogging-Family/linux-tkg $kernel_folder
+	install_latest_kernel
+else 
+	cd $kernel_folder
+
+	current_commit=$(git rev-parse HEAD)
+	latest_commit=$(git rev-parse origin/master) 
+
+	if [ "$current_commit" != "$latest_commit" ]; then
+		install_latest_kernel
+	else
+		echo "Already on latest kernel"
+	fi
 fi
