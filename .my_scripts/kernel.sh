@@ -29,6 +29,7 @@ modules=(
 	usbcore
 	usbhid
 	vfat
+	vaapi
 	xhci_pci
 	xpad
 )
