@@ -28,6 +28,9 @@ modules=(
     usb_storage    # USB storage driver
     usbcore        # USB core driver
     usbhid         # USB HID (Human Interface Device) driver
+    tap            # TUN/TAP virtual network device (Layer 2)
+    tun            # TUN/TAP virtual network device
+    wireguard      # WireGuard VPN module
     vfat           # Virtual File Allocation Table filesystem
     vaapi          # Video Acceleration API
     xhci_pci       # xHCI PCI host controller driver (USB 3.0/3.1)
