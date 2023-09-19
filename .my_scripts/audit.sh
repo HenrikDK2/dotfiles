@@ -27,7 +27,7 @@ format_section() {
 }
 
 # 1. Check systemctl services for failures
-failed_services=$(systemctl --failed --no-legend --plain | awk '{print $1}')
+failed_services=$(systemctl --type=service --failed --no-legend --plain | awk '{print $1}')
 format_section "Failed systemctl services" "$failed_services"
 
 # 2. Check journalctl for important errors
