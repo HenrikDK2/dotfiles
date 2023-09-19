@@ -4,7 +4,10 @@ db_file=~/.config/modprobed.db
 kernel_folder=~/.my_scripts/linux-tkg
 config=$kernel_folder/customization.cfg
 
-# A list of extra modules to add to the kernel
+# modprobeddb may already detect and load many of these modules automatically,
+# but to ensure their inclusion in the database,
+# i've created a list of additional kernel modules to add to the database.
+
 modules=(
     ahci           # Advanced Host Controller Interface (SATA)
     btrfs          # B-tree File System
