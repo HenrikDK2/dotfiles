@@ -4,34 +4,35 @@ db_file=~/.config/modprobed.db
 kernel_folder=~/.my_scripts/linux-tkg
 config=$kernel_folder/customization.cfg
 
-# Define a list of extra modules to add to the kernel
+# A list of extra modules to add to the kernel
 modules=(
-	ahci
-	btrfs
-	btusb
-	cifs
-	ds4drv
-	efivarfs
-	ext4
-	fat
-	hci_uart
-	hid-generic
-	isofs
-	joydev
-	loop
-	md
-	ntfs
-	ntfs3
-	nvme
-	raid
-	snd_usb_audio
-	usb_storage
-	usbcore
-	usbhid
-	vfat
-	vaapi
-	xhci_pci
-	xpad
+    ahci           # Advanced Host Controller Interface (SATA)
+    btrfs          # B-tree File System
+    btusb          # Bluetooth USB driver
+    cifs           # Common Internet File System (SMB)
+    ds4drv         # Sony DualShock 4 controller driver
+    efivarfs       # EFI variables filesystem
+    ext4           # Extended File System 4
+    fat            # File Allocation Table filesystem
+    hci_uart       # Bluetooth HCI UART driver
+    hid-generic    # Generic HID (Human Interface Device) driver
+    i915           # Intel integrated graphics driver
+    isofs          # ISO 9660 filesystem (CD/DVD)
+    joydev         # Joystick device driver
+    loop           # Loopback block device support
+    md             # Multiple Device (MD) RAID support
+    ntfs           # NTFS filesystem
+    ntfs3          # NTFS-3G filesystem (NTFS read/write support)
+    nvme           # NVMe (Non-Volatile Memory Express) driver
+    raid           # RAID (Redundant Array of Independent Disks) support
+    snd_usb_audio  # USB audio driver
+    usb_storage    # USB storage driver
+    usbcore        # USB core driver
+    usbhid         # USB HID (Human Interface Device) driver
+    vfat           # Virtual File Allocation Table filesystem
+    vaapi          # Video Acceleration API
+    xhci_pci       # xHCI PCI host controller driver (USB 3.0/3.1)
+    xpad           # Xbox gamepad driver
 )
 
 install_latest_kernel(){
@@ -41,8 +42,8 @@ install_latest_kernel(){
 	# Modify package name to 'linux-tkg'
 	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="linux-tkg"/' $config
 
-    # Set CPU scheduler to 'eevdf'
-	sed -i 's/_cpusched=""/_cpusched="eevdf"/' $config
+    # Set CPU scheduler to 'cacule'
+	sed -i 's/_cpusched=""/_cpusched="cfs"/' $config
 
 	# Enable compiler optimizations (-O3)
 	sed -i 's/_compileroptlevel="1"/_compileroptlevel="2"/' $config 
@@ -94,7 +95,7 @@ install_latest_kernel(){
 
 # If the modprobed database file doesn't exist, create it
 if [ ! -f "$db_file" ]; then
-	yay -S modprobe-db --needed --noconfirm 
+	yay -S modprobed-db --needed --noconfirm 
 
 	modprobed-db
 fi
