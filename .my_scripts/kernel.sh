@@ -16,7 +16,6 @@ modules=(
     fat            # File Allocation Table filesystem
     hci_uart       # Bluetooth HCI UART driver
     hid-generic    # Generic HID (Human Interface Device) driver
-    i915           # Intel integrated graphics driver
     isofs          # ISO 9660 filesystem (CD/DVD)
     joydev         # Joystick device driver
     loop           # Loopback block device support
