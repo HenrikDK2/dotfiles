@@ -40,6 +40,12 @@ modules=(
     xpad           # Xbox gamepad driver
 )
 
+ctrl_c() {
+  exit 0
+}
+
+trap ctrl_c INT
+
 install_latest_kernel(){
 	cd $kernel_folder
 	git pull --force
@@ -93,6 +99,9 @@ install_latest_kernel(){
 	  sed -i 's/_numadisable="false"/_numadisable="true"/' $config
 	fi
 
+	clear
+	echo "Current kernel version: $(echo "$(uname -r)" | cut -d- -f1)"
+	echo -e "You can abort with Ctrl+C if you're on the same version \n"
 	makepkg -si --noconfirm
 	sudo sed -i "s/default.*/default tkg.conf/" /boot/loader/loader.conf
 	exit 0
