@@ -90,8 +90,6 @@ label#window {
   margin-left: 6px;
 }
 
-#network.disabled,
-#network.disconnected,
 #battery.warning,
 #pulseaudio.muted {
   background-color: @nord-warning;
