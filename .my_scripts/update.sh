@@ -14,15 +14,6 @@ if [ -n "$updates_available" ] || [ ! -f ~/.cache/git-update-last ]; then
 	ionice -c 3 -p $$
 	clear
 
-	# Build directly from ram (Faster)
-	total_free_mem_bytes=$(free -b | awk '/^Mem/ { mem = $4 } /^Swap/ { swap = $4 } END { print mem + swap }')
-	min_required_mem_bytes=$((24 * 1024 * 1024 * 1024)) # 24GB
-	
-	## Check if there is enough free memory
-	if ((total_free_mem_bytes >= min_required_mem_bytes)); then
-	    export BUILDDIR=/tmp/makepkg
-	fi
-
 	# Updating normal packages
 	echo -e "\033[1mUpdating packages.\033[0m\n"
 	yay -Su --noconfirm --needed
