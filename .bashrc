@@ -16,4 +16,6 @@ min_required_mem_bytes=$((24 * 1024 * 1024 * 1024)) # 24GB
 
 if ((total_free_mem_bytes >= min_required_mem_bytes)); then
     export BUILDDIR=/tmp/makepkg
+else
+	unset BUILDDIR
 fi

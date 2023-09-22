@@ -7,6 +7,8 @@ set min_required_mem_bytes (math "24 * 1024 * 1024 * 1024") # 24GB
 
 if test $total_free_mem_bytes -ge $min_required_mem_bytes
     set -x BUILDDIR /tmp/makepkg
+else 
+    set -e BUILDDIR
 end
 
 if status is-interactive
