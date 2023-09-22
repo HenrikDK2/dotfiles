@@ -124,7 +124,7 @@ for module in "${modules_to_add[@]}"; do
 done
 
 # Sort the list and remove duplicates in the database
-sort -u $db_file
+sort -u $db_file -o $db_file
 clear
 
 # If the linux-tkg folder doesn't exist, clone it and install the latest kernel
