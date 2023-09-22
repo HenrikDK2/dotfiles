@@ -15,6 +15,7 @@ modules=(
     cifs           # Common Internet File System (SMB)
     ds4drv         # Sony DualShock 4 controller driver
     efivarfs       # EFI variables filesystem
+    exfat		   # exFAT filesystem support
     ext4           # Extended File System 4
     fat            # File Allocation Table filesystem
     hci_uart       # Bluetooth HCI UART driver
