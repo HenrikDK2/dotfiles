@@ -2,13 +2,13 @@
 
 db_file=~/.config/modprobed.db
 kernel_folder=~/.my_scripts/linux-tkg
-config=$kernel_folder/customization.cfg
+config_file=$kernel_folder/customization.cfg
 
 # modprobeddb may already detect and load many of these modules automatically,
 # but to ensure their inclusion in the database,
 # i've created a list of additional kernel modules to add to the database.
 
-modules=(
+modules_to_add=(
     ahci           # Advanced Host Controller Interface (SATA)
     btrfs          # B-tree File System
     btusb          # Bluetooth USB driver
@@ -52,52 +52,52 @@ install_latest_kernel(){
 	git pull --force
 
 	# Modify package name to 'linux-tkg'
-	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="linux-tkg"/' $config
+	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="linux-tkg"/' $config_file
 
     # Set CPU scheduler to 'cacule'
-	sed -i 's/_cpusched=""/_cpusched="cfs"/' $config
+	sed -i 's/_cpusched=""/_cpusched="cfs"/' $config_file
 
 	# Enable compiler optimizations (-O3)
-	sed -i 's/_compileroptlevel="1"/_compileroptlevel="2"/' $config 
+	sed -i 's/_compileroptlevel="1"/_compileroptlevel="2"/' $config_file 
 
 	# Enable modprobeddb
-	sed -i 's/_modprobeddb="false"/_modprobeddb="true"/' $config 
+	sed -i 's/_modprobeddb="false"/_modprobeddb="true"/' $config_file 
 
 	# Tickless idle
-	sed -i 's/_tickless=""/_tickless="2"/' $config 
+	sed -i 's/_tickless=""/_tickless="2"/' $config_file 
 
 	# Set timer frequency to 1000
-	sed -i 's/_timer_freq=""/_timer_freq="1000"/' $config 
+	sed -i 's/_timer_freq=""/_timer_freq="1000"/' $config_file 
 
 	# Disable ftrace
-	sed -i 's/_ftracedisable="false"/_ftracedisable="true"/' $config 
+	sed -i 's/_ftracedisable="false"/_ftracedisable="true"/' $config_file 
 
 	# Disable debugging
-	sed -i 's/_debugdisable="false"/_debugdisable="true"/' $config 
+	sed -i 's/_debugdisable="false"/_debugdisable="true"/' $config_file 
 
 	# Enable ACS override
-	sed -i 's/_acs_override=""/_acs_override="true"/' $config
+	sed -i 's/_acs_override=""/_acs_override="true"/' $config_file
 
 	# Enable Android modules for Waydroid
-	sed -i 's/_waydroid=""/_waydroid="true"/' $config 
+	sed -i 's/_waydroid=""/_waydroid="true"/' $config_file 
 
 	# Disable menuconfig
-	sed -i 's/_menunconfig=""/_menunconfig="0"/' $config 
+	sed -i 's/_menunconfig=""/_menunconfig="0"/' $config_file 
 
 	# Enable full LTO and use the LLVM compiler
-	sed -i 's/_lto_mode=""/_lto_mode="full"/' $config 
-	sed -i 's/_compiler=""/_compiler="llvm"/' $config
+	sed -i 's/_lto_mode=""/_lto_mode="full"/' $config_file 
+	sed -i 's/_compiler=""/_compiler="llvm"/' $config_file
 
 	# Compile for the native CPU architecture
 	if grep -q "vendor_id\s*:\s*GenuineIntel" /proc/cpuinfo; then
-	  sed -i 's/_processor_opt=""/_processor_opt="native_intel"/' $config
+	  sed -i 's/_processor_opt=""/_processor_opt="native_intel"/' $config_file
 	elif grep -q "vendor_id\s*:\s*AuthenticAMD" /proc/cpuinfo; then
-	  sed -i 's/_processor_opt=""/_processor_opt="native_amd"/' $config
+	  sed -i 's/_processor_opt=""/_processor_opt="native_amd"/' $config_file
 	fi
 
 	# If no NVIDIA GPU is present, disable NUMA
 	if (! lspci | grep -q -i 'NVIDIA Corporation'); then
-	  sed -i 's/_numadisable="false"/_numadisable="true"/' $config
+	  sed -i 's/_numadisable="false"/_numadisable="true"/' $config_file
 	fi
 
 	clear
@@ -119,7 +119,7 @@ fi
 modprobed-db storesilent
 
 # Add extra modules defined in the modules list to the database
-for module in "${modules[@]}"; do
+for module in "${modules_to_add[@]}"; do
 	echo "$module" >> "$db_file"
 done
 
