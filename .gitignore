@@ -116,6 +116,8 @@
 !.config/gamemode.ini
 !.config/mimeapps.list
 
+!.config/user-dirs.dirs
+
 # .LOCAL
 !.local/
 !.local/share
