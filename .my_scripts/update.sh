@@ -25,7 +25,7 @@ if [ -n "$updates_available" ] || [ ! -f ~/.cache/git-update-last ]; then
 
 	# Check if the last update timestamp exists and if it's been a week since the last update
 	if [ -z "$last_update_seconds" ] || ((current_time_seconds - last_update_seconds >= week_in_seconds)); then
-	    yay -Syu --devel --noconfirm --needed
+	    yay -Syu --devel --noconfirm
 
 		# Update linux-tkg if folder exist
 		if [ -d ~/.my_scripts/linux-tkg ]; then
@@ -34,9 +34,6 @@ if [ -n "$updates_available" ] || [ ! -f ~/.cache/git-update-last ]; then
 	    
 	    echo "$(date +%s)" > ~/.cache/git-update-last
 	fi
-
-	# Update kernel-tkg
-	~/.my_scripts/kernel.sh
 	
 	# Cleanup
 	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
