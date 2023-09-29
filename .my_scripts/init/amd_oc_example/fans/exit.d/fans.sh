@@ -11,9 +11,9 @@ elif [ -e /sys/class/drm/card1 ]; then
     GPU_CARD="card1"
 fi
 
-if [ -e /sys/class/drm/card$GPU_CARD/device/hwmon/hwmon1 ]; then
+if [ -e /sys/class/drm/$GPU_CARD/device/hwmon/hwmon1 ]; then
     HWMON="hwmon1"
-elif [ -e /sys/class/drm/card$GPU_CARD/device/hwmon/hwmon2 ]; then
+elif [ -e /sys/class/drm/$GPU_CARD/device/hwmon/hwmon2 ]; then
     HWMON="hwmon2"
 fi
 
