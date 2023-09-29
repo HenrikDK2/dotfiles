@@ -2,6 +2,7 @@
 
 1. Copy amd-overclock.service to /etc/systemd/system/
 2. Modify oc.sh and copy to /usr/local/bin
+3. Enable amd-overclock.service (sudo systemctl enable amd-overclock.service)
 
 ## Fans
 
