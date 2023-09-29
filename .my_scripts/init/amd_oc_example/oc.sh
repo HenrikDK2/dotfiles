@@ -9,9 +9,9 @@ GPU_CARD=""
 HWMON=""
 
 if [ -e /sys/class/drm/card0 ]; then
-    GPU_CARD="0"
+    GPU_CARD="card0"
 elif [ -e /sys/class/drm/card1 ]; then
-    GPU_CARD="1"
+    GPU_CARD="card1"
 fi
 
 if [ -e /sys/class/drm/card$GPU_CARD/device/hwmon/hwmon1 ]; then
@@ -21,11 +21,11 @@ elif [ -e /sys/class/drm/card$GPU_CARD/device/hwmon/hwmon2 ]; then
 fi
 
 # Core, memory, voltage curve, and power limit
-echo "s 1 2120" > "/sys/class/drm/card$GPU_CARD/device/pp_od_clk_voltage"
-echo "m 1 885" > "/sys/class/drm/card$GPU_CARD/device/pp_od_clk_voltage"
-echo "vc 1 1450 890" > "/sys/class/drm/card$GPU_CARD/device/pp_od_clk_voltage"
-echo "vc 2 2120 1200" > "/sys/class/drm/card$GPU_CARD/device/pp_od_clk_voltage"
-echo "300000000" > "/sys/class/drm/card$GPU_CARD/device/hwmon/$HWMON/power1_cap"
-echo "c" > "/sys/class/drm/card$GPU_CARD/device/pp_od_clk_voltage"
+echo "s 1 2120" > "/sys/class/drm/$GPU_CARD/device/pp_od_clk_voltage"
+echo "m 1 885" > "/sys/class/drm/$GPU_CARD/device/pp_od_clk_voltage"
+echo "vc 1 1450 890" > "/sys/class/drm/$GPU_CARD/device/pp_od_clk_voltage"
+echo "vc 2 2120 1200" > "/sys/class/drm/$GPU_CARD/device/pp_od_clk_voltage"
+echo "300000000" > "/sys/class/drm/$GPU_CARD/device/hwmon/$HWMON/power1_cap"
+echo "c" > "/sys/class/drm/$GPU_CARD/device/pp_od_clk_voltage"
 
 exit 0
