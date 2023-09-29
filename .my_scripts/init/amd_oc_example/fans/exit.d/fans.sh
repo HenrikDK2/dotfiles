@@ -17,4 +17,4 @@ elif [ -e /sys/class/drm/$GPU_CARD/device/hwmon/hwmon2 ]; then
     HWMON="hwmon2"
 fi
 
-echo "2" > /sys/class/drm/$GPU_CARD/device/hwmon/$HWMON/pwm1_enablet
+echo "2" > /sys/class/drm/$GPU_CARD/device/hwmon/$HWMON/pwm1_enable
