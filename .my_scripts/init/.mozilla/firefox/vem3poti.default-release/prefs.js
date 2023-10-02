@@ -51,11 +51,14 @@ user_pref("browser.toolbars.bookmarks.visibility", "always");
 user_pref("browser.urlbar.placeholderName", "Google");
 user_pref("browser.urlbar.placeholderName.private", "Google");
 user_pref("browser.sessionstore.resume_from_crash", false);
+user_pref("browser.sessionhistory.max_entries", 20);
 user_pref("browser.send_pings", false);
 
 user_pref("network.http.pipelining", true);
 user_pref("network.http.proxy.pipelining", true);
 user_pref("network.http.pipelining.maxrequests", 20);
+user_pref("network.cookie.cookieBehavior", 1);
+user_pref("network.cookie.cookieBehavior.pbmode", 1);
 
 user_pref("devtools.onboarding.telemetry.logged", false);
 user_pref("devtools.toolbox.host", "right");
@@ -63,6 +66,10 @@ user_pref("devtools.toolbox.host", "right");
 user_pref("privacy.trackingprotection.origin_telemetry.enabled", false);
 user_pref("privacy.webrtc.legacyGlobalIndicator", false);
 user_pref("privacy.webrtc.hideGlobalIndicator", true);
+user_pref("privacy.firstparty.isolate", true);
+user_pref("privacy.donottrackheader.enabled", true);
+user_pref("privacy.trackingprotection.enabled", true);
+user_pref("privacy.trackingprotection.pbmode.enabled", true);
 
 user_pref("network.trr.confirmation_telemetry_enabled", false);
 user_pref("network.dns.disablePrefetchFromHTTPS", false);
@@ -77,6 +84,8 @@ user_pref("geo.provider.ms-windows-location", false);
 user_pref("geo.enabled", false);
 
 user_pref("datareporting.healthreport.uploadEnabled", false);
+user_pref("datareporting.healthreport.service.enabled", false);
+user_pref("datareporting.policy.dataSubmissionPolicyAccepted", false);
 user_pref("datareporting.policy.dataSubmissionEnabled", false);
 user_pref("datareporting.sessions.current.clean", false);
 
