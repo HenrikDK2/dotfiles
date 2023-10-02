@@ -3,6 +3,12 @@
 # https://somegit.dev/ALHP/ALHP.GO 
 # Adds x86-64-v3 repo if your system supports it.
 
+# Check if user has root permissions
+if [[ $EUID -eq 0 ]]; then
+   echo "You shouldn't run this script as root" 
+   exit 1
+fi
+
 if (/lib/ld-linux-x86-64.so.2 --help | grep -q "x86-64-v3 (supported, searched)"); then
 	yay -S alhp-keyring alhp-mirrorlist --needed --noconfirm
 
