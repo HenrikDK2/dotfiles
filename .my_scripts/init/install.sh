@@ -21,10 +21,12 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Enable multilib and ParallelDownloads 
-sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
-sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10" /etc/pacman.conf
-sudo pacman -Sy
+# Enable multilib, DisableDownloadTimeout and ParallelDownloads 
+if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
+	sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+	sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10\nDisableDownloadTimeout" /etc/pacman.conf
+	sudo pacman -Sy
+fi
 
 # Reflector - Find the fastest mirrors
 if [ -z "$(pacman -Qe | grep reflector)" ]; then
