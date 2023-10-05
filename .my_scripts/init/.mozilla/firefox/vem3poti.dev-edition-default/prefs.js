@@ -118,6 +118,9 @@ user_pref(
 );
 user_pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.feeds.section.topstories", false);
 
+user_pref("cookiebanners.service.mode", 1);
+user_pref("cookiebanners.service.mode.privateBrowsing", 1);
+
 user_pref("loop.enabled", false);
 user_pref("beacon.enabled", false);
 user_pref("telemetry.hybridContent", false);
