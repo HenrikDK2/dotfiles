@@ -1,6 +1,6 @@
 [Default Applications]
 inode/directory=nemo.desktop
-application/x-shellscript=code-oss-url-handler.desktop
+application/x-shellscript=nemo-autorun-software.desktop
 x-scheme-handler/msteams=teams.desktop
 x-scheme-handler/mailto=userapp-Evolution-1DWUM1.desktop
 message/rfc822=userapp-Thunderbird-F0M0M1.desktop
@@ -29,7 +29,7 @@ application/x-ms-dos-executable=wine.desktop
 image/webp=imv.desktop
 
 [Added Associations]
-application/x-shellscript=code-oss-url-handler.desktop;
+application/x-shellscript=code-oss-url-handler.desktop;nemo-autorun-software.desktop;
 x-scheme-handler/mailto=userapp-Evolution-1DWUM1.desktop;
 x-scheme-handler/mid=userapp-Thunderbird-F0M0M1.desktop;
 x-scheme-handler/webcal=userapp-Thunderbird-WY81M1.desktop;
