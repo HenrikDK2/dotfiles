@@ -1,5 +1,16 @@
 #!/bin/sh
 
+function confirm() {
+    while true; do
+        read -p " [y/n] " yn
+        case $yn in
+            [Yy]* ) return 0;;
+            [Nn]* ) return 1;;
+            * ) printf "\nPlease answer YES or NO";;
+        esac
+    done
+}
+
 # Check if sudo and git are installed
 if [ ! command -v sudo &> /dev/null || ! command -v git &> /dev/null ]; then
     echo "Sudo and/or Git is not installed"
@@ -61,94 +72,83 @@ fi
 
 # Add bootloader entries, and install kernel
 clear
-while true; do
-    printf "Only for systemd-boot! - Add bootloader entries?\n\n"
-    read -p "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking [y/n] "  yn
-    case $yn in
-        [Yy]* ) source ~/.my_scripts/init/bootloader.sh; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+printf "Only for systemd-boot! - Add bootloader entries?\n\n"
+printf "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking"
+
+if confirm; then
+    source ~/.my_scripts/init/bootloader.sh; 
+fi
 
 # Ultrawide gaps on workspace 1
 clear
-while true; do
-    printf "Only for 5120x1440 ultrawide monitor!\n\n"
-    read -p "Do you want to have a 1440p window in the center of workspace 1? [y/n] " yn
-    case $yn in
-        [Yy]* ) mkdir ~/.config/sway/config.d
-                cp ~/.my_scripts/init/config.d/workspace-gaps ~/.config/sway/config.d/workspace-gaps; break;;
-        [Nn]* ) rm -rf ~/.config/sway/config.d/workspace-gaps; break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+printf "Only for 5120x1440 ultrawide monitor!\n\n"
+printf "Do you want to have a 1440p window in the center of workspace 1?"
+
+if confirm; then 
+    mkdir ~/.config/sway/config.d
+    cp ~/.my_scripts/init/config.d/workspace-gaps ~/.config/sway/config.d/workspace-gaps
+else
+    rm -rf ~/.config/sway/config.d/workspace-gaps
+fi
 
 # Optimized Firefox profile
 clear
-while true; do
-    printf "Do you wish to use an optimized Firefox profile?\n\n"
-    printf "It disables telemetry, animations and more for privacy and performance.\n\n"
-    read -p "This will reset your current profile? [y/n] " yn
-    case $yn in
-        [Yy]* ) rm -rf ~/.mozilla; cp -r ~/.my_scripts/init/.mozilla ~/.mozilla; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+printf "Do you wish to use an optimized Firefox profile?\n\n"
+printf "It disables telemetry, animations and more for privacy and performance.\n\n"
+printf "This will reset your current profile, do you want to proceed?"
+
+if confirm; then 
+    rm -rf ~/.mozilla;
+    cp -r ~/.my_scripts/init/.mozilla ~/.mozilla; 
+fi
 
 # Install Virt-manager
 clear
-while true; do
-    printf "This is for virtual machines.\n\n"
-    read -p "Do you want to install virt-manager? [y/n] " yn
-    case $yn in
-        [Yy]* ) yay -S virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --needed;
-				sudo systemctl enable --now libvirtd virtlogd;
-				sudo usermod -a -G libvirt $(whoami);  break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+printf "This is for virtual machines.\n\n"
+printf "Do you want to install virt-manager?"
+
+if confirm; then
+    yay -S virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --needed;
+	sudo systemctl enable --now libvirtd virtlogd;
+	sudo usermod -a -G libvirt $(whoami);
+fi
 
 # Setup bluetooth
 clear
-while true; do
-	printf "This is for bluetooth.\n\n"
-    read -p "Do you want to install blueman? [y/n] " yn
-    case $yn in
-        [Yy]* ) sudo pacman -S blueman --needed --noconfirm;
-        		sudo systemctl enable --now bluetooth.service; break;;
-        [Nn]* ) break;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+printf "This is for bluetooth.\n\n"
+printf "Do you want to install blueman?"
+
+if confirm; then
+    sudo pacman -S blueman --needed --noconfirm;
+    sudo systemctl enable --now bluetooth.service;
+fi
 
 # Mesa drivers - AMD/Intel
 if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
     clear
-    while true; do
-        read -p "Do you want to install Mesa drivers for AMD? [y/n] " yn
-        case $yn in
-            [Yy]* ) yay -Syu mesa-amdonly-gaming-git lib32-mesa-amdonly-gaming-git
-                    sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
-                    sudo mkinitcpio -P; break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
+    printf "Do you want to install Mesa drivers for AMD?"
+
+    if confirm; then
+        printf "\nDo you want to install the git version of Mesa?"
+
+        if confirm; then
+            yay -S mesa-amdonly-gaming-git lib32-mesa-amdonly-gaming-git
+        else
+            yay -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils
+        fi
+        
+        sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+        sudo mkinitcpio -P;
+    fi
 fi
 
 if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
     clear
-    while true; do
-        read -p "Do you want to install Mesa drivers for Intel? [y/n] " yn
-        case $yn in
-            [Yy]* ) yay -Syu mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver; break;;
-            [Nn]* ) break;;
-            * ) echo "Please answer yes or no.";;
-        esac
-    done
+    printf "Do you want to install Mesa drivers for Intel?"
+
+    if confirm; then
+        yay -Syu mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver
+    fi
 fi
 
 # Packages
@@ -187,11 +187,10 @@ sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved connma
 
 # Reboot
 clear
-while true; do
-    read -p "Do you want to reboot? [y/n] " yn
-    case $yn in
-        [Yy]* ) reboot; break;;
-        [Nn]* ) clear; break;; 
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+printf "Do you want to reboot?"
+
+if confirm; then
+    reboot
+else
+    clear
+fi
