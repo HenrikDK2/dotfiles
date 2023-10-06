@@ -147,7 +147,7 @@ if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
     printf "Do you want to install Mesa drivers for Intel?"
 
     if confirm; then
-        yay -Syu mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver
+        yay -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver
     fi
 fi
 
