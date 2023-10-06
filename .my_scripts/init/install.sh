@@ -49,6 +49,11 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	rm -rf ./yay
 fi
 
+# Avoid stalls on memory allocations
+total_memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+min_free_kbytes=$((total_memory * 2 / 100)) # 2% of memory
+sudo sed -i "s/#MEM/$min_free_kbytes/" /etc/tmpfiles.d/tweaks.conf
+
 # Dnsmasq
 if ! grep -Fxq "conf-dir=/etc/dnsmasq.d" /etc/dnsmasq.conf; then
   echo -e "\nconf-dir=/etc/dnsmasq.d" | sudo tee -a /etc/dnsmasq.conf;
