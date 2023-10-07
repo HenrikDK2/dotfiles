@@ -21,13 +21,13 @@ PP_OD_CLK_VOLTAGE="/sys/class/drm/$GPU_CARD/device/pp_od_clk_voltage"
 POWER_CAP="/sys/class/drm/$GPU_CARD/device/hwmon/$HWMON/power1_cap"
 
 # Voltage offset
-echo "vo -70" > $PP_OD_CLK_VOLTAGE
+echo "vo -60" > $PP_OD_CLK_VOLTAGE
 
 # Max core clock
-echo "s 1 3150" > $PP_OD_CLK_VOLTAGE
+echo "s 1 3100" > $PP_OD_CLK_VOLTAGE
 
 # Max memory clock
-echo "m 1 1345" > $PP_OD_CLK_VOLTAGE
+echo "m 1 1330" > $PP_OD_CLK_VOLTAGE
 
 # Powerlimit (350W)
 echo "350000000" > $POWER_CAP
