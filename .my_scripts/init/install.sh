@@ -99,7 +99,8 @@ printf "This will reset your current profile, do you want to proceed?"
 
 if confirm; then 
     rm -rf ~/.mozilla;
-    cp -r ~/.my_scripts/init/.mozilla ~/.mozilla; 
+    cp -r ~/.my_scripts/init/.mozilla ~/.mozilla;
+    cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-release; 
 fi
 
 # Install Virt-manager
