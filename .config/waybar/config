@@ -48,7 +48,7 @@
   },
   "custom/suspend": {
     "format": "",
-    "on-click": "/usr/local/bin/lock_screen.sh",
+    "on-click": "swaylock -C ~/.config/swaylock/config",
     "tooltip": false
   },
   "tray": {
