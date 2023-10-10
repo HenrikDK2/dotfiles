@@ -48,7 +48,7 @@
   },
   "custom/suspend": {
     "format": "",
-    "on-click": "gtklock",
+    "on-click": "/usr/local/bin/lock_screen.sh",
     "tooltip": false
   },
   "tray": {

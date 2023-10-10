@@ -1,7 +1,9 @@
 #!/bin/sh
 
-exec swayidle -w \
-		timeout 300 'gtklock' \
-		timeout 500 'swaymsg "output * dpms off"' \
-			resume 'swaymsg "output * dpms on"' \
-		before-sleep 'gtklock'
+export lock_screen="/usr/local/bin/lock_screen.sh"
+
+swayidle -w \
+	timeout 300 $lock_screen \
+	timeout 600 'swaymsg "output * power off"' \
+		resume 'swaymsg "output * power on"' \
+	before-sleep $lock_screen
