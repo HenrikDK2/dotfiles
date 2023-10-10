@@ -128,8 +128,8 @@ for_window [title="Choose ONE of the audio conference options"] floating enable
 for_window [title="zoom" app_id="zoom"] floating enable
 
 # Inhibit idle
-for_window [class="steam_app*"] inhibit_idle focus
-for_window [class="gamescope"] inhibit_idle focus
+for_window [class="steam_app*"] inhibit_idle
+for_window [class="gamescope"] inhibit_idle
 for_window [class="heroic"] inhibit_idle
 for_window [class="^.*"] inhibit_idle fullscreen
 for_window [app_id="^.*"] inhibit_idle fullscreen
