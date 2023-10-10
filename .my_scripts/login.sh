@@ -17,7 +17,6 @@ for script in ~/.my_scripts/login.d/*.sh; do (exec "$script" &) done
 
 # Programs to lauch at login (executable)
 (exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)
-(exec /usr/local/bin/swayidle.sh &)
 (exec mako &)
 (exec waybar &) 
 (exec evolution &)
