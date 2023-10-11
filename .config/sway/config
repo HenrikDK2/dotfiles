@@ -8,7 +8,7 @@ set $right ae
 output * {   
     max_render_time 6
     adaptive_sync on 
-    bg ~/Wallpapers/1.png center
+    bg ~/Wallpapers/3.png center
 }
 
 input * {
