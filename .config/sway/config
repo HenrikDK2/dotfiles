@@ -4,10 +4,8 @@ set $down k
 set $up l
 set $right ae
 
-# If screen flickers, disable adaptive_sync
 output * {   
     max_render_time 6
-    adaptive_sync on 
     bg ~/Wallpapers/3.png center
 }
 
@@ -147,7 +145,7 @@ font pango:Cantarell Bold 12
 seat seat0 xcursor_theme Sunity-cursors 24
 
 exec {
-   exec ~/.my_scripts/login.sh &
+	~/.my_scripts/login.sh &
 }
 
 exec_always {
