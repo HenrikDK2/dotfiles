@@ -130,16 +130,6 @@ clear
 # If the linux-tkg folder doesn't exist, clone it and install the latest kernel
 if [ ! -d "$kernel_folder" ]; then
 	git clone --depth 1 https://github.com/Frogging-Family/linux-tkg $kernel_folder
-	install_latest_kernel
-else 
-	cd $kernel_folder
-
-	current_commit=$(git rev-parse HEAD)
-	latest_commit=$(git rev-parse origin/master) 
-
-	if [ "$current_commit" != "$latest_commit" ]; then
-		install_latest_kernel
-	else
-		echo "Already on latest kernel"
-	fi
 fi
+
+install_latest_kernel
