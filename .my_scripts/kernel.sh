@@ -1,7 +1,7 @@
 #!/bin/bash
 
 db_file=~/.config/modprobed.db
-kernel_folder=~/.my_scripts/linux-tkg
+kernel_folder=~/.cache/linux-tkg
 config_file=$kernel_folder/customization.cfg
 
 # modprobeddb may already detect and load many of these modules automatically,
@@ -127,7 +127,7 @@ done
 sort -u $db_file -o $db_file
 clear
 
-# If the linux-tkg folder doesn't exist, clone it and install the latest kernel
+# If the linux-tkg folder doesn't exist, clone it
 if [ ! -d "$kernel_folder" ]; then
 	git clone --depth 1 https://github.com/Frogging-Family/linux-tkg $kernel_folder
 fi
