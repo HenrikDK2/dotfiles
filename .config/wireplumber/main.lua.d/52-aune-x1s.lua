@@ -6,8 +6,6 @@ rule = {
   },
   apply_properties = {
     ["resample.disable"] = true,
-    ["api.alsa.use-chmap"] = true,
-    ["api.alsa.disable-batch"] = true,
     ["channelmix.disable"] = true,
     ["audio.allowed-rates"] = "44100,48000,88200,96000,176400,192000,352800,384000",
   },
