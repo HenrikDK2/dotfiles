@@ -48,7 +48,7 @@
   },
   "custom/suspend": {
     "format": "",
-    "on-click": "swaylock -C ~/.config/swaylock/config",
+    "on-click": "sh -c '(sleep 0.1s; swaylock)' & disown",
     "tooltip": false
   },
   "tray": {
