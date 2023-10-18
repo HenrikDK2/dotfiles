@@ -1,5 +1,4 @@
-Defaults	passwd_tries=10
-Defaults	timestamp_timeout=120
+Defaults passwd_tries=10, passwd_timeout=60, timestamp_timeout=60
 %wheel ALL=(ALL:ALL) ALL
 %wheel ALL = NOPASSWD: /usr/local/bin/gamemode/optimize.sh
 %wheel ALL = NOPASSWD: /usr/local/bin/gamemode/start.sh
