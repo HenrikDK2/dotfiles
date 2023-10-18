@@ -28,7 +28,7 @@ if [ -n "$updates_available" ] || [ ! -f ~/.cache/git-update-last ]; then
 	    yay -Syu --devel --noconfirm
 
 		# Update linux-tkg if folder exist
-		if [ -d ~/.my_scripts/linux-tkg ]; then
+		if [ -d ~/.cache/linux-tkg ]; then
 			~/.my_scripts/kernel.sh
 		fi
 	    
