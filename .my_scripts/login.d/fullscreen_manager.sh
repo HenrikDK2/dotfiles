@@ -11,14 +11,10 @@ swaymsg -t subscribe -m '[ "window" ]' | while read window_json; do
         window_fullscreen_status=$(echo ${window_json} | jq -r '.container.fullscreen_mode')
 
         if [[ $window_fullscreen_status = "1" ]]; then
-            killall -9 waybar swaybg;
-        elif [[ $window_fullscreen_status = "0" ]]; then
+            killall -9 waybar;
+        else
         	if ! pgrep -x "waybar" > /dev/null; then
             	waybar &
-            fi
-
-            if ! pgrep -x "swaybg" > /dev/null; then
-            	swaybg -i $WALLPAPER -m $WALLPAPER_MODE &
             fi
         fi
     fi
