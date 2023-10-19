@@ -11,22 +11,26 @@ else
     set -e BUILDDIR
 end
 
+
+
 if status is-interactive
+    # Check if fisher is installed
     if type -q fisher;
-        if not test -e ~/.config/fish/functions/nvm.fish; 
+        # Install nvm
+        if not test -e ~/.config/fish/conf.d/nvm.fish; 
             fisher install jorgebucaran/nvm.fish
         end
     
-         # Install nvm
-        if not test -e ~/.config/fish/functions/_autopair_tab.fish; 
-            fisher install fisher install jorgebucaran/autopair.fish
+        # Install autopair
+        if not test -e ~/.config/fish/conf.d/autopair.fish; 
+            fisher install jorgebucaran/autopair.fish
         end
-
-        clear
     end
-   
+
     # On login
     if test -z "$DISPLAY"; and test (tty) = /dev/tty1
         sway
     end
+
+    clear
 end
