@@ -37,6 +37,8 @@
 # .CONFIG
 !.config
 
+!.config/user-dirs.dirs
+
 !.config/discord/
 !.config/discord/settings.json
 
