@@ -2,9 +2,9 @@
 
 add_source(){
 	if [ -z $2 ]; then
-		wget -O - >> "/tmp/denyhosts.txt" $1
+		wget -T 20 -t 1 -O - >> "/tmp/denyhosts.txt" $1
 	else
-		wget -O - > "/tmp/denyhoststemp.txt" $1
+		wget -T 20 -t 1 -O - > "/tmp/denyhoststemp.txt" $1
 		sed -i '/^[ \t]*#/d;/^[[:space:]]*$/d' /tmp/denyhoststemp.txt
 		sed -i "s/^/$2 /" /tmp/denyhoststemp.txt
 		cat /tmp/denyhoststemp.txt | tee -a /tmp/denyhosts.txt
@@ -26,7 +26,6 @@ update_hosts(){
 		add_source https://urlhaus.abuse.ch/downloads/hostfile/
 		add_source https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Spam/hosts
 		add_source https://zerodot1.gitlab.io/CoinBlockerLists/hosts_browser
-		add_source https://osint.digitalside.it/Threat-Intel/lists/latestdomains.txt "0.0.0.0"
 		add_source https://v.firebog.net/hosts/Prigent-Malware.txt "0.0.0.0"
 		add_source https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt "0.0.0.0"
 		add_source https://gitlab.com/quidsup/notrack-blocklists/raw/master/notrack-malware.txt "0.0.0.0"
