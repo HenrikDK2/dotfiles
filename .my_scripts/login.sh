@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # First login (Post-install)
 if [ ! -f .config/fish/.post-install ]; then
@@ -26,3 +26,6 @@ for script in ~/.my_scripts/login.d/*.sh; do (exec "$script" &) done
 renice -n 20 $$
 ionice -c idle -p $$
 
+# Optimize priorities of processes
+sleep 10
+sudo /usr/local/bin/gamemode/optimize.sh &

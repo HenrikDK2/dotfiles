@@ -24,7 +24,8 @@ sudo setcap 'cap_sys_nice=eip' /usr/bin/sway
 sudo setcap 'cap_sys_nice=eip' /usr/bin/gamescope
 
 # Set priorities
-set_prio "pipewire*" -19 3
+set_prio "pipewire*" -19
+set_prio "wireplumber*" -19
 set_prio "systemd-journald" 20 3
 set_prio "systemd-timesyncd" 20 3
 set_prio "cups" 20 3
