@@ -9,4 +9,3 @@ sudo systemctl start upower
 sudo systemctl start systemd-journald cups systemd-timesyncd
 sudo systemctl start libvirtd virtlogd
 sudo systemctl start docker
-sudo systemctl start rtkit-daemon

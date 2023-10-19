@@ -157,7 +157,7 @@ sudo pacman -S pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jac
 sudo pacman -S mangohud lib32-mangohud --noconfirm --needed
 
 yay -S adobe-source-sans-fonts adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-ms-fonts --needed
-yay -S btop cabextract fuse cmst cups curl dconf dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 glxinfo gnome-keyring gperftools grim gvfs gvfs-mtp imv steam discord irqbalance kitty linux-firmware lib32-gamemode lib32-gperftools lib32-gtk2 lib32-libva lib32-libvdpau libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm obs-gstreamer obs-studio obs-vkcapture openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland rtkit scrot seahorse slurp swaylock-effects swappy sway swaybg swayidle tesseract-data-eng ufw unrar unzip util-linux code vulkan-tools waybar wayland-protocols wget wine wine-gecko wine-mono wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
+yay -S btop cabextract fuse cmst cups curl dconf dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 glxinfo gnome-keyring gperftools grim gvfs gvfs-mtp imv steam discord irqbalance kitty linux-firmware lib32-gamemode lib32-gperftools lib32-gtk2 lib32-libva lib32-libvdpau libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm obs-gstreamer obs-studio obs-vkcapture openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swaylock-effects swappy sway swaybg swayidle tesseract-data-eng ufw unrar unzip util-linux code vulkan-tools waybar wayland-protocols wget wine wine-gecko wine-mono wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
 
 # Change default, and current user shell to fish
 sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
@@ -179,12 +179,12 @@ sudo ufw enable
 sudo timedatectl set-ntp true
 
 # Enable services
-sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts dbus-broker optimize-interruptfreq fstrim.timer rtkit-daemon
+sudo systemctl enable ufw cups dnsmasq irqbalance denyhosts dbus-broker optimize-interruptfreq fstrim.timer
 systemctl --user enable wireplumber psd dbus-broker
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory
-sudo systemctl mask ldconfig.service upower systemd-resolved connman-vpn
+sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved connman-vpn
 
 # Reboot
 clear

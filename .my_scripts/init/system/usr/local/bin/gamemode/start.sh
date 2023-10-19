@@ -20,7 +20,6 @@ stop_service upower
 stop_service cups
 stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
 stop_service systemd-timesyncd
-stop_service rtkit-daemon
 
 # Only stop services related to virt-manager if closed
 if [ -z "$(pgrep virt-manager)" ]; then
