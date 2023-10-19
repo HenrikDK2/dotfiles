@@ -17,7 +17,11 @@ if [ -n "$updates_available" ] || [ ! -f ~/.cache/git-update-last ]; then
 	# Updating normal packages
 	echo -e "\033[1mUpdating packages.\033[0m\n"
 	yay -Su --noconfirm --needed
-	sudo flatpak update --noninteractive
+
+	# Update flatpak packages
+	if command -v flatpak &> /dev/null; then
+	  sudo flatpak update --noninteractive
+	fi
 
 	# Update -git AUR packages (Weekly)
 	last_update_seconds=$(cat ~/.cache/git-update-last)
