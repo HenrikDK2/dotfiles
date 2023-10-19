@@ -7,14 +7,19 @@
 # 4. Ionice classdata, range from 0-7, lower is higher. Idle class doesn't allow classdata, so it's ignored.
 set_prio () {
     pids=$(pgrep -f "$1")
-    if [ -n "$pids" ]; then
-        sudo renice -n $2 -p $pids
-        if ([ $3 ] && [ -z $4 ]) || [ $3 -eq 3 ]; then
-            sudo ionice -c $3 -p $pids
-        fi
+	nice_value="$2"
+    io_class="$3"
+    io_classdata="$4"
 
-        if [ $3 -ne 3 ] && [ $4 ]; then
-            sudo ionice -c $3 -n $4 -p $pids
+    if [ -n "$pids" ] && [ -n $nice_value ]; then
+        sudo renice -n $nice_value -p $pids
+
+        if [ $io_class ]; then
+	        if  [ -z $io_classdata ] || [ $io_class -eq 3 ]; then
+	            sudo ionice -c $io_class -p $pids
+	        else
+	            sudo ionice -c $io_class -n $io_classdata -p $pids
+	        fi
         fi
     fi
 }
