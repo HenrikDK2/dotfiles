@@ -29,8 +29,7 @@
 !.my_scripts/**
 .my_scripts/login.d/**
 !.my_scripts/login.d/code_extensions.sh
-!.my_scripts/login.d/update_reminder.sh
-!.my_scripts/login.d/swayidle.sh
+!.my_scripts/login.d/fullscreen_manager.sh
 .my_scripts/linux-tkg
 .my_scripts/init/entries/tmp
 

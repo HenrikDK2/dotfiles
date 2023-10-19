@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Wallpaper
+swaybg -i $WALLPAPER -m $WALLPAPER_MODE &
+
 # First login (Post-install)
 if [ ! -f .config/fish/.post-install ]; then
 	dconf write /org/nemo/window-state/start-with-menu-bar false
