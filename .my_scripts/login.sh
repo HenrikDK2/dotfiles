@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Wallpaper
-swaybg -i $WALLPAPER -m $WALLPAPER_MODE &
-
 # First login (Post-install)
 if [ ! -f .config/fish/.post-install ]; then
 	dconf write /org/nemo/window-state/start-with-menu-bar false
@@ -19,11 +16,11 @@ fi
 for script in ~/.my_scripts/login.d/*.sh; do (exec "$script" &) done
 
 # Programs to lauch at login (executable)
-(exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)
-(exec mako &)
-(exec waybar &) 
-(exec evolution &)
-(exec discord -enable-features=UseOzonePlatform -ozone-platform=wayland &)
+(/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)
+(mako &)
+(waybar &) 
+(evolution &)
+(discord -enable-features=UseOzonePlatform -ozone-platform=wayland &)
 
 # Reduce priority of this script
 renice -n 20 $$
