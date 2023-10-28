@@ -39,13 +39,6 @@ if [ -n "$updates_available" ] || [ ! -f ~/.cache/git-update-last ]; then
 	    
 	    echo "$(date +%s)" > ~/.cache/git-update-last
 	fi
-	
-	# Cleanup
-	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-	echo -e "\033[1mClean up.\033[0m\n"
-	while ! [ "$(pacman -Qdtq)" = "" ]; do
-		sudo pacman -Rsunc $(pacman -Qdtq) --noconfirm
-	done
 
 	# Audit
 	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
