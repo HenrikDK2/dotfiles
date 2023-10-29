@@ -1,20 +1,16 @@
 #!/bin/sh
 
-clear
-sudo pacman -Sy
-clear
+# Vars
+GITFLAGS="--filter=tree:0"
 
-# Run pacman update check
-updates_available=$(pacman -Qu --check)
+audit(){
+	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+	echo -e "\033[1mBeginning audit.\033[0m\n"
+	~/.my_scripts/audit.sh
+}
 
-# Check if there are updates available
-if [ -n "$updates_available" ] || [ ! -f ~/.cache/git-update-last ]; then
-	# Reduce priority of script
-	renice 20 $$
-	ionice -c 3 -p $$
-	clear
-
-	# Updating normal packages
+update_packages(){
+	# Update normal packages
 	echo -e "\033[1mUpdating packages.\033[0m\n"
 	yay -Su --noconfirm --needed
 
@@ -32,22 +28,30 @@ if [ -n "$updates_available" ] || [ ! -f ~/.cache/git-update-last ]; then
 	if [ -z "$last_update_seconds" ] || ((current_time_seconds - last_update_seconds >= week_in_seconds)); then
 	    yay -Syu --devel --noconfirm
 
-		# Update linux-tkg if folder exist
+		# Update linux-tkg
 		if [ -d ~/.cache/linux-tkg ]; then
 			~/.my_scripts/kernel.sh
 		fi
 	    
 	    echo "$(date +%s)" > ~/.cache/git-update-last
 	fi
+}
 
-	# Audit
-	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-	echo -e "\033[1mBeginning audit.\033[0m\n"
-	~/.my_scripts/audit.sh
+# Sync DB
+sudo pacman -Sy
+
+# Reduce priority of script
+renice 20 $$
+ionice -c 3 -p $$
+clear
+
+# Check if there are updates available
+if [ -n "$(pacman -Qu --check)" ] || [ ! -f ~/.cache/git-update-last ]; then
+	update_packages
+	audit
 else
 	echo "No updates available"
 fi
 
 printf "\n"
 read -p "Press enter to continue"
-
