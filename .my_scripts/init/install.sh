@@ -1,15 +1,6 @@
 #!/bin/sh
 
-function confirm() {
-    while true; do
-        read -p " [y/n] " yn
-        case $yn in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) printf "\nPlease answer YES or NO";;
-        esac
-    done
-}
+source $HOME/.my_scripts/init/scripts/functions.sh
 
 # Check if sudo and git are installed
 if [ ! command -v sudo &> /dev/null || ! command -v git &> /dev/null ]; then
@@ -76,7 +67,7 @@ printf "Only for systemd-boot! - Add bootloader entries?\n\n"
 printf "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking"
 
 if confirm; then
-    source ~/.my_scripts/init/bootloader.sh; 
+    source $HOME/.my_scripts/init/scripts/bootloader.sh
 fi
 
 # Ultrawide gaps on workspace 1
