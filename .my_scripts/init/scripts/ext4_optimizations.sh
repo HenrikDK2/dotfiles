@@ -16,7 +16,7 @@ while read -r line; do
 	      new_options="${new_options},noatime"
 	    fi
 
-	    if [[ "$options" != *commit=60* ]]; then
+	    if [[ "$options" != *commit* ]]; then
 	      new_options="${new_options},commit=60"
 	    fi
 
