@@ -23,6 +23,9 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
+# Improve ext4 performance
+$HOME/.my_scripts/init/scripts/ext4_optimizations.sh
+
 # Enable multilib, DisableDownloadTimeout and ParallelDownloads 
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
