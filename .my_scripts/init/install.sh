@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 source $HOME/.my_scripts/init/scripts/functions.sh
 
@@ -124,9 +124,10 @@ if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
         printf "\nDo you want to install the git version of Mesa?"
 
         if confirm; then
-            yay -S mesa-amdonly-gaming-git lib32-mesa-amdonly-gaming-git
+        	sudo pacman -Rdd mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm
+            yay -S mesa-amdonly-gaming-git lib32-mesa-amdonly-gaming-git --noconfirm
         else
-            yay -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils
+            yay -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm
         fi
         
         sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
@@ -143,12 +144,16 @@ if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
     fi
 fi
 
-# Packages
-sudo pacman -S pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber --noconfirm --needed
-sudo pacman -S mangohud lib32-mangohud --noconfirm --needed
+# Mullvad vpn
+clear
+printf "Do you want to install mullvad vpn?"
+if confirm; then
+	yay -S mullvad-vpn-bin --needed --noconfirm
+fi
 
-yay -S adobe-source-sans-fonts adobe-source-serif-fonts cantarell-fonts otf-font-awesome ttf-mac-fonts ttf-ms-fonts --needed
-yay -S btop cabextract fuse cmst cups curl dconf dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 glxinfo gnome-keyring gperftools grim gvfs gvfs-mtp imv jq steam discord irqbalance kitty linux-firmware lib32-gamemode lib32-gperftools lib32-gtk2 lib32-libva lib32-libvdpau libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm obs-gstreamer obs-studio obs-vkcapture openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swaylock-effects swappy sway swaybg tesseract-data-eng ufw unrar unzip util-linux code vulkan-tools waybar wayland-protocols wget wine wine-gecko wine-mono wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
+# Packages
+yay -S heroic-games-launcher-bin proton-ge-custom-bin ttf-ms-fonts cmst obs-gstreamer obs-vkcapture sway-git swaybg-git waybar-git swaylock-effects-git --needed --noconfirm
+sudo pacman -S adobe-source-sans-fonts ttf-jetbrains-mono adobe-source-serif-fonts cantarell-fonts otf-font-awesome pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber mangohud lib32-mangohud btop cabextract fuse cups curl dconf dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox-developer-edition fish fisher gamemode gamescope glib2 gnome-keyring grim gvfs gvfs-mtp imv steam discord irqbalance kitty lib32-gamemode lib32-libvdpau libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm obs-studio openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy tesseract-data-eng ufw unrar unzip code wayland-protocols wget wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed --noconfirm
 
 # Change default, and current user shell to fish
 sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
