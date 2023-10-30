@@ -49,13 +49,14 @@ trap ctrl_c INT
 
 install_latest_kernel(){
 	cd $kernel_folder
+	git restore .
 	git pull --force
 
 	# Modify package name to 'linux-tkg'
 	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="linux-tkg"/' $config_file
 
     # Set CPU scheduler to 'cacule'
-	sed -i 's/_cpusched=""/_cpusched="cfs"/' $config_file
+	sed -i 's/_cpusched=""/_cpusched="eevdf"/' $config_file
 
 	# Enable compiler optimizations (-O3)
 	sed -i 's/_compileroptlevel="1"/_compileroptlevel="2"/' $config_file 
