@@ -67,7 +67,6 @@ user_pref("devtools.toolbox.host", "right");
 user_pref("privacy.trackingprotection.origin_telemetry.enabled", false);
 user_pref("privacy.webrtc.legacyGlobalIndicator", false);
 user_pref("privacy.webrtc.hideGlobalIndicator", true);
-user_pref("privacy.firstparty.isolate", true);
 user_pref("privacy.donottrackheader.enabled", true);
 user_pref("privacy.trackingprotection.enabled", true);
 user_pref("privacy.trackingprotection.pbmode.enabled", true);
