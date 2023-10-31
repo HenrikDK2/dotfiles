@@ -27,7 +27,7 @@ echo "vo -45" > $PP_OD_CLK_VOLTAGE
 echo "s 1 3150" > $PP_OD_CLK_VOLTAGE
 
 # Max memory clock
-echo "m 1 1325" > $PP_OD_CLK_VOLTAGE
+echo "m 1 1360" > $PP_OD_CLK_VOLTAGE
 
 # Powerlimit (350W)
 echo "350000000" > $POWER_CAP
