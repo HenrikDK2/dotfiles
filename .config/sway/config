@@ -18,7 +18,7 @@ input * {
 #
 # Basics:
 #
-    bindsym $mod+Return exec kitty
+    bindsym $mod+Return exec alacritty
     bindsym $mod+n exec nemo
     bindsym $mod+d kill
     bindsym $mod+space exec ~/.config/sway/wofi.sh
@@ -100,10 +100,10 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-bindsym $mod+u exec kitty ~/.my_scripts/update.sh
+bindsym $mod+u exec alacritty -e ~/.my_scripts/update.sh
 bindsym print exec slurp | grim -g - - | swappy -f -
 bindsym $mod+print exec ~/.my_scripts/ocr_clipboard.sh
-bindsym ctrl+alt+delete exec kitty btop
+bindsym ctrl+alt+delete exec alacritty -e btop
 bindsym $mod+escape exec systemctl soft-reboot
 bindsym $mod+pause exec scrolllock
 
@@ -162,7 +162,7 @@ exec_always {
 	gsettings set org.gnome.desktop.interface text-scaling-factor 1.0
 
 	# Applications - Standard
-	gsettings set org.cinnamon.desktop.default-applications.terminal exec kitty
+	gsettings set org.cinnamon.desktop.default-applications.terminal exec alacritty
 	xdg-settings set default-web-browser firefoxdeveloperedition.desktop
 	xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 	gsettings set org.gnome.desktop.background show-desktop-icons false

@@ -111,8 +111,8 @@
 !.config/mako
 !.config/mako/**
 
-!.config/kitty
-!.config/kitty/**
+!.config/alacritty/
+!.config/alacritty/alacritty.yml
 
 !.config/gamemode.ini
 !.config/mimeapps.list
