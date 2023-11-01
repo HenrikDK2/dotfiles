@@ -4,6 +4,7 @@ window:
     padding:
         x: 20
         y: 20
+        
 font:
     normal:
         family: JetBrains Mono
@@ -22,6 +23,7 @@ font:
         style: Bold Italic
 
     size: 16
+    
 colors:
     primary:
         background: '#2e3440'
@@ -45,6 +47,9 @@ colors:
         magenta: '#b48ead'
         cyan:    '#8fbcbb'
         white:   '#eceff4'
+    cursor:
+        text: CellBackground
+        cursor: "#e5e9f0"
   
 selection:
     text: "#2e3440"
