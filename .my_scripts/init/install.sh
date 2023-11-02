@@ -30,7 +30,8 @@ $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 	sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10\nDisableDownloadTimeout" /etc/pacman.conf
-	sudo pacman -Sy
+	sudo sed -i '/^\[core\]/i [mesa-git]\nServer = https://pkgbuild.com/~lcarlier/$repo/$arch \nSigLevel = Optional \n' /etc/pacman.conf
+	sudo pacman -Suuy
 fi
 
 # Reflector - Find the fastest mirrors
@@ -120,31 +121,11 @@ fi
 
 # Mesa drivers - AMD/Intel
 if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
-    clear
-    printf "Do you want to install Mesa drivers for AMD?"
-
-    if confirm; then
-        printf "\nDo you want to install the git version of Mesa?"
-
-        if confirm; then
-        	sudo pacman -Rdd mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm
-            yay -S mesa-amdonly-gaming-git lib32-mesa-amdonly-gaming-git --noconfirm
-        else
-            yay -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm
-        fi
-        
-        sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
-        sudo mkinitcpio -P;
-    fi
-fi
-
-if [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
-    clear
-    printf "Do you want to install Mesa drivers for Intel?"
-
-    if confirm; then
-        yay -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver
-    fi
+	install mesa-git
+	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+	sudo mkinitcpio -P;
+elif [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
+ 	install mesa-git
 fi
 
 # Mullvad vpn
