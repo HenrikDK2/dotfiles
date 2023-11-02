@@ -27,6 +27,7 @@ text/plain=code.desktop
 text/x-log=code.desktop
 application/x-ms-dos-executable=wine.desktop
 image/webp=imv.desktop
+text/x-python=code-oss.desktop
 
 [Added Associations]
 application/x-shellscript=code-oss-url-handler.desktop;nemo-autorun-software.desktop;
@@ -47,3 +48,4 @@ text/plain=code-oss.desktop;code.desktop;
 text/x-log=code.desktop;
 application/x-ms-dos-executable=wine.desktop;
 image/webp=imv.desktop;
+text/x-python=code-oss.desktop;
