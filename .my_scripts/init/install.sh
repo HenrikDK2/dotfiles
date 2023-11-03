@@ -26,11 +26,11 @@ sudo cp -r ~/.my_scripts/init/system/* /
 # Improve ext4 performance
 $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 
-# Enable multilib, DisableDownloadTimeout, ParallelDownloads, and add ALPH repo 
+# Enable multilib, DisableDownloadTimeout, and ParallelDownloads
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 	sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10\nDisableDownloadTimeout" /etc/pacman.conf
-	$HOME/.my_scripts/init/scripts/alph.sh
+	sudo pacman -Su
 fi
 
 # Reflector - Find the fastest mirrors
@@ -53,6 +53,9 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	(cd yay && makepkg -si --noconfirm)
 	rm -rf ./yay
 fi
+
+# Add ALPH repo
+$HOME/.my_scripts/init/scripts/alph.sh
 
 # Avoid stalls on memory allocations
 total_memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
