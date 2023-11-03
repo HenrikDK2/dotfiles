@@ -127,11 +127,11 @@ fi
 
 # Mesa drivers - AMD/Intel
 if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
-	yay -Syu mesa-git lib32-mesa-git --noconfirm
+	yay -S mesa-git lib32-mesa-git --noconfirm
 	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
 	sudo mkinitcpio -P;
 elif [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
-	yay -Syu mesa-git lib32-mesa-git --noconfirm
+	yay -S mesa-git lib32-mesa-git --noconfirm
 fi
 
 # Packages
