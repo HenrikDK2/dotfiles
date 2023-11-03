@@ -125,12 +125,16 @@ if confirm; then
 	yay -S mullvad-vpn-bin --needed --noconfirm
 fi
 
-# Mesa drivers - AMD/Intel
-if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
+# GPU drivers
+clear
+if [[ $(get_primary_gpu) == "nvidia" ]]; then
+	echo "Nvidia GPU drivers not yet implemented..."
+	read -p "Press enter to continue"
+elif [[ $(get_primary_gpu) == "amd" ]]; then
 	sudo pacman -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm
 	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
 	sudo mkinitcpio -P;
-elif [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
+elif [[ $(get_primary_gpu) == "intel" ]]; then
 	sudo pacman -S lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm
 fi
 
