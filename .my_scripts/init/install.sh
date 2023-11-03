@@ -135,7 +135,7 @@ elif [[ $(get_primary_gpu) == "amd" ]]; then
 	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
 	sudo mkinitcpio -P;
 elif [[ $(get_primary_gpu) == "intel" ]]; then
-	sudo pacman -S lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm
+	sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm
 fi
 
 # Packages
