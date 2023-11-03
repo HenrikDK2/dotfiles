@@ -30,8 +30,7 @@ $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 	sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10\nDisableDownloadTimeout" /etc/pacman.conf
-	sudo sed -i '/^\[core\]/i [mesa-git]\nServer = https://pkgbuild.com/~lcarlier/$repo/$arch \nSigLevel = Optional \n' /etc/pacman.conf
-	sudo pacman -Suuy
+	sudo pacman -Su
 fi
 
 # Reflector - Find the fastest mirrors
@@ -119,20 +118,20 @@ if confirm; then
     sudo systemctl enable --now bluetooth.service;
 fi
 
-# Mesa drivers - AMD/Intel
-if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
-	install mesa-git
-	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
-	sudo mkinitcpio -P;
-elif [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
- 	install mesa-git
-fi
-
 # Mullvad vpn
 clear
 printf "Do you want to install mullvad vpn?"
 if confirm; then
 	yay -S mullvad-vpn-bin --needed --noconfirm
+fi
+
+# Mesa drivers - AMD/Intel
+if [ ! -z  "$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)" ]; then
+	yay -Syu mesa-git lib32-mesa-git --noconfirm
+	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+	sudo mkinitcpio -P;
+elif [[ ! -z "$(lspci -vnn | grep VGA -A 12 | grep -i Intel)" ]]; then
+	yay -Syu mesa-git lib32-mesa-git --noconfirm
 fi
 
 # Packages
