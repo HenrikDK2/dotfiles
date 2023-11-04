@@ -59,8 +59,8 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	rm -rf ./yay
 fi
 
-# Add ALPH repo
-$HOME/.my_scripts/init/scripts/alph.sh
+# Add ALHP repo
+$HOME/.my_scripts/init/scripts/alhp.sh
 
 # Add bootloader entries, and install kernel
 clear
