@@ -1,0 +1,9 @@
+[Trigger]
+Type = Package
+Operation = Remove
+Target = alhp-mirrorlist
+
+[Action]
+Description = Remove related repo from pacman.conf
+When = PostTransaction
+Exec = /etc/pacman.d/scripts/alhp-mirrorlist-remove.sh
