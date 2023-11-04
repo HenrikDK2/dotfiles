@@ -37,7 +37,7 @@ sudo sed -i "s/#MEM/$min_free_kbytes/" /etc/tmpfiles.d/tweaks.conf
 # Config settings for Heroic Games Launcher
 if [ ! -d "$HOME/.config/heroic" ]; then
 	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
-	sed -i "s/#NAME/$USER/" $HOME/.my_scripts/init/heroic/config.json
+	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
 fi
 
 # Improve ext4 performance
