@@ -28,6 +28,11 @@ total_memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 min_free_kbytes=$((total_memory * 2 / 100)) # 2% of memory
 sudo sed -i "s/#MEM/$min_free_kbytes/" /etc/tmpfiles.d/tweaks.conf
 
+# Copy default settings for Heroic Games Launcher
+if [ ! -d "$HOME/.config/heroic" ]; then
+	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
+fi
+
 # Improve ext4 performance
 $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 
