@@ -23,6 +23,11 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
+# Avoid stalls on memory allocations
+total_memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+min_free_kbytes=$((total_memory * 2 / 100)) # 2% of memory
+sudo sed -i "s/#MEM/$min_free_kbytes/" /etc/tmpfiles.d/tweaks.conf
+
 # Improve ext4 performance
 $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 
@@ -40,8 +45,8 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 	sudo systemctl enable reflector.timer # Update mirrorlist weekly
 fi
 
-# Install building tools and awk
-sudo pacman -S base-devel gawk --noconfirm --needed
+# Install building tools
+sudo pacman -S base-devel --noconfirm --needed
 
 # Makepkg related packages (Flags in ~/.makepkg.conf)
 sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
@@ -56,16 +61,6 @@ fi
 
 # Add ALPH repo
 $HOME/.my_scripts/init/scripts/alph.sh
-
-# Avoid stalls on memory allocations
-total_memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-min_free_kbytes=$((total_memory * 2 / 100)) # 2% of memory
-sudo sed -i "s/#MEM/$min_free_kbytes/" /etc/tmpfiles.d/tweaks.conf
-
-# Dnsmasq
-if ! grep -Fxq "conf-dir=/etc/dnsmasq.d" /etc/dnsmasq.conf; then
-  echo -e "\nconf-dir=/etc/dnsmasq.d" | sudo tee -a /etc/dnsmasq.conf;
-fi
 
 # Add bootloader entries, and install kernel
 clear
@@ -171,6 +166,9 @@ systemctl --user enable wireplumber psd dbus-broker
 # Disable services
 systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory
 sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved connman-vpn
+
+# Remove initial pacsave/pacnew files
+sudo find /etc -name "*.pacnew" -o -name "*.pacsave" | xargs sudo rm;
 
 # Reboot
 clear

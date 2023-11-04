@@ -5,7 +5,7 @@ export fish_color_autosuggestion="595d5e"
 export EDITOR="micro"
 export VISUAL="micro"
 export DIFFPROG="micro"
-export MICRO_CONFIG_HOME="$HOME/.config/micro"
+export MICRO_CONFIG_HOME=$HOME/.config/micro
 export MICRO_TRUECOLOR=1
 
 export MOZ_ENABLE_WAYLAND=1
