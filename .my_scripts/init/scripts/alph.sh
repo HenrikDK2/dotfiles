@@ -11,14 +11,5 @@ if (/lib/ld-linux-x86-64.so.2 --help | grep -q "x86-64-v3 (supported, searched)"
 		sudo sed -i '/^\[multilib\]/i [multilib-x86-64-v3]\nInclude = /etc/pacman.d/alhp-mirrorlist\n' /etc/pacman.conf
     fi
 
-	# Remove worldwide mirror (Really slow)
-    sudo sed -i '/https:\/\/alhp.krautflare.de\/$repo\/os\/$arch\//d' /etc/pacman.d/alhp-mirrorlist
-
-	# Resolve potential issues with signatures
-    sudo rm -rf /etc/pacman.d/gnupg/
-    sudo pacman-key --init
-    sudo pacman-key --populate
-
-    # Update
     sudo pacman -Suuy
 fi
