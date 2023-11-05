@@ -12,10 +12,10 @@
     "checkForUpdatesOnStartup": false,
     "autoUpdateGames": false,
     "customWinePaths": [],
-    "defaultInstallPath": "/home/henrik/Games/Heroic",
+    "defaultInstallPath": "/home/#NAME/Games/Heroic",
     "libraryTopSection": "disabled",
-    "defaultSteamPath": "/home/henrik/.steam/steam",
-    "defaultWinePrefix": "/home/henrik/Games/Heroic/Prefixes/default",
+    "defaultSteamPath": "/home/#NAME/.steam/steam",
+    "defaultWinePrefix": "/home/#NAME/Games/Heroic/Prefixes/default",
     "hideChangelogsOnStartup": true,
     "language": "en",
     "maxWorkers": 0,
@@ -31,13 +31,19 @@
         "value": "1"
       }
     ],
+    "wrapperOptions": [
+      {
+        "exe": "/home/#NAME/.my_scripts/redist.sh",
+        "args": ""
+      }
+    ],
     "showFps": false,
     "useGameMode": true,
     "userInfo": {
-    	"name": "#NAME"
+      "name": "#NAME"
     },
     "wineCrossoverBottle": "Heroic",
-    "winePrefix": "/home/henrik/Games/Heroic/Prefixes/default",
+    "winePrefix": "/home/#NAME/Games/Heroic/Prefixes/default",
     "wineVersion": {
       "bin": "/usr/share/steam/compatibilitytools.d/proton-ge-custom/proton",
       "name": "Proton - proton-ge-custom",
