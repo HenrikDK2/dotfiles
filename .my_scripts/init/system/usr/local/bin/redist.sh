@@ -1,6 +1,10 @@
 #!/bin/bash
 
-export WINEPREFIX="$STEAM_COMPAT_DATA_PATH/pfx"
+if [ -z "$WINEPREFIX" ] && [ ! -z "$STEAM_COMPAT_DATA_PATH" ]; then
+	export WINEPREFIX="$STEAM_COMPAT_DATA_PATH/pfx"
+else
+	export WINEPREFIX="$WINEPREFIX/pfx"
+fi
 
 REDIST_FILE="$WINEPREFIX/redist-done"
 PACKAGES="vcrun2022 dotnet48 version d3dcompiler_47"
