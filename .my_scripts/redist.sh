@@ -6,9 +6,9 @@
 export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/steam"
 export PROTON_PATH=/usr/share/steam/compatibilitytools.d/proton-ge-custom/proton
 
-if [ -z $STEAM_COMPAT_DATA_PATH ]; then
+if [ -z "$STEAM_COMPAT_DATA_PATH" ]; then
 	export STEAM_COMPAT_DATA_PATH=$WINEPREFIX
-elif [ -z $WINEPREFIX ]; then
+elif [ -z "$WINEPREFIX" ]; then
 	export WINEPREFIX=$STEAM_COMPAT_DATA_PATH
 fi
 
