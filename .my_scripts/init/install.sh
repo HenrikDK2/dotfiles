@@ -131,6 +131,7 @@ fi
 # Mullvad vpn
 clear
 printf "Do you want to install mullvad vpn?"
+
 if confirm; then
 	yay -S mullvad-vpn-bin --needed --noconfirm
 fi
