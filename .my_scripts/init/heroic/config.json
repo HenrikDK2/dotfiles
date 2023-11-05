@@ -31,12 +31,6 @@
         "value": "1"
       }
     ],
-    "wrapperOptions": [
-      {
-        "exe": "/usr/local/bin/redist.sh",
-        "args": ""
-      }
-    ],
     "showFps": false,
     "useGameMode": true,
     "userInfo": {
