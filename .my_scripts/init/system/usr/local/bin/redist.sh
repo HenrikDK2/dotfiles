@@ -1,11 +1,14 @@
 #!/bin/bash
 
-export WINEPREFIX="$STEAM_COMPAT_DATA_PATH"
+export WINEPREFIX="$STEAM_COMPAT_DATA_PATH/pfx"
 
-if [ ! -f "./redist-done" ]; then
+REDIST_FILE="$WINEPREFIX/redist-done"
+PACKAGES="vcrun2022 dotnet48 version d3dcompiler_47"
+
+if [ ! -f "$REDIST_FILE" ]; then
 	notify-send -u low "Installing DLLs to new prefix"
-	winetricks -q --force vcrun2022 dotnet48 version d3dcompiler_47
-	touch "redist-done"
+	winetricks -q --force $PACKAGES
+	touch "$REDIST_FILE"
 fi
 
 exec "$@" &
