@@ -14,9 +14,6 @@ update_packages(){
 	echo -e "\033[1mUpdating packages.\033[0m\n"
 	yay -Su --noconfirm --needed
 
-	# Winetricks
-	sudo winetricks --self-update
-
 	# Update flatpak packages
 	if command -v flatpak &> /dev/null; then
 	  sudo flatpak update --noninteractive
