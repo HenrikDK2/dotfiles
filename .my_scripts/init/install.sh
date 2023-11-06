@@ -50,13 +50,6 @@ if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sudo pacman -Su
 fi
 
-# Reflector - Find the fastest mirrors
-if [ -z "$(pacman -Qe | grep reflector)" ]; then
-	sudo pacman -S reflector --noconfirm --needed
-	sudo reflector --verbose --protocol https --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-	sudo systemctl enable reflector.timer # Update mirrorlist weekly
-fi
-
 # Install building tools
 sudo pacman -S base-devel curl --noconfirm --needed
 
@@ -71,8 +64,20 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	rm -rf ./yay
 fi
 
+# Reflector - Get latest mirrors
+if [ -z "$(pacman -Qe | grep reflector)" ]; then
+	sudo pacman -S reflector --noconfirm --needed
+	sudo reflector --verbose --protocol https --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
+	sudo systemctl enable reflector.timer # Update mirrorlist weekly
+fi
+
 # Add cachyos repo
 $HOME/.my_scripts/init/scripts/cachyos-repo.sh
+
+# Filter fastest mirrors
+for mirrorlist in "/etc/pacman.d"/*mirrorlist*; do
+	filter_fastest_mirrors "$mirrorlist"
+done
 
 # Add bootloader entries, and install kernel
 clear

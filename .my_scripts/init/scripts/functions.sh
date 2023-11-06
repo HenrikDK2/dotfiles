@@ -27,7 +27,7 @@ function get_primary_gpu() {
 	exit 0
 }
 
-function find_fastest_mirrors () {
+function filter_fastest_mirrors () {
 	if [ ! -f "$1" ]; then
 		exit 1
 	fi
