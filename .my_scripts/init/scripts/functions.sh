@@ -45,7 +45,10 @@ function filter_fastest_mirrors () {
 
 	while IFS= read -r mirror; do
 	    mirror_speed=$(curl -s -o /dev/null -w '%{speed_download}\n' "$mirror")
-        mirror_speeds+=("$mirror_speed $mirror")
+
+        if [ "$(bc <<< "$mirror_speed > 0")" -eq 1 ]; then
+            mirror_speeds+=("$mirror_speed $mirror")
+        fi
 	done < "$MIRROR_TMP"
 
 	# Sort the mirror_speeds array by speed in descending order
