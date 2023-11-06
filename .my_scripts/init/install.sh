@@ -58,7 +58,7 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 fi
 
 # Install building tools
-sudo pacman -S base-devel --noconfirm --needed
+sudo pacman -S base-devel curl --noconfirm --needed
 
 # Makepkg related packages (Flags in ~/.makepkg.conf)
 sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
