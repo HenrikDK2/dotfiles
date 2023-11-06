@@ -2,12 +2,6 @@
 
 source $HOME/.my_scripts/init/scripts/functions.sh
 
-# Copy default settings for Heroic Games Launcher
-if [ ! -d "$HOME/.config/heroic" ]; then
-	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
-	sed -i "s/#NAME/$USER/" $HOME/.my_scripts/init/heroic/config
-fi
-
 # Check if sudo and git are installed
 if [ ! command -v sudo &> /dev/null || ! command -v git &> /dev/null ]; then
     echo "Sudo and/or Git is not installed"
