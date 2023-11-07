@@ -20,7 +20,6 @@ export VKD3D_CONFIG="dxr,dxr11"
 export RTC_USE_PIPEWIRE=true
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export OBS_VKCAPTURE=1
-export MANGOHUD=1
 export PATH="$HOME/.local/bin:$PATH"
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 export FREETYPE_PROPERTIES="hinting=true:hintstyle=hintslight:antialias=rgb:subpixel_rendering=rgb"
