@@ -13,20 +13,23 @@ elif [ -z "$WINEPREFIX" ]; then
 	WINEPREFIX=$STEAM_COMPAT_DATA_PATH
 fi
 
-REDISTS_HASH_LIST="$WINEPREFIX/.redists"
-
 function install_dlls() {
-	cd "$1" || exit 1
+    local redist_dir="$1"
+    local redist_hash_list="$WINEPREFIX/.redists"
+    
+    if [ -z "$redist_dir" ] || [ ! -d "$redist_dir" ]; then
+        echo "Invalid or missing directory: $redist_dir"
+        exit 1
+    fi
 
-	for file in *.exe; do
-		local sha256=$(sha256sum "$file" | cut -d ' ' -f 1)
+    find "$redist_dir" -type f -name "*.exe" | while read -r file; do
+        local sha256=$(sha256sum "$file" | cut -d ' ' -f 1)
 
-		# If file_hash doesn't exist in the list
-		if ! grep -q "$sha256" "$REDISTS_HASH_LIST"; then
-			$PROTON_PATH run "$file"
-			echo "$sha256" >> "$REDISTS_HASH_LIST"
-		fi
-	done
+        if ! grep -q "$sha256" "$redist_hash_list"; then
+            $PROTON_PATH run "$file"
+            echo "$sha256" >> "$redist_hash_list"
+        fi
+    done
 }
 
 if [ ! -f "$REDISTS_HASH_LIST" ]; then
@@ -35,8 +38,8 @@ if [ ! -f "$REDISTS_HASH_LIST" ]; then
 
 	# Install redists files inside game folder
 	while read redist; do
-		install_dlls "$redist"
-	done <<< "$(find "$GAME_FOLDER" -type d -iname '_Redist')"
+	    install_dlls "$redist"
+	done <<< "$(find "$GAME_FOLDER" -type d \( -iname '_Redist' -o -iname 'Redist' -o -iname 'Redistributable' -o -iname 'Redistributables' \))"
 fi
 
 exec "$@" &
