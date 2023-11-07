@@ -13,9 +13,10 @@ elif [ -z "$WINEPREFIX" ]; then
 	WINEPREFIX=$STEAM_COMPAT_DATA_PATH
 fi
 
+REDISTS_HASH_LIST="$WINEPREFIX/.redists"
+
 function install_dlls() {
     local redist_dir="$1"
-    local redist_hash_list="$WINEPREFIX/.redists"
     
     if [ -z "$redist_dir" ] || [ ! -d "$redist_dir" ]; then
         echo "Invalid or missing directory: $redist_dir"
@@ -25,9 +26,9 @@ function install_dlls() {
     find "$redist_dir" -type f -name "*.exe" | while read -r file; do
         local sha256=$(sha256sum "$file" | cut -d ' ' -f 1)
 
-        if ! grep -q "$sha256" "$redist_hash_list"; then
+        if ! grep -q "$sha256" "$REDISTS_HASH_LIST"; then
             $PROTON_PATH run "$file"
-            echo "$sha256" >> "$redist_hash_list"
+            echo "$sha256" >> "$REDISTS_HASH_LIST"
         fi
     done
 }
