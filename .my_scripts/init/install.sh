@@ -65,13 +65,8 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 	sudo systemctl enable reflector.timer # Update mirrorlist weekly
 fi
 
-# Add cachyos repo
+# Install CachyOS repo
 $HOME/.my_scripts/init/scripts/cachyos-repo.sh
-
-# Filter fastest mirrors
-for mirrorlist in "/etc/pacman.d"/*mirrorlist*; do
-	filter_fastest_mirrors "$mirrorlist"
-done
 
 # Add bootloader entries, and install kernel
 clear

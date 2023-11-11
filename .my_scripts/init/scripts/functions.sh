@@ -27,41 +27,46 @@ function get_primary_gpu() {
 	exit 0
 }
 
-function filter_fastest_mirrors () {
-	if [ ! -f "$1" ]; then
-		exit 1
-	fi
-	
-	local MIRROR_TMP="$HOME/.cache/mirror.tmp"
-	local mirror_speeds=()
-	
-	echo -e "\n-----------------------------------------------------------------"
-	echo -e "Finding fastest mirrors in $1"
-	echo -e "-----------------------------------------------------------------\n"
-	
-	cat "$1" > $MIRROR_TMP
-	sed -i '/^#/d' $MIRROR_TMP
-	sed -i 's/Server = //' $MIRROR_TMP
+# $1 - Mirrorlist file path
+# $2 - File to download minus url path to mirror
+function sort_fastest_mirrors() {
+    if [ ! -f "$1" ]; then
+        exit 1
+    fi
 
-	while IFS= read -r mirror; do
-	    mirror_speed=$(curl -s -o /dev/null -w '%{speed_download}\n' "$mirror")
+    local mirror_tmp="$HOME/.cache/mirror.tmp"
+    local mirror_speeds=()
 
-        if [ "$(bc <<< "$mirror_speed > 0")" -eq 1 ]; then
+    echo -e "\n-----------------------------------------------------------------"
+    echo -e "Finding fastest mirrors in $1"
+    echo -e "-----------------------------------------------------------------\n"
+
+    cat "$1" >$mirror_tmp
+    sed -i '/^#/d' $mirror_tmp
+    sed -i 's/Server = //' $mirror_tmp
+
+    # Loop through each mirror in the mirrorlist
+    while IFS= read -r mirror; do
+        local mirror_url=$(echo "$mirror" | sed 's|/\$.*$|/|')
+        local mirror_speed=$(curl -s -o /dev/null -w '%{speed_download}\n' "$mirror_url/$2")
+
+        if [ "$(bc <<<"$mirror_speed > 0")" -eq 1 ]; then
             mirror_speeds+=("$mirror_speed $mirror")
         fi
-	done < "$MIRROR_TMP"
+    done <"$mirror_tmp"
 
-	# Sort the mirror_speeds array by speed in descending order
+    # Sort the mirror_speeds array by speed in descending order
     IFS=$'\n' mirror_speeds=($(sort -r -n <<<"${mirror_speeds[*]}"))
 
-	# Reset mirror.tmp
-	rm $MIRROR_TMP
-	
+    # Reset mirror.tmp
+    rm $mirror_tmp
+
     # Output the sorted mirrors to the specified file
     for item in "${mirror_speeds[@]}"; do
         mirror_url=${item#* }
-        echo "Server = $mirror_url" >> "$MIRROR_TMP"
+        echo "Server = $mirror_url" >>"$mirror_tmp"
     done
 
-    cat $MIRROR_TMP | sudo tee $1
+    # Update the original mirrorlist file with the sorted mirrors
+    cat $mirror_tmp | sudo tee $1
 }
