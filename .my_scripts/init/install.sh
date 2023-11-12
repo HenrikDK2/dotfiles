@@ -26,7 +26,7 @@ sudo cp -r ~/.my_scripts/init/system/* /
 # Avoid stalls on memory allocations
 total_memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
 min_free_kbytes=$((total_memory * 2 / 100)) # 2% of memory
-sudo sed -i "s/#MEM/$min_free_kbytes/" /etc/tmpfiles.d/tweaks.conf
+sudo sed -i "s/#MEM/$min_free_kbytes/" /etc/sysctl.d/99-performance-tweaks.conf
 
 # Config settings for Heroic Games Launcher
 if [ ! -d "$HOME/.config/heroic" ]; then
