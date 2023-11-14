@@ -92,6 +92,7 @@ user_pref("datareporting.sessions.current.clean", false);
 user_pref("reader.parse-on-load.enabled", false);
 user_pref("reader.parse-on-load.force-enabled", false);
 
+user_pref("extensions.activeThemeID", "firefox-compact-dark@mozilla.org");
 user_pref("extensions.getAddons.showPane", false);
 user_pref("extensions.htmlaboutaddons.discover.enabled", false);
 user_pref("extensions.htmlaboutaddons.recommendations.enabled", false);
@@ -110,6 +111,8 @@ user_pref("app.normandy.api_url", "");
 
 user_pref("media.ffmpeg.vaapi.enabled", true);
 user_pref("media.ffmpeg.vaapi-drm-display.enabled", true);
+user_pref("media.webspeech.synth.enabled", false);
+user_pref("media.navigator.enabled", false);
 
 user_pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.section.highlights.includePocket", false);
 user_pref(
@@ -121,11 +124,12 @@ user_pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.feeds.sec
 user_pref("cookiebanners.service.mode", 1);
 user_pref("cookiebanners.service.mode.privateBrowsing", 1);
 
+user_pref("dom.security.unexpected_system_load_telemetry_enabled", false);
+user_pref("dom.event.clipboardevents.enabled", false);
+
 user_pref("loop.enabled", false);
 user_pref("beacon.enabled", false);
 user_pref("telemetry.hybridContent", false);
-user_pref("media.webspeech.synth.enabled", false);
 user_pref("config.trim_on_minimize", true);
 user_pref("alerts.disableSlidingEffect", false);
 user_pref("nglayout.initialpaint.delay", 0);
-user_pref("dom.security.unexpected_system_load_telemetry_enabled", false);
