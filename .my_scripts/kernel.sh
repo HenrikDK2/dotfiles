@@ -55,7 +55,7 @@ install_latest_kernel(){
 	# Modify package name to 'linux-tkg'
 	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="linux-tkg"/' $config_file
 
-    # Set CPU scheduler to 'cacule'
+    # Set CPU scheduler to 'eevdf'
 	sed -i 's/_cpusched=""/_cpusched="eevdf"/' $config_file
 
 	# Enable compiler optimizations (-O3)
