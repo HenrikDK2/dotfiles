@@ -77,6 +77,14 @@ if confirm; then
     source $HOME/.my_scripts/init/scripts/bootloader.sh
 fi
 
+# Compile optimized kernel
+clear
+printf "Do you want to compile an optimized kernel?"
+
+if confirm; then
+    source $HOME/.my_scripts/kernel.sh
+fi
+
 # Ultrawide gaps on workspace 1
 clear
 printf "Only for 5120x1440 ultrawide monitor!\n\n"
