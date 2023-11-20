@@ -58,6 +58,9 @@ install_latest_kernel(){
     # Set CPU scheduler to 'eevdf'
 	sed -i 's/_cpusched=""/_cpusched="eevdf"/' $config_file
 
+	# Reduce overhead by lowering max cpu cores to current processor cores (Requires recompile on new CPU)
+	sed -i 's/_NR_CPUS_value=""/_NR_CPUS_value="$(nproc)"/' $config_file
+	
 	# Enable compiler optimizations (-O3)
 	sed -i 's/_compileroptlevel="1"/_compileroptlevel="2"/' $config_file 
 
