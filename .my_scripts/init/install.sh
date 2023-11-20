@@ -74,7 +74,7 @@ printf "Only for systemd-boot! - Add bootloader entries?\n\n"
 printf "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking"
 
 if confirm; then
-    source $HOME/.my_scripts/init/scripts/bootloader.sh
+	$HOME/.my_scripts/init/scripts/bootloader.sh
 fi
 
 # Compile optimized kernel
@@ -82,7 +82,7 @@ clear
 printf "Do you want to compile an optimized kernel?"
 
 if confirm; then
-    source $HOME/.my_scripts/kernel.sh
+    $HOME/.my_scripts/kernel.sh
 fi
 
 # Ultrawide gaps on workspace 1
