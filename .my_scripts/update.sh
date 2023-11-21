@@ -37,6 +37,12 @@ update_packages(){
 	fi
 }
 
+# Check for an internet connection
+if ! ping -c 1 google.com >/dev/null 2>&1; then
+  echo "An internet connection is required to run this script."
+  exit 1
+fi
+
 # Sync DB
 sudo pacman -Sy
 
