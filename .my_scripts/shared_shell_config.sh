@@ -15,7 +15,7 @@ export RADV_FORCE_VRS="2x2"
 export RADV_DEBUG="novrsflatshading"
 export AMD_VULKAN_ICD="RADV"
 export RADV_PERFTEST="nggc,sam,ngg_streamout"
-export VKD3D_CONFIG="dxr,dxr11"
+export VKD3D_CONFIG="dxr11"
 
 export RTC_USE_PIPEWIRE=true
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
