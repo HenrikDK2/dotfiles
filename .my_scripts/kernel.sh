@@ -3,6 +3,8 @@
 db_file=~/.config/modprobed.db
 kernel_folder=~/.cache/linux-tkg
 config_file=$kernel_folder/customization.cfg
+stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP "latest stable version of the Linux kernel is:\s+\K\d+\.\d+(\.\d+)?")
+current_kernel=$(uname -r | cut -d'-' -f1)
 
 # modprobeddb may already detect and load many of these modules automatically,
 # but to ensure their inclusion in the database,
@@ -41,12 +43,6 @@ modules_to_add=(
     xpad           # Xbox gamepad driver
 )
 
-ctrl_c() {
-  exit 0
-}
-
-trap ctrl_c INT
-
 install_latest_kernel(){
 	cd $kernel_folder
 	git restore .
@@ -54,6 +50,9 @@ install_latest_kernel(){
 
 	# Modify package name to 'linux-tkg'
 	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="linux-tkg"/' $config_file
+	
+	# Change kernel version to stable
+	sed -i "s/_version=\"\"/_version=\"$stable_kernel\"/" $config_file
 
     # Set CPU scheduler to 'eevdf'
 	sed -i 's/_cpusched=""/_cpusched="eevdf"/' $config_file
@@ -105,8 +104,6 @@ install_latest_kernel(){
 	fi
 
 	clear
-	echo "Current kernel version: $(echo "$(uname -r)" | cut -d- -f1)"
-	echo -e "You can abort with Ctrl+C if you're on the same version \n"
 	makepkg -si --noconfirm
 	sudo sed -i "s/default.*/default tkg.conf/" /boot/loader/loader.conf
 	exit 0
@@ -136,4 +133,9 @@ if [ ! -d "$kernel_folder" ]; then
 	git clone --depth 1 https://github.com/Frogging-Family/linux-tkg $kernel_folder
 fi
 
-install_latest_kernel
+if [[ "$stable_version" != "$current_version" ]]; then
+	echo "Already on latest stable kernel $current_kernel"
+else
+	install_latest_kernel
+fi
+
