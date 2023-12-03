@@ -21,7 +21,7 @@ update_packages(){
 
 	# Update kernel
 	if [ -d ~/.cache/linux-tkg ]; then
-		~/.my_scripts/kernel.sh | 
+		~/.my_scripts/kernel.sh
 	fi
 }
 
