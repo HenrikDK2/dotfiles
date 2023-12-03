@@ -133,7 +133,7 @@ if [ ! -d "$kernel_folder" ]; then
 	git clone --depth 1 https://github.com/Frogging-Family/linux-tkg $kernel_folder
 fi
 
-if [[ "$stable_version" != "$current_version" ]]; then
+if [[ "$stable_kernel" == "$current_kernel" ]]; then
 	echo "Already on latest stable kernel $current_kernel"
 else
 	install_latest_kernel
