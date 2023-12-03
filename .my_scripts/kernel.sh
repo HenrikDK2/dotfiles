@@ -138,4 +138,3 @@ if [[ "$stable_kernel" == "$current_kernel" ]]; then
 else
 	install_latest_kernel
 fi
-
