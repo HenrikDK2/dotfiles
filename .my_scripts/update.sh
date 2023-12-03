@@ -49,3 +49,4 @@ fi
 
 printf "\n"
 read -p "Press enter to continue"
+exit 0
