@@ -11,7 +11,7 @@ audit(){
 update_packages(){
 	# Update normal packages
 	echo -e "\033[1mUpdating packages.\033[0m\n"
-	yay -Syu --devel --noconfirm
+	yay -Syu --noconfirm
 
 	# Update flatpak packages
 	if command -v flatpak &> /dev/null; then
@@ -40,7 +40,7 @@ sudo pacman -Sy
 
 # Reduce priority of script
 renice -n 20 -p $$ -g $$
-ionice -c 3 -p $$ -P $$
+ionice -c 3 -P $$
 clear
 
 # Check if there are updates available
