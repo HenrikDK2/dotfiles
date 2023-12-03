@@ -35,8 +35,8 @@ fi
 sudo pacman -Sy
 
 # Reduce priority of script
-renice 20 $$
-ionice -c 3 -p $$
+renice -n 20 -p $$ -g $$
+ionice -c 3 -p $$ -P $$
 clear
 
 # Check if there are updates available
