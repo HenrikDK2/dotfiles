@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# Vars
 GITFLAGS="--filter=tree:0"
 
 audit(){
@@ -21,7 +20,12 @@ update_packages(){
 
 	# Update kernel
 	if [ -d ~/.cache/linux-tkg ]; then
-		~/.my_scripts/kernel.sh
+		local stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP -m1 '\K\d+\.\d+\.\d+')
+		local current_kernel=$(uname -r | cut -d'-' -f1)
+		
+		if [[ "$stable_kernel" != "$current_kernel" ]]; then
+			~/.my_scripts/kernel.sh
+		fi
 	fi
 }
 
