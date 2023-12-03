@@ -109,7 +109,7 @@ install_latest_kernel(){
 	exit 0
 }
 
-yay -S modprobed-db --needed --noconfirm 
+yay -S modprobed-db curl --needed --noconfirm 
 
 # If the modprobed database file doesn't exist, create it
 if [ ! -f "$db_file" ]; then
