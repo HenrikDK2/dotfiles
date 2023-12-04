@@ -11,7 +11,7 @@ format_section() {
     section_content="$2"
 
     # Determine title color based on section content
-    if [[ -n "$section_content" ]]; then
+    if [[ -n "$section_content" ]] && [[ "$section_content" != "-- No entries --" ]]; then
         title_color=$RED
     else
         title_color=$GREEN
