@@ -38,8 +38,6 @@ if [ ! -f "$REDISTS_HASH_LIST" ]; then
 	install_dlls "$HOME/.my_scripts/_redist"
 
 	# Install redists files inside game folder
-	echo "GAME_FOLDER: $GAME_FOLDER" >> $HOME/print
-
 	while read redist; do
 		if [ -d "$redist" ]; then
 	    	install_dlls "$redist"
