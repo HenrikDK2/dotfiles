@@ -4,7 +4,6 @@ db_file=~/.config/modprobed.db
 kernel_folder=~/.cache/linux-tkg
 config_file=$kernel_folder/customization.cfg
 stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP -m1 '\K\d+\.\d+\.\d+')
-current_kernel=$(uname -r | cut -d'-' -f1)
 
 # modprobeddb may already detect and load many of these modules automatically,
 # but to ensure their inclusion in the database,
@@ -133,8 +132,4 @@ if [ ! -d "$kernel_folder" ]; then
 	git clone --depth 1 https://github.com/Frogging-Family/linux-tkg $kernel_folder
 fi
 
-if [[ "$stable_kernel" == "$current_kernel" ]]; then
-	echo "Already on latest stable kernel $current_kernel"
-else
-	install_latest_kernel
-fi
+install_latest_kernel
