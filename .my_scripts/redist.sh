@@ -45,6 +45,9 @@ if [ ! -f "$REDISTS_HASH_LIST" ]; then
 	    	install_dlls "$redist"
 		fi
 	done <<< "$(find "$GAME_FOLDER" -type d \( -iname '_Redist' -o -iname 'Redist' -o -iname 'Redistributable' -o -iname 'Redistributables' \))"
+
+	# Kill all subprocesses from script
+	pgrep -P $$ --signal SIGTERM
 fi
 
 exec "$@" &
