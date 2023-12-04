@@ -1,6 +1,5 @@
 listen-address=::1,127.0.0.1
 port=53
-bind-interfaces
 
 no-resolv
 cache-size=10000
