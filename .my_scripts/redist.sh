@@ -5,7 +5,7 @@
 
 STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/steam"
 PROTON_PATH=/usr/share/steam/compatibilitytools.d/proton-ge-custom/proton
-GAME_FOLDER="$PWD"
+GAME_FOLDER=$(echo "$PWD" | sed -E 's/(bin|bin64)$//I')
 
 if [ -z "$STEAM_COMPAT_DATA_PATH" ]; then
 	STEAM_COMPAT_DATA_PATH=$WINEPREFIX
