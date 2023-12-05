@@ -37,9 +37,6 @@
 
 !.config/user-dirs.dirs
 
-!.config/discord/
-!.config/discord/settings.json
-
 !.config/yay/
 !.config/yay/config.json
 
