@@ -8,9 +8,6 @@ export DIFFPROG="micro"
 export MICRO_CONFIG_HOME=$HOME/.config/micro
 export MICRO_TRUECOLOR=1
 
-export MOZ_ENABLE_WAYLAND=1
-export MOZ_WEBRENDER=1
-
 export RADV_FORCE_VRS="2x2"
 export RADV_DEBUG="novrsflatshading"
 export AMD_VULKAN_ICD="RADV"
