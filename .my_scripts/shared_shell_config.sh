@@ -14,6 +14,9 @@ export AMD_VULKAN_ICD="RADV"
 export RADV_PERFTEST="nggc,sam,ngg_streamout"
 export VKD3D_CONFIG="dxr11"
 
+export MOZ_ENABLE_WAYLAND=1
+export MOZ_WEBRENDER=1
+
 export RTC_USE_PIPEWIRE=true
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export OBS_VKCAPTURE=1
