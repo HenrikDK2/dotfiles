@@ -90,6 +90,9 @@ install_latest_kernel(){
 	sed -i 's/_lto_mode=""/_lto_mode="full"/' $config_file 
 	sed -i 's/_compiler=""/_compiler="llvm"/' $config_file
 
+	# Force the use of the LLVM Integrated Assembler
+	sed -i 's/_llvm_ias=""/_llvm_ias="1"/' $config_file 
+	
 	# Compile for the native CPU architecture
 	if grep -q "vendor_id\s*:\s*GenuineIntel" /proc/cpuinfo; then
 	  sed -i 's/_processor_opt=""/_processor_opt="native_intel"/' $config_file
