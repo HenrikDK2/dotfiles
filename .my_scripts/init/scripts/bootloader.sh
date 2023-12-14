@@ -163,6 +163,8 @@ add_options
 sudo cp -r ~/.my_scripts/init/entries/tmp/. /boot/loader/entries
 rm -rf ~/.my_scripts/init/entries/tmp/
 
-# Change default kernel to Linux Zen
-change_default zen.conf
-clear
+# Change default kernel to Linux Zen if run from install script
+if [[ "${0}" =~ ".my_scripts/init/install.sh" ]]; then
+    change_default zen.conf
+    clear
+fi

@@ -21,8 +21,7 @@
   "search.followSymlinks": false,
   "workbench.startupEditor": "none",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
-  "git.openRepositoryInParentFolders": "always",
-  "diffEditor.ignoreTrimWhitespace": false
+  "git.openRepositoryInParentFolders": "always"
 }
