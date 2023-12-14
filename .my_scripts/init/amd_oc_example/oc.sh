@@ -24,13 +24,13 @@ POWER_CAP="/sys/class/drm/$GPU_CARD/device/hwmon/$HWMON/power1_cap"
 echo "vo -70" > $PP_OD_CLK_VOLTAGE
 
 # Max core clock
-#echo "s 1 3025" > $PP_OD_CLK_VOLTAGE
+#echo "s 1 3225" > $PP_OD_CLK_VOLTAGE
 
 # Max memory clock
 echo "m 1 1320" > $PP_OD_CLK_VOLTAGE
 
 # Powerlimit (350W)
-#echo "350000000" > $POWER_CAP
+echo "350000000" > $POWER_CAP
 
 # Apply settings
 echo "c" > $PP_OD_CLK_VOLTAGE
