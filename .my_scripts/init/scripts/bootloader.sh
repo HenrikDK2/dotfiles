@@ -46,6 +46,13 @@ kernel_other=(
 	"tsc=reliable" 
 	"clocksource=tsc"
 
+	# Solve amdgpu issues
+	"amdgpu.noretry=0"
+	"amdgpu.lockup_timeout=1000"
+	"amdgpu.gpu_recovery=1"
+	"amdgpu.audio=0"
+	"pcie_aspm=off"
+
 	# Improves boot times on harddrives
 	"libahci.ignore_sss=1"
 
