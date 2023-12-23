@@ -47,6 +47,7 @@ kernel_other=(
 	"clocksource=tsc"
 
 	# Solve amdgpu issues
+	"amdgpu.dcdebugmask=0x10"
 	"amdgpu.audio=0"
 	"pcie_aspm=off"
 
