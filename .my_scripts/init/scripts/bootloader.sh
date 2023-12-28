@@ -1,69 +1,8 @@
 #!/bin/bash
 
-kernel_hardening=(
-	# Disables the vDSO which can be a potential attack vector for exploits
-	"vsyscall=none"
-
-	# Randomizes the kernel stack offset for each task, making it more difficult for attackers to locate and exploit stack buffer overflows
-	"randomize_kstack_offset=on"
-
-	# Prevent certain types of attacks that target the kernel memory allocation subsystem
-	"slab_nomerge"
-
-	# Prevent the loading of malicious or unsigned modules that could be used to exploit the system
-	"modules.sig_enforce=1"
-
-	# Prevent certain types of attacks that rely on uninitialized memory
-	"init_on_alloc=1"
-
-	# Prevent certain types of attacks that rely on accessing freed memory
-	"init_on_free=1"
-
-	# Shuffles the allocation of physical pages by the kernel, making it more difficult for attackers to predict the physical layout of memory
-	"page_alloc.shuffle=1"
-
-	# Disables the debugfs file system, which can be a potential attack vector for exploits
-	"debugfs=off"
-
-	# This can help improve performance and reduce the attack surface of the system by reducing the amount of potentially sensitive information that is logged
+kernel_params=(
+	# Reduce the attack surface of the system by reducing the amount of potentially sensitive information that is logged
 	"loglevel=3"
-
-	# Protect against the Meltdown CPU vulnerability by isolating kernel memory from user processes
-	"pti=on" 
-)
-
-kernel_other=(
-	# Fixes Hogwarts Legacy crashing issue (Might resolve other games)
-	"clearcpuid=514" 
-	
-	# Reduces latency
-	"preempt=full" 
-	
-	# Disabling MCEs can help improve system stability and prevent potential data loss
-	"mce=0"
-	
-	# Improve clock_gettime throughput (~50 times higher than other options)
-	"tsc=reliable" 
-	"clocksource=tsc"
-
-	# Solve amdgpu issues
-	"amdgpu.dcdebugmask=0x10"
-	"amdgpu.audio=0"
-	"pcie_aspm=off"
-
-	# Improves boot times on harddrives
-	"libahci.ignore_sss=1"
-
-	# Enables Full Dynamic Tick, reduces the number of timer interrupts and improve system responsiveness
-	"nohz_full=on"
-
-	# Sets the maximum C-state for the CPU to C1, which can help reduce power consumption and improve performance
-	"intel_idle.max_cstate=1"
-
-	# Disable watchdog to reduce overhead
-	"nowatchdog"
-	"nmi_watchdog=0"
-	"module_blacklist=iTCO_wdt"
 
 	# Increase CPU performance, but might decrease battery life
 	"processor.ignore_ppc=1"
@@ -71,11 +10,26 @@ kernel_other=(
 	# Reduces overhead by disabling split-lock detection
 	"split_lock_detect=off"
 
+	# Improves boot times on harddrives
+	"libahci.ignore_sss=1"
+
+	# Disable watchdog to reduce overhead
+	"nowatchdog"
+	"nomce"
+	"nmi_watchdog=0"
+	"module_blacklist=iTCO_wdt"
+
+	# Disable IPV6
+	"ipv6.disable=1"
+
+	# Reduce writes to SSD 
+	"rootflags=noatime"
+
 	# Enable AMD GPU overclocking
 	"amdgpu.ppfeaturemask=0xffffffff"
 )
 
-kernel_params_str=$(printf "%s " "${kernel_hardening[@]}" "${kernel_other[@]}")
+kernel_params_str=$(printf "%s " "${kernel_params[@]}")
 
 microcode () {
 	if [ -n "$(cat /proc/cpuinfo | grep 'AuthenticAMD')" ]; then
