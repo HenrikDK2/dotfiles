@@ -21,6 +21,9 @@ stop_service cups
 stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
 stop_service systemd-timesyncd
 
+# Disable split lock mitigation for performance gain in some games, is enabled again on game exit. 
+sudo sysctl kernel.split_lock_mitigate=0
+
 # Only stop services related to virt-manager if closed
 if [ -z "$(pgrep virt-manager)" ]; then
 	stop_service systemd-machined
