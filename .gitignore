@@ -110,7 +110,7 @@
 !.config/mako/**
 
 !.config/alacritty/
-!.config/alacritty/alacritty.yml
+!.config/alacritty/alacritty.toml
 
 !.config/gamemode.ini
 !.config/mimeapps.list
