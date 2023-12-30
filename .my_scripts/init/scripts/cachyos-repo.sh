@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ! grep -q "[cachyos]" "/etc/pacman.conf"; then
+if ! grep -qF "[cachyos]" "/etc/pacman.conf"; then
 	source $HOME/.my_scripts/init/scripts/functions.sh
 
 	# Install CachyOS
