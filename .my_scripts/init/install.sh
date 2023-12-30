@@ -44,8 +44,8 @@ if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sudo pacman -Su
 fi
 
-# Install building tools
-sudo pacman -S base-devel curl wget --noconfirm --needed
+# Install required packages for building/scripts
+sudo pacman -S base-devel bc curl wget --noconfirm --needed
 
 # Makepkg related packages (Flags in ~/.makepkg.conf)
 sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
