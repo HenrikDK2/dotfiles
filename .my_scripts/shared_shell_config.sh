@@ -14,6 +14,9 @@ export AMD_VULKAN_ICD="RADV"
 export RADV_PERFTEST="nggc,sam,ngg_streamout"
 export VKD3D_CONFIG="dxr11"
 
+export MANGOHUD_DLSYM=1
+export MANGOHUD=1
+
 export MOZ_ENABLE_WAYLAND=1
 export MOZ_WEBRENDER=1
 
