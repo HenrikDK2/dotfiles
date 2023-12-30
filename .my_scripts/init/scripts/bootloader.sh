@@ -13,6 +13,9 @@ kernel_params=(
 	# Improves boot times on harddrives
 	"libahci.ignore_sss=1"
 
+	# Reduce writes to SSD 
+	"rootflags=noatime"
+
 	# Disable watchdog to reduce overhead
 	"nowatchdog"
 	"nomce"
@@ -22,8 +25,15 @@ kernel_params=(
 	# Disable IPV6
 	"ipv6.disable=1"
 
-	# Reduce writes to SSD 
-	"rootflags=noatime"
+	# Disable amdgpu audio 
+	"amdgpu.audio=0"
+
+	# Disable PCIe power management
+	"pcie_aspm=off"
+
+	# Enable Next Generation Graphics (ngg)
+	"ngg=1"
+	"amdgpu.ngg=1"
 
 	# Enable AMD GPU overclocking
 	"amdgpu.ppfeaturemask=0xffffffff"
