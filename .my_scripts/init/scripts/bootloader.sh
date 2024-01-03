@@ -28,13 +28,6 @@ kernel_params=(
 	# Disable amdgpu audio 
 	"amdgpu.audio=0"
 
-	# Disable PCIe power management
-	"pcie_aspm=off"
-
-	# Enable Next Generation Graphics (ngg)
-	"ngg=1"
-	"amdgpu.ngg=1"
-
 	# Enable AMD GPU overclocking
 	"amdgpu.ppfeaturemask=0xffffffff"
 )
