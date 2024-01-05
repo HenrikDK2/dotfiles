@@ -65,9 +65,6 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 	sudo systemctl enable reflector.timer # Update mirrorlist weekly
 fi
 
-# Install CachyOS repo
-$HOME/.my_scripts/init/scripts/cachyos-repo.sh
-
 # Add bootloader entries, and install kernel
 clear
 printf "Only for systemd-boot! - Add bootloader entries?\n\n"
