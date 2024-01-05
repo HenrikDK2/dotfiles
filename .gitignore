@@ -97,6 +97,9 @@
 .config/sway/config.d/**
 !.config/sway/config.d/50-systemd-user.conf
 
+!.config/swaylock/
+!.config/swaylock/config
+
 !.config/wofi
 !.config/wofi/**
 
