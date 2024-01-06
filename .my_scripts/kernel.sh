@@ -87,9 +87,6 @@ install_latest_kernel(){
 	# Disable Android modules for Waydroid
 	set_config "_waydroid" "false"
 
-	# Disable misc additions
-	set_config "_misc_adds" "false"
-
 	# Disable menuconfig
 	set_config "_menunconfig" "0"
 
