@@ -42,67 +42,74 @@ modules_to_add=(
     xpad           # Xbox gamepad driver
 )
 
+set_config(){
+    sed "/$1=/ s/.*/$1=\"$2\"/" -i $config_file
+}
+
 install_latest_kernel(){
 	cd $kernel_folder
 	git restore .
 	git pull --force
 
 	# Modify package name to 'linux-tkg'
-	sed -i 's/_custom_pkgbase=""/_custom_pkgbase="linux-tkg"/' $config_file
-	
+	set_config "_custom_pkgbase" "linux-tkg"
+
 	# Change kernel version to stable
-	sed -i "s/_version=\"\"/_version=\"$stable_kernel\"/" $config_file
+	set_config "_version" "$stable_kernel"
 
     # Set CPU scheduler to 'eevdf'
-	sed -i 's/_cpusched=""/_cpusched="eevdf"/' $config_file
+	set_config "_cpusched" "eevdf"
 
 	# Reduce overhead by lowering max cpu cores to current processor cores (Requires recompile on new CPU)
-	sed -i 's/_NR_CPUS_value=""/_NR_CPUS_value="$(nproc)"/' $config_file
+	set_config "_NR_CPUS_value" "$(nproc)"
 	
 	# Enable compiler optimizations (-O3)
-	sed -i 's/_compileroptlevel="1"/_compileroptlevel="2"/' $config_file 
+	set_config "_compileroptlevel" "2"
 
 	# Enable modprobeddb
-	sed -i 's/_modprobeddb="false"/_modprobeddb="true"/' $config_file 
+	set_config "_modprobeddb" "true"
 
 	# Tickless idle
-	sed -i 's/_tickless=""/_tickless="2"/' $config_file 
+	set_config "_tickless" "2"
 
 	# Set timer frequency to 1000
-	sed -i 's/_timer_freq=""/_timer_freq="1000"/' $config_file 
+	set_config "_timer_freq" "1000"
 
 	# Disable ftrace
-	sed -i 's/_ftracedisable="false"/_ftracedisable="true"/' $config_file 
+	set_config "_ftracedisable" "true"
 
 	# Disable debugging
-	sed -i 's/_debugdisable="false"/_debugdisable="true"/' $config_file 
+	set_config "_debugdisable" "true"
 
 	# Enable ACS override
-	sed -i 's/_acs_override=""/_acs_override="true"/' $config_file
+	set_config "_acs_override" "false"
 
-	# Enable Android modules for Waydroid
-	sed -i 's/_waydroid=""/_waydroid="true"/' $config_file 
+	# Disable Android modules for Waydroid
+	set_config "_waydroid" "false"
+
+	# Disable misc additions
+	set_config "_misc_adds" "false"
 
 	# Disable menuconfig
-	sed -i 's/_menunconfig=""/_menunconfig="0"/' $config_file 
+	set_config "_menunconfig" "0"
 
 	# Enable full LTO and use the LLVM compiler
-	sed -i 's/_lto_mode=""/_lto_mode="full"/' $config_file 
-	sed -i 's/_compiler=""/_compiler="llvm"/' $config_file
+	set_config "_lto_mode" "full"
+	set_config "_compiler" "llvm"
 
 	# Force the use of the LLVM Integrated Assembler
-	sed -i 's/_llvm_ias=""/_llvm_ias="1"/' $config_file 
-	
+	set_config "_llvm_ias" "1"
+
 	# Compile for the native CPU architecture
 	if grep -q "vendor_id\s*:\s*GenuineIntel" /proc/cpuinfo; then
-	  sed -i 's/_processor_opt=""/_processor_opt="native_intel"/' $config_file
+		set_config "_processor_opt" "native_intel"
 	elif grep -q "vendor_id\s*:\s*AuthenticAMD" /proc/cpuinfo; then
-	  sed -i 's/_processor_opt=""/_processor_opt="native_amd"/' $config_file
+		set_config "_processor_opt" "native_amd"
 	fi
 
 	# If no NVIDIA GPU is present, disable NUMA
 	if (! lspci | grep -q -i 'NVIDIA Corporation'); then
-	  sed -i 's/_numadisable="false"/_numadisable="true"/' $config_file
+		set_config "_numadisable" "true"
 	fi
 
 	clear
