@@ -13,7 +13,6 @@ modules_to_add=(
     ahci           # Advanced Host Controller Interface (SATA)
     btrfs          # B-tree File System
     btusb          # Bluetooth USB driver
-    conntrack      # Connection tracking for packet filtering and NAT
     cifs           # Common Internet File System (SMB)
     ds4drv         # Sony DualShock 4 controller driver
     efivarfs       # EFI variables filesystem
