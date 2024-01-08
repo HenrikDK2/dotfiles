@@ -9,6 +9,15 @@ stop_service () {
     done
 }
 
+# Set performance level to high
+for card_dir in /sys/class/drm/card*; do
+	power_dpm="$card_dir/device/power_dpm_force_performance_level"
+	
+    if [ -e "$power_dpm" ]; then
+        echo "high" | sudo tee $power_dpm
+  	fi
+done
+
 # Kills cmst (Kill the front-end for connman, it usually runs in the background, but is not needed)
 killall -9 cmst
 
