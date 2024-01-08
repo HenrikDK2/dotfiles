@@ -4,6 +4,12 @@ kernel_params=(
 	# Reduce the attack surface of the system by reducing the amount of potentially sensitive information that is logged
 	"loglevel=3"
 
+	# Disables the debugfs file system, which can be a potential attack vector for exploits
+	"debugfs=off"
+
+	# Disables the vDSO which can be a potential attack vector for exploits
+	"vsyscall=none"
+
 	# Increase CPU performance, but might decrease battery life
 	"processor.ignore_ppc=1"
 
@@ -21,9 +27,6 @@ kernel_params=(
 	"nomce"
 	"nmi_watchdog=0"
 	"module_blacklist=iTCO_wdt"
-
-	# Disable IPV6
-	"ipv6.disable=1"
 
 	# Disable amdgpu audio 
 	"amdgpu.audio=0"
