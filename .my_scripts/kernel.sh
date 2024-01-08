@@ -3,7 +3,7 @@
 db_file=~/.config/modprobed.db
 kernel_folder=~/.cache/linux-tkg
 config_file=$kernel_folder/customization.cfg
-stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP -m1 '\K\d+\.\d+\.\d+')
+stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP 'The latest stable version of the Linux kernel is:\s+\K[\d.]+')
 
 # modprobeddb may already detect and load many of these modules automatically,
 # but to ensure their inclusion in the database,

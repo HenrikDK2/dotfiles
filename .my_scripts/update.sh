@@ -20,7 +20,7 @@ update_packages(){
 
 	# Update kernel
 	if [ -d ~/.cache/linux-tkg ]; then
-		local stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP -m1 '\K\d+\.\d+\.\d+')
+		local stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP 'The latest stable version of the Linux kernel is:\s+\K[\d.]+')
 		local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
 		
 		if [[ "$stable_kernel" != "$current_kernel" ]]; then
