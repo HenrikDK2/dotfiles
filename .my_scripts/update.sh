@@ -29,7 +29,7 @@ update_packages(){
 	fi
 
 	# Update kernel
-	if [ -d ~/.cache/linux-tkg ]; then
+	if pacman -Qi "linux-tkg" &> /dev/null; then
 		local stable_kernel=$(get_stable_kernel)
 		local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
 		
