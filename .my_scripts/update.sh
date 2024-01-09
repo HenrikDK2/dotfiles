@@ -8,6 +8,16 @@ audit(){
 	~/.my_scripts/audit.sh
 }
 
+get_stable_kernel(){
+	local stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP 'The latest stable version of the Linux kernel is:\s+\K[\d.]+')
+
+	if [[ $stable_kernel == *.* && $stable_kernel != *.*.* ]]; then
+	    stable_kernel="${stable_kernel}.0"
+	fi
+
+	echo "$stable_kernel"
+}
+
 update_packages(){
 	# Update normal packages
 	echo -e "\033[1mUpdating packages.\033[0m\n"
@@ -20,7 +30,7 @@ update_packages(){
 
 	# Update kernel
 	if [ -d ~/.cache/linux-tkg ]; then
-		local stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP 'The latest stable version of the Linux kernel is:\s+\K[\d.]+')
+		local stable_kernel=$(get_stable_kernel)
 		local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
 		
 		if [[ "$stable_kernel" != "$current_kernel" ]]; then
