@@ -137,18 +137,16 @@ if [[ $(get_primary_gpu) == "nvidia" ]]; then
 	echo "Nvidia GPU drivers not yet implemented..."
 	read -p "Press enter to continue"
 elif [[ $(get_primary_gpu) == "amd" ]]; then
-	#sudo pacman -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm
-	sudo pacman -S mesa-git lib32-mesa-git --noconfirm
+	sudo pacman -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm
 	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
 	sudo mkinitcpio -P;
 elif [[ $(get_primary_gpu) == "intel" ]]; then
-	#sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm
-	sudo pacman -S mesa-git lib32-mesa-git --noconfirm
+	sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm
 fi
 
 # Packages
-yay -S heroic-games-launcher-bin proton-ge-custom-bin ttf-ms-fonts all-repository-fonts cmst obs-gstreamer obs-vkcapture swaylock-effects-git --needed --noconfirm
-sudo pacman -S adobe-source-sans-fonts ttf-jetbrains-mono adobe-source-serif-fonts cantarell-fonts otf-font-awesome pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber mangohud lib32-mangohud btop cabextract fuse cups dconf dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox fish fisher gamemode gamescope glib2 gnome-keyring grim gvfs gvfs-mtp imv steam discord alacritty lib32-gamemode lib32-libvdpau lib32-pipewire-jack libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm obs-studio openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg tesseract-data-eng ufw unrar unzip code wayland-protocols wl-clipboard waybar wine wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
+yay -S heroic-games-launcher-bin proton-ge-custom-bin ttf-ms-fonts all-repository-fonts cmst swaylock-effects-git --needed --noconfirm
+sudo pacman -S adobe-source-sans-fonts ttf-jetbrains-mono adobe-source-serif-fonts cantarell-fonts otf-font-awesome pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber mangohud lib32-mangohud btop cabextract fuse cups dconf dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox fish fisher gamemode gamescope glib2 gnome-keyring grim gvfs gvfs-mtp imv steam discord alacritty lib32-gamemode lib32-libvdpau lib32-pipewire-jack libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm openvr p7zip pavucontrol pciutils polkit polkit-gnome profile-sync-daemon qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg tesseract-data-eng ufw unrar unzip code wayland-protocols wl-clipboard waybar wine wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
 
 # Make user part of the games group (Allows proton to set niceness of process)
 sudo usermod -a -G games $(whoami)
