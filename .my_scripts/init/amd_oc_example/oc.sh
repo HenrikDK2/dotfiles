@@ -24,7 +24,7 @@ POWER_CAP="/sys/class/drm/$GPU_CARD/device/hwmon/$HWMON/power1_cap"
 echo "vo -40" > $PP_OD_CLK_VOLTAGE
 
 # Max core clock
-#echo "s 1 2900" > $PP_OD_CLK_VOLTAGE
+echo "s 1 2950" > $PP_OD_CLK_VOLTAGE
 
 # Max memory clock
 echo "m 1 1320" > $PP_OD_CLK_VOLTAGE
