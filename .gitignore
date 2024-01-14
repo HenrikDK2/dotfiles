@@ -58,9 +58,6 @@
 !.config/wireplumber
 !.config/wireplumber/**
 
-!.config/psd/
-!.config/psd/psd.conf
-
 !.config/gtklock/
 !.config/gtklock/**
 
