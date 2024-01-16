@@ -36,6 +36,7 @@
 !.config
 
 !.config/user-dirs.dirs
+!.config/modprobed_add.db
 
 !.config/yay/
 !.config/yay/config.json

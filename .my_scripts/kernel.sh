@@ -5,43 +5,6 @@ kernel_folder=~/.cache/linux-tkg
 config_file=$kernel_folder/customization.cfg
 stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP 'The latest stable version of the Linux kernel is:\s+\K[\d.]+')
 
-# modprobeddb may already detect and load many of these modules automatically,
-# but to ensure their inclusion in the database,
-# i've created a list of additional kernel modules to add to the database.
-
-modules_to_add=(
-    ahci           # Advanced Host Controller Interface (SATA)
-    btrfs          # B-tree File System
-    btusb          # Bluetooth USB driver
-    cifs           # Common Internet File System (SMB)
-    ds4drv         # Sony DualShock 4 controller driver
-    efivarfs       # EFI variables filesystem
-    exfat		   # exFAT filesystem support
-    ext4           # Extended File System 4
-    fat            # File Allocation Table filesystem
-    hci_uart       # Bluetooth HCI UART driver
-    hid-generic    # Generic HID (Human Interface Device) driver
-    isofs          # ISO 9660 filesystem (CD/DVD)
-    joydev         # Joystick device driver
-    loop           # Loopback block device support
-    md             # Multiple Device (MD) RAID support
-    ntfs           # NTFS filesystem
-    ntfs3          # NTFS-3G filesystem (NTFS read/write support)
-    nvme           # NVMe (Non-Volatile Memory Express) driver
-    raid           # RAID (Redundant Array of Independent Disks) support
-    snd_usb_audio  # USB audio driver
-    usb_storage    # USB storage driver
-    usbcore        # USB core driver
-    usbhid         # USB HID (Human Interface Device) driver
-    tap            # TUN/TAP virtual network device (Layer 2)
-    tun            # TUN/TAP virtual network device
-    wireguard      # WireGuard VPN module
-    vfat           # Virtual File Allocation Table filesystem
-    vaapi          # Video Acceleration API
-    xhci_pci       # xHCI PCI host controller driver (USB 3.0/3.1)
-    xpad           # Xbox gamepad driver
-)
-
 set_config(){
     sed "/$1=/ s/.*/$1=\"$2\"/" -i $config_file
 }
@@ -125,10 +88,8 @@ fi
 # Store currently loaded modules in the database
 modprobed-db storesilent
 
-# Add extra modules defined in the modules list to the database
-for module in "${modules_to_add[@]}"; do
-	echo "$module" >> "$db_file"
-done
+# Add additional modules
+cat $HOME/.config/modprobed_add.db >> $HOME/.config/modprobed.db
 
 # Sort the list and remove duplicates in the database
 sort -u $db_file -o $db_file
