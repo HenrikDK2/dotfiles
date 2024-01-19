@@ -49,7 +49,7 @@ microcode () {
 
 enable_hibernation () {
 	sudo sed -i 's/^[ \t]*HOOKS=(base udev autodetect/HOOKS=(base udev resume autodetect/' /etc/mkinitcpio.conf
-	sudo mkinitcpio -p linux-zen
+	sudo mkinitcpio -P
 }
 
 add_options () {
@@ -90,28 +90,6 @@ add_options () {
 	fi
 }
 
-change_default () {
-	if sudo grep "default" /boot/loader/loader.conf
-	then
-		sudo sed -i "s/default.*/default $1/" /boot/loader/loader.conf
-	else
-		echo "default $1" | sudo tee -a /boot/loader/loader.conf
-	fi
-
-	if sudo grep "timeout" /boot/loader/loader.conf
-	then
-		sudo sed -i 's/#timeout.*/timeout 3/' /boot/loader/loader.conf
-	else
-		echo "timeout 3" | sudo tee -a /boot/loader/loader.conf
-	fi
-}
-
-# Install Linux Zen
-if [ -z "$(pacman -Qe | grep 'linux-zen')" ]; then
-	sudo pacman -Syu linux-zen --noconfirm --needed
-	clear
-fi
-
 # Create temp kernel entries
 mkdir ~/.my_scripts/init/entries/tmp
 cp ~/.my_scripts/init/entries/*.conf ~/.my_scripts/init/entries/tmp
@@ -127,9 +105,3 @@ add_options
 # Copy to boot
 sudo cp -r ~/.my_scripts/init/entries/tmp/. /boot/loader/entries
 rm -rf ~/.my_scripts/init/entries/tmp/
-
-# Change default kernel to Linux Zen if run from install script
-if [[ "${0}" =~ ".my_scripts/init/install.sh" ]]; then
-    change_default zen.conf
-    clear
-fi
