@@ -126,6 +126,7 @@ for_window [class="steam" title="Friends List"] floating enable
 for_window [title="Choose ONE of the audio conference options"] floating enable
 for_window [title="zoom" app_id="zoom"] floating enable
 for_window [title="Wine System Tray"] border none, resize set 0 0, move scratchpad
+for_window [title="Firefox — Sharing Indicator"] floating enable
 
 # Inhibit idle
 for_window [class="steam_app*"] inhibit_idle
