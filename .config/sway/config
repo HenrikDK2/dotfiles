@@ -119,6 +119,7 @@ assign [app_id="discord"] workspace 2
 assign [class="Spotify"] workspace 2
 assign [class="steam" title="Steam"] workspace 2
 assign [class="steam" title="Steam"] workspace 2
+assign [class="WeekToDo"] workspace 2
 
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="python3"] floating enable
