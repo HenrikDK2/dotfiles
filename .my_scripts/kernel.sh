@@ -74,7 +74,6 @@ install_latest_kernel(){
 
 	clear
 	makepkg -si --noconfirm
-	sudo sed -i "s/default.*/default tkg.conf/" /boot/loader/loader.conf
 	exit 0
 }
 
