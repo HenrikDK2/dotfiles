@@ -95,8 +95,9 @@ sort -u $db_file -o $db_file
 clear
 
 # If the linux-tkg folder doesn't exist, clone it
-if [ ! -d "$kernel_folder" ]; then
-	git clone --depth 1 https://github.com/Frogging-Family/linux-tkg $kernel_folder
+if [ ! -d "$kernel_folder" ] || [ ! -d "$kernel_folder/.git" ]; then
+	rm -rf "$kernel_folder"
+	git clone https://github.com/Frogging-Family/linux-tkg $kernel_folder
 fi
 
 install_latest_kernel
