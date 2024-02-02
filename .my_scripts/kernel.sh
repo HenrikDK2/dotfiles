@@ -77,6 +77,12 @@ install_latest_kernel(){
 	exit 0
 }
 
+# Check for an internet connection
+if ! ping -c 1 google.com >/dev/null 2>&1; then
+  echo "An internet connection is required to run this script."
+  exit 1
+fi
+
 yay -S modprobed-db curl --needed --noconfirm 
 
 # If the modprobed database file doesn't exist, create it

@@ -29,7 +29,7 @@ My dotfiles are intended for personal usage, but feel free to make use of them a
 
     ```
     git init
-    git remote add origin git@github.com:HenrikDK2/dotfiles.git
+    git remote add origin https://github.com/HenrikDK2/dotfiles.git
     git fetch --all
     git checkout master --force
     ```
