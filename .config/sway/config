@@ -19,7 +19,7 @@ input * {
 # Basics:
 #
     bindsym $mod+Return exec alacritty
-    bindsym $mod+n exec nemo
+    bindsym $mod+n exec ~/.local/share/nemo/startup.sh
     bindsym $mod+d kill
     bindsym $mod+space exec ~/.config/sway/wofi.sh
     floating_modifier $mod normal

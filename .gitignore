@@ -129,3 +129,5 @@
 
 !.local/share/nemo
 !.local/share/nemo/**
+!.local/share/applications
+!.local/share/applications/nemo.desktop
