@@ -175,7 +175,7 @@ sudo systemctl enable ufw cups dnsmasq denyhosts dbus-broker fstrim.timer
 systemctl --user enable wireplumber dbus-broker
 
 # Disable services
-systemctl --user mask at-spi-dbus-bus gvfs-metadata evolution-addressbook-factory
+systemctl --user mask at-spi-dbus-bus evolution-addressbook-factory
 sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved connman-vpn
 
 # Remove initial pacsave/pacnew files
