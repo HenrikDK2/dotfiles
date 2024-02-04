@@ -1,8 +1,10 @@
 #!/bin/bash
 
-while pgrep -x "nemo" > /dev/null; do
-    sleep 1
-done
+if [ "$1" != "gamemode" ]; then
+	while pgrep -x "nemo" > /dev/null; do
+	    sleep 1
+	done
+fi
 
 systemctl --user stop gvfs-daemon
 systemctl --user stop gvfs-mtp-volume-monitor
