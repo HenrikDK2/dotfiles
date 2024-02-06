@@ -125,10 +125,8 @@ user_pref("cookiebanners.service.mode", 1);
 user_pref("cookiebanners.service.mode.privateBrowsing", 1);
 
 user_pref("dom.security.unexpected_system_load_telemetry_enabled", false);
-user_pref("dom.event.clipboardevents.enabled", false);
-
-user_pref("loop.enabled", false);
 user_pref("beacon.enabled", false);
+user_pref("loop.enabled", false);
 user_pref("telemetry.hybridContent", false);
 user_pref("config.trim_on_minimize", true);
 user_pref("general.autoScroll", true);
