@@ -17,7 +17,7 @@ export VKD3D_CONFIG="dxr11"
 export MANGOHUD_DLSYM=1
 export MANGOHUD=1
 
-export MOZ_ENABLE_WAYLAND=1
+#export MOZ_ENABLE_WAYLAND=1 Disabled until copy/paste works again
 export MOZ_WEBRENDER=1
 
 export RTC_USE_PIPEWIRE=true
