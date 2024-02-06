@@ -125,6 +125,7 @@
 
 !.local/share/icons
 !.local/share/icons/**
+.local/share/icons/Superposition.png
 .local/share/icons/hicolor
 
 !.local/share/nemo

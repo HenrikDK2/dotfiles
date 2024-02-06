@@ -21,6 +21,9 @@ done
 # Kills cmst (Kill the front-end for connman, it usually runs in the background, but is not needed)
 killall -9 cmst
 
+# Killed mullvad vpn graphical interface (the daemon still runs)
+killall -9 mullvad-gui
+
 # Kill bluez front-end
 killall -9 blueman-applet blueman-manager blueman-tray
 
