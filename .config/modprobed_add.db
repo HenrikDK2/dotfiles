@@ -5,6 +5,7 @@ algif_hash
 algif_skcipher
 bluetooth
 bnep
+bridge
 btbcm
 btintel
 btmtk
@@ -88,7 +89,9 @@ nf_reject_ipv4
 nf_reject_ipv6
 nf_tables
 nft_chain_nat
+nft_compat
 nft_ct
+nft_limit
 nft_masq
 nft_reject
 nft_reject_inet
@@ -159,9 +162,11 @@ xhci_pci_renesas
 xpad
 x_tables
 xt_addrtype
+xt_CHECKSUM
 xt_conntrack
 xt_hl
 xt_limit
 xt_LOG
+xt_MASQUERADE
 xt_recent
 xt_tcpudp
