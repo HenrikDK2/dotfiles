@@ -135,5 +135,4 @@ user_pref("config.trim_on_minimize", true);
 user_pref("general.autoScroll", true);
 user_pref("alerts.disableSlidingEffect", false);
 user_pref("nglayout.initialpaint.delay", 0);
-user_pref("layers.acceleration.disabled", true);
 user_pref("devtools.inspector.enabled", false)
