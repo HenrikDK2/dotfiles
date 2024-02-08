@@ -114,10 +114,11 @@ gaps inner 20
 gaps top 34
 
 assign [app_id="evolution"] workspace 2 
+assign [class="thunderbird"] workspace 2 
+
 assign [class="discord"] workspace 2 
 assign [app_id="discord"] workspace 2 
 assign [class="Spotify"] workspace 2
-assign [class="steam" title="Steam"] workspace 2
 assign [class="steam" title="Steam"] workspace 2
 assign [class="WeekToDo"] workspace 2
 
@@ -167,7 +168,6 @@ exec_always {
 
 	# Applications - Standard
 	gsettings set org.cinnamon.desktop.default-applications.terminal exec alacritty
-	xdg-settings set default-web-browser firefox.desktop
 	xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 	gsettings set org.gnome.desktop.background show-desktop-icons false
     gsettings set org.nemo.desktop show-desktop-icons true

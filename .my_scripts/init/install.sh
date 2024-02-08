@@ -89,14 +89,15 @@ else
     rm -rf ~/.config/sway/config.d/workspace-gaps
 fi
 
-# Optimized Firefox profile
+# Optimized Firefox/Thunderbird profile
 clear
-printf "Do you wish to use an optimized Firefox profile?\n\n"
+printf "Do you wish to use an optimized Firefox/Thunderbird profile?\n\n"
 printf "It disables telemetry, animations and more for privacy and performance.\n\n"
 printf "This will reset your current profile, do you want to proceed?"
 
 if confirm; then 
-    rm -rf ~/.mozilla;
+    rm -rf ~/.mozilla ~/.thunderbird;
+    cp -r ~/.my_scripts/init/.thunderbird ~/.thunderbird;
     cp -r ~/.my_scripts/init/.mozilla ~/.mozilla;
     cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-release; 
 	cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-nightly; 
@@ -146,7 +147,7 @@ fi
 
 # Packages
 yay -S heroic-games-launcher-bin proton-ge-custom-bin ttf-ms-fonts all-repository-fonts cmst swaylock-effects-git --needed --noconfirm
-sudo pacman -S adobe-source-sans-fonts ttf-jetbrains-mono adobe-source-serif-fonts cantarell-fonts otf-font-awesome pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber mangohud lib32-mangohud btop cabextract fuse cups dconf dbus-broker deluge deluge-gtk dnsmasq evolution evolution-ews firefox fish fisher gamemode gamescope glib2 gnome-keyring grim gvfs gvfs-mtp imv steam discord alacritty lib32-gamemode lib32-libvdpau lib32-pipewire-jack libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm ntfs-3g openvr p7zip pavucontrol pciutils polkit polkit-gnome qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg tesseract-data-eng ufw unrar unzip code wayland-protocols wl-clipboard waybar wine wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
+sudo pacman -S adobe-source-sans-fonts ttf-jetbrains-mono adobe-source-serif-fonts cantarell-fonts otf-font-awesome pipewire pipewire-audio pipewire-pulse pipewire-alsa pipewire-jack wireplumber mangohud lib32-mangohud btop cabextract fuse cups dconf dbus-broker deluge deluge-gtk dnsmasq firefox fish fisher gamemode gamescope glib2 gnome-keyring grim gvfs gvfs-mtp imv steam discord alacritty lib32-gamemode lib32-libvdpau lib32-pipewire-jack libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db micro mpv nemo nemo-fileroller nemo-preview npm ntfs-3g openvr p7zip pavucontrol pciutils polkit polkit-gnome qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp swappy sway swaybg tesseract-data-eng thunderbird ufw unrar unzip code wayland-protocols wl-clipboard waybar wine wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
 
 # Make user part of the games group (Allows proton to set niceness of process)
 sudo usermod -a -G games $(whoami)
@@ -175,7 +176,7 @@ sudo systemctl enable ufw cups dnsmasq denyhosts dbus-broker fstrim.timer
 systemctl --user enable wireplumber dbus-broker
 
 # Disable services
-systemctl --user mask at-spi-dbus-bus evolution-addressbook-factory
+systemctl --user mask at-spi-dbus-bus
 sudo systemctl mask rtkit-daemon ldconfig.service upower systemd-resolved connman-vpn
 
 # Remove initial pacsave/pacnew files

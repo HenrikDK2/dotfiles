@@ -39,6 +39,7 @@ set_prio "mako" 20 3
 set_prio "polkit-gnome" 20 3
 set_prio "waybar" 20 3
 set_prio "evolution" 20 3
+set_prio "thunderbird" 20 3
 set_prio "tidal-hifi" 20 3
 set_prio "spotify" 20 3
 set_prio "swayidle" 20 3
