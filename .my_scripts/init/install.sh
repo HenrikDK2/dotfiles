@@ -124,14 +124,6 @@ if confirm; then
     sudo systemctl enable --now bluetooth.service;
 fi
 
-# Mullvad vpn
-clear
-printf "Do you want to install mullvad vpn?"
-
-if confirm; then
-	yay -S mullvad-vpn-bin --needed --noconfirm
-fi
-
 # GPU drivers
 clear
 if [[ $(get_primary_gpu) == "nvidia" ]]; then
