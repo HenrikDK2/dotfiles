@@ -54,29 +54,14 @@ enable_hibernation () {
 
 add_options () {
 	get_root_uuid (){
-		clear
-		printf 'Which partition is the root partition that Linux is running on? Example: sdc3\n\n'
-		lsblk | grep /
-		printf "\n"
-		if [ -n "$1" ]; then printf "Couldn't find drive, try again!\n\n"; fi
-		read ROOT_DRIVE
-		ROOT_UUID=$(sudo blkid -o value -s UUID /dev/$ROOT_DRIVE)
-		
-		if [ -z $ROOT_UUID ]; then get_root_uuid "error"; fi
-		sudo tune2fs -O fast_commit /dev/$ROOT_DRIVE
+		ROOT_DRIVE=$(df -hT / | awk 'NR==2 {print $1}')
+		ROOT_UUID=$(sudo blkid -o value -s UUID $ROOT_DRIVE)
+		sudo tune2fs -O fast_commit $ROOT_DRIVE
 	}
 	
 	get_swap_uuid () {
-		clear
-		printf 'Which partition is the swap partition? Example: sdc2\n\n'
-		printf "You can type \"none\", however hibernation will not be enabled\n\n"
-		lsblk | grep SWAP
-		printf "\n"
-		if [ -n "$1" ]; then printf "Couldn't find drive, try again!\n\n"; fi
-		read SWAP_DRIVE
-		SWAP_UUID=$(sudo blkid -o value -s UUID /dev/$SWAP_DRIVE)
-		
-		if [[ -z $SWAP_UUID && "$SWAP_DRIVE" != "none" ]]; then get_swap_uuid "error"; fi
+		SWAP_DRIVE=$(swapon --show=NAME --noheadings --raw | awk '{print $1}')
+		SWAP_UUID=$(sudo blkid -o value -s UUID $SWAP_DRIVE)
 	}
 
 	get_root_uuid

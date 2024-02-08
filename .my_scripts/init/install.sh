@@ -45,7 +45,7 @@ if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 fi
 
 # Install required packages for building/scripts
-sudo pacman -S base-devel bc curl wget --noconfirm --needed
+sudo pacman -S base-devel fzy bc curl wget --noconfirm --needed
 
 # Makepkg related packages (Flags in ~/.makepkg.conf)
 sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
@@ -69,13 +69,7 @@ fi
 $HOME/.my_scripts/init/scripts/cachyos-repo.sh
 
 # Add bootloader entries, and install kernel
-clear
-printf "Only for systemd-boot! - Add bootloader entries?\n\n"
-printf "This includes kernel hardening, hibernation, ucode, tweaks and unlock access to AMD overclocking"
-
-if confirm; then
-	source $HOME/.my_scripts/init/scripts/bootloader.sh
-fi
+$HOME/.my_scripts/init/scripts/bootloader.sh
 
 # Ultrawide gaps on workspace 1
 clear

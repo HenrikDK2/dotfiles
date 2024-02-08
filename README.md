@@ -13,25 +13,23 @@ My dotfiles are intended for personal usage, but feel free to make use of them a
 
 - These configuration/system files have only been tested on a fresh install of Arch Linux.
 
-- Ensure that `sudo` and `git` are already installed and configured on your system.
-
-- I recommend using `systemd-boot` as the bootloader. Some scripts depend on it for kernel hardening, hibernation, microcode, tweaks, and unlocking access to AMD overclocking.
-
 - Keep in mind that this project is tailored to my usage on an AMD machine. You may need to make some adjustments to adapt it to your specific hardware.
 
 ### Installation guide
 
 **Warning!** Executing the following steps will replace your existing files with my configuration files.
 
+The install script expects Arch Linux to be setup with `sudo`, `git`, `connman`, and `systemd-boot`.
+
 1. Open the terminal and navigate to your home directory.
 
-2. Run the following commands: 
+2. Run the following commands:
 
-    ```
-    git init
-    git remote add origin https://github.com/HenrikDK2/dotfiles.git
-    git fetch --all
-    git checkout master --force
-    ```
+   ```
+   git init
+   git remote add origin https://github.com/HenrikDK2/dotfiles.git
+   git fetch --all
+   git checkout master --force
+   ```
 
 3. Now you're almost done! As a normal user, execute the installation script `~/.my_scripts/init/install.sh` and follow the simple instructions to complete the installation process.
