@@ -23,19 +23,11 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Avoid stalls on memory allocations
-total_memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-min_free_kbytes=$((total_memory * 2 / 100)) # 2% of memory
-sudo sed -i "s/#MEM/$min_free_kbytes/" /etc/tmpfiles.d/performance.conf
-
 # Config settings for Heroic Games Launcher
 if [ ! -d "$HOME/.config/heroic" ]; then
 	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
 	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
 fi
-
-# Improve ext4 performance
-$HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 
 # Enable multilib, DisableDownloadTimeout, and ParallelDownloads
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
@@ -67,6 +59,12 @@ fi
 
 # Install CachyOS repo
 $HOME/.my_scripts/init/scripts/cachyos-repo.sh
+
+# Improve ext4 performance
+$HOME/.my_scripts/init/scripts/ext4_optimizations.sh
+
+# Avoid stalls on memory allocations
+$HOME/.my_scripts/init/scripts/avoid_stalls_memory.sh
 
 # Add bootloader entries, and install kernel
 $HOME/.my_scripts/init/scripts/bootloader.sh
