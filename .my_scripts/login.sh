@@ -23,7 +23,7 @@ mullvad connect
 (/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)
 (mako &)
 (waybar &) 
-(evolution &)
+(thunderbird &)
 (discord -enable-features=UseOzonePlatform -ozone-platform=wayland &)
 
 # Reduce priority of this script
