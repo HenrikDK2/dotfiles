@@ -66,9 +66,14 @@ install_latest_kernel(){
 	fi
 
 	# Compile for the native CPU architecture
-	if grep -q "vendor_id\s*:\s*GenuineIntel" /proc/cpuinfo; then
+	local model_name=$(lscpu | grep "Model name")
+	local vendor_id=$(lscpu | awk '/Vendor ID:/ {print $3}')
+
+	if [[ $model_name =~ "Ryzen 7 5800X3D" ]]; then
+		set_config "_processor_opt" "zen3"
+	elif [ $vendor_id = "GenuineIntel" ]; then
 		set_config "_processor_opt" "native_intel"
-	elif grep -q "vendor_id\s*:\s*AuthenticAMD" /proc/cpuinfo; then
+	elif [ $vendor_id = "AuthenticAMD" ]; then
 		set_config "_processor_opt" "native_amd"
 	fi
 
