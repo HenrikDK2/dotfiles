@@ -9,12 +9,14 @@ stop_service () {
     done
 }
 
-# Set performance level to high
+# Set to AMD gpu to maximum performance level during gaming (Reduce stutters)
 for card_dir in /sys/class/drm/card*; do
 	power_dpm="$card_dir/device/power_dpm_force_performance_level"
+	pp_power="$card_dir/device/pp_power_profile_mode"
 	
-    if [ -e "$power_dpm" ]; then
-        echo "high" | sudo tee $power_dpm
+    if [[ -e "$power_dpm" && -e "$pp_power" ]]; then
+        echo "manual" | sudo tee $power_dpm
+        echo "1" | sudo tee $pp_power
   	fi
 done
 
