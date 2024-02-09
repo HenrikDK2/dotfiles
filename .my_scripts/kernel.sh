@@ -6,7 +6,7 @@ config_file=$kernel_folder/customization.cfg
 stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP 'The latest stable version of the Linux kernel is:\s+\K[\d.]+')
 
 set_config(){
-    sed "/$1=/ s/.*/$1=\"$2\"/" -i $config_file
+    awk -v key="$1" -v value="$2" 'BEGIN{FS=OFS="="} $1 == key {$2 = "\"" value "\""} 1' "$config_file" > "$config_file.tmp" && mv "$config_file.tmp" "$config_file"
 }
 
 install_latest_kernel(){
@@ -88,7 +88,7 @@ if ! ping -c 1 google.com >/dev/null 2>&1; then
   exit 1
 fi
 
-yay -S modprobed-db curl --needed --noconfirm 
+yay -S modprobed-db curl gawk --needed --noconfirm 
 
 # If the modprobed database file doesn't exist, create it
 if [ ! -f "$db_file" ]; then
