@@ -12,6 +12,7 @@ output * {
 input * {
     xkb_layout dk
 	accel_profile "flat"
+	pointer_accel 0
 }
 
 ### Key bindings
