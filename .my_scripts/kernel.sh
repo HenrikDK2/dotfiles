@@ -60,6 +60,11 @@ install_latest_kernel(){
 	# Force the use of the LLVM Integrated Assembler
 	set_config "_llvm_ias" "1"
 
+	# Build in ram to speed up compile time
+	if [ "$BUILDDIR" = "/tmp/makepkg" ]; then
+	   set_config "_kernel_work_folder" "/tmp/makepkg"
+	fi
+
 	# Compile for the native CPU architecture
 	if grep -q "vendor_id\s*:\s*GenuineIntel" /proc/cpuinfo; then
 		set_config "_processor_opt" "native_intel"
