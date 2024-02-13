@@ -165,7 +165,7 @@ systemctl --user enable wireplumber dbus-broker
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus
-sudo systemctl mask accounts-daemon rtkit-daemon ldconfig upower systemd-resolved connman-vpn
+sudo systemctl mask systemd-userdbd accounts-daemon rtkit-daemon ldconfig upower systemd-resolved connman-vpn
 
 # Remove initial pacsave/pacnew files
 sudo find /etc -name "*.pacnew" -o -name "*.pacsave" | xargs sudo rm;
