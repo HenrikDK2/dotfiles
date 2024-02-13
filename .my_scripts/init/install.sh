@@ -29,6 +29,10 @@ if [ ! -d "$HOME/.config/heroic" ]; then
 	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
 fi
 
+# Add hostname to /etc/hosts file
+HOSTNAME=$(hostnamectl hostname)
+sudo sed -i "s/#HOSTNAME/$HOSTNAME/" /etc/hosts
+
 # Enable multilib, DisableDownloadTimeout, and ParallelDownloads
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
