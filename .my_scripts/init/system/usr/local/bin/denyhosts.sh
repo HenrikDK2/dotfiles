@@ -2,9 +2,9 @@
 
 add_source(){
 	if [ -z $2 ]; then
-		wget -T 20 -t 1 -O - >> "/tmp/denyhosts.txt" $1
+		curl -m 20 --retry 1 -o - "$1" >> "/tmp/denyhosts.txt"
 	else
-		wget -T 20 -t 1 -O - > "/tmp/denyhoststemp.txt" $1
+        curl -m 20 --retry 1 -o - "$1" >> "/tmp/denyhoststemp.txt"
 		sed -i '/^[ \t]*#/d;/^[[:space:]]*$/d' /tmp/denyhoststemp.txt
 		sed -i "s/^/$2 /" /tmp/denyhoststemp.txt
 		cat /tmp/denyhoststemp.txt | tee -a /tmp/denyhosts.txt
@@ -13,7 +13,7 @@ add_source(){
 }
 
 update_hosts(){
-    wget -q --tries=10 --timeout=20 -O - http://google.com > /dev/null
+    curl -s --retry 10 --max-time 20 -o /dev/null http://google.com
 
     if [[ $? -eq 0 ]]; then
 	    add_source https://raw.githubusercontent.com/Ultimate-Hosts-Blacklist/Ultimate.Hosts.Blacklist/master/hosts/hosts0
