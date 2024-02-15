@@ -57,7 +57,7 @@ ionice -c 3 -P $$
 clear
 
 # Check if there are updates available
-if [ -n "$(pacman -Qu --check)" ] || [ ! -f ~/.cache/git-update-last ]; then
+if [ -n "$(pacman -Qu --check)" ]; then
 	update_packages
 	audit
 else
