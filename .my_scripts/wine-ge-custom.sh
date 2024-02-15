@@ -10,7 +10,7 @@ url=$(echo "$json_data" | jq -r '.assets[1].browser_download_url')
 filename=$(basename "$url")
 file="$download_dir/$filename"
 
-# Check if current installed version had the same filename
+# Check if installed wine-ge-custom has the same filename
 if [ "$current_filename" = "$filename" ]; then
 	exit 0
 fi
