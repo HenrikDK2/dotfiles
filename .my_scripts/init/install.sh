@@ -23,13 +23,6 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Wine and config settings for Heroic Games Launcher
-if [ ! -d "$HOME/.config/heroic" ]; then
-	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
-	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
-	$HOME/.my_scripts/wine-ge-custom.sh
-fi
-
 # Add hostname to /etc/hosts file
 HOSTNAME=$(hostnamectl hostname)
 sudo sed -i "s/#HOSTNAME/$HOSTNAME/" /etc/hosts
@@ -60,6 +53,13 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 	sudo pacman -S reflector --noconfirm --needed
 	sudo reflector --verbose --protocol https --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
 	sudo systemctl enable reflector.timer # Update mirrorlist weekly
+fi
+
+# Wine and config settings for Heroic Games Launcher
+if [ ! -d "$HOME/.config/heroic" ]; then
+	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
+	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
+	$HOME/.my_scripts/wine-ge-custom.sh
 fi
 
 # Install CachyOS repo
