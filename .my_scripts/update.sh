@@ -37,6 +37,9 @@ update_packages(){
 			~/.my_scripts/kernel.sh
 		fi
 	fi
+
+	# Update wine-ge-custom
+	$HOME/.my_scripts/wine-ge-custom.sh
 }
 
 # Check for an internet connection

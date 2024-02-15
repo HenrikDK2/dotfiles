@@ -45,12 +45,17 @@
     "wineCrossoverBottle": "Heroic",
     "winePrefix": "/home/#NAME/Games/Heroic/Prefixes/default",
     "wineVersion": {
-      "bin": "/usr/share/steam/compatibilitytools.d/proton-ge-custom/proton",
-      "name": "Proton - proton-ge-custom",
-      "type": "proton"
+      "bin": "/home/#NAME/.config/heroic/tools/wine/Wine-GE-Latest/bin/wine",
+      "name": "Wine - Wine-GE-Latest",
+      "type": "wine",
+      "lib": "/home/#NAME/.config/heroic/tools/wine/Wine-GE-Latest/lib64",
+      "lib32": "/home/#NAME/.config/heroic/tools/wine/Wine-GE-Latest/lib",
+      "wineserver": "/home/#NAME/.config/heroic/tools/wine/Wine-GE-Latest/bin/wineserver"
     },
     "enableEsync": true,
     "enableFsync": true,
+    "eacRuntime": true,
+    "battlEyeRuntime": true,
     "framelessWindow": false,
     "useSteamRuntime": true,
     "showMangohud": true

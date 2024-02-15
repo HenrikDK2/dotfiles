@@ -23,10 +23,11 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Config settings for Heroic Games Launcher
+# Wine and config settings for Heroic Games Launcher
 if [ ! -d "$HOME/.config/heroic" ]; then
 	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
 	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
+	$HOME/.my_scripts/wine-ge-custom.sh
 fi
 
 # Add hostname to /etc/hosts file
@@ -41,7 +42,7 @@ if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 fi
 
 # Install required packages for building/scripts
-sudo pacman -S base-devel fzy bc curl wget --noconfirm --needed
+sudo pacman -S base-devel bc curl jq wget --noconfirm --needed
 
 # Makepkg related packages (Flags in ~/.makepkg.conf)
 sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
@@ -134,8 +135,8 @@ elif [[ $(get_primary_gpu) == "intel" ]]; then
 fi
 
 # Packages
-yay -S heroic-games-launcher-bin proton-ge-custom-bin ttf-ms-fonts all-repository-fonts cmst swaylock-effects-git --needed --noconfirm
-sudo pacman -S alacritty btop cabextract code connman cups dbus-broker dconf deluge deluge-gtk discord dnsmasq firefox fish fisher fuse gamemode gamescope glib2 gnome-keyring grim gvfs gvfs-mtp imv lib32-gamemode lib32-libvdpau lib32-mangohud lib32-pipewire-jack libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db mangohud micro mpv nemo nemo-fileroller nemo-preview npm ntfs-3g openvr p7zip pavucontrol pciutils pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse polkit polkit-gnome qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp steam swappy sway swaybg tesseract-data-eng thunderbird ufw unrar unzip waybar wayland-protocols wine wireplumber wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
+yay -S heroic-games-launcher-bin ttf-ms-fonts all-repository-fonts cmst swaylock-effects-git --needed --noconfirm
+sudo pacman -S alacritty btop cabextract code connman cups dbus-broker dconf deluge deluge-gtk discord dnsmasq firefox fish fisher fuse gamemode gamescope glib2 gnome-keyring grim gvfs gvfs-mtp imv lib32-gamemode lib32-libvdpau lib32-mangohud lib32-pipewire-jack libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db mangohud micro mpv nemo nemo-fileroller nemo-preview npm ntfs-3g openvr p7zip pavucontrol pciutils pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse polkit polkit-gnome qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp steam swappy sway swaybg tesseract-data-eng thunderbird ufw unrar unzip waybar wayland-protocols wireplumber wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
 
 # Make user part of the games group (Allows proton to set niceness of process)
 sudo usermod -a -G games $(whoami)
