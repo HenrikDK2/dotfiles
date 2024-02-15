@@ -55,13 +55,15 @@ if [ -z "$(pacman -Qe | grep reflector)" ]; then
 	sudo systemctl enable reflector.timer # Update mirrorlist weekly
 fi
 
-# Wine and config settings for Heroic Games Launcher
+# Config settings for Heroic Games Launcher
 if [ ! -d "$HOME/.config/heroic" ]; then
 	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
 	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
-	$HOME/.my_scripts/wine-ge-custom.sh
 fi
 
+# Install wine-ge-custom 
+$HOME/.my_scripts/wine-ge-custom.sh
+	
 # Install CachyOS repo
 $HOME/.my_scripts/init/scripts/cachyos-repo.sh
 
