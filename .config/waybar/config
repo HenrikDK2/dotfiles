@@ -85,7 +85,7 @@
   },
   "network": {
     "format-wifi": "  {signalStrength}%",
-    "format-ethernet": "  {ipaddr}",
+    "format-ethernet": "  {ifname}",
     "on-click": "cmst",
     "format-linked": "  {ifname} (No IP)",
     "format-disconnected": "⚠  Disconnected"
