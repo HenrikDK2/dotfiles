@@ -1,0 +1,12 @@
+[Unit]
+Description=Sort mirrors by fastest
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mirrors.sh
+
+[Install]
+WantedBy=multi-user.target

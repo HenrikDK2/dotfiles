@@ -1,0 +1,10 @@
+[Unit]
+Description=Run mirrors.service weekly
+
+[Timer]
+OnCalendar=weekly
+OnBootSec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

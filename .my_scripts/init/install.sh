@@ -48,24 +48,20 @@ if [ -z "$(pacman -Qe | grep yay)" ]; then
 	rm -rf ./yay
 fi
 
-# Reflector - Get latest mirrors
-if [ -z "$(pacman -Qe | grep reflector)" ]; then
-	sudo pacman -S reflector --noconfirm --needed
-	sudo reflector --verbose --protocol https --latest 10 --sort rate --save /etc/pacman.d/mirrorlist
-	sudo systemctl enable reflector.timer # Update mirrorlist weekly
-fi
-
 # Config settings for Heroic Games Launcher
 if [ ! -d "$HOME/.config/heroic" ]; then
 	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
 	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
 fi
 
-# Install wine-ge-custom 
-$HOME/.my_scripts/wine-ge-custom.sh
-	
 # Install CachyOS repo
 $HOME/.my_scripts/init/scripts/cachyos-repo.sh
+
+# Sort fastest mirrors weekly
+$HOME/.my_scripts/init/scripts/mirrors.sh
+
+# Install wine-ge-custom 
+$HOME/.my_scripts/wine-ge-custom.sh
 
 # Improve ext4 performance
 $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
