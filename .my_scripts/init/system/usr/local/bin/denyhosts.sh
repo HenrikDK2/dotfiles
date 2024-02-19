@@ -23,6 +23,7 @@ update_hosts(){
         sed -i '/^[ \t]*#/d;/^[[:space:]]*$/d' /tmp/denyhosts.txt
 		sed -i '1,7d' /tmp/denyhosts.txt
 		sed -i 's/127.0.0.1[ \t]*/0.0.0.0 /g' /tmp/denyhosts.txt
+		sed -i '/fe80::1%lo0/d' /tmp/denyhosts.txt
         awk -i inplace '!seen[$0]++' /tmp/denyhosts.txt
 
         # Replace current hosts.deny with new one
