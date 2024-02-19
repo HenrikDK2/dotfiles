@@ -25,6 +25,7 @@ input * {
     bindsym $mod+space exec ~/.config/sway/wofi.sh
     floating_modifier $mod normal
     bindsym $mod+home reload
+    bindsym $mod+m exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 #
 # Moving around:
