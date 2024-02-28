@@ -72,6 +72,9 @@ $HOME/.my_scripts/init/scripts/avoid_stalls_memory.sh
 # Add bootloader entries, and install kernel
 $HOME/.my_scripts/init/scripts/bootloader.sh
 
+# Enable AMD overclocking service/script
+$HOME/.my_scripts/init/scripts/amd_oc.sh
+
 # Ultrawide gaps on workspace 1
 clear
 printf "Only for 5120x1440 ultrawide monitor!\n\n"

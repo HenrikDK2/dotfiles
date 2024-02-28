@@ -1,9 +1,7 @@
 #!/bin/sh
 
 # CHANGE OC VALUES BEFORE RUNNING SCRIPT, THIS IS JUST AN EXAMPLE FILE FOR MY CURRENT OC!
-
 # Some changes might be needed for different generations of AMD GPU, however this works on RDNA3.
-# Run this as a simple service script at boot, or through some other means.
 
 if [ -e /sys/class/drm/card0 ]; then
     GPU_CARD="card0"
