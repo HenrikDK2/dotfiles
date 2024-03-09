@@ -1,7 +1,7 @@
 # Welcome to my dotfiles
 
-![20230609-162049](https://github.com/HenrikDK2/dotfiles/assets/30632653/f785198b-9339-457e-b58d-5e80eaecf11b)
-![20230609-162658](https://github.com/HenrikDK2/dotfiles/assets/30632653/5bf760b1-947b-427d-85a9-d53ae10cf21f)
+![20240308-085741](https://github.com/HenrikDK2/dotfiles/assets/30632653/2356ff00-1e85-44dc-a348-05494f9ce953)
+![20240308-085940](https://github.com/HenrikDK2/dotfiles/assets/30632653/8473e129-bf4c-451b-9a16-22a6d8330f71)
 
 My dotfiles are intended for personal usage, but feel free to make use of them as well. They include all of my configuration files, along with tweaks for system files. I always incorporate these tweaks on my system to enhance responsiveness, gaming performance, and security, when setting up new systems.
 
@@ -33,3 +33,4 @@ The install script expects Arch Linux to be setup with `sudo`, `git`, `connman`,
    ```
 
 3. Now you're almost done! As a normal user, execute the installation script `~/.my_scripts/init/install.sh` and follow the simple instructions to complete the installation process.
+
