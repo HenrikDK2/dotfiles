@@ -20,6 +20,7 @@ export MANGOHUD=1
 #export MOZ_ENABLE_WAYLAND=1 Disabled until copy/paste works again
 export MOZ_WEBRENDER=1
 
+export XDG_CURRENT_DESKTOP=sway
 export RTC_USE_PIPEWIRE=true
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export OBS_VKCAPTURE=1
