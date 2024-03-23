@@ -7,8 +7,8 @@ connected() {
 }
 
 # Check if Mullvad VPN is active based on the status
-if (mullvad status | grep -q "Connected to"); then
-	connected "$(mullvad status)"
+if (mullvad status | grep -q "^Connected to"); then
+	connected;
 fi
 
 # Check if NordVPN is active
