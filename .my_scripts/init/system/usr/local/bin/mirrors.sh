@@ -12,7 +12,7 @@ fi
 
 # Update arch mirrors
 TMPFILE="$(mktemp)"
-rate-mirrors --save=$TMPFILE --protocol=https arch --max-delay=7200 \
+rate-mirrors --save=$TMPFILE --allow-root --protocol=https arch --max-delay=43200 \
 	&& cat $TMPFILE | sudo tee /etc/pacman.d/mirrorlist
 
 # Update cachyos mirrors
