@@ -11,9 +11,7 @@ if ! command -v cachyos-rate-mirrors &> /dev/null; then
 fi
 
 # Update arch mirrors
-TMPFILE="$(mktemp)"
-rate-mirrors --save=$TMPFILE --allow-root --protocol=https arch --max-delay=43200 \
-	&& cat $TMPFILE | sudo tee /etc/pacman.d/mirrorlist
+rate-mirrors --disable-comments-in-file --allow-root --protocol=https arch  | sudo tee /etc/pacman.d/mirrorlist
 
 # Update cachyos mirrors
 cachyos-rate-mirrors
