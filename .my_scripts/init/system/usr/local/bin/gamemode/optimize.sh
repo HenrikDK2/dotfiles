@@ -33,6 +33,7 @@ set_prio "pipewire*" -19
 set_prio "wireplumber*" -19
 set_prio "systemd-journald" 20 3
 set_prio "systemd-timesyncd" 20 3
+set_prio "swww-daemon" 20 3
 set_prio "cups" 20 3
 set_prio "corectrl" 20 3
 set_prio "mako" 20 3

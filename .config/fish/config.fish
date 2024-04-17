@@ -27,7 +27,6 @@ if status is-interactive
 
     # On login
     if test -z "$DISPLAY"; and test (tty) = /dev/tty1
-        $HOME/.config/sway/random_wallpaper.sh
         sway
     end
 
