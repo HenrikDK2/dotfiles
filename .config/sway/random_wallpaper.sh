@@ -24,7 +24,7 @@ fi
 
 while true; do
     for wallpaper in "${wallpapers[@]}"; do
-        swww img -t outer --transition-step 90 --transition-pos 'top-right' "$wallpaper"
+        swww img -t 'fade' --transition-duration '1.5' "$wallpaper"
         sleep 10m
     done
 	
