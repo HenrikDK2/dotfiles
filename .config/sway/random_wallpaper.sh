@@ -31,4 +31,6 @@ echo "output * {
 }" > $bg_conf
 
 # Reload sway
-swaymsg reload
+if pgrep -x "sway" > /dev/null; then
+	swaymsg reload
+fi
