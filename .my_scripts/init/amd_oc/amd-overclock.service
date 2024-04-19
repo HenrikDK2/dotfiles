@@ -1,8 +1,5 @@
 [Unit]
 Description=Amd overclock
-Wants=network-online.target
-After=network-online.target
-StartLimitIntervalSec=0
 
 [Service]
 Type=simple
