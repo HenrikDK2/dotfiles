@@ -14,18 +14,13 @@ set_wallpapers(){
     done
 }
 
-if ! pgrep swww-daemon >/dev/null; then
-    swww-daemon &
-	set_wallpapers
-    swww img -t 'none' ${wallpapers[0]}
-    wallpapers=("${wallpapers[@]:1}")
-    sleep 10m
-fi
-
 while true; do
     for wallpaper in "${wallpapers[@]}"; do
-        swww img -t 'fade' --transition-duration '1.5' "$wallpaper"
-        sleep 10m
+        pids=$(pgrep -d' ' swaybg)
+        swaybg -i $wallpaper -m center &
+        sleep 5s
+    	kill $pids
+        sleep 20m
     done
 	
    	set_wallpapers
