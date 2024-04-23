@@ -44,6 +44,10 @@
 !.config/MangoHud/
 !.config/MangoHud/*
 
+
+!.config/discord/
+!.config/discord/settings.json
+
 !.config/systemd/
 !.config/systemd/user/
 !.config/systemd/user/*.d/
