@@ -19,6 +19,7 @@ input * {
 # Basics:
 #
     bindsym $mod+Return exec alacritty
+    bindsym $mod+Shift+Delete exec ~/.config/sway/kill_wine.sh
     bindsym $mod+n exec ~/.local/share/nemo/startup.sh
     bindsym $mod+d kill
     bindsym $mod+space exec ~/.config/sway/wofi.sh
