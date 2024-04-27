@@ -8,8 +8,8 @@ mute_status=$(pactl get-source-mute "$source_name" | awk '{print $2}')
 # Toggle mute
 if [ "$mute_status" == "yes" ]; then
     pactl set-source-mute "$source_name" 0
-    notify-send --urgency=low "Microphone is unmuted"
+    mpg123 $HOME/.config/sway/sounds/unmute.mp3
 elif [ "$mute_status" == "no" ]; then
     pactl set-source-mute "$source_name" 1
-    notify-send --urgency=low "Microphone is muted"
+    mpg123 $HOME/.config/sway/sounds/mute.mp3
 fi
