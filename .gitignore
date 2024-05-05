@@ -135,6 +135,9 @@
 !.local/share/nemo
 !.local/share/nemo/**
 
+!.local/share/Steam
+!.local/share/Steam/steam_dev.cfg
+
 !.local/share/applications
 !.local/share/applications/nemo.desktop
 !.local/share/applications/steam.desktop
