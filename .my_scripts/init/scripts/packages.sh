@@ -3,7 +3,6 @@
 packages=(
     # Fonts
     "cantarell-fonts"
-    "cantarell-fonts"
     "otf-font-awesome"
     "ttf-jetbrains-mono"
     "ttf-ms-fonts"
