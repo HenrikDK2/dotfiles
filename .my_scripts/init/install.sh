@@ -136,7 +136,7 @@ elif [[ $(get_primary_gpu) == "intel" ]]; then
 fi
 
 # Packages
-$HOME/.my_scripts/scripts/packages.sh
+$HOME/.my_scripts/init/scripts/packages.sh
 
 # Make user part of the games group (Allows proton to set niceness of process)
 sudo usermod -a -G games $(whoami)

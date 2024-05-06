@@ -94,8 +94,5 @@ packages=(
     "thunderbird"
 )
 
-# Loop through the array and install packages using yay
-for pkg in "${packages[@]}"; do
-    yay -S "$pkg" --noconfirm --needed
-done
-
+# Install all packages
+yay -S "${packages[@]}" --needed
