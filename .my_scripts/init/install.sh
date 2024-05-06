@@ -136,8 +136,7 @@ elif [[ $(get_primary_gpu) == "intel" ]]; then
 fi
 
 # Packages
-yay -S heroic-games-launcher-bin ttf-ms-fonts ttf-google-fonts-git cmst swaylock-effects-git --needed --noconfirm
-sudo pacman -S alacritty btop cantarell-fonts cabextract code connman cups dbus-broker dconf deluge deluge-gtk discord dnsmasq firefox fish fisher fuse gamemode gamescope glib2 gnome-keyring grim gvfs gvfs-mtp imv lib32-gamemode lib32-libvdpau lib32-mangohud lib32-pipewire-jack libappindicator-gtk2 libappindicator-gtk3 libsecret mako man-db mangohud micro mpv nemo nemo-fileroller nemo-preview npm ntfs-3g openvr p7zip pavucontrol pipewire pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse polkit polkit-gnome qt5-declarative qt5-wayland qt6-declarative qt6-wayland scrot seahorse slurp steam swappy sway swaybg tesseract-data-eng thunderbird ufw unrar unzip waybar wayland-protocols wireplumber wl-clipboard wofi xdg-desktop-portal xdg-desktop-portal-wlr xorg-xwayland --needed
+$HOME/.my_scripts/scripts/packages.sh
 
 # Make user part of the games group (Allows proton to set niceness of process)
 sudo usermod -a -G games $(whoami)
@@ -162,8 +161,8 @@ sudo ufw enable
 sudo timedatectl set-ntp true
 
 # Enable services
-sudo systemctl enable ufw cups dnsmasq denyhosts dbus-broker fstrim.timer
-systemctl --user enable wireplumber dbus-broker
+sudo systemctl enable ufw cups dnsmasq denyhosts fstrim.timer
+systemctl --user enable wireplumber
 
 # Disable services
 systemctl --user mask at-spi-dbus-bus
