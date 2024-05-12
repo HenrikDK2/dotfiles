@@ -124,11 +124,13 @@ user_pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.feeds.sec
 user_pref("cookiebanners.service.mode", 1);
 user_pref("cookiebanners.service.mode.privateBrowsing", 1);
 
+user_pref("general.autoScroll", true);
+user_pref("general.smoothScroll", true);
+
 user_pref("dom.security.unexpected_system_load_telemetry_enabled", false);
 user_pref("beacon.enabled", false);
 user_pref("loop.enabled", false);
 user_pref("telemetry.hybridContent", false);
 user_pref("config.trim_on_minimize", true);
-user_pref("general.autoScroll", true);
 user_pref("alerts.disableSlidingEffect", false);
 user_pref("nglayout.initialpaint.delay", 0);
