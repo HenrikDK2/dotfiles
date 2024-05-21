@@ -49,11 +49,11 @@ if ! ping -c 1 google.com >/dev/null 2>&1; then
 fi
 
 # Sync DB
-sudo pacman -Sy
+sudo pacman -Sy > /dev/null
 
 # Reduce priority of script
-renice -n 20 -p $$ -g $$
-ionice -c 3 -P $$
+renice -n 20 -p $$ -g $$ > /dev/null
+ionice -c 3 -P $$ > /dev/null
 clear
 
 # Check if there are updates available
