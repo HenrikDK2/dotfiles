@@ -18,10 +18,24 @@ get_stable_kernel(){
 	echo "$stable_kernel"
 }
 
+update_normal_packages() {
+	echo -e "\033[1mUpdating packages.\033[0m\n"
+	output=$(yay -Syu --noconfirm)
+
+	# Check if mirror failed
+	if echo "$output" | grep -q "error: failed retrieving file"; then
+	    echo -e "Error detected\n"
+
+	    echo -e "Trying to fix issue by refreshing mirrorlists\n"
+	    sudo /usr/local/bin/mirrors.sh
+		
+	    yay -Syu --noconfirm
+	fi	
+}
+
 update_packages(){
 	# Update normal packages
-	echo -e "\033[1mUpdating packages.\033[0m\n"
-	yay -Syu --noconfirm
+	update_normal_packages
 
 	# Update flatpak packages
 	if command -v flatpak &> /dev/null; then
@@ -54,13 +68,13 @@ sudo pacman -Sy > /dev/null
 # Reduce priority of script
 renice -n 20 -p $$ -g $$ > /dev/null
 ionice -c 3 -P $$ > /dev/null
-clear
 
 # Check if there are updates available
 if [ -n "$(pacman -Qu --check)" ]; then
 	update_packages
 	audit
 else
+	clear
 	echo "No updates available"
 fi
 
