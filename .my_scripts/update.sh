@@ -31,8 +31,6 @@ update_normal_packages() {
 		
 	    yay -Syu --noconfirm
 	fi
-	
-	clear
 }
 
 update_packages(){
@@ -73,6 +71,7 @@ ionice -c 3 -P $$ > /dev/null
 
 # Check if there are updates available
 if [ -n "$(pacman -Qu --check)" ]; then
+	clear
 	update_packages
 	audit
 else
