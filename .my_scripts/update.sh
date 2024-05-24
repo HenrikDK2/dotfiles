@@ -28,8 +28,10 @@ update_normal_packages() {
 
 	    echo -e "Trying to fix issue by refreshing mirrorlists\n"
 	    sudo /usr/local/bin/mirrors.sh
-		
-	    yay -Syu --noconfirm
+
+		clear
+		echo -e "\033[1mUpdating packages.\033[0m\n"
+		yay -Syu --noconfirm
 	fi
 }
 
