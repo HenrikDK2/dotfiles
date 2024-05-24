@@ -20,7 +20,7 @@ get_stable_kernel(){
 
 update_normal_packages() {
 	echo -e "\033[1mUpdating packages.\033[0m\n"
-	output=$(yay -Syu --noconfirm)
+	output=$(yay -Syu --noconfirm 2>&1 | tee /dev/tty)
 
 	# Check if mirror failed
 	if echo "$output" | grep -q "error: failed retrieving file"; then
@@ -30,7 +30,9 @@ update_normal_packages() {
 	    sudo /usr/local/bin/mirrors.sh
 		
 	    yay -Syu --noconfirm
-	fi	
+	fi
+	
+	clear
 }
 
 update_packages(){
