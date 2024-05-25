@@ -35,16 +35,7 @@ update_normal_packages() {
 	fi
 }
 
-update_packages(){
-	# Update normal packages
-	update_normal_packages
-
-	# Update flatpak packages
-	if command -v flatpak &> /dev/null; then
-	  sudo flatpak update --noninteractive
-	fi
-
-	# Update kernel
+update_kernel(){
 	if pacman -Qi "linux-tkg" &> /dev/null; then
 		local stable_kernel=$(get_stable_kernel)
 		local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
@@ -53,9 +44,6 @@ update_packages(){
 			~/.my_scripts/kernel.sh
 		fi
 	fi
-
-	# Update wine-ge-custom
-	$HOME/.my_scripts/wine-ge-custom.sh
 }
 
 # Check for an internet connection
@@ -74,7 +62,22 @@ ionice -c 3 -P $$ > /dev/null
 # Check if there are updates available
 if [ -n "$(pacman -Qu --check)" ]; then
 	clear
-	update_packages
+
+	# Update packages
+	update_normal_packages
+
+	# Update flatpak packages
+	if command -v flatpak &> /dev/null; then
+	  sudo flatpak update --noninteractive
+	fi
+
+	# Update custom built kernel
+	update_kernel
+
+	# Update wine-ge-custom
+	$HOME/.my_scripts/wine-ge-custom.sh
+
+	# Check for any systemd/journald issues
 	audit
 else
 	clear
