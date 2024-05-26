@@ -10,7 +10,7 @@ main () {
 
 	if ! command -v cachyos-rate-mirrors &> /dev/null; then
 	    echo "Error: cachyos-rate-mirrors command is not available." >&2
-	    exit 1
+	    exit 0
 	fi
 
 	# Check for an internet connection
