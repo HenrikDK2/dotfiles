@@ -78,6 +78,7 @@ packages=(
 
     # Gaming
     "discord"
+    "wine"
     "gamemode"
     "gamescope"
     "heroic-games-launcher-bin"
