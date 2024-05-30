@@ -26,10 +26,6 @@
         "key": "AMD_VULKAN_ICD",
         "value": "RADV"
       },
-      {
-        "key": "MANGOHUD",
-        "value": "1"
-      }
     ],
     "wrapperOptions": [
       {
@@ -58,7 +54,7 @@
     "battlEyeRuntime": true,
     "framelessWindow": false,
     "useSteamRuntime": true,
-    "showMangohud": true
+    "showMangohud": false
   },
   "version": "v0"
 }
