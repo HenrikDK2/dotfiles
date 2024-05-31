@@ -1,7 +1,12 @@
 #!/bin/sh
 
-# CHANGE OC VALUES BEFORE RUNNING SCRIPT, THIS IS JUST AN EXAMPLE FILE FOR MY CURRENT OC!
+# CHANGE OC VARIABLE VALUES BEFORE RUNNING SCRIPT, THIS IS JUST AN EXAMPLE FILE FOR MY CURRENT OC!
 # Some changes might be needed for different generations of AMD GPU, however this works on RDNA3.
+
+voltage_offset="-30"
+core_clock="2950"
+memory_clock="1300"
+powerlimit="327" # Watts
 
 if [ -e /sys/class/drm/card0 ]; then
     GPU_CARD="card0"
@@ -19,18 +24,22 @@ PP_OD_CLK_VOLTAGE="/sys/class/drm/$GPU_CARD/device/pp_od_clk_voltage"
 POWER_CAP="/sys/class/drm/$GPU_CARD/device/hwmon/$HWMON/power1_cap"
 
 # Voltage offset
-echo "vo -30" > $PP_OD_CLK_VOLTAGE
+echo "vo $voltage_offset" > $PP_OD_CLK_VOLTAGE
 
-# Max core clock
-echo "s 1 2950" > $PP_OD_CLK_VOLTAGE
+# Core clock
+echo "s 1 $core_clock" > $PP_OD_CLK_VOLTAGE
 
-# Max memory clock
-echo "m 1 1300" > $PP_OD_CLK_VOLTAGE
+# Memory clock
+echo "m 1 $memory_clock" > $PP_OD_CLK_VOLTAGE
 
 # Powerlimit (327W)
-#echo "327000000" > $POWER_CAP
+#echo "$powerlimit" > $POWER_CAP
 
 # Apply settings
 echo "c" > $PP_OD_CLK_VOLTAGE
 
-exit 0
+# Hacky fix to solve memory clock sometimes getting stock
+sleep 5
+memory_clock=$((memory_clock + 1))
+echo "m 1 $memory_clock" > $PP_OD_CLK_VOLTAGE
+echo "c" > $PP_OD_CLK_VOLTAGE

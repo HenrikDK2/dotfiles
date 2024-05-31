@@ -49,3 +49,6 @@ fi
 if [[ -z $(sudo docker ps -q) ]]; then
   stop_service docker
 fi
+
+# Start amd_overclock service
+sudo systemctl start amd_overclock
