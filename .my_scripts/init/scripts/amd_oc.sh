@@ -1,34 +1,31 @@
 #!/bin/bash
 
 source $HOME/.my_scripts/init/scripts/functions.sh
-oc_dir="$HOME/.my_scripts/init/amd_oc"
 
 # ANSI escape codes for yellow color
 yellow='\033[1;33m'
 reset='\033[0m' # reset to default color
+conf_file="/etc/amd-overclock.conf"
 
-script="$oc_dir/oc.sh"
-service="$oc_dir/amd-overclock.service"
-
-script_dest="/usr/local/bin/oc.sh"
-service_dest="/etc/systemd/system/amd-overclock.service"
-
-if [  $(get_primary_gpu) = "amd" ] && [ ! -f "$script_dest" ]; then
-	clear
-	printf "Do you want to enable AMD overclocking via. system file/service?\n\n"
-	printf "${yellow}$script_dest${reset} echo values will be commented by default.\n"
-	printf "You will need to modify ${yellow}$script_dest${reset} for values that work with your GPU?"
+if [ "$(get_primary_gpu)" = "amd" ] && ! systemctl is-enabled amd-overclock >/dev/null 2>&1; then
+ 	clear
+	printf "Do you want to enable AMD overclocking via. system service?"
 
 	if confirm; then
-		sudo cp "$script" "$script_dest"
-		sudo cp "$service" "$service_dest"
-		sudo systemctl enable amd-overclock.service
+		# Comment out each variable in the config file
+		sudo sed -i 's/^\(VOLTAGE_OFFSET=.*\)/#\1/' "$conf_file"
+		sudo sed -i 's/^\(CORE_CLOCK=.*\)/#\1/' "$conf_file"
+		sudo sed -i 's/^\(MEMORY_CLOCK=.*\)/#\1/' "$conf_file"
+		sudo sed -i 's/^\(MAX_WATTS_POWERLIMIT=.*\)/#\1/' "$conf_file"
+		clear
+		
+		printf "Overclock values will be commented by default.\n\n"
+		printf "You will need to modify ${yellow}$conf_file${reset}"
 
-		while IFS= read -r line; do
-			if [[ $line == "echo"* ]]; then
-		    	sudo sed -i 's/^echo/#echo/' "$script_dest"
-		    	break
-		 	fi
-		done < "$script_dest"
+		printf "\n\n"
+		read -p "Press enter to continue"
+
+		sudo xdg-open $conf_file
+		sudo systemctl enable amd-overclock.service
 	fi
 fi
