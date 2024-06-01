@@ -23,7 +23,7 @@ fi
 GPU="/sys/class/drm/$GPU_CARD/device"
 PP_OD_CLK_VOLTAGE="$GPU/pp_od_clk_voltage"
 POWER_CAP="$GPU/hwmon/$HWMON/power1_cap"
-CURRENT_MEMORY_SPEED="$GPU/hwmon/$HWMON/power1_cap"
+CURRENT_MEMORY_SPEED=$(grep '*' "$GPU/pp_dpm_mclk" | awk '{print $2}')
 
 # Voltage offset
 echo "vo $VOLTAGE_OFFSET" > $PP_OD_CLK_VOLTAGE
@@ -42,7 +42,10 @@ echo "c" > $PP_OD_CLK_VOLTAGE
 
 # Fix memory stuck
 while true; do
-	if [[ "$MEMORY_SPEED" == "772Mhz" ]]; then
+
+	# Only the default memory speeds are present in pp_dpm_mclk, if the value is empty that means the overclocked memory clock is applied.
+	# However if not empty, it will try to fix the stuck memory speed. 
+	if [[ "$CURRENT_MEMORY_SPEED" != "" ]]; then
 		echo "m 1 $(($MEMORY_CLOCK + 1))" > $PP_OD_CLK_VOLTAGE
 		echo "c" > $PP_OD_CLK_VOLTAGE
 		sleep 5
