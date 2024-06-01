@@ -63,16 +63,18 @@ echo "Applying settings."
 echo "c" > $PP_OD_CLK_VOLTAGE
 
 # Check if memory speed is stuck
-while true; do
-	CURRENT_MEMORY_SPEED=$(grep '*' "$GPU/pp_dpm_mclk" | awk '{print $2}')
+if [ ! -z "$MEMORY_CLOCK" ]; then
+	while true; do
+		CURRENT_MEMORY_SPEED=$(grep '*' "$GPU/pp_dpm_mclk" | awk '{print $2}')
 
-    if [[ "$CURRENT_MEMORY_SPEED" != "" ]]; then
-        echo "m 1 $(($MEMORY_CLOCK + 1))" > $PP_OD_CLK_VOLTAGE
-        echo "c" > $PP_OD_CLK_VOLTAGE
-        sleep 5
-        echo "m 1 $MEMORY_CLOCK" > $PP_OD_CLK_VOLTAGE
-        echo "c" > $PP_OD_CLK_VOLTAGE
-    fi
+	    if [[ "$CURRENT_MEMORY_SPEED" != "" ]]; then
+	        echo "m 1 $(($MEMORY_CLOCK + 1))" > $PP_OD_CLK_VOLTAGE
+	        echo "c" > $PP_OD_CLK_VOLTAGE
+	        sleep 5
+	        echo "m 1 $MEMORY_CLOCK" > $PP_OD_CLK_VOLTAGE
+	        echo "c" > $PP_OD_CLK_VOLTAGE
+	    fi
 
-    sleep 300
-done
+	    sleep 300
+	done
+fi
