@@ -3,6 +3,11 @@ Description=Amd overclock
 
 [Service]
 Type=simple
+Restart=always
+RestartSec=3
+Nice=19
+IOSchedulingClass=idle
+IOSchedulingPriority=7
 ExecStart=/usr/local/bin/oc.sh
 
 [Install]
