@@ -1,5 +1,7 @@
 [Unit]
 Description=Run mirrors.service weekly
+After=network-online.target
+Wants=network-online.target
 
 [Timer]
 OnBootSec=15min
