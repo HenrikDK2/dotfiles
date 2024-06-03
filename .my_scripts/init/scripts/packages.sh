@@ -8,14 +8,13 @@ packages=(
     "ttf-ms-fonts"
 
     # Sound
-    "lib32-pipewire-jack"
-    "pavucontrol"
     "pipewire"
     "pipewire-audio"
     "pipewire-alsa"
     "pipewire-jack"
     "pipewire-pulse"
     "wireplumber"
+    "pavucontrol"
 
     # Networking
     "cmst"
