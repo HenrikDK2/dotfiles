@@ -28,17 +28,11 @@ if [ "$(get_primary_gpu)" = "amd" ] && ! systemctl is-enabled amd-overclock >/de
 		# Edit config file 
 		if [ ! -z "$EDITOR" ]; then
 			sudo $EDITOR $conf_file
-		fi
-
-		if command -v xdg-open >/dev/null 2>&1; then
+		elif command -v xdg-open >/dev/null 2>&1; then
 			sudo xdg-open $conf_file
-		fi
-
-		if command -v micro; then
+		elif command -v micro; then
 			sudo micro $conf_file
-		fi
-
-		if command -v nano; then
+		elif command -v nano; then
 			sudo nano $conf_file
 		fi
 
