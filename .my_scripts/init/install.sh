@@ -99,6 +99,7 @@ if confirm; then
     cp -r ~/.my_scripts/init/.mozilla ~/.mozilla;
     cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-release; 
 	cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-nightly; 
+	sed -i "s/\/home\/henrik/\/home\/$(whoami)/g" $HOME/.mozilla/firefox/vem3poti.dev-edition-default/extensions.json
 fi
 
 # Install Virt-manager

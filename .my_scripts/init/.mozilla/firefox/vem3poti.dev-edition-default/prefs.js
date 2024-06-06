@@ -20,7 +20,9 @@ user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("browser.fullscreen.animateUp", false);
 user_pref("browser.fullscreen.animate", 0);
 user_pref("browser.download.animateNotifications", false);
+user_pref("browser.discovery.enabled", false);
 user_pref("browser.preferences.animateFadeIn", false);
+
 user_pref("browser.newtabpage.activity-stream.pocketCta", "");
 user_pref("browser.newtabpage.activity-stream.section.highlights.includePocket", false);
 user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
@@ -68,6 +70,7 @@ user_pref("privacy.trackingprotection.origin_telemetry.enabled", false);
 user_pref("privacy.webrtc.legacyGlobalIndicator", false);
 user_pref("privacy.webrtc.hideGlobalIndicator", true);
 user_pref("privacy.donottrackheader.enabled", true);
+user_pref("privacy.globalprivacycontrol.enabled", true);
 user_pref("privacy.trackingprotection.enabled", true);
 user_pref("privacy.trackingprotection.pbmode.enabled", true);
 
@@ -104,6 +107,13 @@ user_pref("extensions.pocket.onSaveRecs", false);
 user_pref("extensions.pocket.onSaveRecs.locales", "");
 user_pref("extensions.pocket.showHome", false);
 user_pref("extensions.pocket.site", "0.0.0.0");
+user_pref("extensions.abuseReport.amWebAPI.enabled", false);
+user_pref("extensions.abuseReport.amoFormEnabled", false);
+user_pref("extensions.abuseReport.enabled", false);
+user_pref("extensions.pictureinpicture.enable_picture_in_picture_overrides", false);
+user_pref("extensions.htmlaboutaddons.inline-options.enabled", false);
+user_pref("extensions.screenshots.disabled", true);
+user_pref("extensions.htmlaboutaddons.inline-options.enabled", false);
 
 user_pref("app.shield.optoutstudies.enabled", false);
 user_pref("app.normandy.enabled", false);
