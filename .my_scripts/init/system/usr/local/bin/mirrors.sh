@@ -1,28 +1,21 @@
 #!/bin/bash
 
-internet_loops=0
+if ! command -v rate-mirrors &> /dev/null; then
+    echo "Error: rate-mirrors command is not available." >&2
+    exit 1
+fi
+
+if ! command -v cachyos-rate-mirrors &> /dev/null; then
+    echo "Error: cachyos-rate-mirrors command is not available." >&2
+    exit 1
+fi
 
 main () {
-	if ! command -v rate-mirrors &> /dev/null; then
-	    echo "Error: rate-mirrors command is not available." >&2
-	    exit 1
-	fi
-
-	if ! command -v cachyos-rate-mirrors &> /dev/null; then
-	    echo "Error: cachyos-rate-mirrors command is not available." >&2
-	    exit 0
-	fi
-
-	# Check for an internet connection
+	# Service should first start when network is online
+	# But if for some reason connection isn't found it will continue to loop every minute
 	if ! ping -c 1 google.com >/dev/null 2>&1; then
-	  if $internet_loops -lt 10; then
-		sleep 10
-		internet_loops=$((internet_loops + 1))
+		sleep 1m
 		main
-	  else
-	  	echo "An internet connection is required to run this script."
-	  	exit 1
-	  fi
 	fi
 
 	# Update arch mirrors
