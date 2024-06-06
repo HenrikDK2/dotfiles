@@ -25,7 +25,24 @@ if [ "$(get_primary_gpu)" = "amd" ] && ! systemctl is-enabled amd-overclock >/de
 		printf "\n\n"
 		read -p "Press enter to continue"
 
-		sudo xdg-open $conf_file
+		# Edit config file 
+		if [ ! -z "$EDITOR" ]; then
+			sudo $EDITOR $conf_file
+		fi
+
+		if command -v xdg-open >/dev/null 2>&1; then
+			sudo xdg-open $conf_file
+		fi
+
+		if command -v micro; then
+			sudo micro $conf_file
+		fi
+
+		if command -v nano; then
+			sudo nano $conf_file
+		fi
+
+		# Enable service
 		sudo systemctl enable amd-overclock.service
 	fi
 fi
