@@ -22,6 +22,10 @@ kernel_params=(
 	# Reduce writes to SSD 
 	"rootflags=noatime"
 
+	# Stop rfkill from soft-blocking
+	"rfkill.default_state=1"
+	"rfkill.master_switch_mode=2"
+
 	# Disable watchdog to reduce overhead
 	"nowatchdog"
 	"nomce"

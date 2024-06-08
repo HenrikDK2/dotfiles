@@ -172,5 +172,8 @@ sudo systemctl mask systemd-userdbd systemd-userdbd.socket accounts-daemon rtkit
 # Remove initial pacsave/pacnew files
 sudo find /etc -name "*.pacnew" -o -name "*.pacsave" | xargs sudo rm;
 
+# Unblock bluetooth
+sudo rfkill unblock bluetooth
+
 # Reboot
 for i in {5..1}; do echo "Rebooting in $i..."; sleep 1; done; reboot
