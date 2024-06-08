@@ -6,6 +6,7 @@ packages=(
     "otf-font-awesome"
     "ttf-jetbrains-mono"
     "ttf-ms-fonts"
+    "ttf-droid"
 
     # Sound
     "pipewire"
