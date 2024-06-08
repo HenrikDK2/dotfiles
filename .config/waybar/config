@@ -64,10 +64,10 @@
       "weeks-pos": "right",
       "format": {
         "months": "<span size='16pt' rise='16pt' color='#ffead3'><b>{}</b></span>",
-        "days": "<span size='13pt' color='#e5eaf0'><b>{}</b></span>",
-        "weeks": "<span color='#99ffdd'><b>W{:%U}</b></span>",
-        "weekdays": "<span size='13pt' color='#ffcc66'><b>{}</b></span>",
-        "today": "<span size='14pt' color='#8fbbba'><b><u>{}</u></b></span>"
+        "days": "<span size='15pt' color='#e5eaf0'><b>{}</b></span>",
+        "weeks": "<span color='#8fbbba'><b>W{:%U}</b></span>",
+        "weekdays": "<span size='15pt' color='#ffcc66'><b>{}</b></span>",
+        "today": "<span size='15pt' color='#99ffdd'><b><u>{}</u></b></span>"
       }
     }
   },
