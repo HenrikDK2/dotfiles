@@ -28,7 +28,6 @@ kernel_params=(
 
 	# Disable watchdog to reduce overhead
 	"nowatchdog"
-	"nomce"
 	"nmi_watchdog=0"
 	"module_blacklist=iTCO_wdt"
 
