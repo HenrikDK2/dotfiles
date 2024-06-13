@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Proton BattlEye Runtime
+Comment=Play this game on Steam
+Exec=steam steam://rungameid/1161040
+Icon=steam
+Terminal=false
+Type=Application
+Categories=Game;
+Hidden=true
+NoDisplay=true

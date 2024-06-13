@@ -44,7 +44,6 @@
 !.config/MangoHud/
 !.config/MangoHud/*
 
-
 !.config/discord/
 !.config/discord/settings.json
 
@@ -142,3 +141,9 @@
 !.local/share/applications/nemo.desktop
 !.local/share/applications/steam.desktop
 !.local/share/applications/discord.desktop
+!.local/share/applications/org.gnome.FileRoller.desktop
+!.local/share/applications/fish.desktop
+!.local/share/applications/Steam Linux Runtime 3.0 (sniper).desktop
+!.local/share/applications/Proton Experimental.desktop
+!.local/share/applications/Proton EasyAntiCheat Runtime.desktop
+!.local/share/applications/Proton BattlEye Runtime.desktop
