@@ -54,6 +54,7 @@ packages=(
     "p7zip"
     "polkit"
     "polkit-gnome"
+    "python-pip"
     "qt5-declarative"
     "qt5-wayland"
     "qt6-declarative"
