@@ -119,8 +119,9 @@ printf "This is for bluetooth.\n\n"
 printf "Do you want to install blueman?"
 
 if confirm; then
-    sudo pacman -S blueman --needed --noconfirm;
+    sudo pacman -S blueman bluez-utils --needed --noconfirm;
     sudo systemctl enable --now bluetooth.service;
+    echo 'power on' | bluetoothctl;
 fi
 
 # GPU drivers
@@ -171,9 +172,6 @@ sudo systemctl mask systemd-userdbd systemd-userdbd.socket accounts-daemon rtkit
 
 # Remove initial pacsave/pacnew files
 sudo find /etc -name "*.pacnew" -o -name "*.pacsave" | xargs sudo rm;
-
-# Unblock bluetooth
-sudo rfkill unblock bluetooth
 
 # Reboot
 for i in {5..1}; do echo "Rebooting in $i..."; sleep 1; done; reboot
