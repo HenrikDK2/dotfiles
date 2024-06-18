@@ -54,9 +54,6 @@ if [ ! -d "$HOME/.config/heroic" ]; then
 	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
 fi
 
-# Install CachyOS repo
-$HOME/.my_scripts/init/scripts/cachyos-repo.sh
-
 # Sort fastest mirrors weekly
 $HOME/.my_scripts/init/scripts/mirrors.sh
 
