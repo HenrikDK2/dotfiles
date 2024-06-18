@@ -75,6 +75,9 @@ $HOME/.my_scripts/init/scripts/bootloader.sh
 # Enable AMD overclocking service/script
 $HOME/.my_scripts/init/scripts/amd_oc.sh
 
+# Android Development
+$HOME/.my_scripts/init/scripts/android_development.sh
+
 # Ultrawide gaps on workspace 1
 clear
 printf "Only for 5120x1440 ultrawide monitor!\n\n"
