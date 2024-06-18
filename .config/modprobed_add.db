@@ -67,6 +67,8 @@ isofs
 jbd2
 joydev
 kvm
+kvm_amd
+kvm_intel
 ledtrig_audio
 libchacha
 libchacha20poly1305
