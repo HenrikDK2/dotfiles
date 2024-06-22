@@ -22,6 +22,9 @@ kernel_params=(
 	# Reduce writes to SSD 
 	"rootflags=noatime"
 
+	# Disable USB power management
+	"usbcore.autosuspend=-1"
+
 	# Stop rfkill from soft-blocking
 	"rfkill.default_state=1"
 	"rfkill.master_switch_mode=2"
