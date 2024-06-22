@@ -7,6 +7,7 @@ packages=(
     "ttf-jetbrains-mono"
     "ttf-ms-fonts"
     "ttf-droid"
+    "ttf-dejavu"
 
     # Sound
     "pipewire"
