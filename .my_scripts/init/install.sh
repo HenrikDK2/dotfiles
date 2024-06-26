@@ -23,9 +23,8 @@ fi
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
-# Add hostname to /etc/hosts file
-HOSTNAME=$(hostnamectl hostname)
-sudo sed -i "s/#HOSTNAME/$HOSTNAME/" /etc/hosts
+# Add host to /etc/hosts file
+echo 127.0.0.1 localhost $(hostname) | sudo tee /etc/hosts
 
 # Enable multilib, DisableDownloadTimeout, and ParallelDownloads
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
