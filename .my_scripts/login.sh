@@ -24,7 +24,7 @@ mullvad connect
 (mako &)
 (waybar &) 
 (thunderbird &)
-(discord -enable-features=UseOzonePlatform -ozone-platform=wayland &)
+(vesktop &)
 
 # Reduce priority of this script
 renice -n 20 $$
