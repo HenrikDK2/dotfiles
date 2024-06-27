@@ -77,6 +77,9 @@ if [ -n "$(pacman -Qu --check)" ]; then
 	# Update wine-ge-custom
 	$HOME/.my_scripts/wine-ge-custom.sh
 
+	# Clear tmp
+	sudo rm -r /tmp/*
+
 	# Check for any systemd/journald issues
 	audit
 else

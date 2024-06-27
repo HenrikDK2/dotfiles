@@ -84,7 +84,7 @@ install_latest_kernel(){
 
 	clear
 	makepkg -si --noconfirm
-	exit 0
+	sudo rm -r /tmp/*
 }
 
 # Check for an internet connection
