@@ -52,40 +52,31 @@ if ! ping -c 1 google.com >/dev/null 2>&1; then
   exit 1
 fi
 
-# Sync DB
-sudo pacman -Sy > /dev/null
-
 # Reduce priority of script
 renice -n 20 -p $$ -g $$ > /dev/null
 ionice -c 3 -P $$ > /dev/null
 
-# Check if there are updates available
-if [ -n "$(pacman -Qu --check)" ]; then
-	clear
+# Update packages
+update_normal_packages
 
-	# Update packages
-	update_normal_packages
-
-	# Update flatpak packages
-	if command -v flatpak &> /dev/null; then
-	  sudo flatpak update --noninteractive
-	fi
-
-	# Update custom built kernel
-	update_kernel
-
-	# Update wine-ge-custom
-	$HOME/.my_scripts/wine-ge-custom.sh
-
-	# Clear tmp
-	sudo rm -r /tmp/*
-
-	# Check for any systemd/journald issues
-	audit
-else
-	clear
-	echo "No updates available"
+# Update flatpak packages
+if command -v flatpak &> /dev/null; then
+  sudo flatpak update --noninteractive
 fi
+
+# Update custom built kernel
+update_kernel
+
+# Update wine-ge-custom
+$HOME/.my_scripts/wine-ge-custom.sh
+
+# Clear files stored in memory
+if [ "$(ls /tmp)" ]; then
+	sudo rm -r /tmp/*
+fi
+
+# Check for any systemd/journald issues
+audit
 
 printf "\n"
 read -p "Press enter to continue"
