@@ -79,7 +79,7 @@ packages=(
     "wl-clipboard"
 
     # Gaming
-    "vesktop-bin" # Discord with better Wayland support
+    "discord"
     "wine"
     "gamemode"
     "gamescope"

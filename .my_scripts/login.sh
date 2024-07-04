@@ -24,7 +24,7 @@ mullvad connect
 (mako &)
 (waybar &) 
 (thunderbird &)
-(vesktop &)
+(discord &)
 
 # Reduce priority of this script
 renice -n 20 $$
