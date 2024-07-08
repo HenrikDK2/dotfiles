@@ -55,7 +55,9 @@ install_latest_kernel(){
 
 	# Enable full LTO and use the LLVM compiler
 	set_config "_lto_mode" "full"
-	set_config "_compiler" "llvm"
+
+	# Switched to gcc until llvm problem is fixed: (https://gitlab.archlinux.org/archlinux/packaging/packages/pahole/-/issues/1)
+	set_config "_compiler" "gcc"
 
 	# Force the use of the LLVM Integrated Assembler
 	set_config "_llvm_ias" "1"
