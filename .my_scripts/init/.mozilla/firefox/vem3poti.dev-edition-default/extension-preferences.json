@@ -25,5 +25,6 @@
   "wikipedia@search.mozilla.org": { "permissions": ["internal:svgContextPropertiesAllowed"], "origins": [] },
   "bing@search.mozilla.org": { "permissions": ["internal:svgContextPropertiesAllowed"], "origins": [] },
   "{e58d3966-3d76-4cd9-8552-1582fbc800c1}": { "permissions": ["internal:privateBrowsingAllowed"], "origins": [] },
-  "idcac-pub@guus.ninja": { "permissions": ["internal:privateBrowsingAllowed"], "origins": [] }
+  "idcac-pub@guus.ninja": { "permissions": ["internal:privateBrowsingAllowed"], "origins": [] },
+  "jid1-ZAdIEUB7XOzOJw@jetpack": { "permissions": ["internal:privateBrowsingAllowed"], "origins": [] }
 }

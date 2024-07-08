@@ -3464,6 +3464,397 @@
       "recommendationState": null,
       "rootURI": "jar:file:///home/henrik/.mozilla/firefox/vem3poti.default-release/extensions/idcac-pub@guus.ninja.xpi!/",
       "location": "app-profile"
+    },
+    {
+      "id": "jid1-ZAdIEUB7XOzOJw@jetpack",
+      "syncGUID": "{68297f06-1290-48fc-afec-37ba78b387bb}",
+      "version": "2024.6.13",
+      "type": "extension",
+      "loader": null,
+      "updateURL": null,
+      "installOrigins": null,
+      "manifestVersion": 2,
+      "optionsURL": "html/options.html",
+      "optionsType": 5,
+      "optionsBrowserStyle": true,
+      "aboutURL": null,
+      "defaultLocale": {
+        "name": "DuckDuckGo Privacy Essentials",
+        "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+        "creator": null,
+        "developers": null,
+        "translators": null,
+        "contributors": null
+      },
+      "visible": true,
+      "active": true,
+      "userDisabled": false,
+      "appDisabled": false,
+      "embedderDisabled": false,
+      "installDate": 1720420720883,
+      "updateDate": 1720420720883,
+      "applyBackgroundUpdates": 1,
+      "path": "/home/henrik/.mozilla/firefox/vem3poti.default-release/extensions/jid1-ZAdIEUB7XOzOJw@jetpack.xpi",
+      "skinnable": false,
+      "sourceURI": "https://addons.mozilla.org/firefox/downloads/file/4302639/duckduckgo_for_firefox-2024.6.13.xpi",
+      "releaseNotesURI": null,
+      "softDisabled": false,
+      "foreignInstall": false,
+      "strictCompatibility": true,
+      "locales": [
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["en"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["ja"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["et"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["pt-PT"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["fr"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["bg"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["id"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["sv"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["cs"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["hu"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["ar"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["ko"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["it"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["no"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["lt"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["de"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["en-GB"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["nb"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["ca"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["sk"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["zh-CN"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["ru"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["pl"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["sl"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["lv"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["hr"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["fi"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["ro"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["el"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["es"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["zh-TW"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["da"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["tr"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["zh-HK"]
+        },
+        {
+          "name": "DuckDuckGo Privacy Essentials",
+          "description": "Privacy, simplified. Protect your data as you search and browse: tracker blocking, smarter encryption, private search, and more.",
+          "creator": null,
+          "developers": null,
+          "translators": null,
+          "contributors": null,
+          "locales": ["nl"]
+        }
+      ],
+      "targetApplications": [{ "id": "toolkit@mozilla.org", "minVersion": "102.0", "maxVersion": "*" }],
+      "targetPlatforms": [],
+      "signedState": 2,
+      "signedTypes": [2, 1],
+      "signedDate": 1719567055000,
+      "seen": true,
+      "dependencies": [],
+      "incognito": "spanning",
+      "userPermissions": {
+        "permissions": [
+          "activeTab",
+          "alarms",
+          "contextMenus",
+          "storage",
+          "tabs",
+          "webNavigation",
+          "webRequest",
+          "webRequestBlocking"
+        ],
+        "origins": ["*://*/*", "<all_urls>"]
+      },
+      "optionalPermissions": { "permissions": [], "origins": [] },
+      "requestedPermissions": { "permissions": [], "origins": [] },
+      "icons": { "16": "img/icon_16.png", "48": "img/icon_48.png", "128": "img/icon_128.png" },
+      "iconURL": null,
+      "blocklistState": 0,
+      "blocklistURL": null,
+      "startupData": null,
+      "hidden": false,
+      "installTelemetryInfo": { "source": "unknown", "sourceURL": "https://duckduckgo.com/", "method": "link" },
+      "recommendationState": {
+        "validNotAfter": 1877355055000,
+        "validNotBefore": 1719567055000,
+        "states": ["recommended"]
+      },
+      "rootURI": "jar:file:///home/henrik/.mozilla/firefox/vem3poti.default-release/extensions/jid1-ZAdIEUB7XOzOJw@jetpack.xpi!/",
+      "location": "app-profile"
     }
   ]
 }

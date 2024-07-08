@@ -25,4 +25,4 @@ default-timeout=15000
 default-timeout=40000
 
 [app-name="discord"]
-default-timeout=0
+default-timeout=40000
