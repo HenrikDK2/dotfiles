@@ -23,3 +23,6 @@ default-timeout=15000
 
 [urgency=high]
 default-timeout=40000
+
+[app-name="discord"]
+default-timeout=0
