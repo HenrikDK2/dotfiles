@@ -5,7 +5,13 @@ source "$parent_path/optimize.sh"
 
 stop_service () {
     while [ -n "$(systemctl --state=running | grep "$1")" ]; do
-        if [ -z "$2" ]; then sudo systemctl stop $1; else sudo systemctl stop $2; fi
+        if [ -z "$2" ]; then
+        	sudo systemctl stop $1;
+       	else 
+       		sudo systemctl stop $2;
+       	fi
+
+       	sleep 3
     done
 }
 
@@ -32,7 +38,7 @@ killall -9 blueman-applet blueman-manager blueman-tray
 # Stop services using memory while not needed
 stop_service upower
 stop_service cups
-stop_service journald systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket
+stop_service journald "systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket"
 stop_service systemd-timesyncd
 
 # Disable split lock mitigation for performance gain in some games, is enabled again on game exit. 
