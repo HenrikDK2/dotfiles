@@ -1,6 +1,5 @@
 #!/bin/bash
 
-db_file=~/.config/modprobed.db
 kernel_folder=~/.cache/linux-tkg
 config_file=$kernel_folder/customization.cfg
 stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP 'The latest stable version of the Linux kernel is:\s+\K[\d.]+')
@@ -28,9 +27,6 @@ install_latest_kernel(){
 	
 	# Enable compiler optimizations (-O3)
 	set_config "_compileroptlevel" "2"
-
-	# Enable modprobeddb
-	set_config "_modprobeddb" "true"
 
 	# Tickless idle
 	set_config "_tickless" "2"
@@ -62,11 +58,6 @@ install_latest_kernel(){
 	# Force the use of the LLVM Integrated Assembler
 	set_config "_llvm_ias" "1"
 
-	# Build in ram to speed up compile time
-	if [ "$BUILDDIR" = "/tmp/makepkg" ]; then
-	   set_config "_kernel_work_folder" "/tmp/makepkg"
-	fi
-
 	# Compile for the native CPU architecture
 	local model_name=$(lscpu | grep "Model name")
 	local vendor_id=$(lscpu | awk '/Vendor ID:/ {print $3}')
@@ -94,23 +85,6 @@ if ! ping -c 1 google.com >/dev/null 2>&1; then
   echo "An internet connection is required to run this script."
   exit 1
 fi
-
-yay -S modprobed-db curl gawk --needed --noconfirm 
-
-# If the modprobed database file doesn't exist, create it
-if [ ! -f "$db_file" ]; then
-	modprobed-db
-fi
-
-# Store currently loaded modules in the database
-modprobed-db storesilent
-
-# Add additional modules
-cat $HOME/.config/modprobed_add.db >> $HOME/.config/modprobed.db
-
-# Sort the list and remove duplicates in the database
-sort -u $db_file -o $db_file
-clear
 
 # If the linux-tkg folder doesn't exist, clone it
 if [ ! -d "$kernel_folder" ] || [ ! -d "$kernel_folder/.git" ]; then
