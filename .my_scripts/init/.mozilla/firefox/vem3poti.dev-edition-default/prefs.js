@@ -37,7 +37,7 @@ user_pref("browser.panorama.animate_zoom", false);
 user_pref("browser.ping-centre.telemetry", false);
 user_pref("browser.safebrowsing.downloads.enabled", false);
 user_pref("browser.safebrowsing.downloads.remote.enabled", false);
-user_pref("browser.startup.homepage", "https://duckduckgo.com");
+user_pref("browser.startup.homepage", "https://google.com");
 user_pref("browser.tabs.animate", false);
 user_pref("browser.compactmode.show", false);
 user_pref("browser.aboutConfig.showWarning", false);
