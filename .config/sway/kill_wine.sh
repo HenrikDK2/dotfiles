@@ -1,4 +1,5 @@
 #!/bin/bash
 
 pkill -f '\.exe$'  # This kills processes with .exe extension
+pkill -f '\explorer.exe /desktop'  # This kills processes with .exe extension
 pkill -f 'wine'    # This kills Wine processes
