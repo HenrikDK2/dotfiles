@@ -141,6 +141,8 @@ user_pref("general.autoScroll", true);
 user_pref("general.smoothScroll", true);
 
 user_pref("dom.security.unexpected_system_load_telemetry_enabled", false);
+user_pref("dom.private-attribution.submission.enabled", false);
+
 user_pref("beacon.enabled", false);
 user_pref("loop.enabled", false);
 user_pref("telemetry.hybridContent", false);
