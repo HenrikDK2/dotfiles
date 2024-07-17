@@ -1,9 +1,11 @@
 #!/bin/bash
 
+source $HOME/.my_scripts/init/scripts/functions.sh
+
 db_file=~/.config/modprobed.db
 kernel_folder=~/.cache/linux-tkg
 config_file=$kernel_folder/customization.cfg
-stable_kernel=$(pacman -Si linux | grep Version | awk '{print $3}' | cut -d'.' -f1-3)
+stable_kernel=$(get_stable_kernel)
 
 set_config(){
     awk -v key="$1" -v value="$2" 'BEGIN{FS=OFS="="} $1 == key {$2 = "\"" value "\""} 1' "$config_file" > "$config_file.tmp" && mv "$config_file.tmp" "$config_file"

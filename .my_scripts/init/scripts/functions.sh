@@ -11,6 +11,16 @@ function confirm() {
     done
 }
 
+function get_stable_kernel(){
+	local stable_kernel=$(pacman -Si linux | grep Version | awk '{print $3}' | sed 's/^\([0-9]\+\(\.[0-9]\+\)*\).*/\1/')
+
+	if [[ $stable_kernel == *.* && $stable_kernel != *.*.* ]]; then
+	    stable_kernel="${stable_kernel}.0"
+	fi
+
+	 echo "$stable_kernel"
+}
+
 function get_primary_gpu() {
 	local amd=$(lspci -vnn | grep VGA -A 12 | grep -i amdgpu)
 	local intel=$(lspci -vnn | grep VGA -A 12 | grep -i Intel)

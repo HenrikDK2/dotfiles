@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source $HOME/.my_scripts/init/scripts/functions.sh
+
 GITFLAGS="--filter=tree:0"
 
 audit(){
@@ -27,7 +29,7 @@ update_normal_packages() {
 
 update_kernel(){
 	if pacman -Qi "linux-tkg" &> /dev/null; then
-		local stable_kernel=$(pacman -Si linux | grep Version | awk '{print $3}' | cut -d'.' -f1-3)
+		local stable_kernel=$(get_stable_kernel)
 		local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
 		
 		if [[ "$stable_kernel" != "$current_kernel" ]]; then
