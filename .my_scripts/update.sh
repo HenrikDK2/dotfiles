@@ -15,8 +15,8 @@ update_normal_packages() {
 	output=$(yay -Syu --noconfirm 2>&1 | tee /dev/tty)
 
 	# Check if mirror failed
-	if echo "$output" | grep -q "error: failed retrieving file"; then
-	    echo -e "Error detected\n"
+	if [[ "$output" == *"error: failed to synchronize all databases"* || "$output" == *"error: failed retrieving file"* ]]; then
+	    echo -e "Error with mirrorlists detected\n"
 
 	    echo -e "Trying to fix issue by refreshing mirrorlists\n"
 	    sudo /usr/local/bin/mirrors.sh
