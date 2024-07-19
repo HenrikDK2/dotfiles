@@ -16,6 +16,7 @@ update_normal_packages() {
 
 	# Check if mirror failed
 	if [[ "$output" == *"error: failed to synchronize all databases"* || "$output" == *"error: failed retrieving file"* ]]; then
+		clear
 	    echo -e "Error with mirrorlists detected\n"
 
 	    echo -e "Trying to fix issue by refreshing mirrorlists\n"
