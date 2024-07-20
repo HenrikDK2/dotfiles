@@ -96,9 +96,10 @@ if confirm; then
     rm -rf ~/.mozilla ~/.thunderbird;
     cp -r ~/.my_scripts/init/.thunderbird ~/.thunderbird;
     cp -r ~/.my_scripts/init/.mozilla ~/.mozilla;
+	sed -i "s|/home/henrik|$HOME|g" $HOME/.mozilla/firefox/vem3poti.dev-edition-default/extensions.json
+	sed -i "s|/home/henrik|$HOME|g" $HOME/.mozilla/firefox/vem3poti.dev-edition-default/prefs.js
     cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-release; 
 	cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-nightly; 
-	sed -i "s/\/home\/henrik/\/home\/$(whoami)/g" $HOME/.mozilla/firefox/vem3poti.dev-edition-default/extensions.json
 fi
 
 # Install Virt-manager
