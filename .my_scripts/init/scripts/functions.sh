@@ -13,11 +13,12 @@ function confirm() {
 
 function get_stable_kernel(){
 	local stable_kernel=$(pacman -Si linux | grep Version | awk '{print $3}' | sed 's/^\([0-9]\+\(\.[0-9]\+\)*\).*/\1/')
-	local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
 
-	# Skip first minor patch
+	# If kernel is on new minor version, and linux-tkg is installed, then skip minor version until first patch
 	if [[ $stable_kernel == *.* && $stable_kernel != *.*.* ]]; then
-	    stable_kernel="${current_kernel}"
+		if pacman -Qi linux-tkg &> /dev/null; then 
+	    	stable_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
+		fi
 	fi
 
 	 echo "$stable_kernel"
