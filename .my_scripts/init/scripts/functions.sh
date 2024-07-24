@@ -13,9 +13,11 @@ function confirm() {
 
 function get_stable_kernel(){
 	local stable_kernel=$(pacman -Si linux | grep Version | awk '{print $3}' | sed 's/^\([0-9]\+\(\.[0-9]\+\)*\).*/\1/')
+	local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
 
+	# Skip first minor patch
 	if [[ $stable_kernel == *.* && $stable_kernel != *.*.* ]]; then
-	    stable_kernel="${stable_kernel}.0"
+	    stable_kernel="${current_kernel}"
 	fi
 
 	 echo "$stable_kernel"
