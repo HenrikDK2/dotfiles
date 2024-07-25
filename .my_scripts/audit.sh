@@ -26,9 +26,19 @@ format_section() {
     echo
 }
 
-# Function to filter out gkr-pam error, which is a harmless error
+# Function to filter harmless errors in journalctl
 filter_journalctl() {
-    journalctl "$@" | grep -v "gkr-pam: unable to locate daemon control file"
+    local patterns=(
+        "gkr-pam: unable to locate daemon control file"
+        "Inconsistent IP pool management \(start not found\)"
+    )
+
+    # Construct the grep pattern
+    local pattern
+    pattern=$(IFS='|'; echo "${patterns[*]}")
+
+    # Use the pattern with grep
+    journalctl "$@" | grep -Ev "$pattern"
 }
 
 # 1. Check systemctl services for failures
