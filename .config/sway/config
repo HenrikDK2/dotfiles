@@ -106,7 +106,7 @@ bindsym $mod+u exec alacritty -e ~/.my_scripts/update.sh
 bindsym print exec slurp | grim -g - - | swappy -f -
 bindsym $mod+print exec ~/.my_scripts/ocr_clipboard.sh
 bindsym ctrl+alt+delete exec alacritty -e btop
-bindsym $mod+escape exec systemctl soft-reboot
+bindsym $mod+escape exec sudo soft-reboot
 bindsym $mod+pause exec scrolllock
 
 hide_edge_borders --i3 smart
