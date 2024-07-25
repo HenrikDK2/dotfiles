@@ -63,11 +63,6 @@ update_kernel
 # Update wine-ge-custom
 $HOME/.my_scripts/wine-ge-custom.sh
 
-# Clear files stored in memory
-if [ "$(ls /tmp)" ]; then
-	sudo rm -r /tmp/*
-fi
-
 # Check for any systemd/journald issues
 audit
 
