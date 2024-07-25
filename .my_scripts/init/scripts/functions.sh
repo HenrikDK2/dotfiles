@@ -12,7 +12,7 @@ function confirm() {
 }
 
 function get_stable_kernel(){
-	local stable_kernel=$(pacman -Si linux | grep Version | awk '{print $3}' | sed 's/^\([0-9]\+\(\.[0-9]\+\)*\).*/\1/')
+	local stable_kernel=$(curl -s https://www.kernel.org/finger_banner | grep -oP 'The latest stable version of the Linux kernel is:\s+\K[\d.]+')
 
 	# If kernel is on new minor version, and linux-tkg is installed, then skip minor version until first patch
 	if [[ $stable_kernel == *.* && $stable_kernel != *.*.* ]]; then
