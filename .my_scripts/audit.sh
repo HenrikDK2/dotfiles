@@ -47,7 +47,7 @@ format_section "Failed systemctl services" "$failed_services"
 
 # 2. Check journalctl for important errors
 error_logs=$(filter_journalctl -p 3 -b)
-format_section "Errors in journalctl (It might be relevant)" "$error_logs"
+format_section "Errors in journalctl" "$error_logs"
 
 # 3. Look for pacnew/pacsave files
 pacnew_files=$(find /etc -name "*.pacnew" -o -name "*.pacsave" 2>/dev/null)
