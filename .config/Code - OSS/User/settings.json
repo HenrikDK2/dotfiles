@@ -23,5 +23,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "git.openRepositoryInParentFolders": "always"
+  "git.openRepositoryInParentFolders": "always",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }
