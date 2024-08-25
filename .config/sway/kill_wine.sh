@@ -1,5 +1,13 @@
 #!/bin/bash
 
-pkill -f '\.exe$'  # This kills processes with .exe extension
-pkill -f '\explorer.exe /desktop'  # This kills processes with .exe extension
-pkill -f 'wine'    # This kills Wine processes
+# Get the current script's PID
+current_pid=$$
+
+# Kill .exe processes, excluding this script
+pkill -f '\.exe$' --signal SIGTERM --parent "$current_pid"
+
+# Kill explorer.exe processes
+pkill -f 'explorer.exe /desktop' --signal SIGTERM --parent "$current_pid"
+
+# Kill wine processes, excluding this script
+pkill -f 'wine' --signal SIGTERM --parent "$current_pid"

@@ -34,6 +34,7 @@ x-scheme-handler/nntp=userapp-Thunderbird-GX6UO2.desktop
 x-scheme-handler/feed=userapp-Thunderbird-CKFVO2.desktop
 application/rss+xml=userapp-Thunderbird-CKFVO2.desktop
 application/x-extension-rss=userapp-Thunderbird-CKFVO2.desktop
+x-scheme-handler/discord-409416265891971072=discord-409416265891971072.desktop
 
 [Added Associations]
 application/x-shellscript=code-oss-url-handler.desktop;nemo-autorun-software.desktop;
