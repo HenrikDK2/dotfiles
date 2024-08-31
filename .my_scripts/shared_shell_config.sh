@@ -22,9 +22,10 @@ export RTC_USE_PIPEWIRE=true
 export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export OBS_VKCAPTURE=1
 export PATH="$HOME/.local/bin:$PATH"
-export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 export FREETYPE_PROPERTIES="hinting=true:hintstyle=hintslight:antialias=rgb:subpixel_rendering=rgb"
 export ANDROID_HOME=$HOME/Android/Sdk
+
 
 # Alias
 alias upgraded='grep -i upgraded /var/log/pacman.log'
