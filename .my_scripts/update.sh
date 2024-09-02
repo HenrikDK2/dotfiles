@@ -60,9 +60,6 @@ fi
 # Update custom built kernel
 update_kernel
 
-# Update wine-ge-custom
-$HOME/.my_scripts/wine-ge-custom.sh
-
 # Check for any systemd/journald issues
 audit
 
