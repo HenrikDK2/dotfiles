@@ -56,9 +56,6 @@ fi
 # Sort fastest mirrors weekly
 $HOME/.my_scripts/init/scripts/mirrors.sh
 
-# Install wine-ge-custom 
-$HOME/.my_scripts/wine-ge-custom.sh
-
 # Improve ext4 performance
 $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 
