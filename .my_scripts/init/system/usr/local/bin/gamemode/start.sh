@@ -55,3 +55,17 @@ fi
 if [[ -z $(sudo docker ps -q) ]]; then
   stop_service docker
 fi
+
+# Sometimes memory clock isn't using the overclocked value
+# The function below fixes that issue
+
+source /usr/local/bin/amd-overclock.sh
+
+if [ ! -z "$MEMORY_CLOCK" ]; then
+	sleep 20
+	echo "m 1 $(($MEMORY_CLOCK + 1))" > $PP_OD_CLK_VOLTAGE
+	echo "c" > $PP_OD_CLK_VOLTAGE
+	sleep 5
+	echo "m 1 $MEMORY_CLOCK" > $PP_OD_CLK_VOLTAGE
+	echo "c" > $PP_OD_CLK_VOLTAGE
+fi
