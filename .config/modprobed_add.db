@@ -62,6 +62,7 @@ hid_generic
 hid_xpadneo
 hub
 i2c_algo_bit
+i2c-dev
 i2c_hid
 i2c_piix4
 i915
