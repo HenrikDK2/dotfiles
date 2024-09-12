@@ -20,3 +20,8 @@ for card_dir in /sys/class/drm/card*; do
         echo "auto" | sudo tee $power_dpm
   	fi
 done
+
+# Sometimes proton doesn't exit correctly, and leaves unwanted processes behind
+# This wil kill all wine-related processes
+ps aux | awk '/\.exe$/ {print $2}' | xargs kill
+pkill -f wine
