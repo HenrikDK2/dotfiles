@@ -116,6 +116,8 @@ gaps top 34
 
 assign [app_id="evolution"] workspace 2 
 assign [class="thunderbird"] workspace 2 
+assign [appid="thunderbird"] workspace 2 
+
 
 assign [class="discord"] workspace 2
 assign [app_id="vesktop"] workspace 2 
