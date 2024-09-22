@@ -115,7 +115,7 @@ default_floating_border pixel 2
 gaps inner 20
 gaps top 34
 
-assign [app_id="evolution"] workspace 2 
+assign [app_id="thunderbird" title=".*Reminder.*"] workspace 1
 assign [app_id="thunderbird"] workspace 2 
 assign [class="discord"] workspace 2
 assign [app_id="vesktop"] workspace 2 
@@ -131,6 +131,7 @@ for_window [title="Choose ONE of the audio conference options"] floating enable
 for_window [title="zoom" app_id="zoom"] floating enable
 for_window [title="Wine System Tray"] border none, resize set 0 0, move scratchpad
 for_window [title="Firefox — Sharing Indicator"] floating enable
+for_window [app_id="thunderbird" title=".*Reminder.*"] floating enable, resize set 550 350
 
 # Inhibit idle
 for_window [class="steam_app*"] inhibit_idle
