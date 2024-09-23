@@ -29,6 +29,12 @@ update_git_packages() {
     fi
 }
 
+update_flatpak () {
+	if command -v flatpak &> /dev/null; then
+	  sudo flatpak update --noninteractive
+	fi
+}
+
 update_normal_packages() {
 	echo -e "\033[1mUpdating packages.\033[0m\n"
 	output=$(yay -Syu --noconfirm 2>&1 | tee /dev/tty)
@@ -68,21 +74,10 @@ fi
 renice -n 20 -p $$ -g $$ > /dev/null
 ionice -c 3 -P $$ > /dev/null
 
-# Update packages
 update_normal_packages
-
-# Update git packages
 update_git_packages
-
-# Update flatpak packages
-if command -v flatpak &> /dev/null; then
-  sudo flatpak update --noninteractive
-fi
-
-# Update custom built kernel
+update_flatpak
 update_kernel
-
-# Check for any systemd/journald issues
 audit
 
 printf "\n"
