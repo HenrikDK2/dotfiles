@@ -5,7 +5,7 @@
   "removemake": "no",
   "cleanmenu": false,
   "diffmenu": false,
-  "devel":  true,
+  "devel":  false,
   "editmenu": false,
   "editor": "micro"
 }

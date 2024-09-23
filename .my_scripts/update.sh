@@ -10,6 +10,25 @@ audit(){
 	~/.my_scripts/audit.sh
 }
 
+update_git_packages() {
+    last_update_file="$HOME/.cache/.update_git"
+
+    if [ ! -f "$last_update_file" ]; then
+        yay -Syu --devel --noconfirm
+        date +%s > "$last_update_file"
+    else
+        current_time_in_secs=$(date +%s)
+        last_update_in_secs=$(cat "$last_update_file")
+        time_diff=$(( current_time_in_secs - last_update_in_secs ))
+        
+        # Check if at least 72 hours (259200 seconds) have passed
+        if [ "$time_diff" -ge 259200 ]; then
+            yay -Syu --devel --noconfirm
+            date +%s > "$last_update_file"
+        fi
+    fi
+}
+
 update_normal_packages() {
 	echo -e "\033[1mUpdating packages.\033[0m\n"
 	output=$(yay -Syu --noconfirm 2>&1 | tee /dev/tty)
@@ -51,6 +70,9 @@ ionice -c 3 -P $$ > /dev/null
 
 # Update packages
 update_normal_packages
+
+# Update git packages
+update_git_packages
 
 # Update flatpak packages
 if command -v flatpak &> /dev/null; then
