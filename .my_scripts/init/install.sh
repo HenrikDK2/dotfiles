@@ -71,33 +71,11 @@ $HOME/.my_scripts/init/scripts/amd_oc.sh
 # Android Development
 $HOME/.my_scripts/init/scripts/android_development.sh
 
+# Optimised Firefox/Thunderbird profile (Only copies if config folders doesn't exist)
+$HOME/.my_scripts/init/scripts/mozilla.sh
+
 # Ultrawide gaps on workspace 1
-clear
-printf "Only for 5120x1440 ultrawide monitor!\n\n"
-printf "Do you want to have a 1440p window in the center of workspace 1?"
-
-if confirm; then 
-    mkdir ~/.config/sway/config.d
-    cp ~/.my_scripts/init/config.d/workspace-gaps ~/.config/sway/config.d/workspace-gaps
-else
-    rm -rf ~/.config/sway/config.d/workspace-gaps
-fi
-
-# Optimized Firefox/Thunderbird profile
-clear
-printf "Do you wish to use an optimized Firefox/Thunderbird profile?\n\n"
-printf "It disables telemetry, animations and more for privacy and performance.\n\n"
-printf "This will reset your current profile, do you want to proceed?"
-
-if confirm; then 
-    rm -rf ~/.mozilla ~/.thunderbird;
-    cp -r ~/.my_scripts/init/.thunderbird ~/.thunderbird;
-    cp -r ~/.my_scripts/init/.mozilla ~/.mozilla;
-	sed -i "s|/home/henrik|$HOME|g" $HOME/.mozilla/firefox/vem3poti.dev-edition-default/extensions.json
-	sed -i "s|/home/henrik|$HOME|g" $HOME/.mozilla/firefox/vem3poti.dev-edition-default/prefs.js
-    cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-release; 
-	cp -r ~/.mozilla/firefox/vem3poti.dev-edition-default ~/.mozilla/firefox/vem3poti.default-nightly; 
-fi
+$HOME/.my_scripts/init/scripts/ultrawide_gaps.sh
 
 # Install Virt-manager
 clear
