@@ -54,6 +54,7 @@ fi
 # Stop docker if no containers are running
 if [[ -z $(sudo docker ps -q) ]]; then
   stop_service docker
+  stop_service containerd
 fi
 
 # Sometimes memory clock isn't using the overclocked value

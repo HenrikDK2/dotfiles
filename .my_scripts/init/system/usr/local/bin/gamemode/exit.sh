@@ -8,6 +8,7 @@ sudo systemctl start systemd-journald.service
 sudo systemctl start cups systemd-timesyncd
 sudo systemctl start libvirtd virtlogd
 sudo systemctl start docker
+sudo systemctl start containerd
 
 # Re-enable split lock mitigation
 sudo sysctl kernel.split_lock_mitigate=1
