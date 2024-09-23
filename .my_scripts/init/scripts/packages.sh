@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $HOME/.my_scripts/init/scripts/functions.sh
+
 packages=(
     # Fonts
     "cantarell-fonts"
@@ -96,6 +98,29 @@ packages=(
     "firefox"
     "thunderbird"
 )
+
+# GPU drivers
+clear
+if [[ $(get_primary_gpu) == "nvidia" ]]; then
+	echo "Nvidia GPU drivers not yet implemented..."
+	read -p "Press enter to continue"
+elif [[ $(get_primary_gpu) == "amd" ]]; then
+	clear
+	printf "Yes - Compile drivers directly from source\n"
+	printf "No - Install default Arch repo mesa drivers\n\n"
+	printf "Do you want to compile the drivers?"
+
+	if confirm; then
+		yay -S amdonly-gaming-mesa-git lib32-amdonly-gaming-mesa-git --needed --noconfirm
+	else
+		sudo pacman -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils --noconfirm
+	fi
+
+	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+	sudo mkinitcpio -P;
+elif [[ $(get_primary_gpu) == "intel" ]]; then
+	sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver --noconfirm
+fi
 
 # Install all packages
 yay -S "${packages[@]}" --needed
