@@ -74,7 +74,7 @@ $HOME/.my_scripts/init/scripts/android_development.sh
 # Optimised Firefox/Thunderbird profile (Only copies if config folders doesn't exist)
 $HOME/.my_scripts/init/scripts/mozilla.sh
 
-# Ultrawide gaps on workspace 1
+# Ultrawide gaps on workspace 1 (If aspect ratio is 32:9)
 $HOME/.my_scripts/init/scripts/ultrawide_gaps.sh
 
 # Install Virt-manager
