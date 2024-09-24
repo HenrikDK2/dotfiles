@@ -56,7 +56,6 @@ renice -n 20 -p $$ -g $$ > /dev/null
 ionice -c 3 -P $$ > /dev/null
 
 update_normal_packages
-update_git_packages
 update_flatpak
 update_kernel
 audit
