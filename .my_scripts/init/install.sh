@@ -68,9 +68,6 @@ $HOME/.my_scripts/init/scripts/bootloader.sh
 # Enable AMD overclocking service/script
 $HOME/.my_scripts/init/scripts/amd_oc.sh
 
-# Android Development
-$HOME/.my_scripts/init/scripts/android_development.sh
-
 # Optimised Firefox/Thunderbird profile (Only copies if config folders doesn't exist)
 $HOME/.my_scripts/init/scripts/mozilla.sh
 
