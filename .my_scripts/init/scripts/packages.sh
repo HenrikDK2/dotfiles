@@ -99,6 +99,29 @@ packages=(
     "thunderbird"
 )
 
+
+# Install Virt-manager
+clear
+printf "This is for virtual machines.\n\n"
+printf "Do you want to install virt-manager?"
+
+if confirm; then
+    yay -S virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --needed;
+	sudo systemctl enable --now libvirtd virtlogd;
+	sudo usermod -a -G libvirt $(whoami);
+fi
+
+# Setup bluetooth
+clear
+printf "This is for bluetooth.\n\n"
+printf "Do you want to install blueman?"
+
+if confirm; then
+    sudo pacman -S blueman bluez-utils --needed --noconfirm;
+    sudo systemctl enable --now bluetooth.service;
+    echo 'power on' | bluetoothctl;
+fi
+
 # GPU drivers
 clear
 if [[ $(get_primary_gpu) == "nvidia" ]]; then

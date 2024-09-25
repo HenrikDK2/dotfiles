@@ -77,28 +77,6 @@ $HOME/.my_scripts/init/scripts/mozilla.sh
 # Ultrawide gaps on workspace 1 (If aspect ratio is 32:9)
 $HOME/.my_scripts/init/scripts/ultrawide_gaps.sh
 
-# Install Virt-manager
-clear
-printf "This is for virtual machines.\n\n"
-printf "Do you want to install virt-manager?"
-
-if confirm; then
-    yay -S virt-manager qemu-desktop libvirt edk2-ovmf iptables-nft dmidecode --needed;
-	sudo systemctl enable --now libvirtd virtlogd;
-	sudo usermod -a -G libvirt $(whoami);
-fi
-
-# Setup bluetooth
-clear
-printf "This is for bluetooth.\n\n"
-printf "Do you want to install blueman?"
-
-if confirm; then
-    sudo pacman -S blueman bluez-utils --needed --noconfirm;
-    sudo systemctl enable --now bluetooth.service;
-    echo 'power on' | bluetoothctl;
-fi
-
 # Packages
 $HOME/.my_scripts/init/scripts/packages.sh
 
