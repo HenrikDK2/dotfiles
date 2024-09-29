@@ -1,6 +1,5 @@
 [Default Applications]
 inode/directory=nemo.desktop
-application/x-shellscript=nemo-autorun-software.desktop
 x-scheme-handler/msteams=teams.desktop
 x-scheme-handler/mailto=userapp-Thunderbird-IVSPT2.desktop
 message/rfc822=userapp-Thunderbird-IVSPT2.desktop
@@ -37,7 +36,6 @@ application/x-extension-rss=userapp-Thunderbird-IAOFT2.desktop
 x-scheme-handler/discord-409416265891971072=discord-409416265891971072.desktop
 
 [Added Associations]
-application/x-shellscript=code-oss-url-handler.desktop;nemo-autorun-software.desktop;
 x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
 x-scheme-handler/mid=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
 x-scheme-handler/webcal=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-54CUO2.desktop;userapp-Thunderbird-H24ET2.desktop;
