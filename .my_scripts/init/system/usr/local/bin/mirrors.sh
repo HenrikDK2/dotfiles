@@ -13,9 +13,9 @@ main () {
         main
     fi
 
-    # Update arch mirrors
+    # Update Arch mirrors
     rate-mirrors --save=/tmp/mirrorlist.tmp --disable-comments-in-file --allow-root --protocol=https arch
-
+	
     if [ $? -eq 0 ] && [ -s /tmp/mirrorlist.tmp ]; then
         mv /tmp/mirrorlist.tmp /etc/pacman.d/mirrorlist
         echo "Mirrorlist updated successfully."
@@ -23,6 +23,9 @@ main () {
         echo "Error occurred while refreshing mirrors. Mirrorlist not updated."
         rm /tmp/mirrorlist.tmp
     fi
+
+    # Update CachyOS mirrors
+	cachyos-rate-mirrors
 }
 
 main
