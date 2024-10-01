@@ -16,6 +16,11 @@ if (nordvpn status | grep -q "Status: Connected"); then
 	connected "$(nordvpn status)"
 fi
 
+# Check if Private Internet Access (PIA) is active
+if (command -v piactl &> /dev/null) && [ "$(piactl get connectionstate)" = "Connected" ]; then
+    connected "PIA VPN is connected";
+fi
+
 # Check if the tun0 or ppp0 interface exists
 if [ -d /proc/sys/net/ipv4/conf/tun0 ] || [ -d /proc/sys/net/ipv4/conf/ppp0 ]; then 
 	connected;

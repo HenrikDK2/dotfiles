@@ -30,6 +30,7 @@
 .my_scripts/login.d/**
 !.my_scripts/login.d/code_extensions.sh
 !.my_scripts/login.d/mic_base_volume.sh
+!.my_scripts/login.d/vpn.sh
 .my_scripts/linux-tkg
 .my_scripts/init/entries/tmp
 

@@ -12,12 +12,11 @@ if [ ! -f .config/fish/.post-install ]; then
 	touch .config/fish/.post-install
 fi
 
+# Make sure VPN script is loaded as quickly as possible
+$HOME/.my_scripts/login.d/vpn.sh
 
 # Custom bash scripts within ~/.my_scripts/login.d will load at session start
-for script in ~/.my_scripts/login.d/*.sh; do (exec "$script" &) done
-
-# Connect to mullvad vpn
-mullvad connect
+for script in $HOME/.my_scripts/login.d/*.sh; do (exec "$script" &) done
 
 # Programs to lauch at login (executable)
 (/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)
