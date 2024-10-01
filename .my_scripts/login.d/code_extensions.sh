@@ -1,10 +1,9 @@
 #!/bin/sh
 
-# Install vscode plugins
+# List of vscode plugins
 plugins=(
     "redhat.vscode-yaml"
     "aaron-bond.better-comments"
-    "VisualStudioExptTeam.vscodeintellicode"
     "llvm-vs-code-extensions.vscode-clangd"
     "mikestead.dotenv"
     "stylelint.vscode-stylelint"
@@ -17,12 +16,17 @@ plugins=(
     "esbenp.prettier-vscode"
     "eamodio.gitlens"
     "dbaeumer.vscode-eslint"
-    "MariusAlchimavicius.json-to-ts"
     "bmalehorn.vscode-fish"
-    )
+)
 
+# Get the list of installed extensions
+installed_plugins=$(code --list-extensions)
+
+# Loop through plugins and install only if not already installed
 for plugin in "${plugins[@]}"; do
-    code --install-extension $plugin
+    if echo "$installed_plugins" | grep -q "$plugin"; then
+        echo "$plugin is already installed"
+    else
+        code --install-extension "$plugin"
+    fi
 done
-
-clear
