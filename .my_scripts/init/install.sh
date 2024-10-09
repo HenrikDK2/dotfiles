@@ -27,7 +27,7 @@ $HOME/.my_scripts/init/scripts/prerequisites.sh
 # Switch to CachyOS repository
 $HOME/.my_scripts/init/scripts/cachyos-repo.sh
 
-# Heroic games launcher
+# Heroic games launcher config settings (Copies if config folders doesn't exist)
 $HOME/.my_scripts/init/scripts/heroic.sh
 
 # Sort fastest mirrors weekly
@@ -45,7 +45,7 @@ $HOME/.my_scripts/init/scripts/bootloader.sh
 # Enable AMD overclocking service/script
 $HOME/.my_scripts/init/scripts/amd_oc.sh
 
-# Optimised Firefox/Thunderbird profile (Only copies if config folders doesn't exist)
+# Optimised Firefox/Thunderbird profile (Copies if config folders doesn't exist)
 $HOME/.my_scripts/init/scripts/mozilla.sh
 
 # Ultrawide gaps on workspace 1 (If aspect ratio is 32:9)
