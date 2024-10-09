@@ -30,7 +30,7 @@ $HOME/.my_scripts/init/scripts/cachyos-repo.sh
 # Heroic games launcher config settings (Copies if config folders doesn't exist)
 $HOME/.my_scripts/init/scripts/heroic.sh
 
-# Sort fastest mirrors weekly
+# Enable custom mirror service for better download speeds
 $HOME/.my_scripts/init/scripts/mirrors.sh
 
 # Improve ext4 performance
