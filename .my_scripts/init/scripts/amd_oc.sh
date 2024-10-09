@@ -34,6 +34,11 @@ if [ "$(get_primary_gpu)" = "amd" ] && ! systemctl is-enabled amd-overclock >/de
 			sudo micro $conf_file
 		elif command -v nano; then
 			sudo nano $conf_file
+		elif command -v vim; then
+			sudo vim $conf_file
+		else
+			sudo pacman -S micro --noconfirm
+			sudo micro $conf_file
 		fi
 
 		# Enable service

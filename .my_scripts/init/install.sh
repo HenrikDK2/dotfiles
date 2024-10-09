@@ -1,17 +1,15 @@
 #!/bin/bash
 
-source $HOME/.my_scripts/init/scripts/functions.sh
-
-# Check if sudo and git are installed
-if [ ! command -v sudo &> /dev/null || ! command -v git &> /dev/null ]; then
-    echo "Sudo and/or Git is not installed"
-    exit 1
-fi
-
 # Check if user has root permissions
 if [[ $EUID -eq 0 ]]; then
    echo "You shouldn't run this script as root" 
    exit 1
+fi
+
+# Check if the user does not have full sudo privileges
+if ! sudo -l 2>/dev/null | grep -q "(ALL : ALL) ALL"; then
+    echo "User does not have full sudo privileges."
+    exit 1
 fi
 
 # Check for an internet connection
@@ -20,41 +18,17 @@ if ! ping -c 1 google.com >/dev/null 2>&1; then
   exit 1
 fi
 
-# Copy system files
-sudo cp -r ~/.my_scripts/init/system/* /
+# Get access to certain functions required for the script to work
+source $HOME/.my_scripts/init/scripts/functions.sh
 
-# Add host to /etc/hosts file
-echo 127.0.0.1 localhost $(hostname) | sudo tee /etc/hosts
+# Prerequisites setup script to ensure all necessary dependencies are in place
+$HOME/.my_scripts/init/scripts/prerequisites.sh
 
-# Enable multilib, DisableDownloadTimeout, and ParallelDownloads
-if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
-	sudo sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
-	sudo sed -i "/ParallelDownloads/c\ParallelDownloads = 10\nDisableDownloadTimeout" /etc/pacman.conf
-	sudo pacman -Suuy
-fi
-
-# Install required packages for building/scripts
-sudo pacman -S base-devel bc curl jq --noconfirm --needed
-
-# Makepkg related packages (Flags in ~/.makepkg.conf)
-sudo pacman -S mold zstd pigz pbzip2 xz --noconfirm --needed
-
-# Install yay
-if [ -z "$(pacman -Qe | grep yay)" ]; then
-	git clone https://aur.archlinux.org/yay.git
-	sudo chmod 777 -R ./yay
-	(cd yay && makepkg -si --noconfirm)
-	rm -rf ./yay
-fi
-
-# Config settings for Heroic Games Launcher
-if [ ! -d "$HOME/.config/heroic" ]; then
-	cp -r $HOME/.my_scripts/init/heroic $HOME/.config
-	sed -i "s/#NAME/$USER/" $HOME/.config/heroic/config.json
-fi
-
-# Switch to CachyOS repo
+# Switch to CachyOS repository
 $HOME/.my_scripts/init/scripts/cachyos-repo.sh
+
+# Heroic games launcher
+$HOME/.my_scripts/init/scripts/heroic.sh
 
 # Sort fastest mirrors weekly
 $HOME/.my_scripts/init/scripts/mirrors.sh
@@ -65,7 +39,7 @@ $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 # Avoid stalls on memory allocations
 $HOME/.my_scripts/init/scripts/avoid_stalls_memory.sh
 
-# Add bootloader entries, and install kernel
+# Add bootloader entries
 $HOME/.my_scripts/init/scripts/bootloader.sh
 
 # Enable AMD overclocking service/script
@@ -77,7 +51,7 @@ $HOME/.my_scripts/init/scripts/mozilla.sh
 # Ultrawide gaps on workspace 1 (If aspect ratio is 32:9)
 $HOME/.my_scripts/init/scripts/ultrawide_gaps.sh
 
-# Packages
+# Install packages
 $HOME/.my_scripts/init/scripts/packages.sh
 
 # Make user part of the games group (Allows proton to set niceness of process)

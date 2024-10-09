@@ -81,6 +81,11 @@ add_options () {
 	fi
 }
 
+# Install systemd-boot
+if [ ! -d "/boot/loader" ]; then
+    sudo bootctl install
+fi
+
 # Create temp kernel entries
 mkdir ~/.my_scripts/init/entries/tmp
 cp ~/.my_scripts/init/entries/*.conf ~/.my_scripts/init/entries/tmp
