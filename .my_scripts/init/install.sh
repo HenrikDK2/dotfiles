@@ -54,35 +54,17 @@ $HOME/.my_scripts/init/scripts/ultrawide_gaps.sh
 # Install packages
 $HOME/.my_scripts/init/scripts/packages.sh
 
+# Setup UFW
+$HOME/.my_scripts/init/scripts/firewall.sh
+
 # Make user part of the games group (Allows proton to set niceness of process)
 sudo usermod -a -G games $(whoami)
 
 # Change default, and current user shell to fish
 sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
 
-# Enable UFW and add firewall rules
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo sed -i 's/echo-request -j ACCEPT/echo-request -j DROP/' /etc/ufw/before.rules
-echo "Port 1065" | sudo tee /etc/ssh/sshd_config.d/99-port.conf
-sudo ufw limit 1065/tcp #SSH
-sudo ufw allow 631/tcp #CUPS (printer)
-sudo ufw allow ftp/tcp
-sudo ufw allow http/tcp
-sudo ufw allow https/tcp
-sudo ufw logging off
-sudo ufw enable
-
-# Clock sync
+# Enable network time sync
 sudo timedatectl set-ntp true
-
-# Enable services
-sudo systemctl enable ufw cups dnsmasq denyhosts fstrim.timer
-systemctl --user enable wireplumber
-
-# Disable services
-systemctl --user mask at-spi-dbus-bus
-sudo systemctl mask systemd-userdbd systemd-userdbd.socket accounts-daemon rtkit-daemon ldconfig upower systemd-resolved connman-vpn
 
 # Remove initial pacsave/pacnew files
 sudo find /etc -name "*.pacnew" -o -name "*.pacsave" | xargs sudo rm;

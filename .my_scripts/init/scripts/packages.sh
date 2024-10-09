@@ -117,3 +117,11 @@ fi
 
 # Install all packages
 yay -S "${packages[@]}" --needed
+
+# Enable required services
+sudo systemctl enable cups ufw dnsmasq denyhosts fstrim.timer
+systemctl --user enable wireplumber
+
+# Mask unused services
+systemctl --user mask at-spi-dbus-bus
+sudo systemctl mask systemd-userdbd systemd-userdbd.socket accounts-daemon rtkit-daemon ldconfig upower systemd-resolved connman-vpn
