@@ -55,7 +55,7 @@ if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sudo pacman -Suuy
 fi
 
-# Install yay for installing from the AUR
+# Install yay for AUR packages
 if [ -z "$(pacman -Qe | grep yay)" ]; then
 	git clone https://aur.archlinux.org/yay.git
 	sudo chmod 777 -R ./yay
