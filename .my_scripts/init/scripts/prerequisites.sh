@@ -12,7 +12,6 @@ prerequisites_packages=(
     "git"
     "bc"
     "curl"
-    "inetutils"
     "jq"
     "connman"
 
@@ -59,7 +58,7 @@ done
 sudo cp -r ~/.my_scripts/init/system/* /
 
 # Add host to /etc/hosts file
-echo 127.0.0.1 localhost $(hostname) | sudo tee /etc/hosts
+echo 127.0.0.1 localhost $(cat /etc/hostname) | sudo tee /etc/hosts
 
 # Enable multilib, DisableDownloadTimeout, and ParallelDownloads
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
