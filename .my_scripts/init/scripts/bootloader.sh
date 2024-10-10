@@ -55,7 +55,6 @@ microcode () {
 
 enable_hibernation () {
 	sudo sed -i 's/^[ \t]*HOOKS=(base udev autodetect/HOOKS=(base udev resume autodetect/' /etc/mkinitcpio.conf
-	sudo mkinitcpio -P
 }
 
 add_options () {
