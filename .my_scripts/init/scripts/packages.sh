@@ -81,6 +81,7 @@ packages=(
     "wl-clipboard"
 
     # Gaming
+    "proton-ge-custom-bin"
     "discord"
     "wine"
     "gamemode"
