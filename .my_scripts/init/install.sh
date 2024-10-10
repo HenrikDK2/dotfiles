@@ -18,44 +18,45 @@ if ! ping -c 1 google.com >/dev/null 2>&1; then
   exit 1
 fi
 
-# Get access to certain functions required for the script to work
-source $HOME/.my_scripts/init/scripts/functions.sh
+# Get access to certain functions/envs required for the script to work
+source "$HOME/.my_scripts/init/scripts/functions.sh"
+source "$HOME/.my_scripts/init/scripts/envs.sh"
 
 # Prerequisites setup script to ensure all necessary dependencies are in place
-$HOME/.my_scripts/init/scripts/prerequisites.sh
+source "$HOME/.my_scripts/init/scripts/prerequisites.sh"
 
 # Switch to CachyOS repository
-$HOME/.my_scripts/init/scripts/cachyos-repo.sh
-
-# Heroic games launcher config settings (Copies if config folders doesn't exist)
-$HOME/.my_scripts/init/scripts/heroic.sh
+source "$HOME/.my_scripts/init/scripts/cachyos-repo.sh"
 
 # Enable custom mirror service for better download speeds
-$HOME/.my_scripts/init/scripts/mirrors.sh
-
-# Improve ext4 performance
-$HOME/.my_scripts/init/scripts/ext4_optimizations.sh
-
-# Avoid stalls on memory allocations
-$HOME/.my_scripts/init/scripts/avoid_stalls_memory.sh
+source "$HOME/.my_scripts/init/scripts/mirrors.sh"
 
 # Add bootloader entries
-$HOME/.my_scripts/init/scripts/bootloader.sh
-
-# Enable AMD overclocking service/script
-$HOME/.my_scripts/init/scripts/amd_oc.sh
-
-# Optimised Firefox/Thunderbird profile (Copies if config folders doesn't exist)
-$HOME/.my_scripts/init/scripts/mozilla.sh
-
-# Ultrawide gaps on workspace 1 (If aspect ratio is 32:9)
-$HOME/.my_scripts/init/scripts/ultrawide_gaps.sh
+source "$HOME/.my_scripts/init/scripts/bootloader.sh"
 
 # Install packages
-$HOME/.my_scripts/init/scripts/packages.sh
+source "$HOME/.my_scripts/init/scripts/packages.sh"
+
+# Heroic games launcher config settings (Copies if config folders doesn't exist)
+source "$HOME/.my_scripts/init/scripts/heroic.sh"
+
+# Improve ext4 performance
+source "$HOME/.my_scripts/init/scripts/ext4_optimizations.sh"
+
+# Avoid stalls on memory allocations
+source "$HOME/.my_scripts/init/scripts/avoid_stalls_memory.sh"
+
+# Enable AMD overclocking service/script
+source "$HOME/.my_scripts/init/scripts/amd_oc.sh"
+
+# Optimised Firefox/Thunderbird profile (Copies if config folders doesn't exist)
+source "$HOME/.my_scripts/init/scripts/mozilla.sh"
+
+# Ultrawide gaps on workspace 1 (If aspect ratio is 32:9)
+source "$HOME/.my_scripts/init/scripts/ultrawide_gaps.sh"
 
 # Setup UFW
-$HOME/.my_scripts/init/scripts/firewall.sh
+source "$HOME/.my_scripts/init/scripts/firewall.sh"
 
 # This will regenerate the initial ramdisk environment for all installed kernels
 sudo mkinitcpio -P

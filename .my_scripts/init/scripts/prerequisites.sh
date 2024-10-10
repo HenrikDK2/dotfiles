@@ -1,64 +1,34 @@
 #!/bin/bash
 
-prerequisites_packages=(
-    "linux-zen"
-    "linux-firmware"
-
-    "base"
-    "base-devel"
-    "mkinitcpio"
-
-    "sudo"
-    "git"
-    "bc"
-    "curl"
-    "jq"
-    "connman"
-
-    # Makepkg related packages (Flags in ~/.makepkg.conf)
-    "mold"
-    "zstd"
-    "pigz"
-    "pbzip2"
-    "xz"
-)
-
-# Packages to exclude from removal
-exclude_packages=(
-    "linux-tkg.*"
-    "tidal-hifi-bin"
-    "piavpn-bin"
-    "yay"
-    "mullvad-vpn-bin"
-)
-
 # Update package database and install prerequisites
 sudo pacman -Syy ${prerequisites_packages[@]} --needed --noconfirm
-
-# Create the exclusion pattern for grep
-exclude_pattern=$(IFS="|"; echo "${prerequisites_packages[*]}|${exclude_packages[*]}")
-
-# Get the list of explicitly installed packages, except for prerequisites and excluded packages
-packages_to_remove=$(pacman -Qe | cut -d ' ' -f 1 | grep -v -E "^($exclude_pattern)$")
 
 # Remove the unwanted packages, if any
 if [ ! -z "$packages_to_remove" ]; then
     sudo pacman -Rns --nodeps --cascade $packages_to_remove --noconfirm
 fi
 
-# Enable connman
-sudo systemctl enable --now connman
-
-# Wait for internet connection
-until ping -c 1 google.com &> /dev/null; do
-    sleep 5
-done
-
 # Copy system files
 sudo cp -r ~/.my_scripts/init/system/* /
 
 # Add host to /etc/hosts file
 echo 127.0.0.1 localhost $(cat /etc/hostname) | sudo tee /etc/hosts
+
+# Enable connman
+sudo systemctl enable connman
+sudo systemctl start connman
+
+# Wait for internet connection to the AUR
+while true; do
+    RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null "https://aur.archlinux.org")
+
+    if [ "$RESPONSE" -eq 200 ]; then
+        break
+    else
+        echo "Couldn't connect to AUR. Retrying in 5 seconds..."
+        sleep 5
+    fi
+done
 
 # Enable multilib, DisableDownloadTimeout, and ParallelDownloads
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Make sure required packages are installed
-yay -S rate-mirrors-bin cachyos-rate-mirrors --needed --noconfirm
+yay -S "${mirror_packages[@]}" --needed --noconfirm
 
-# Run script to sort mirrors
+# Run script after short delay 
 sudo /usr/local/bin/mirrors.sh
 
 # Updates the package databases and updates package to latest version

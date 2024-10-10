@@ -1,29 +1,5 @@
 #!/bin/bash
 
-source $HOME/.my_scripts/init/scripts/functions.sh
-
-android_development_packages=(
-	"watchman-bin"
-	"python"
-	"jdk-openjdk"
-	"android-tools"
-	"android-studio"
-)
-
-virt_manager_packages=(
-	"virt-manager"
-	"qemu-desktop"
-	"libvirt"
-	"edk2-ovmf"
-	"iptables-nft"
-	"dmidecode"
-)
-
-bluetooth_packages=(
-	"blueman"
-	"bluez-utils"
-)
-
 install_android_development_tools() {
 	clear
 	printf "Do you want to install the required tools for android development?"
@@ -32,7 +8,6 @@ install_android_development_tools() {
 		yay -S "${android_development_packages[@]}" --needed --noconfirm
 	fi
 }
-
 
 install_bluetooth() {
 	clear

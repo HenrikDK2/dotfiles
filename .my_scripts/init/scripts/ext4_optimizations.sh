@@ -8,8 +8,8 @@ while read -r line; do
     mount_point="${drive_info[1]}"
     format="${drive_info[2]}"
     options="${drive_info[3]}"
-	pass="${drive_info[4]} ${drive_info[5]}"
-	new_options="$options"
+    pass="${drive_info[4]} ${drive_info[5]}"
+    new_options="$options"
 
     if [[ $format == "ext4" ]]; then
 	    if [[ "$options" != *noatime* ]]; then

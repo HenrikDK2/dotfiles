@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source $HOME/.my_scripts/init/scripts/functions.sh
-
 # ANSI escape codes for yellow color
 yellow='\033[1;33m'
 reset='\033[0m' # reset to default color
