@@ -11,7 +11,7 @@ stop_service () {
        		sudo systemctl stop $2;
        	fi
 
-       	sleep 3
+       	sleep 2
     done
 }
 
