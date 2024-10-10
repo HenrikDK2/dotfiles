@@ -100,6 +100,3 @@ add_options
 # Copy to boot
 sudo cp -r ~/.my_scripts/init/entries/tmp/. /boot/loader/entries
 rm -rf ~/.my_scripts/init/entries/tmp/
-
-# This will regenerate the initial ramdisk environment for all installed kernels
-sudo mkinitcpio -P

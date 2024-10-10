@@ -57,6 +57,10 @@ $HOME/.my_scripts/init/scripts/packages.sh
 # Setup UFW
 $HOME/.my_scripts/init/scripts/firewall.sh
 
+
+# This will regenerate the initial ramdisk environment for all installed kernels
+sudo mkinitcpio -P
+
 # Make user part of the games group (Allows proton to set niceness of process)
 sudo usermod -a -G games $(whoami)
 
