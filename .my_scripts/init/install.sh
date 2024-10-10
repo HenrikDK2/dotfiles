@@ -40,7 +40,7 @@ $HOME/.my_scripts/init/scripts/ext4_optimizations.sh
 $HOME/.my_scripts/init/scripts/avoid_stalls_memory.sh
 
 # Add bootloader entries
-$HOME/.my_scripts/init/scripts/bootloader.sh
+#$HOME/.my_scripts/init/scripts/bootloader.sh
 
 # Enable AMD overclocking service/script
 $HOME/.my_scripts/init/scripts/amd_oc.sh
