@@ -84,6 +84,8 @@ packages=(
     "proton-ge-custom-bin"
     "discord"
     "wine"
+    "wine-gecko"
+    "wine-mono"
     "gamemode"
     "gamescope"
     "heroic-games-launcher-bin"
@@ -109,10 +111,10 @@ if [[ $(get_primary_gpu) == "nvidia" ]]; then
 	echo "Nvidia GPU drivers not yet implemented..."
 	read -p "Press enter to continue"
 elif [[ $(get_primary_gpu) == "amd" ]]; then
-	sudo pacman -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon libva-mesa-driver libva-utils
+	sudo pacman -S mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon vulkan-icd-loader lib32-vulkan-icd-loader libva-mesa-driver libva-utils
 	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
 elif [[ $(get_primary_gpu) == "intel" ]]; then
-	sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver 
+	sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver
 fi
 
 # Install all packages
