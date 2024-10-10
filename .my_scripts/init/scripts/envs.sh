@@ -181,5 +181,5 @@ exclude_packages=(
 # Create the exclusion pattern for grep
 exclude_pattern=$(IFS="|"; echo "${exclude_packages[*]}")
 
-# Get the list of explicitly installed packages, except for prerequisites and excluded packages
+# Get the list of explicitly installed packages, except for excluded packages
 packages_to_remove=$(pacman -Qe | cut -d ' ' -f 1 | grep -v -E "^($exclude_pattern)$")
