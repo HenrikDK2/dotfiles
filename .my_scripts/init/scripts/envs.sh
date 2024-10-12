@@ -1,9 +1,7 @@
 #!/bin/bash
 
 prerequisites_packages=(
-    "linux-zen"
     "linux-firmware"
-
     "base"
     "base-devel"
     "mkinitcpio"
@@ -123,6 +121,16 @@ packages=(
     "thunderbird"
 )
 
+kernel_packages=(
+	"linux-zen"
+	"linux"
+	"linux-lts"
+	"linux-hardened"
+	"linux-rt"
+	"linux-rt-lts"
+    "linux-tkg.*"
+)
+
 android_development_packages=(
 	"watchman-bin"
 	"python"
@@ -161,15 +169,15 @@ elif [[ $(get_primary_gpu) == "intel" ]]; then
 fi
 
 exclude_packages=(
-    "linux-tkg.*"
     "tidal-hifi-bin"
     "piavpn-bin"
     "yay"
     "mullvad-vpn-bin"
     "cachyos.*"
     ".*.-ucode"
-
+	
     ${mirror_packages[@]}
+    ${kernel_packages[@]}
     ${prerequisites_packages[@]}
     ${packages[@]}
     ${android_development_packages[@]}
@@ -178,8 +186,5 @@ exclude_packages=(
     ${gpu_packages[@]}
 )
 
-# Create the exclusion pattern for grep
-exclude_pattern=$(IFS="|"; echo "${exclude_packages[*]}")
-
 # Get the list of explicitly installed packages, except for excluded packages
-packages_to_remove=$(pacman -Qe | cut -d ' ' -f 1 | grep -v -E "^($exclude_pattern)$")
+packages_to_remove=$(pacman -Qe | cut -d ' ' -f 1 | grep -v -E "^($(IFS='|'; echo "${exclude_packages[*]}"))$")

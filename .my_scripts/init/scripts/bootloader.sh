@@ -85,6 +85,16 @@ if [ ! -d "/boot/loader" ]; then
     sudo bootctl install
 fi
 
+# Loader config
+echo "timeout 3" | sudo tee "/boot/loader/loader.conf" > /dev/null
+
+# Check for installed kernel packages and append the default kernel entry to the loader config
+if pacman -Qq | grep -q "^linux-tkg$"; then
+    echo "default tkg.conf" | sudo tee -a "/boot/loader/loader.conf" > /dev/null
+elif pacman -Qq | grep -q "^linux-zen$"; then
+    echo "default zen.conf" | sudo tee -a "/boot/loader/loader.conf" > /dev/null
+fi
+
 # Create temp kernel entries
 mkdir ~/.my_scripts/init/entries/tmp
 cp ~/.my_scripts/init/entries/*.conf ~/.my_scripts/init/entries/tmp

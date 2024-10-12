@@ -22,6 +22,10 @@ fi
 source "$HOME/.my_scripts/init/scripts/functions.sh"
 source "$HOME/.my_scripts/init/scripts/envs.sh"
 
+echo "$packages_to_remove"
+
+exit
+
 # Prerequisites setup script to ensure all necessary dependencies are in place
 source "$HOME/.my_scripts/init/scripts/prerequisites.sh"
 
@@ -30,6 +34,9 @@ source "$HOME/.my_scripts/init/scripts/cachyos-repo.sh"
 
 # Enable custom mirror service for better download speeds
 source "$HOME/.my_scripts/init/scripts/mirrors.sh"
+
+# Choice between linux-zen, or compile the kernel from source
+source "$HOME/.my_scripts/init/scripts/kernel.sh"
 
 # Add bootloader entries
 source "$HOME/.my_scripts/init/scripts/bootloader.sh"
