@@ -145,7 +145,7 @@ bluetooth_packages=(
 	"bluez-utils"
 )
 
-bluetooth_packages=(
+mirror_packages=(
 	"rate-mirrors-bin"
 	"cachyos-rate-mirrors"
 )
