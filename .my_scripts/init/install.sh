@@ -22,10 +22,6 @@ fi
 source "$HOME/.my_scripts/init/scripts/functions.sh"
 source "$HOME/.my_scripts/init/scripts/envs.sh"
 
-echo "$packages_to_remove"
-
-exit
-
 # Prerequisites setup script to ensure all necessary dependencies are in place
 source "$HOME/.my_scripts/init/scripts/prerequisites.sh"
 
