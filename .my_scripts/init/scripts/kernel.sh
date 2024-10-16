@@ -13,7 +13,7 @@ if ! pacman -Qq | grep -q "^linux-tkg$"; then
 		printf "Skips the first MINOR patch as it can be quite buggy\n\n"
 		read -p "Press enter to continue"
 
-		$HOME/.my_scripts/kernel.sh
+		source "$HOME/.my_scripts/kernel.sh"
 	else
 		sudo pacman -S ${kernel_packages[0]} --needed --noconfirm
 	fi

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ask if you want to install any of the optional packages
-$HOME/.my_scripts/init/scripts/optional_packages.sh
+source "$HOME/.my_scripts/init/scripts/optional_packages.sh"
 
 # GPU drivers
 yay -S "${gpu_packages[@]}" --needed
