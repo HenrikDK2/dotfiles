@@ -25,7 +25,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 export FREETYPE_PROPERTIES="hinting=true:hintstyle=hintslight:antialias=rgb:subpixel_rendering=rgb"
 export ANDROID_HOME=$HOME/Android/Sdk
-
+export GSK_RENDERER=ngl
 
 # Alias
 alias upgraded='grep -i upgraded /var/log/pacman.log'
