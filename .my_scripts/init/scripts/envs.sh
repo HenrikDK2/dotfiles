@@ -55,6 +55,7 @@ packages=(
     "fisher"
     "fuse"
     "glib2"
+    "gnome-calculator"
     "gnome-keyring"
     "grim"
     "gvfs"
