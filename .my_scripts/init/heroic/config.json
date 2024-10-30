@@ -25,7 +25,7 @@
       {
         "key": "AMD_VULKAN_ICD",
         "value": "RADV"
-      },
+      }
     ],
     "wrapperOptions": [
       {

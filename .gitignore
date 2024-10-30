@@ -109,9 +109,6 @@
 !.config/waybar
 !.config/waybar/**
 
-!.config/fish
-!.config/fish/config.fish
-
 !.config/mako
 !.config/mako/**
 

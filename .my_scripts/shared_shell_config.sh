@@ -1,3 +1,5 @@
+source $HOME/.my_scripts/init/scripts/functions.sh
+
 # Env Variables
 export fish_greeting=""
 export fish_color_autosuggestion="595d5e"

@@ -47,12 +47,12 @@ packages=(
 
     # System
     "alacritty"
+	"bash-completion"
+	"blesh-git"
     "btop"
     "cabextract"
     "cups"
     "dconf"
-    "fish"
-    "fisher"
     "fuse"
     "glib2"
     "gnome-calculator"
@@ -136,6 +136,7 @@ android_development_packages=(
 	"watchman-bin"
 	"python"
 	"jdk-openjdk"
+	"jdk17-openjdk"
 	"android-tools"
 	"android-studio"
 )

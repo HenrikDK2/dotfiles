@@ -36,6 +36,33 @@ function get_primary_gpu() {
 	elif [ ! -z "$intel" ]; then
 		echo "intel"
 	fi
+}
 
-	exit 0
+# Function to set Java version based on the number
+function set_java_version() {
+    if [ -z "$1" ]; then
+        echo "Usage: set_java_version <java_version_number>"
+        return 1
+    fi
+    
+    # Construct the expected path based on the input version number
+    JAVA_PATH="/usr/lib/jvm/java-$1-openjdk"
+
+	# If java version is not found, then install
+	if [ ! -d "$JAVA_PATH" ]; then
+    	sudo pacman -S "jdk$1-openjdk" --needed
+    fi
+    
+    # Check if the specified Java path exists
+    if [ -d "$JAVA_PATH" ]; then
+        export JAVA_HOME="$JAVA_PATH"
+        export PATH="$JAVA_HOME/bin:$PATH"
+        
+        # Confirm the Java version
+        java -version
+        echo "JAVA_HOME set to $JAVA_HOME"
+    else
+        echo "Error: Java version $1 not found at $JAVA_PATH"
+        return 1
+    fi
 }

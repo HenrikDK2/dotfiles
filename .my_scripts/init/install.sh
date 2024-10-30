@@ -67,9 +67,6 @@ sudo mkinitcpio -P
 # Make user part of the games group (Allows proton to set niceness of process)
 sudo usermod -a -G games $(whoami)
 
-# Change default, and current user shell to fish
-sudo chsh -s /bin/fish && sudo chsh -s /bin/fish $(whoami)
-
 # Enable network time sync
 sudo timedatectl set-ntp true
 
