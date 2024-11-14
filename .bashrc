@@ -6,18 +6,11 @@ if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
     nohup sway &>/dev/null &
 fi
 
-# Function to get the current Git branch
-function parse_git_branch() {
-    local git_dir
-    git_dir=$(git rev-parse --git-dir 2>/dev/null)
-    if [ -n "$git_dir" ]; then
-        echo "($(git symbolic-ref --short HEAD))"
-    fi
-}
-
-# Set PS1 to include username in green, hostname in white, path in green, and Git branch if available
+# PS1
+parse_git_branch() { git rev-parse --abbrev-ref HEAD 2>/dev/null | sed 's/^/(/;s/$/)/'; }
 export PS1='\[\e[32m\]\u\[\e[37m\]@\h \[\e[32m\]\w\[\e[0m\] $(parse_git_branch)> '
 
+# Source files
 source $HOME/.my_scripts/init/scripts/functions.sh
 source /usr/share/blesh/ble.sh --noattach
 
