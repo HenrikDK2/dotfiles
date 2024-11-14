@@ -1,6 +1,11 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# Autostart sway on TTY login
+if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
+    sway
+fi
+
 PS1="\[\e[32;1m\]\w\[\e[0m\] \$ "
 
 # Functions
