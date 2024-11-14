@@ -39,9 +39,9 @@ function get_primary_gpu() {
 }
 
 # Function to set Java version based on the number
-function set_java_version() {
+function set-java() {
     if [ -z "$1" ]; then
-        echo "Usage: set_java_version <java_version_number>"
+        echo "Usage: set-java <java_version_number>"
         return 1
     fi
     
