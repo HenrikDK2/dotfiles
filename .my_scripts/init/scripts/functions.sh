@@ -39,14 +39,15 @@ function get_primary_gpu() {
 }
 
 # Function to set Java version based on the number
-function set-java() {
+function set-java-version() {
     if [ -z "$1" ]; then
-        echo "Usage: set-java <java_version_number>"
+        echo "Usage: set-java-version <java_version_number>"
         return 1
     fi
     
     # Construct the expected path based on the input version number
-    JAVA_PATH="/usr/lib/jvm/java-$1-openjdk"
+    JAVA_VERSION="java-$1-openjdk"
+    JAVA_PATH="/usr/lib/jvm/$JAVA_VERSION"
 
 	# If java version is not found, then install
 	if [ ! -d "$JAVA_PATH" ]; then
@@ -55,12 +56,14 @@ function set-java() {
     
     # Check if the specified Java path exists
     if [ -d "$JAVA_PATH" ]; then
+        sudo archlinux-java set $JAVA_VERSION
         export JAVA_HOME="$JAVA_PATH"
         export PATH="$JAVA_HOME/bin:$PATH"
         
         # Confirm the Java version
+		clear
         java -version
-        echo "JAVA_HOME set to $JAVA_HOME"
+        archlinux-java status
     else
         echo "Error: Java version $1 not found at $JAVA_PATH"
         return 1
