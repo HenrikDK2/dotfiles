@@ -1,4 +1,13 @@
 bleopt edit_magic_expand=history:sabbrev:alias
+bleopt highlight_filename=
+bleopt highlight_variable=
+bleopt complete_menu_filter=
+bleopt prompt_eol_mark=''
+bleopt exec_errexit_mark=
+bleopt exec_elapsed_mark=
+bleopt exec_exit_mark=
+bleopt edit_marker=
+bleopt edit_marker_error=
 
 # Set colors to match the Waybar theme
 nord0="#3b4252"       # Background
