@@ -3,6 +3,7 @@
 
 # Standalone files
 !.bashrc
+!.blerc
 !.hidden
 !.bash_profile
 !.gitignore
