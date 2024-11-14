@@ -172,6 +172,8 @@ fi
 
 exclude_packages=(
     "tidal-hifi-bin"
+	"prismlauncher"
+	"curseforge"
     "piavpn-bin"
     "yay"
     "mullvad-vpn-bin"
