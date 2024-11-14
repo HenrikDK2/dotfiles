@@ -40,8 +40,8 @@ ble-face argument_option=fg="$nord3"
 ble-face auto_complete=fg=242
 ble-face cmdinfo_cd_cdpath=fg="$nord1",bg="$nord_warning"
 ble-face command_alias=fg="$nord3"
-ble-face command_builtin=fg="$nord_critical"
-ble-face command_builtin_dot=fg="$nord_critical",bold
+ble-face command_builtin=fg="#81a1c1"
+ble-face command_builtin_dot=fg="#81a1c1",bold
 ble-face command_directory=fg=66,underline
 ble-face command_file=fg="#81a1c1"
 ble-face command_function=fg="$nord3"
