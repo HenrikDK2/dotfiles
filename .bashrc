@@ -6,7 +6,16 @@ if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
     sway
 fi
 
-PS1="\[\e[32;1m\]\w\[\e[0m\] \$ "
+# Function to get the current Git branch
+parse_git_branch() {
+    git rev-parse --is-inside-work-tree &>/dev/null
+    if [ $? -eq 0 ]; then
+        echo "($(git branch --show-current))"
+    fi
+}
+
+# Set PS1 to include username in green, hostname in white, path in green, and Git branch if available
+export PS1='\[\e[32m\]\u\[\e[37m\]@\h \[\e[32m\]\w\[\e[0m\] $(parse_git_branch)> '
 
 # Functions
 source $HOME/.my_scripts/init/scripts/functions.sh
