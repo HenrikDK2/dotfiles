@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # First login (Post-install)
-if [ ! -f .config/fish/.post-install ]; then
+if [ ! -f $HOME/.config/.post-install ]; then
 	dconf write /org/nemo/window-state/start-with-menu-bar false
 	dconf write /org/gnome/evolution/shell/menubar-visible false
 	dconf write /org/gnome/evolution/shell/statusbar-visible false
@@ -9,7 +9,7 @@ if [ ! -f .config/fish/.post-install ]; then
 	dconf write /org/gnome/evolution/mail/show-preview-toolbar false
 	dconf write /org/gnome/evolution/shell/buttons-style "'icons'"
 	dconf write /org/gnome/evolution/shell/toolbar-icon-size "'small'"
-	touch .config/fish/.post-install
+	touch $HOME/.config/.post-install
 fi
 
 # Make sure VPN script is loaded as quickly as possible

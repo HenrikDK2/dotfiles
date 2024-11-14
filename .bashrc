@@ -3,19 +3,7 @@
 
 PS1="\[\e[32;1m\]\w\[\e[0m\] \$ "
 
-# First login (Post-install)
-if [ ! -f $HOME/.config/.post-install ]; then
-	dconf write /org/nemo/window-state/start-with-menu-bar false
-	dconf write /org/gnome/evolution/shell/menubar-visible false
-	dconf write /org/gnome/evolution/shell/statusbar-visible false
-	dconf write /org/gnome/evolution/shell/toolbar-visible false
-	dconf write /org/gnome/evolution/mail/show-preview-toolbar false
-	dconf write /org/gnome/evolution/shell/buttons-style "'icons'"
-	dconf write /org/gnome/evolution/shell/toolbar-icon-size "'small'"
-	touch $HOME/.config/.post-install
-fi
-
-# Bash functions
+# Functions
 source $HOME/.my_scripts/init/scripts/functions.sh
 
 # Setup blesh auto-suggestions
