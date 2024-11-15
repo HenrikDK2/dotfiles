@@ -6,7 +6,7 @@ install_android_development_tools() {
 	
 	if confirm; then
 		yay -S "${android_development_packages[@]}" --needed --noconfirm
-		set-java-version 17
+		set_java_version 17
 	fi
 }
 
