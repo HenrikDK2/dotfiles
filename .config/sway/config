@@ -27,7 +27,7 @@ input * {
     floating_modifier $mod normal
     bindsym $mod+home reload
     bindsym $mod+m exec $HOME/.config/sway/mute_mic.sh
-	bindsym --whole-window button9 exec $HOME/.config/sway/mute_mic.sh
+	bindsym --whole-window alt+button9 exec $HOME/.config/sway/mute_mic.sh
 
 #
 # Moving around:
