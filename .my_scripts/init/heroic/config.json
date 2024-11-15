@@ -35,26 +35,34 @@
     ],
     "showFps": false,
     "useGameMode": true,
-    "userInfo": {
-      "name": "#NAME"
-    },
     "wineCrossoverBottle": "Heroic",
     "winePrefix": "/home/#NAME/Games/Heroic/Prefixes/default",
     "wineVersion": {
-      "bin": "/home/#NAME/.config/heroic/tools/wine/Wine-GE-Latest/bin/wine",
-      "name": "Wine - Wine-GE-Latest",
-      "type": "wine",
-      "lib": "/home/#NAME/.config/heroic/tools/wine/Wine-GE-Latest/lib64",
-      "lib32": "/home/#NAME/.config/heroic/tools/wine/Wine-GE-Latest/lib",
-      "wineserver": "/home/#NAME/.config/heroic/tools/wine/Wine-GE-Latest/bin/wineserver"
+      "bin": "/usr/share/steam/compatibilitytools.d/proton-ge-custom/proton",
+      "name": "Proton - proton-ge-custom",
+      "type": "proton"
     },
     "enableEsync": true,
     "enableFsync": true,
+    "enableMsync": false,
     "eacRuntime": true,
     "battlEyeRuntime": true,
     "framelessWindow": false,
+    "beforeLaunchScriptPath": "",
+    "afterLaunchScriptPath": "",
+    "userInfo": {
+      "name": "#NAME"
+    },
     "useSteamRuntime": true,
-    "showMangohud": false
+    "showMangohud": false,
+    "discordRPC": true,
+    "experimentalFeatures": {
+      "enableNewDesign": false,
+      "enableHelp": false,
+      "automaticWinetricksFixes": true,
+      "cometSupport": true,
+      "umuSupport": true
+    }
   },
   "version": "v0"
 }
