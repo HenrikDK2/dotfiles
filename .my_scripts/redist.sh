@@ -21,6 +21,7 @@ fi
 STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/steam"
 GAME_FOLDER=$(find_game_folder)
 REDISTS_HASH_LIST="$WINEPREFIX/.redists"
+RESTART_NEEDED=0
 
 log "GAME_FOLDER: $GAME_FOLDER"
 log "STEAM_COMPAT_DATA_PATH: $STEAM_COMPAT_DATA_PATH"
@@ -44,7 +45,8 @@ install_dlls() {
         exit 1
     fi
 
-    find "$redist_dir" -type f -name "*.exe" | while read -r file; do
+    # Avoid subshell: Use a for loop with find
+    while IFS= read -r -d '' file; do
         log "Found file: $file"
         local sha256=$(sha256sum "$file" | cut -d ' ' -f 1)
 
@@ -52,10 +54,11 @@ install_dlls() {
             log "Running: $file"
             $WINE_RUN "$file" /quiet
             echo "$sha256" >> "$REDISTS_HASH_LIST"
+            RESTART_NEEDED=1  # Update global variable
         else
             log "Already installed (hash matched): $file"
         fi
-    done
+    done < <(find "$redist_dir" -type f -name "*.exe" -print0)
 }
 
 if [ ! -z "$WINE_RUN" ]; then
@@ -68,6 +71,13 @@ if [ ! -z "$WINE_RUN" ]; then
         fi
     done <<< "$(find "$GAME_FOLDER" -type d \( -iname '_Redist' -o -iname 'Redist' -o -iname 'Redistributable' -o -iname 'DotNetCore' -o -iname 'Redistributables' \))"
 
+    if [ $RESTART_NEEDED -eq 1 ]; then
+        log "New redistributables installed.\nRestart required!"
+        notify-send "RedistScript" "New redistributables were installed.\nRestart required!"
+        pkill -9 wineserver
+        ps aux | awk '/\.exe$/ {print $2}' | xargs kill
+        exit 0
+    fi
 fi
 
 log "Script execution completed."
