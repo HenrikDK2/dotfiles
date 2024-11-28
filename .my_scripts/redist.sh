@@ -1,52 +1,74 @@
 #!/bin/bash
 
-# This script is useful for Heroic Games Launcher
-# It will automatically install the redists files inside _redist folder
+log() {
+    echo "RedistScript: $1"
+}
+
+find_game_folder() {
+    if [[ "$PWD" =~ /steamapps/common/([^/]+) ]]; then
+        echo "/home/henrik/.local/share/Steam/steamapps/common/${BASH_REMATCH[1]}"
+        return 0
+    fi
+    echo "$(echo "$PWD" | sed -E 's/(bin|bin64)$//I')"
+}
 
 if [ -z "$STEAM_COMPAT_DATA_PATH" ]; then
-	STEAM_COMPAT_DATA_PATH="$WINEPREFIX"
+    STEAM_COMPAT_DATA_PATH="$WINEPREFIX"
 elif [ -z "$WINEPREFIX" ]; then
-	WINEPREFIX="$STEAM_COMPAT_DATA_PATH"
+    WINEPREFIX="$STEAM_COMPAT_DATA_PATH"
 fi
 
 STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.local/share/steam"
-GAME_FOLDER=$(echo "$PWD" | sed -E 's/(bin|bin64)$//I')
+GAME_FOLDER=$(find_game_folder)
 REDISTS_HASH_LIST="$WINEPREFIX/.redists"
 
-if [[ "$WINEDLLPATH" == "$HOME/.config/heroic/tools/wine/Wine-GE-Latest"* ]]; then
-	WINE_RUN="$HOME/.config/heroic/tools/wine/Wine-GE-Latest/bin/wine"
+log "GAME_FOLDER: $GAME_FOLDER"
+log "STEAM_COMPAT_DATA_PATH: $STEAM_COMPAT_DATA_PATH"
+log "WINEPREFIX: $WINEPREFIX"
+
+if [ -x "$PROTONPATH/files/bin/wine" ]; then
+    WINE_RUN="$PROTONPATH/files/bin/wine"
+elif [ -x "$PROTONPATH/dist/bin/wine" ]; then
+    WINE_RUN="$PROTONPATH/dist/bin/wine"
+elif [[ "$WINEDLLPATH" == "$HOME/.config/heroic/tools/wine/Wine-GE-Latest"* ]]; then
+    WINE_RUN="$HOME/.config/heroic/tools/wine/Wine-GE-Latest/bin/wine"
 fi
 
-function install_dlls() {
+log "Using Wine: $WINE_RUN"
+
+install_dlls() {
     local redist_dir="$1"
-    
+
     if [ -z "$redist_dir" ] || [ ! -d "$redist_dir" ]; then
-        echo "Invalid or missing directory: $redist_dir"
+        log "Invalid or missing directory: $redist_dir"
         exit 1
     fi
 
     find "$redist_dir" -type f -name "*.exe" | while read -r file; do
+        log "Found file: $file"
         local sha256=$(sha256sum "$file" | cut -d ' ' -f 1)
 
         if ! grep -q "$sha256" "$REDISTS_HASH_LIST"; then
-            $WINE_RUN $file
+            log "Running: $file"
+            $WINE_RUN "$file" /quiet
             echo "$sha256" >> "$REDISTS_HASH_LIST"
+        else
+            log "Already installed (hash matched): $file"
         fi
     done
 }
 
 if [ ! -z "$WINE_RUN" ]; then
-	install_dlls "$HOME/.my_scripts/_redist"
+    install_dlls "$HOME/.my_scripts/_redist"
 
-	# Install redists files inside game folder
-	while read redist; do
-		if [ -d "$redist" ]; then
-	    	install_dlls "$redist"
-		fi
-	done <<< "$(find "$GAME_FOLDER" -type d \( -iname '_Redist' -o -iname 'Redist' -o -iname 'Redistributable' -o -iname 'Redistributables' \))"
+    while read -r redist; do
+        log "Found redist folder: $redist"
+        if [ -d "$redist" ]; then
+            install_dlls "$redist"
+        fi
+    done <<< "$(find "$GAME_FOLDER" -type d \( -iname '_Redist' -o -iname 'Redist' -o -iname 'Redistributable' -o -iname 'DotNetCore' -o -iname 'Redistributables' \))"
 
-	# Kill all subprocesses from script
-	pgrep -P $$ --signal SIGTERM
 fi
 
+log "Script execution completed."
 exec "$@" &
