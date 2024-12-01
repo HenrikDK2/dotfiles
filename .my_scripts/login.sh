@@ -24,6 +24,7 @@ for script in $HOME/.my_scripts/login.d/*.sh; do (exec "$script" &) done
 (waybar &) 
 (thunderbird &)
 (discord &)
+(discord-canary &)
 
 # Reduce priority of this script
 renice -n 20 $$
