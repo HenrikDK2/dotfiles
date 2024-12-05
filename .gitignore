@@ -1,3 +1,4 @@
+
 # Exclude all files
 *
 
@@ -48,6 +49,8 @@
 !.config/MangoHud/*
 
 !.config/discord/
+!.config/discordcanary/
+!.config/discordcanary/settings.json
 !.config/discord/settings.json
 
 !.config/systemd/
