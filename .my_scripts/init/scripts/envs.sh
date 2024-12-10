@@ -141,6 +141,11 @@ android_development_packages=(
 	"android-studio"
 )
 
+obs_packages=(
+	"obs-studio-browser"
+	"obs-vkcapture"
+)
+
 virt_manager_packages=(
 	"virt-manager"
 	"qemu-desktop"
@@ -187,6 +192,7 @@ exclude_packages=(
     ${android_development_packages[@]}
     ${virt_manager_packages[@]}
     ${bluetooth_packages[@]}
+    ${obs_packages[@]}
     ${gpu_packages[@]}
 )
 

@@ -35,11 +35,30 @@ install_virt_manager() {
 	fi
 }
 
+install_obs() {
+	clear
+	printf "This is for streaming/recording.\n\n"
+	printf "Do you want to install obs-studio with browser source and game capture?"
+
+	if confirm; then
+		yay -S "${obs_packages[@]}" --needed --noconfirm
+	fi
+}
+
 # Checks if any of the android packages are installed, if not
 # then ask if you want to install Android Development Tools
 for pkg in "${android_development_packages[@]}"; do
 	if ! pacman -Q "$pkg" &> /dev/null; then
 		install_android_development_tools
+		break
+	fi
+done
+
+# Checks if any of the android packages are installed, if not
+# then ask if you want to install obs-studio packages
+for pkg in "${obs_packages[@]}"; do
+	if ! pacman -Q "$pkg" &> /dev/null; then
+		install_obs
 		break
 	fi
 done
