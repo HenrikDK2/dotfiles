@@ -35,14 +35,18 @@ update_normal_packages() {
 }
 
 update_kernel(){
-	if pacman -Qi "linux-tkg" &> /dev/null; then
-		local stable_kernel=$(get_stable_kernel)
-		local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
-		
-		if [[ "$stable_kernel" != "$current_kernel" ]]; then
-			~/.my_scripts/kernel.sh
-		fi
-	fi
+    if pacman -Qi "linux-tkg" &> /dev/null; then
+        local stable_kernel=$(get_stable_kernel)
+        local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
+        
+        # Extract patch version from the stable kernel version
+        local patch_version=$(echo "$stable_kernel" | cut -d'.' -f3)
+
+        # Check if the patch version is odd
+        if [[ "$stable_kernel" != "$current_kernel" && $((patch_version % 2)) -ne 0 ]]; then
+            ~/.my_scripts/kernel.sh
+        fi
+    fi
 }
 
 # Check for an internet connection
