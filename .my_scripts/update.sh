@@ -39,14 +39,29 @@ update_kernel(){
         local stable_kernel=$(get_stable_kernel)
         local current_kernel=$(pacman -Qi linux-tkg | awk '/^Version/ {print $3}' | cut -d'-' -f1)
         
-        # Extract patch version from the stable kernel version
-        local patch_version=$(echo "$stable_kernel" | cut -d'.' -f3)
+        # Extract major, minor, and patch versions
+        local stable_major=$(echo "$stable_kernel" | cut -d'.' -f1)
+        local stable_minor=$(echo "$stable_kernel" | cut -d'.' -f2)
+        local stable_patch=$(echo "$stable_kernel" | cut -d'.' -f3)
 
-        # Check if the patch version is odd
-        if [[ "$stable_kernel" != "$current_kernel" && $((patch_version % 2)) -ne 0 ]]; then
-            ~/.my_scripts/kernel.sh
-        fi
-    fi
+        local current_major=$(echo "$current_kernel" | cut -d'.' -f1)
+        local current_minor=$(echo "$current_kernel" | cut -d'.' -f2)
+        local current_patch=$(echo "$current_kernel" | cut -d'.' -f3)
+
+        # Precompute the minimum required patch
+        local minimum_req_patch=$((current_patch + 2))
+	
+	    # Check if the kernel should be updated:
+	    if [[ "$stable_patch" -ne 0 && (  # Ensure stable patch version is not 0
+	        # 1. If the stable kernel has a different major or minor version than the current kernel, update
+	        "$stable_major" -ne "$current_major" || 
+	        "$stable_minor" -ne "$current_minor" || 
+	        # 2. If the stable kernel has the same major and minor versions, ensure the patch version is at least 2 higher
+	        ("$stable_patch" -ge 1 && "$stable_patch" -ge "$minimum_req_patch")
+	    ) ]]; then
+	        ~/.my_scripts/kernel.sh
+	    fi
+	fi
 }
 
 # Check for an internet connection
