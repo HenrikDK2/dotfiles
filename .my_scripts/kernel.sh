@@ -82,7 +82,7 @@ install_latest_kernel(){
 	fi
 
 	clear
-	makepkg -si --noconfirm
+	yes "" | makepkg -si --noconfirm
 }
 
 # Check for an internet connection
