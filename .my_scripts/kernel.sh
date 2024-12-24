@@ -76,6 +76,13 @@ install_latest_kernel(){
 		set_config "_processor_opt" "native_amd"
 	fi
 
+	# Check if "x86-64-v3" is supported on CPU
+	if /lib64/ld-linux-x86-64.so.2 --help | grep -q "x86-64-v3 (supported, searched)"; then
+	    set_config "_x86_64_isalvl" "3"
+	else
+	    set_config "_x86_64_isalvl" ""
+	fi
+
 	# If no NVIDIA GPU is present, disable NUMA
 	if (! lspci | grep -q -i 'NVIDIA Corporation'); then
 		set_config "_numadisable" "true"
