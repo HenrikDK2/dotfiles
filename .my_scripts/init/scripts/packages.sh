@@ -4,10 +4,10 @@
 source "$HOME/.my_scripts/init/scripts/optional_packages.sh"
 
 # GPU drivers
-yay -S "${gpu_packages[@]}" --needed
+yay -S "${gpu_packages[@]}" --needed --ask 4
 
 # Install packages
-yay -S "${packages[@]}" --needed
+yay -S "${packages[@]}" --needed --ask 4
 
 # Enable required services
 sudo systemctl enable cups ufw dnsmasq denyhosts fstrim.timer
