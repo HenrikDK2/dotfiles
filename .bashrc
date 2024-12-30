@@ -40,6 +40,10 @@ export FREETYPE_PROPERTIES="hinting=true:hintstyle=hintslight:antialias=rgb:subp
 export ANDROID_HOME=$HOME/Android/Sdk
 export GSK_RENDERER=ngl
 
+# Allows 32-bit applications to access up to 4 GB of virtual memory.
+export PROTON_FORCE_LARGE_ADDRESS_AWARE=1
+export LD_PRELOAD="" # Fixes issues with games suttering after 30 minutes (https://github.com/ValveSoftware/steam-for-linux/issues/11446)
+
 # Alias
 alias upgraded='grep -i upgraded /var/log/pacman.log'
 alias installed='grep -i installed /var/log/pacman.log'
@@ -54,3 +58,10 @@ alias install='yay -S'
 alias uninstall='yay -Rsn'
 
 [[ ${BLE_VERSION-} ]] && ble-attach
+
+
+# This is just an easy way for me to copy to steam launch options
+
+# file.exe - Path to a custom .exe file, relative to the game’s .exe directory.
+# cmd=(gamescope -w 2560 -h 1440 -- gamemoderun %command%); cmd[-1]=file.exe; "${cmd[@]}"
+

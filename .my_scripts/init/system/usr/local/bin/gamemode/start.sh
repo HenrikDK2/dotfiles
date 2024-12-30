@@ -4,15 +4,7 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 source "$parent_path/optimize.sh"
 
 stop_service () {
-    while [ -n "$(systemctl --state=running | grep "$1")" ]; do
-        if [ -z "$2" ]; then
-        	sudo systemctl stop $1;
-       	else 
-       		sudo systemctl stop $2;
-       	fi
-
-       	sleep 2
-    done
+	sudo systemctl stop $1;
 }
 
 # Set to AMD gpu to maximum performance level during gaming (Reduce stutters)
@@ -38,7 +30,10 @@ killall -9 blueman-applet blueman-manager blueman-tray
 # Stop services using memory while not needed
 stop_service upower
 stop_service cups
-stop_service journald "systemd-journald systemd-journald.socket systemd-journald-dev-log.socket systemd-journald-audit.socket"
+stop_service systemd-journald.socket
+stop_service systemd-journald-dev-log.socket
+stop_service systemd-journald-audit.socket
+stop_service journald
 stop_service systemd-timesyncd
 
 # Disable split lock mitigation for performance gain in some games, is enabled again on game exit. 
@@ -46,9 +41,10 @@ sudo sysctl kernel.split_lock_mitigate=0
 
 # Only stop services related to virt-manager if closed
 if [ -z "$(pgrep virt-manager)" ]; then
-	stop_service systemd-machined
-	stop_service virtlogd
-	stop_service libvirtd libvirtd.service libvirtd-admin.socket libvirtd-ro.socket libvirtd.socket
+	stop_service libvirtd-admin.socket
+	stop_service libvirtd-ro.socket
+	stop_service libvirtd.socket
+	stop_service libvirtd
 fi
 
 # Stop docker if no containers are running
