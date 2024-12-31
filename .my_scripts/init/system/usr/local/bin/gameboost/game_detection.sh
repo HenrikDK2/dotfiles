@@ -84,5 +84,5 @@ while true; do
         IS_START_SCRIPT_STARTED=false
     fi
 
-    sleep 2
+    sleep 30
 done
