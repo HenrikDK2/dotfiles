@@ -132,6 +132,7 @@ nvme
 nvme_auth
 nvme_common
 nvme_core
+ondemand
 ohci_hcd
 openvpn
 overlay

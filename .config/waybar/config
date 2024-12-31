@@ -76,8 +76,7 @@
     "tooltip": false
   },
   "memory": {
-    "format": "  {percentage}%",
-    "on-click": "sudo /usr/local/bin/gamemode/optimize.sh"
+    "format": "  {percentage}%"
   },
   "battery": {
     "states": {

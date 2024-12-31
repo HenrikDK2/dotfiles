@@ -12,21 +12,21 @@ set_prio () {
     io_classdata="$4"
 
     if [ -n "$pids" ] && [ -n $nice_value ]; then
-        sudo renice -n $nice_value -p $pids
+        renice -n $nice_value -p $pids
 
         if [ $io_class ]; then
 	        if  [ -z $io_classdata ] || [ $io_class -eq 3 ]; then
-	            sudo ionice -c $io_class -p $pids
+	            ionice -c $io_class -p $pids
 	        else
-	            sudo ionice -c $io_class -n $io_classdata -p $pids
+	            ionice -c $io_class -n $io_classdata -p $pids
 	        fi
         fi
     fi
 }
 
 # Improve scheduling in Sway and Gamescope
-sudo setcap 'cap_sys_nice=eip' /usr/bin/sway
-sudo setcap 'cap_sys_nice=eip' /usr/bin/gamescope
+setcap 'cap_sys_nice=eip' /usr/bin/sway
+setcap 'cap_sys_nice=eip' /usr/bin/gamescope
 
 # Set priorities
 set_prio "pipewire*" -19
@@ -54,4 +54,4 @@ set_prio "/usr/bin/lutris" 20 3
 
 # Clear RAM
 kill $(pgrep chrome_crashpad)
-sudo sh -c 'echo 3 >  /proc/sys/vm/drop_caches'
+sh -c 'echo 3 >  /proc/sys/vm/drop_caches'

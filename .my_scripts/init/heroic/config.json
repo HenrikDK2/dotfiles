@@ -34,7 +34,7 @@
       }
     ],
     "showFps": false,
-    "useGameMode": true,
+    "useGameMode": false,
     "wineCrossoverBottle": "Heroic",
     "winePrefix": "/home/#NAME/Games/Heroic/Prefixes/default",
     "wineVersion": {

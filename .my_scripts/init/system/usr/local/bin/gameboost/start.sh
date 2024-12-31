@@ -4,19 +4,27 @@ parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 source "$parent_path/optimize.sh"
 
 stop_service () {
-	sudo systemctl stop $1;
+	systemctl stop $1;
 }
 
-# Set to AMD gpu to maximum performance level during gaming (Reduce stutters)
+# Set CPU govenor to performance
+for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+    echo "performance" | tee $cpu
+done
+
+# Set AMD gpu to maximum performance level during gaming (Reduce stutters)
 for card_dir in /sys/class/drm/card*; do
 	power_dpm="$card_dir/device/power_dpm_force_performance_level"
 	pp_power="$card_dir/device/pp_power_profile_mode"
 	
     if [[ -e "$power_dpm" && -e "$pp_power" ]]; then
-        echo "manual" | sudo tee $power_dpm
-        echo "1" | sudo tee $pp_power
+        echo "manual" | tee $power_dpm
+        echo "1" | tee $pp_power
   	fi
 done
+
+# Disable CPU Idle C-states (for better responsiveness)
+echo 1 > /sys/devices/system/cpu/cpu*/cpuidle/state*/disable
 
 # Kills cmst (Kill the front-end for connman, it usually runs in the background, but is not needed)
 killall -9 cmst
@@ -33,11 +41,11 @@ stop_service cups
 stop_service systemd-journald.socket
 stop_service systemd-journald-dev-log.socket
 stop_service systemd-journald-audit.socket
-stop_service journald
+stop_service systemd-journald
 stop_service systemd-timesyncd
 
 # Disable split lock mitigation for performance gain in some games, is enabled again on game exit. 
-sudo sysctl kernel.split_lock_mitigate=0
+sysctl kernel.split_lock_mitigate=0
 
 # Only stop services related to virt-manager if closed
 if [ -z "$(pgrep virt-manager)" ]; then
@@ -48,7 +56,7 @@ if [ -z "$(pgrep virt-manager)" ]; then
 fi
 
 # Stop docker if no containers are running
-if [[ -z $(sudo docker ps -q) ]]; then
+if [[ -z $(docker ps -q) ]]; then
   stop_service docker
   stop_service containerd
 fi

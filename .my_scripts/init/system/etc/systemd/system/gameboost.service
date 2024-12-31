@@ -1,0 +1,14 @@
+[Unit]
+Description=GameBoost - Automatically switches to performance mode when a game is detected
+After=network.target
+
+[Service]
+Nice=19
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+CPUSchedulingPolicy=idle
+ExecStart=/usr/bin/nice -n 19 /usr/local/bin/gameboost/game_detection.sh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

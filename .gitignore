@@ -119,7 +119,6 @@
 !.config/alacritty/
 !.config/alacritty/alacritty.toml
 
-!.config/gamemode.ini
 !.config/mimeapps.list
 
 # .LOCAL
