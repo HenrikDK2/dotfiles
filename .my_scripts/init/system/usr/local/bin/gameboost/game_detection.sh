@@ -41,7 +41,7 @@ is_gpu_usage_above_50() {
     fi
 }
 
-# Check system memory and determine if game-related activity is present
+# Check gpu and system memory activity to determine if a game is running
 check_game_activity() {
 	if ! is_gpu_usage_above_50; then
 		return 1
