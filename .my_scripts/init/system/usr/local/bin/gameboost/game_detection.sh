@@ -43,23 +43,16 @@ is_gpu_usage_above_50() {
 
 # Check system memory and determine if game-related activity is present
 check_game_activity() {
-    local detected=1  # Default to "no game activity"
+	if ! is_gpu_usage_above_50; then
+		return 1
+	fi
 
-    # Loop through the top processes and check conditions
-    while read -r pid name ram_mb; do
-        if is_gpu_usage_above_50; then
-            detected=0  # Set to "game activity detected"
-            break       # Exit the loop
-        fi
-    done < <(ps -eo pid,comm,%mem --sort=-%mem | head -n 10 | awk -v limit=$min_ram_limit -v total_mem=$total_mem '
-        NR > 1 {
-            ram_mb = ($3 / 100) * total_mem;  # Convert %mem to MB
-            if (ram_mb > limit) {
-                print $1, $2, ram_mb
-            }
-        }')
-
-    return $detected
+    # Check the top 5 processes by memory usage and compare with min_ram_limit
+    if ps aux --sort=-%mem | awk 'NR>1 {if ($6/1024 > '$min_ram_limit') exit 0} END {exit 1}'; then
+        return 0  # Return 0 if a process is using more than min_ram_limit
+    else
+        return 1  # Return 1 if no process exceeds the min_ram_limit
+    fi
 }
 
 # Combine multiple checks to determine if a game is running
@@ -91,5 +84,5 @@ while true; do
         IS_START_SCRIPT_STARTED=false
     fi
 
-    sleep 30
+    sleep 2
 done
