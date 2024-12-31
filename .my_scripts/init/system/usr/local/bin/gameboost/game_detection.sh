@@ -2,7 +2,7 @@
 
 total_mem=$(free -m | awk '/^Mem:/ {print $2}') # Get total system memory in MB
 threshold_mem=$((total_mem / 2)) # 50% of total memory
-min_ram_limit=$((threshold_mem < 2000 ? threshold_mem : 2000))
+min_ram_limit=$((threshold_mem < 2000 ? threshold_mem : 2000)) # Whichever is lower 2GB or 50% of ram
 
 # Function to check if any game-related processes are running
 is_game_running() {
