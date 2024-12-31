@@ -1,41 +1,33 @@
 #!/bin/sh
 
-systemctl start upower
-systemctl start systemd-journald.service
-systemctl start cups systemd-timesyncd
-systemctl start libvirtd virtlogd
-systemctl start docker
-systemctl start containerd
+# Start required services in parallel
+systemctl start upower systemd-journald.service cups systemd-timesyncd libvirtd virtlogd docker containerd &
 
 # Re-enable split lock mitigation
 sysctl kernel.split_lock_mitigate=1
 
 # Set CPU governor to ondemand if available, else powersave
-for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
-    if grep -q "ondemand" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors; then
-        echo "ondemand" | tee $cpu
-    else
-        echo "powersave" | tee $cpu
+governor="powersave"
+if grep -q "ondemand" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors; then
+    governor="ondemand"
+fi
+find /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor -exec echo "$governor" > {} \;
+
+# Enable CPU Idle C-states
+for cpu in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do
+    echo 0 > "$cpu"
+done
+
+# Set performance level to auto for GPUs if applicable
+for card_dir in /sys/class/drm/card*/device/power_dpm_force_performance_level; do
+    if [ -e "$card_dir" ]; then
+        echo "auto" > "$card_dir"
     fi
 done
 
-# Enable CPU Idle C-states
-echo 0 > /sys/devices/system/cpu/cpu*/cpuidle/state*/disable
-
-# Set performance level to auto
-for card_dir in /sys/class/drm/card*; do
-	power_dpm="$card_dir/device/power_dpm_force_performance_level"
-	
-    if [ -e "$power_dpm" ]; then
-        echo "auto" | tee $power_dpm
-  	fi
-done
-
-# Sometimes proton doesn't exit correctly, and leaves unwanted processes behind
-# This will kill all wine-related processes
-ps aux | awk '/\.exe$/ {print $2}' | xargs kill
-pkill -f wine
+# Kill all wine-related processes
+pkill -f '\.exe$'
 
 # Clear RAM
-kill $(pgrep chrome_crashpad)
-sh -c 'echo 3 >  /proc/sys/vm/drop_caches'
+pkill chrome_crashpad
+echo 3 > /proc/sys/vm/drop_caches

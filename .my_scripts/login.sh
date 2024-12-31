@@ -26,13 +26,10 @@ for script in $HOME/.my_scripts/login.d/*.sh; do (exec "$script" &) done
 (discord &)
 (discord-canary &)
 
-# Reduce priority of this script
-renice -n 20 $$
-ionice -c idle -p $$
+# Improve scheduling in Sway and Gamescope (run in parallel)
+setcap 'cap_sys_nice=eip' /usr/bin/sway &
+setcap 'cap_sys_nice=eip' /usr/bin/gamescope &
 
 # Switch to workspace 1
 swaymsg workspace number 1
 
-# Optimize priorities of processes
-sleep 10
-sudo /usr/local/bin/gamemode/optimize.sh &

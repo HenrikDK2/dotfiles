@@ -1,70 +1,56 @@
 #!/bin/sh
 
-stop_service () {
-	systemctl stop $1;
-}
+# Set CPU governor to performance (all at once)
+echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 &
 
-# Set CPU govenor to performance
-for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
-    echo "performance" | tee $cpu
-done
-
-# Set AMD gpu to maximum performance level during gaming (Reduce stutters)
+# Set AMD GPU to maximum performance level during gaming (reduce stutters)
 for card_dir in /sys/class/drm/card*; do
-	power_dpm="$card_dir/device/power_dpm_force_performance_level"
-	pp_power="$card_dir/device/pp_power_profile_mode"
-	
+    power_dpm="$card_dir/device/power_dpm_force_performance_level"
+    pp_power="$card_dir/device/pp_power_profile_mode"
+    
     if [[ -e "$power_dpm" && -e "$pp_power" ]]; then
-        echo "manual" | tee $power_dpm
-        echo "1" | tee $pp_power
-  	fi
+        echo "manual" | tee $power_dpm > /dev/null 2>&1 &
+        echo "1" | tee $pp_power > /dev/null 2>&1 &
+    fi
 done
 
-# Disable CPU Idle C-states (for better responsiveness)
-echo 1 > /sys/devices/system/cpu/cpu*/cpuidle/state*/disable
+# Disable CPU Idle C-states in one go (no need to loop)
+for cpu in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do
+    echo 1 > "$cpu"
+done
 
-# Kills cmst (Kill the front-end for connman, it usually runs in the background, but is not needed)
-killall -9 cmst
+# Kill unnecessary background processes
+killall -9 cmst mullvad-gui blueman-applet blueman-manager blueman-tray
 
-# Killed mullvad vpn graphical interface (the daemon still runs)
-killall -9 mullvad-gui
+# Stop services in parallel
+systemctl stop upower &
+systemctl stop cups &
+systemctl stop systemd-journald.socket &
+systemctl stop systemd-journald-dev-log.socket &
+systemctl stop systemd-journald-audit.socket &
+systemctl stop systemd-journald &
+systemctl stop systemd-timesyncd &
 
-# Kill bluez front-end
-killall -9 blueman-applet blueman-manager blueman-tray
+# Disable split lock mitigation
+sysctl kernel.split_lock_mitigate=0 &
 
-# Stop services using memory while not needed
-stop_service upower
-stop_service cups
-stop_service systemd-journald.socket
-stop_service systemd-journald-dev-log.socket
-stop_service systemd-journald-audit.socket
-stop_service systemd-journald
-stop_service systemd-timesyncd
-
-# Disable split lock mitigation for performance gain in some games, is enabled again on game exit. 
-sysctl kernel.split_lock_mitigate=0
-
-# Only stop services related to virt-manager if closed
+# Stop virt-manager related services only if closed
 if [ -z "$(pgrep virt-manager)" ]; then
-	stop_service libvirtd-admin.socket
-	stop_service libvirtd-ro.socket
-	stop_service libvirtd.socket
-	stop_service libvirtd
+	systemctl stop libvirtd-admin.socket &
+	systemctl stop libvirtd-ro.socket &
+	systemctl stop libvirtd.socket &
+	systemctl stop libvirtd &
 fi
 
-# Stop docker if no containers are running
+# Stop docker services if no containers are running
 if [[ -z $(docker ps -q) ]]; then
-  stop_service docker
-  stop_service containerd
+  systemctl stop docker &
+  systemctl stop containerd &
 fi
 
-# Improve scheduling in Sway and Gamescope
-setcap 'cap_sys_nice=eip' /usr/bin/sway
-setcap 'cap_sys_nice=eip' /usr/bin/gamescope
-
-# Clear RAM
-kill $(pgrep chrome_crashpad)
-sh -c 'echo 3 >  /proc/sys/vm/drop_caches'
+# Clear RAM (in parallel)
+kill $(pgrep chrome_crashpad) &
+sh -c 'echo 3 > /proc/sys/vm/drop_caches' &
 
 # Sometimes memory clock isn't using the overclocked value
 # The function below fixes that issue
@@ -90,3 +76,5 @@ if systemctl is-enabled amd-overclock.service &>/dev/null; then
     	done
     fi
 fi
+
+wait

@@ -4,15 +4,17 @@ total_mem=$(free -m | awk '/^Mem:/ {print $2}') # Get total system memory in MB
 threshold_mem=$((total_mem / 2)) # 50% of total memory
 min_ram_limit=$((threshold_mem < 2000 ? threshold_mem : 2000)) # Whichever is lower 2GB or 50% of ram
 
+gpu_info=$(lspci | grep -iE "AMD/ATI|Intel|NVIDIA")
+
+is_start_script_started=false
+
 # Function to check if any game-related processes are running
 is_game_running() {
-    pid=$(pgrep -f "(proton|gamescope|minecraft)")
+    pids=$(pgrep -f "(proton|gamescope|minecraft)")
 
-    if [ -n "$pid" ]; then
+    if [ -n "$pids" ]; then
         # Change niceness of all matching processes to -19
-        for p in $pid; do
-            sudo renice -n -19 -p "$p"
-        done
+		renice -n -19 -p $pids >/dev/null 2>&1
         return 0  # Return 0 if any game-related process is found
     else
         return 1  # Return 1 if no game-related processes are found
@@ -21,23 +23,14 @@ is_game_running() {
 
 is_gpu_usage_above_50() {
     local usage=0
-
-    if lspci | grep -i "AMD/ATI" >/dev/null; then
-        # AMD GPU: Use gpu_busy_percent
-        if [[ -f /sys/class/drm/card0/device/gpu_busy_percent ]]; then
-            usage=$(cat /sys/class/drm/card0/device/gpu_busy_percent)
-        fi
-    elif lspci | grep -i "Intel" >/dev/null; then
-        # Intel GPU: Use gpu_busy_percent
-        if [[ -f /sys/class/drm/card0/device/gpu_busy_percent ]]; then
-            usage=$(cat /sys/class/drm/card0/device/gpu_busy_percent)
-        fi
-    elif lspci | grep -i "NVIDIA" >/dev/null; then
-        # NVIDIA GPU: Use nvidia-smi
-        if command -v nvidia-smi >/dev/null; then
-            usage=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | head -n 1)
-        fi
-    fi
+    
+	if [[ "$gpu_info" =~ NVIDIA ]]; then
+	    # NVIDIA GPU: Use nvidia-smi
+	    command -v nvidia-smi >/dev/null && usage=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | head -n 1)
+	else
+	    # AMD/Intel GPU: Use gpu_busy_percent
+	    [[ -f /sys/class/drm/card0/device/gpu_busy_percent ]] && usage=$(< /sys/class/drm/card0/device/gpu_busy_percent)
+	fi
 
     # Check if GPU usage is above 50%
     if [[ $usage -gt 50 ]]; then
@@ -73,23 +66,21 @@ is_game_detected() {
 }
 
 # Main loop
-IS_START_SCRIPT_STARTED=false
-
 while true; do
     if is_game_detected; then
-        GAME_DETECTED=true
+        is_game_running=true
    	else 
-		GAME_DETECTED=false
+		is_game_running=false
    	fi
 
-    if [ "$GAME_DETECTED" == "true" ] && [ "$IS_START_SCRIPT_STARTED" == "false" ]; then
+    if [ "$is_game_running" == "true" ] && [ "$is_start_script_started" == "false" ]; then
         echo "Game is detected - Switching to performance mode"
    		(./usr/local/bin/gameboost/start.sh >/dev/null 2>&1 &)
-        IS_START_SCRIPT_STARTED=true
-    elif [ "$GAME_DETECTED" == "false" ] && [ "$IS_START_SCRIPT_STARTED" == "true" ]; then
+        is_start_script_started=true
+    elif [ "$is_game_running" == "false" ] && [ "$is_start_script_started" == "true" ]; then
         echo "Game is no longer detected - Reverting back"
         (./usr/local/bin/gameboost/exit.sh >/dev/null 2>&1 &)
-        IS_START_SCRIPT_STARTED=false
+        is_start_script_started=false
     fi
 
     sleep 30
