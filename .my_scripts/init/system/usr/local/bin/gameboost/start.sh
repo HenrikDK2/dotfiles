@@ -86,7 +86,7 @@ if systemctl is-enabled amd-overclock.service &>/dev/null; then
     		sleep 5
     		echo "m 1 $MEMORY_CLOCK" > $PP_OD_CLK_VOLTAGE
     		echo "c" > $PP_OD_CLK_VOLTAGE
-    		sleep 20
+    		sleep 5
     	done
     fi
 fi

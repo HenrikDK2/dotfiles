@@ -6,11 +6,17 @@ min_ram_limit=$((threshold_mem < 2000 ? threshold_mem : 2000)) # Whichever is lo
 
 # Function to check if any game-related processes are running
 is_game_running() {
-	if pgrep -f "(proton|gamescope|minecraft)" > /dev/null; then
-		return 0
-	else
-		return 1
-	fi
+    pid=$(pgrep -f "(proton|gamescope|minecraft)")
+
+    if [ -n "$pid" ]; then
+        # Change niceness of all matching processes to -19
+        for p in $pid; do
+            sudo renice -n -19 -p "$p"
+        done
+        return 0  # Return 0 if any game-related process is found
+    else
+        return 1  # Return 1 if no game-related processes are found
+    fi
 }
 
 is_gpu_usage_above_50() {
@@ -47,8 +53,10 @@ check_game_activity() {
 		return 1
 	fi
 
-    # Check the top 5 processes by memory usage and compare with min_ram_limit
-    if ps aux --sort=-%mem | awk 'NR>1 {if ($6/1024 > '$min_ram_limit') exit 0} END {exit 1}'; then
+    pid=$(ps aux --sort=-%mem | awk 'NR>1 {if ($6/1024 > '$min_ram_limit') {print $2; exit}}')
+    
+    if pid; then
+    	sudo renice -n -19 -p "$pid"
         return 0  # Return 0 if a process is using more than min_ram_limit
     else
         return 1  # Return 1 if no process exceeds the min_ram_limit
