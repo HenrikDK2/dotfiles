@@ -6,7 +6,7 @@ min_ram_limit=$((threshold_mem < 2000 ? threshold_mem : 2000)) # Whichever is lo
 
 # Function to check if any game-related processes are running
 is_game_running() {
-	if pgrep -f "(proton|gamescope)" > /dev/null; then
+	if pgrep -f "(proton|gamescope|minecraft)" > /dev/null; then
 		return 0
 	else
 		return 1

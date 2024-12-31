@@ -1,8 +1,5 @@
 #!/bin/sh
 
-parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-source "$parent_path/optimize.sh"
-
 stop_service () {
 	systemctl stop $1;
 }
@@ -60,6 +57,14 @@ if [[ -z $(docker ps -q) ]]; then
   stop_service docker
   stop_service containerd
 fi
+
+# Improve scheduling in Sway and Gamescope
+setcap 'cap_sys_nice=eip' /usr/bin/sway
+setcap 'cap_sys_nice=eip' /usr/bin/gamescope
+
+# Clear RAM
+kill $(pgrep chrome_crashpad)
+sh -c 'echo 3 >  /proc/sys/vm/drop_caches'
 
 # Sometimes memory clock isn't using the overclocked value
 # The function below fixes that issue

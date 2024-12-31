@@ -1,8 +1,5 @@
 #!/bin/sh
 
-parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
-source "$parent_path/optimize.sh"
-
 systemctl start upower
 systemctl start systemd-journald.service
 systemctl start cups systemd-timesyncd
@@ -38,3 +35,7 @@ done
 # This will kill all wine-related processes
 ps aux | awk '/\.exe$/ {print $2}' | xargs kill
 pkill -f wine
+
+# Clear RAM
+kill $(pgrep chrome_crashpad)
+sh -c 'echo 3 >  /proc/sys/vm/drop_caches'
