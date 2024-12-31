@@ -7,6 +7,8 @@ Nice=19
 IOSchedulingClass=idle
 IOSchedulingPriority=7
 CPUSchedulingPolicy=idle
+CPUWeight=1
+CPUQuota=0.1%
 ExecStart=/usr/bin/nice -n 19 /usr/local/bin/gameboost/game_detection.sh
 Restart=on-failure
 
