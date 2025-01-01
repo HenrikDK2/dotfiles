@@ -5,6 +5,7 @@ threshold_mem=$((total_mem / 2)) # 50% of total memory
 min_ram_limit=$((threshold_mem < 2000 ? threshold_mem : 2000)) # Whichever is lower 2GB or 50% of ram
 
 gpu_info=$(lspci | grep -iE "AMD/ATI|Intel|NVIDIA")
+gpu_usage=0
 
 is_start_script_started=false
 
@@ -26,8 +27,6 @@ is_game_running() {
 }
 
 is_gpu_usage_above_50() {
-    local usage=0
-    
 	if [[ "$gpu_info" =~ NVIDIA ]]; then
 	    # NVIDIA GPU: Use nvidia-smi
 	    command -v nvidia-smi >/dev/null && usage=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | head -n 1)
