@@ -19,6 +19,9 @@ for cpu in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do
     echo 1 > "$cpu"
 done
 
+# THP reduces memory management and improves performance
+echo 'always' | tee /sys/kernel/mm/transparent_hugepage/enabled
+
 # Kill unnecessary background processes
 killall -9 cmst mullvad-gui blueman-applet blueman-manager blueman-tray
 

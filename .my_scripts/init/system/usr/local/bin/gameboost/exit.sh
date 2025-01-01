@@ -6,6 +6,9 @@ systemctl start upower systemd-journald.service cups systemd-timesyncd libvirtd 
 # Re-enable split lock mitigation
 sysctl kernel.split_lock_mitigate=1
 
+# Set THP to 'madvise' to reduce memory impact
+echo 'madvise' | tee /sys/kernel/mm/transparent_hugepage/enabled
+
 # Set CPU governor to ondemand if available, else powersave
 governor="powersave"
 if grep -q "ondemand" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors; then
