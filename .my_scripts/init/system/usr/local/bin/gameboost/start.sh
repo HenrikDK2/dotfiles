@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Set CPU governor to performance (all at once)
+# Set CPU governor to performance
 echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 &
 
 # Set AMD GPU to maximum performance level during gaming (reduce stutters)
@@ -14,7 +14,7 @@ for card_dir in /sys/class/drm/card*; do
     fi
 done
 
-# Disable CPU Idle C-states in one go (no need to loop)
+# Disable CPU Idle C-states
 for cpu in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do
     echo 1 > "$cpu"
 done
@@ -72,7 +72,7 @@ if systemctl is-enabled amd-overclock.service &>/dev/null; then
     		sleep 5
     		echo "m 1 $MEMORY_CLOCK" > $PP_OD_CLK_VOLTAGE
     		echo "c" > $PP_OD_CLK_VOLTAGE
-    		sleep 5
+    		sleep 10
     	done
     fi
 fi

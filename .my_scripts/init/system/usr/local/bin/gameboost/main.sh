@@ -38,7 +38,7 @@ check_game_activity() {
     is_gpu_usage_above_50 || return 1
     
     if pid=$(ps --no-headers -eo pid,rss | awk -v limit=$((min_ram_limit*1024)) '$2 > limit {print $1; exit}'); then
-        sudo renice -n -19 -p "$pid" 2>/dev/null
+        renice -n -19 -p "$pid" 2>/dev/null
         return 0
     fi
     
