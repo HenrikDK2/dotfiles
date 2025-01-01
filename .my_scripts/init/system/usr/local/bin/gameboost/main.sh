@@ -13,7 +13,7 @@ is_game_running() {
         # Since Proton, Gamescope or Wine-GE is running, then we know it's a game
         # So find and adjust priority of all running .exe processes
         if exe_pids=$(pgrep -f "\.exe"); then
-            renice -n -19 -p $exe_pids >/dev/null 2>&1
+            renice -n -11 -p $exe_pids >/dev/null 2>&1
         fi
 
         return 0
@@ -32,7 +32,7 @@ check_game_activity() {
     is_gpu_usage_above_30 || return 1
 
     if pid=$(ps --no-headers -eo pid,rss | awk -v limit=$((min_ram_limit*1024)) '$2 > limit {print $1; exit}'); then
-        renice -n -19 -p "$pid" >/dev/null 2>&1
+        renice -n -11 -p "$pid" >/dev/null 2>&1
         return 0
     fi
 
