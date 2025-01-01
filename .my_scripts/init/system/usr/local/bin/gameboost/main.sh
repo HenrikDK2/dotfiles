@@ -45,14 +45,9 @@ check_game_activity() {
     return 1
 }
 
-# Combine multiple checks to determine if a game is running
-is_game_detected() {
-    is_game_running || check_game_activity
-}
-
 # Main loop
 while true; do
-    if is_game_detected; then
+    if is_game_running || check_game_activity; then
         if [ "$is_start_script_started" = false ]; then
             echo "Game is detected - Switching to performance mode"
             ./usr/local/bin/gameboost/start.sh >/dev/null 2>&1 &
