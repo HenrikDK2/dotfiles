@@ -25,9 +25,6 @@ for card_dir in /sys/class/drm/card*/device/power_dpm_force_performance_level; d
     fi
 done
 
-# Kill all wine-related processes
-pkill -f '\.exe$'
-
 # Clear RAM
 pkill chrome_crashpad
 echo 3 > /proc/sys/vm/drop_caches

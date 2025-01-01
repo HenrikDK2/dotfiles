@@ -10,8 +10,15 @@ is_start_script_started=false
 
 # Function to check if any game-related processes are running
 is_game_running() {
-    if pids=$(pgrep -f "(proton|gamescope|minecraft)"); then
-        renice -n -19 -p $pids 2>/dev/null
+    if pids=$(pgrep -f "(proton|gamescope|minecraft|Wine-GE)"); then
+        renice -n -19 -p $pids >/dev/null 2>&1
+
+		# Since Proton, Gamescope or Wine-GE is running, then we know it's a game
+		# So find and adjust priority of all running .exe processes
+		if exe_pids=$(pgrep -f "\.exe"); then
+		    renice -n -19 -p $exe_pids >/dev/null 2>&1
+		fi
+        
         return 0
     fi
     
@@ -38,7 +45,7 @@ check_game_activity() {
     is_gpu_usage_above_50 || return 1
     
     if pid=$(ps --no-headers -eo pid,rss | awk -v limit=$((min_ram_limit*1024)) '$2 > limit {print $1; exit}'); then
-        renice -n -19 -p "$pid" 2>/dev/null
+        renice -n -19 -p "$pid" >/dev/null 2>&1
         return 0
     fi
     
