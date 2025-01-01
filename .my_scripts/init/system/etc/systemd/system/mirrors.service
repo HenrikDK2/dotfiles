@@ -6,7 +6,11 @@ StartLimitIntervalSec=0
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/mirrors.sh
+ExecStart=/usr/bin/nice -n 19 /usr/local/bin/mirrors.sh
+Nice=19
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+CPUSchedulingPolicy=idle
 
 [Install]
 WantedBy=multi-user.target

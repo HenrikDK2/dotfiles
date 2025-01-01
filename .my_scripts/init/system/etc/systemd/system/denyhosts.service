@@ -8,7 +8,11 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=604800
-ExecStart=/usr/local/bin/denyhosts.sh
+ExecStart=/usr/bin/nice -n 19 /usr/local/bin/denyhosts.sh
+Nice=19
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+CPUSchedulingPolicy=idle
 
 [Install]
 WantedBy=multi-user.target

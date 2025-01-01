@@ -6,7 +6,8 @@ Type=simple
 Nice=19
 IOSchedulingClass=idle
 IOSchedulingPriority=7
-ExecStart=/usr/local/bin/amd-overclock.sh
+CPUSchedulingPolicy=idle
+ExecStart=/usr/bin/nice -n 19 /usr/local/bin/amd-overclock.sh
 
 [Install]
 WantedBy=multi-user.target
