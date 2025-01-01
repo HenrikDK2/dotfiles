@@ -8,6 +8,7 @@ IOSchedulingClass=idle
 IOSchedulingPriority=7
 CPUSchedulingPolicy=idle
 ExecStart=/usr/bin/nice -n 19 /usr/local/bin/gameboost/main.sh
+ExecStopPost=/usr/bin/nice -n 19 /usr/local/bin/gameboost/exit.sh
 Restart=on-failure
 
 [Install]
