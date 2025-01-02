@@ -220,6 +220,7 @@ exclude_packages=(
     "yay"
     "mullvad-vpn-bin"
     "cachyos.*"
+    "shadps4.*"
     ".*.-ucode"
 	
     ${mirror_packages[@]}
