@@ -1,4 +1,5 @@
 #!/bin/bash
+
 is_start_script_started=false
 
 # Define paths for native Linux games
@@ -53,7 +54,7 @@ is_game_running() {
     if pids=$(pgrep -fi "$combined_pattern"); then
         renice -n -19 -p $pids >/dev/null 2>&1
 
-        # For debug purposses, I want to check for false positives
+        # For debug purposes, I want to check for false positives
         for pid in $pids; do
             local cmd=$(ps -p "$pid" -o cmd=)
             local match=$(echo "$cmd" | grep -oE "$combined_pattern" | head -1)
