@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Adjust priorities of pids passed from main.sh
+pids="$1 $(pgrep -f '\.exe' || true)"
+renice -n -11 -p $pids >/dev/null 2>&1
+
 # Set CPU governor to performance
 echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 &
 
