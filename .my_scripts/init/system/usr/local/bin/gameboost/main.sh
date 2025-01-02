@@ -28,8 +28,6 @@ readonly graphics_patterns="\
 vulkan|\
 vkd3d|\
 dxvk|\
-d3d|\
-glx|\
 opengl|\
 libGL|\
 nouveau|\
@@ -41,13 +39,16 @@ swrast|\
 vkBasalt|\
 shadercache|\
 nvapi|\
-egl|\
 directx|\
-SDL|\
 sdl-game"
 
 # Combine patterns
 readonly combined_pattern="($game_processes|$native_paths|$graphics_patterns)"
+
+# Function to set pids variable, and check if any game-related processes are running
+is_game_running() {
+    pids=$(pgrep -fi "$combined_pattern") && return 0 || return 1
+}
 
 # For debug purposes, I want to check for false positives
 debug_pattern_match() {
@@ -65,11 +66,6 @@ debug_pattern_match() {
 	for match in "${!pattern_matches[@]}"; do
 	    echo "Info: Matched Pattern: '$match' | Process IDs: ${pattern_matches[$match]}"
 	done
-}
-
-# Function to set pids variable, and check if any game-related processes are running
-is_game_running() {
-    pids=$(pgrep -fi "$combined_pattern") && return 0 || return 1
 }
 
 # Main loop
