@@ -6,7 +6,7 @@ is_start_script_started=false
 
 # Function to check if any game-related processes are running
 is_game_running() {
-    if pids=$(pgrep -f "(proton|gamescope|minecraft|Wine-GE)"); then
+    if pids=$(pgrep -f "(proton|gamescope|minecraft|Wine-GE|shadps4)"); then
         renice -n -19 -p $pids >/dev/null 2>&1
         
         # Since Proton, Gamescope or Wine-GE is running, then we know it's a game
