@@ -20,7 +20,7 @@ readonly native_paths="\
 ~/.local/share/games"
 
 # Define known game-related processes
-readonly game_processes="proton|gamescope|minecraft|Wine-GE|shadps4|\.exe|steam_app|lutris-wrapper|runner|mangohud"
+readonly game_processes="proton|gamescope|minecraft|Wine-GE|shadps4|steam_app|lutris-wrapper|runner|mangohud"
 
 # Define graphics API related patterns
 readonly graphics_patterns="\
@@ -49,17 +49,37 @@ sdl-game"
 # Combine patterns
 readonly combined_pattern="($game_processes|$native_paths|$graphics_patterns)"
 
+# For debug purposes, I want to check for false positives
+debug_pattern_match() {
+	declare -A pattern_matches
+	
+	for pid in $1; do
+	    local cmd=$(ps -p "$pid" -o cmd=)
+	    local match=$(echo "$cmd" | grep -oE "$combined_pattern" | head -1)
+	    if [[ -n $match ]]; then
+	        pattern_matches["$match"]+="$pid "
+	    fi
+	done
+	
+	# Dump all matches
+	for match in "${!pattern_matches[@]}"; do
+	    echo "Info: Matched Pattern: '$match' | Process IDs: ${pattern_matches[$match]}"
+	done
+}
+
 # Function to check if any game-related processes are running
 is_game_running() {
     if pids=$(pgrep -fi "$combined_pattern"); then
-        renice -n -19 -p $pids >/dev/null 2>&1
+        renice -n -11 -p $pids >/dev/null 2>&1
 
-        # For debug purposes, I want to check for false positives
-        for pid in $pids; do
-            local cmd=$(ps -p "$pid" -o cmd=)
-            local match=$(echo "$cmd" | grep -oE "$combined_pattern" | head -1)
-            echo "Info: Process ID: $pid | Matched Pattern: $match"
-        done
+        # Since we know a game is running, and not an application
+        # Find and adjust priority of all running .exe processes
+        if exe_pids=$(pgrep -f "\.exe"); then
+            renice -n -11 -p $exe_pids >/dev/null 2>&1
+        fi
+
+		# Debug pattern match for debug purposes
+		debug_pattern_match "$pids"
     
         return 0
     fi
