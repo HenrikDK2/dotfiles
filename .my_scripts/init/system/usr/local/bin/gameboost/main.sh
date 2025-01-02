@@ -70,17 +70,19 @@ debug_pattern_match() {
 # Function to check if any game-related processes are running
 is_game_running() {
     if pids=$(pgrep -fi "$combined_pattern"); then
-        renice -n -11 -p $pids >/dev/null 2>&1
+    	if ! $is_start_script_started; then 
+	        renice -n -11 -p $pids >/dev/null 2>&1
 
-        # Since we know a game is running, and not an application
-        # Find and adjust priority of all running .exe processes
-        if exe_pids=$(pgrep -f "\.exe"); then
-            renice -n -11 -p $exe_pids >/dev/null 2>&1
-        fi
+	        # Since we know a game is running, and not an application
+	        # Find and adjust priority of all running .exe processes
+	        if exe_pids=$(pgrep -f "\.exe"); then
+	            renice -n -11 -p $exe_pids >/dev/null 2>&1
+	        fi
+		
+			# Debug pattern match for debug purposes
+			debug_pattern_match "$pids"
+    	fi
 
-		# Debug pattern match for debug purposes
-		debug_pattern_match "$pids"
-    
         return 0
     fi
     
