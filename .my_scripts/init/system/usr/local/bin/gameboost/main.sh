@@ -68,17 +68,23 @@ debug_pattern_match() {
 	done
 }
 
+send_notification() {
+	uid=$(loginctl list-sessions | awk 'NR==2 {print $2}')
+	echo "GameBoost - $1"
+	runuser -u $(id -nu $uid) -- notify-send "GameBoost" "$1"
+}
+
 # Main loop
 while true; do
     if is_game_running; then
         if ! $is_start_script_started; then
-            echo "GameBoost - Switching to performance mode"
+            send_notification "Switching to performance mode"
             ./usr/local/bin/gameboost/start.sh "$pids" >/dev/null 2>&1 &
             debug_pattern_match "$pids"
             is_start_script_started=true
         fi
     elif $is_start_script_started; then
-        echo "GameBoost - Switching to power-saving mode"
+        send_notification "Switching to power-saving mode"
         ./usr/local/bin/gameboost/exit.sh >/dev/null 2>&1 &
         is_start_script_started=false
     fi
