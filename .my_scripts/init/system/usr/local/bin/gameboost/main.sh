@@ -5,7 +5,7 @@ pids=""
 
 # Define filesystem paths
 readonly fs_paths="\
-.local/share/Steam/steamapps/common/*|\
+/steamapps/common/*|\
 /Games/*|\
 .local/share/Paradox Interactive/*|\
 /compatibilitytools.d/*"
