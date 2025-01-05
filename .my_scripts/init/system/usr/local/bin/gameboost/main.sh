@@ -5,12 +5,10 @@ pids=""
 
 # Define filesystem paths
 readonly fs_paths="\
-$HOME/.local/share/Steam/steamapps/common/*|\
-$HOME/Games|\
-$HOME/.local/share/Paradox Interactive|\
-$HOME/.local/share/Steam/compatibilitytools.d|\
-$HOME/.local/share/games|\
-/usr/share/steam/compatibilitytools.d"
+.local/share/Steam/steamapps/common/*|\
+/Games/*|\
+.local/share/Paradox Interactive/*|\
+/compatibilitytools.d/*"
 
 # Define known game-related processes
 readonly game_processes="gamescope|minecraft|shadps4|mangohud|vkBasalt|SteamLaunch AppId="
