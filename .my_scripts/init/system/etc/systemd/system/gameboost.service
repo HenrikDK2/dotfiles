@@ -1,6 +1,5 @@
 [Unit]
 Description=GameBoost - Automatically switches to performance mode when a game is detected
-After=network.target
 
 [Service]
 Nice=19
@@ -10,6 +9,7 @@ CPUSchedulingPolicy=idle
 ExecStart=/usr/bin/nice -n 19 /usr/local/bin/gameboost/main.sh
 ExecStopPost=/usr/bin/nice -n 19 /usr/local/bin/gameboost/exit.sh
 Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=default.target
