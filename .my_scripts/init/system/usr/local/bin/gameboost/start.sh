@@ -69,7 +69,7 @@ if systemctl is-enabled amd-overclock.service &>/dev/null; then
     
     if [ ! -z "$MEMORY_CLOCK" ]; then
     	while true; do
-    		CURRENT_MEMORY_SPEED=$(grep '*' "$GPU/pp_dpm_mclk" | awk '{print $2}')
+    		CURRENT_MEMORY_SPEED=$(grep '*' "$GPU_SYSFS/pp_dpm_mclk" | awk '{print $2}')
     
     		# Empty means the memory speed is running at a custom speed.
     		# And that indicates that the gpu is running at the overclocked memory speed.
