@@ -21,7 +21,7 @@ for cpu in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do
     echo 0 > "$cpu"
 done
 
-# Set AMD GPU to maximum performance level during gaming (reduce stutters)
+# Set AMD GPU to auto when not gaming
 GPU_PCI=$(lspci | grep -iE "vga|3d" | awk '{print $1}')
 GPU_SYSFS="/sys/bus/pci/devices/0000:$GPU_PCI"
 
