@@ -3,47 +3,20 @@
 is_start_script_started=false
 pids=""
 
-# Define paths for native Linux games
-readonly native_paths="\
-/usr/games|\
-/usr/local/games|\
-~/Games|\
-~/.local/share/Steam|\
-~/.steam|\
-/usr/share/games|\
-~/.local/share/lutris|\
-~/.local/share/vulkan|\
-~/.config/itch|\
-~/.local/share/gogdownloader|\
-/opt/games|\
-/opt/gog|\
-~/.local/share/Paradox Interactive|\
-~/.local/share/games"
+# Define filesystem paths
+readonly fs_paths="\
+$HOME/.local/share/Steam/steamapps/common/*|\
+$HOME/Games|\
+$HOME/.local/share/Paradox Interactive|\
+$HOME/.local/share/Steam/compatibilitytools.d|\
+$HOME/.local/share/games|\
+/usr/share/steam/compatibilitytools.d"
 
 # Define known game-related processes
-readonly game_processes="proton|gamescope|minecraft|Wine-GE|shadps4|steam_app|lutris-wrapper|runner|mangohud"
-
-# Define graphics API related patterns
-readonly graphics_patterns="\
-vulkan|\
-vkd3d|\
-dxvk|\
-opengl|\
-libGL|\
-nouveau|\
-mesa|\
-wayland-egl|\
-libdrm|\
-libvulkan|\
-swrast|\
-vkBasalt|\
-shadercache|\
-nvapi|\
-directx|\
-sdl-game"
+readonly game_processes="gamescope|minecraft|shadps4|mangohud|vkBasalt|SteamLaunch AppId="
 
 # Combine patterns
-readonly combined_pattern="($game_processes|$native_paths|$graphics_patterns)"
+readonly combined_pattern="($game_processes|$fs_paths)"
 
 # Function to set pids variable, and check if any game-related processes are running
 is_game_running() {
