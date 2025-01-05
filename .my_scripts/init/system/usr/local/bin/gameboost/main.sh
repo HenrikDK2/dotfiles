@@ -85,6 +85,7 @@ while true; do
         fi
     elif $is_start_script_started; then
         send_notification "Switching to power-saving mode"
+        killall start.sh
         ./usr/local/bin/gameboost/exit.sh >/dev/null 2>&1 &
         is_start_script_started=false
     fi
