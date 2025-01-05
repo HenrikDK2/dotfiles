@@ -29,6 +29,10 @@ kernel_params=(
 	"rfkill.default_state=1"
 	"rfkill.master_switch_mode=2"
 
+	# Enable MSI to reduce latency
+	"amdgpu.msi=1"
+	"nvidia.NVreg_EnableMSI=1"
+
 	# Disable watchdog to reduce overhead
 	"nowatchdog"
 	"nmi_watchdog=0"
