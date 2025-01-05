@@ -8,15 +8,18 @@ renice -n -11 -p $pids >/dev/null 2>&1
 echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 &
 
 # Set AMD GPU to maximum performance level during gaming (reduce stutters)
-for card_dir in /sys/class/drm/card*; do
-    power_dpm="$card_dir/device/power_dpm_force_performance_level"
-    pp_power="$card_dir/device/pp_power_profile_mode"
-    
-    if [[ -e "$power_dpm" && -e "$pp_power" ]]; then
-        echo "manual" | tee $power_dpm > /dev/null 2>&1 &
-        echo "1" | tee $pp_power > /dev/null 2>&1 &
-    fi
-done
+GPU_PCI=$(lspci | grep -iE "vga|3d" | awk '{print $1}')
+GPU_SYSFS="/sys/bus/pci/devices/0000:$GPU_PCI"
+
+if [ -d "$GPU_SYSFS" ]; then
+	power_dpm="$GPU_SYSFS/power_dpm_force_performance_level"
+	pp_power="$GPU_SYSFS/pp_power_profile_mode"
+	aspm="$GPU_SYSFS/power/control"
+
+	[ -f "$power_dpm" ] && echo "manual" | tee "$power_dpm" > /dev/null 2>&1 
+	[ -f "$pp_power" ] && echo "1" | tee "$pp_power" > /dev/null 2>&1
+	[ -f "$aspm" ] && echo "on" | tee "$aspm" > /dev/null 2>&1 # 'on' disables ASPM
+fi
 
 # Disable CPU Idle C-states
 for cpu in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do

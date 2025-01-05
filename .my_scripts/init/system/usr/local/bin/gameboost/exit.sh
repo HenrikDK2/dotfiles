@@ -21,12 +21,17 @@ for cpu in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do
     echo 0 > "$cpu"
 done
 
-# Set performance level to auto for GPUs if applicable
-for card_dir in /sys/class/drm/card*/device/power_dpm_force_performance_level; do
-    if [ -e "$card_dir" ]; then
-        echo "auto" > "$card_dir"
-    fi
-done
+# Set AMD GPU to maximum performance level during gaming (reduce stutters)
+GPU_PCI=$(lspci | grep -iE "vga|3d" | awk '{print $1}')
+GPU_SYSFS="/sys/bus/pci/devices/0000:$GPU_PCI"
+
+if [ -d "$GPU_SYSFS" ]; then
+	power_dpm="$GPU_SYSFS/power_dpm_force_performance_level"
+	aspm="$GPU_SYSFS/power/control"
+
+	[ -f "$power_dpm" ] && echo "auto" | tee "$power_dpm" > /dev/null 2>&1 
+	[ -f "$aspm" ] && echo "auto" | tee "$aspm" > /dev/null 2>&1
+fi
 
 # Clear RAM
 pkill chrome_crashpad
