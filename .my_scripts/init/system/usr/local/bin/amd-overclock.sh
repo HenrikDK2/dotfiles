@@ -18,11 +18,11 @@ if [ -z "$VOLTAGE_OFFSET" ] && [ -z "$CORE_CLOCK" ] && [ -z "$MEMORY_CLOCK" ] &&
     exit 1
 fi
 
-GPU_SYSFS=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
-HWMON=$(basename "$(find "$GPU_SYSFS/hwmon" -mindepth 1 -maxdepth 1 -name "hwmon*" -type d | head -n 1)" 2>/dev/null)
+GPU=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
+HWMON=$(basename "$(find "$GPU/hwmon" -mindepth 1 -maxdepth 1 -name "hwmon*" -type d | head -n 1)" 2>/dev/null)
 
-PP_OD_CLK_VOLTAGE="$GPU_SYSFS/pp_od_clk_voltage"
-POWER_CAP="$GPU_SYSFS/hwmon/$HWMON/power1_cap"
+PP_OD_CLK_VOLTAGE="$GPU/pp_od_clk_voltage"
+POWER_CAP="$GPU/hwmon/$HWMON/power1_cap"
 
 # Set voltage offset
 if [ ! -z "$VOLTAGE_OFFSET" ]; then

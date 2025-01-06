@@ -8,12 +8,12 @@ renice -n -11 -p $pids >/dev/null 2>&1
 echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 &
 
 # Set AMD GPU to maximum performance level during gaming (reduce stutters)
-GPU_SYSFS=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
+GPU=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
 
-if [ -d "$GPU_SYSFS" ]; then
-	power_dpm="$GPU_SYSFS/power_dpm_force_performance_level"
-	pp_power="$GPU_SYSFS/pp_power_profile_mode"
-	aspm="$GPU_SYSFS/power/control"
+if [ -d "$GPU" ]; then
+	power_dpm="$GPU/power_dpm_force_performance_level"
+	pp_power="$GPU/pp_power_profile_mode"
+	aspm="$GPU/power/control"
 
 	[ -f "$power_dpm" ] && echo "manual" | tee "$power_dpm" > /dev/null 2>&1 
 	[ -f "$pp_power" ] && echo "1" | tee "$pp_power" > /dev/null 2>&1
@@ -68,7 +68,7 @@ if systemctl is-enabled amd-overclock.service &>/dev/null; then
     
     if [ ! -z "$MEMORY_CLOCK" ]; then
     	while true; do
-    		CURRENT_MEMORY_SPEED=$(grep '*' "$GPU_SYSFS/pp_dpm_mclk" | awk '{print $2}')
+    		CURRENT_MEMORY_SPEED=$(grep '*' "$GPU/pp_dpm_mclk" | awk '{print $2}')
     
     		# Empty means the memory speed is running at a custom speed.
     		# And that indicates that the gpu is running at the overclocked memory speed.
