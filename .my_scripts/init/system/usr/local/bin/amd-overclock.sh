@@ -18,8 +18,7 @@ if [ -z "$VOLTAGE_OFFSET" ] && [ -z "$CORE_CLOCK" ] && [ -z "$MEMORY_CLOCK" ] &&
     exit 1
 fi
 
-GPU_PCI=$(lspci | grep -iE "vga|3d" | awk '{print $1}')
-GPU_SYSFS="/sys/bus/pci/devices/0000:$GPU_PCI"
+GPU_SYSFS=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
 HWMON=$(basename "$(find "$GPU_SYSFS/hwmon" -mindepth 1 -maxdepth 1 -name "hwmon*" -type d | head -n 1)" 2>/dev/null)
 
 PP_OD_CLK_VOLTAGE="$GPU_SYSFS/pp_od_clk_voltage"

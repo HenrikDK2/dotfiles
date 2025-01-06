@@ -22,8 +22,7 @@ for cpu in /sys/devices/system/cpu/cpu*/cpuidle/state*/disable; do
 done
 
 # Set AMD GPU to auto when not gaming
-GPU_PCI=$(lspci | grep -iE "vga|3d" | awk '{print $1}')
-GPU_SYSFS="/sys/bus/pci/devices/0000:$GPU_PCI"
+GPU_SYSFS=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
 
 if [ -d "$GPU_SYSFS" ]; then
 	power_dpm="$GPU_SYSFS/power_dpm_force_performance_level"

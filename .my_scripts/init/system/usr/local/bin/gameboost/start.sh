@@ -8,8 +8,7 @@ renice -n -11 -p $pids >/dev/null 2>&1
 echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1 &
 
 # Set AMD GPU to maximum performance level during gaming (reduce stutters)
-GPU_PCI=$(lspci | grep -iE "vga|3d" | awk '{print $1}')
-GPU_SYSFS="/sys/bus/pci/devices/0000:$GPU_PCI"
+GPU_SYSFS=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
 
 if [ -d "$GPU_SYSFS" ]; then
 	power_dpm="$GPU_SYSFS/power_dpm_force_performance_level"
