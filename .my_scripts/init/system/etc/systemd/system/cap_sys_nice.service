@@ -1,0 +1,12 @@
+[Unit]
+Description=Configure CAP_SYS_NICE for Sway and Gamescope
+Documentation=https://man7.org/linux/man-pages/man7/capabilities.7.html
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/setcap 'CAP_SYS_NICE=eip' /usr/bin/sway
+ExecStart=/bin/setcap 'CAP_SYS_NICE=eip' /usr/bin/gamescope
+
+[Install]
+WantedBy=multi-user.target

@@ -10,7 +10,7 @@ yay -S "${gpu_packages[@]}" --needed --ask 4
 yay -S "${packages[@]}" --needed --ask 4
 
 # Enable required services
-sudo systemctl enable cups ufw dnsmasq denyhosts gameboost fstrim.timer
+sudo systemctl enable cups ufw dnsmasq denyhosts gameboost cap_sys_nice fstrim.timer
 systemctl --user enable wireplumber
 
 # Mask unused services
