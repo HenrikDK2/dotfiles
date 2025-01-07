@@ -3,10 +3,6 @@
 
 # Autostart sway on TTY login
 if [ -z "$DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
-	# Improve scheduling in Sway and Gamescope
-	setcap 'CAP_SYS_NICE=eip' /usr/bin/sway &
-	setcap 'CAP_SYS_NICE=eip' /usr/bin/gamescope &
-	
     sway &
 fi
 
