@@ -9,7 +9,7 @@ if ! pacman -Qq | grep -q "^linux-tkg$"; then
 
 	if confirm; then
 		clear
-		printf "The kernel will get updated via. update script on every PATCH version \n\n"
+		printf "The kernel will get updated via. update script on every two new PATCH versions \n\n"
 		printf "Skips the first MINOR patch as it can be quite buggy\n\n"
 		read -p "Press enter to continue"
 
