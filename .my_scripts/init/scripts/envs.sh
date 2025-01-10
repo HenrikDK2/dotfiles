@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Define color codes
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m' # No Color
-YELLOW='\033[1;33m'
 
 prerequisites_packages=(
     "linux-firmware"
@@ -182,32 +177,6 @@ elif [[ $(get_primary_gpu) == "amd" ]]; then
 
 elif [[ $(get_primary_gpu) == "intel" ]]; then
 	gpu_packages=("mesa" "lib32-mesa" "vulkan-intel" "lib32-vulkan-intel" "intel-media-driver")
-fi
-
-if [[ $(get_primary_gpu) == "nvidia" || $(get_primary_gpu) == "amd" ]]; then
-	clear
-
-	# Inform the user about the pros and cons of using Mesa-Git
-	printf "${GREEN}Upsides:${NC}\n"
-	printf "  - Latest features, bug fixes, and performance improvements.\n"
-	printf "  - Better compatibility with newer games and applications.\n\n"
-	printf "${RED}Downsides:${NC}\n"
-	printf "  - Potential instability and unexpected bugs.\n"
-	printf "  - Possible regressions compared to stable versions.\n\n"
-	
-	# Prompt the user for confirmation
-	printf "Do you want to use experimental mesa-git?"
-	
-	if confirm; then
-		# Make sure the user understand the risks
-		clear
-		printf "${YELLOW}Warning:${NC} If you experience any problems, the first thing you should do is revert mesa-git to the stable version.\n\n"
-		printf "Are you sure you want to use experimental mesa-git instead of the standard version?"
-		
-		if confirm; then
-			gpu_packages=("mesa-git" "lib32-mesa-git")
-		fi
-	fi
 fi
 
 #-----------------------------

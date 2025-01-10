@@ -5,7 +5,7 @@ install_android_development_tools() {
 	printf "Do you want to install the required tools for android development?"
 	
 	if confirm; then
-		yay -S "${android_development_packages[@]}" --needed --noconfirm
+		yay -S "${android_development_packages[@]}" --needed --ask 4
 		set_java_version 17
 	fi
 }
@@ -16,7 +16,7 @@ install_bluetooth() {
 	printf "Do you want to install blueman?"
 
 	if confirm; then
-	    yay -S "${bluetooth_packages[@]}" --needed --noconfirm
+	    yay -S "${bluetooth_packages[@]}" --needed --ask 4
 	    sudo systemctl enable --now bluetooth.service;
 	    echo 'power on' | bluetoothctl;
 	fi
@@ -29,7 +29,7 @@ install_virt_manager() {
 	printf "Do you want to install virt-manager?"
 
 	if confirm; then
-		yay -S "${virt_manager_packages[@]}" --needed --noconfirm
+		yay -S "${virt_manager_packages[@]}" --needed --ask 4
 		sudo systemctl enable --now libvirtd virtlogd;
 		sudo usermod -a -G libvirt $(whoami);
 	fi
@@ -41,7 +41,7 @@ install_obs() {
 	printf "Do you want to install obs-studio with browser source and game capture?"
 
 	if confirm; then
-		yay -S "${obs_packages[@]}" --needed --noconfirm
+		yay -S "${obs_packages[@]}" --needed --ask 4
 	fi
 }
 

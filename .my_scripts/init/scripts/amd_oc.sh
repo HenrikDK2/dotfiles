@@ -35,7 +35,7 @@ if [ "$(get_primary_gpu)" = "amd" ] && ! systemctl is-enabled amd-overclock >/de
 		elif command -v vim; then
 			sudo vim $conf_file
 		else
-			sudo pacman -S micro --noconfirm
+			sudo pacman -S micro --needed --ask 4
 			sudo micro $conf_file
 		fi
 

@@ -49,10 +49,10 @@ kernel_params_str=$(printf "%s " "${kernel_params[@]}")
 
 microcode () {
 	if [ -n "$(cat /proc/cpuinfo | grep 'AuthenticAMD')" ]; then
-		sudo pacman -S amd-ucode --noconfirm --needed
+		sudo pacman -S amd-ucode --needed --ask 4
 		sed -i '3 i initrd /amd-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
 	elif [ -n "$(cat /proc/cpuinfo | grep 'GenuineIntel')" ]; then
-		sudo pacman -S intel-ucode --noconfirm --needed
+		sudo pacman -S intel-ucode --needed --ask 4
 		sed -i '3 i initrd /intel-ucode.img' ~/.my_scripts/init/entries/tmp/*.conf
 	fi
 }

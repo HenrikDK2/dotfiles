@@ -51,7 +51,7 @@ function set_java_version() {
 
 	# If java version is not found, then install
 	if [ ! -d "$JAVA_PATH" ]; then
-    	yay -S "jre$1-openjdk" --needed --noconfirm
+    	yay -S "jre$1-openjdk" --needed --ask 4
     fi
     
     # Check if the specified Java path exists

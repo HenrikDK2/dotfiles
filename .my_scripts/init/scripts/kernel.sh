@@ -15,6 +15,6 @@ if ! pacman -Qq | grep -q "^linux-tkg$"; then
 
 		source "$HOME/.my_scripts/kernel.sh"
 	else
-		sudo pacman -S ${kernel_packages[0]} --needed --noconfirm
+		sudo pacman -S ${kernel_packages[0]} --needed --ask 4
 	fi
 fi

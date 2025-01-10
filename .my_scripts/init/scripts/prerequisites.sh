@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Update package database and install prerequisites
-sudo pacman -Syy ${prerequisites_packages[@]} --needed --noconfirm
+sudo pacman -Syy ${prerequisites_packages[@]} --needed --ask 4
 
 # Remove the unwanted packages, if any
 if [ ! -z "$packages_to_remove" ]; then
-    sudo pacman -Rns --nodeps --cascade $packages_to_remove --noconfirm
+    sudo pacman -Rns --nodeps --cascade $packages_to_remove --ask 4
 fi
 
 # Copy system files
