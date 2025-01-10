@@ -168,16 +168,58 @@ mirror_packages=(
 # Set GPU packages to install
 #-----------------------------
 
-if [[ $(get_primary_gpu) == "nvidia" ]]; then
+nvidia_drivers () {
 	echo "Nvidia GPU drivers not yet implemented..."
-	read -p "Press enter to continue"
-elif [[ $(get_primary_gpu) == "amd" ]]; then
-	gpu_packages=("mesa" "lib32-mesa" "vulkan-radeon" "lib32-vulkan-radeon" "vulkan-icd-loader" "lib32-vulkan-icd-loader" "libva-utils")
-	sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+    read -p "Press enter to continue"	
+}
 
-elif [[ $(get_primary_gpu) == "intel" ]]; then
-	gpu_packages=("mesa" "lib32-mesa" "vulkan-intel" "lib32-vulkan-intel" "intel-media-driver")
-fi
+amd_drivers () {
+    gpu_packages=("mesa" "lib32-mesa" "vulkan-radeon" "lib32-vulkan-radeon" "vulkan-icd-loader" "lib32-vulkan-icd-loader" "libva-utils")
+    sudo sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+}
+
+intel_drivers () {
+    gpu_packages=("mesa" "lib32-mesa" "vulkan-intel" "lib32-vulkan-intel" "intel-media-driver")
+}
+
+while true; do
+    if [[ $(get_primary_gpu) == "nvidia" ]]; then
+        nvidia_drivers
+        break
+    elif [[ $(get_primary_gpu) == "amd" ]]; then
+        amd_drivers
+        break
+    elif [[ $(get_primary_gpu) == "intel" ]]; then
+        intel_drivers
+        break
+    else
+        # If get_primary_gpu doesn't exist or is invalid, manually choose the GPU
+        clear
+        echo -e "Script couldn't automatically detect GPU.\n"
+        echo "Please manually choose your GPU:"
+        echo "   1) Nvidia"
+        echo "   2) AMD"
+        echo -e "   3) Intel\n"
+        read -p "Enter your choice (1/2/3): " gpu_choice
+
+        case $gpu_choice in
+            1)
+                nvidia_drivers
+                break
+                ;;
+            2)
+                amd_drivers
+                break
+                ;;
+            3)
+                intel_drivers
+                break
+                ;;
+            *)	
+                ;;
+        esac
+    fi
+done
 
 #-----------------------------
 
