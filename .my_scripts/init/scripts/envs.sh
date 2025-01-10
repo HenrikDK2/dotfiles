@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 prerequisites_packages=(
     "linux-firmware"
     "base"
