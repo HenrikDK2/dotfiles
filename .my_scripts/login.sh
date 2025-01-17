@@ -8,7 +8,7 @@ for script in $HOME/.my_scripts/login.d/*.sh; do "$script" & done
 mako &
 waybar &
 thunderbird &
-discord-canary &
+discord &
 
 # Switch to workspace 1
 swaymsg workspace number 1
