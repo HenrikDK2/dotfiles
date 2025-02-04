@@ -102,7 +102,7 @@ packages=(
 
     # Gaming
     "proton-ge-custom-bin"
-    "discord"
+    "discord-canary"
     "wine"
     "wine-gecko"
     "wine-mono"
