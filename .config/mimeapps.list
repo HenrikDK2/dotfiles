@@ -35,6 +35,7 @@ application/rss+xml=userapp-Thunderbird-IAOFT2.desktop
 application/x-extension-rss=userapp-Thunderbird-IAOFT2.desktop
 x-scheme-handler/discord-409416265891971072=discord-409416265891971072.desktop
 x-scheme-handler/discord-1139939140494971051=discord-1139939140494971051.desktop
+x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop
 
 [Added Associations]
 x-scheme-handler/mailto=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;

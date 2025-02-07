@@ -7,6 +7,7 @@ pids=""
 readonly fs_paths="\
 /steamapps/common/*|\
 /Games/*|\
+/opt/osu-lazer/*|\
 .local/share/Paradox Interactive/*|\
 /compatibilitytools.d/*"
 

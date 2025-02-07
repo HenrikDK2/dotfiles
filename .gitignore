@@ -39,6 +39,10 @@
 # .CONFIG
 !.config
 
+!.config/obs-studio/
+!.config/obs-studio/plugins
+!.config/obs-studio/plugins/*
+
 !.config/user-dirs.dirs
 !.config/modprobed_add.db
 
