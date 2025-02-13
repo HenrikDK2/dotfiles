@@ -31,6 +31,8 @@ filter_journalctl() {
     local patterns=(
         "gkr-pam: unable to locate daemon control file"
         "Inconsistent IP pool management \(start not found\)"
+        "amdgpu: Overdrive is enabled, please disable it before reporting any bugs unrelated to overdrive."
+
     )
 
     # Construct the grep pattern
