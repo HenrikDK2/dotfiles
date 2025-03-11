@@ -121,6 +121,7 @@ assign [app_id="thunderbird"] workspace 2
 assign [class="discord"] workspace 2
 assign [app_id="vesktop"] workspace 2 
 assign [app_id="discord"] workspace 2 
+assign [app_id="org.qbittorrent.qBittorrent"] workspace 2 
 assign [class="Spotify"] workspace 2
 assign [class="steam" title="Steam"] workspace 2
 
@@ -133,7 +134,6 @@ for_window [title="zoom" app_id="zoom"] floating enable
 for_window [title="Firefox — Sharing Indicator"] floating enable
 for_window [app_id="thunderbird" title=".*Reminder.*"] floating enable, move to workspace current, resize set 550 350
 for_window [app_id="org.gnome.Calculator"] floating enable, resize set 400 540
-
 
 # Inhibit idle
 for_window [class="steam_app*"] inhibit_idle
@@ -182,4 +182,3 @@ exec_always {
 include $HOME/.config/sway/config.d/*
 
 workspace number 1
-

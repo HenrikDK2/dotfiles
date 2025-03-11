@@ -10,6 +10,17 @@ install_android_development_tools() {
 	fi
 }
 
+install_qbittorrent() {
+	clear
+	printf "Do you want to install qBittorent?"
+	
+	if confirm; then
+		yay -S "${qBittorent_packages[@]}" --needed --ask 4
+		cp -rf $HOME/.my_scripts/init/qBittorrent $HOME/.config
+		sed -i "s/henrik/$USER/" $HOME/.config/qBittorrent/qBittorrent.conf
+	fi
+}
+
 install_bluetooth() {
 	clear
 	printf "This is for bluetooth.\n\n"

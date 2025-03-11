@@ -114,8 +114,6 @@ packages=(
 
     # Misc
     "code"
-    "deluge"
-    "deluge-gtk"
     "firefox"
     "thunderbird"
 )
@@ -137,6 +135,10 @@ android_development_packages=(
 	"jdk17-openjdk"
 	"android-tools"
 	"android-studio"
+)
+
+qBittorent_packages=(
+	"qbittorrent"
 )
 
 obs_packages=(
@@ -241,6 +243,7 @@ exclude_packages=(
     ${virt_manager_packages[@]}
     ${bluetooth_packages[@]}
     ${obs_packages[@]}
+    ${qBittorent_packages[@]}
     ${gpu_packages[@]}
 )
 
