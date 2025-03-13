@@ -25,7 +25,7 @@ input * {
     bindsym $mod+d kill
     bindsym $mod+space exec $HOME/.config/sway/wofi.sh
     floating_modifier $mod normal
-    bindsym $mod+home reload
+    bindsym $mod+shift+r reload
     bindsym $mod+m exec $HOME/.config/sway/mute_mic.sh
 	bindsym --whole-window alt+button9 exec $HOME/.config/sway/mute_mic.sh
 
