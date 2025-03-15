@@ -6,7 +6,7 @@ set $up l
 set $right ae
 
 output * {   
-    max_render_time 6
+    allow_tearing yes
 }
 
 input * {
