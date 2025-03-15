@@ -7,6 +7,7 @@ set $right ae
 
 output * {   
     allow_tearing yes
+    max_render_time off
 }
 
 input * {
