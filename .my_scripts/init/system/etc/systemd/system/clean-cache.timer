@@ -1,5 +1,5 @@
 [Unit]
-Description=Run Pacman Cache Monthly
+Description=Clean cache monthly
 
 [Timer]
 OnCalendar=monthly
