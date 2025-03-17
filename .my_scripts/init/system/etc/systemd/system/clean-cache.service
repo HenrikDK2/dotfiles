@@ -3,4 +3,4 @@ Description=Clean cache
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c '/usr/bin/pacman -Scc --noconfirm; for user in /home/*; do rm -rf "$user/.cache/"*; done'
+ExecStart=/usr/bin/pacman -Scc --noconfirm
