@@ -5,7 +5,7 @@ renice -n 20 -p $$ -g $$
 ionice -c 3 -P $$
 
 set_wallpapers(){
-    wallpapers=("$HOME/Wallpapers"/*)
+	wallpapers=("$HOME/Wallpapers"/*)
     wallpapers=($(shuf -e "${wallpapers[@]}"))
     
     # Remove XCF files from the array
@@ -14,15 +14,14 @@ set_wallpapers(){
     done
 }
 
-# Start swaybg with the first wallpaper
-set_wallpapers
-swaybg -i "${wallpapers[0]}" -m center &
-
 while true; do
     for wallpaper in "${wallpapers[@]}"; do
-        swaymsg output "*" bg "$wallpaper" center
-        sleep 20m
+        pids=$(pgrep -d' ' swaybg)
+        swaybg -i $wallpaper -m center &
+        sleep 5s
+    	kill $pids
+        sleep 5s
     done
 	
-    set_wallpapers
+   	set_wallpapers
 done
