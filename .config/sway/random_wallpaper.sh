@@ -20,7 +20,7 @@ while true; do
         swaybg -i $wallpaper -m center &
         sleep 5s
     	kill $pids
-        sleep 5s
+        sleep 20m
     done
 	
    	set_wallpapers
