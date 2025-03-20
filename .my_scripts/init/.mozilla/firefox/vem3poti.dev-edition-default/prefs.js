@@ -95,6 +95,7 @@ user_pref("datareporting.healthreport.service.enabled", false);
 user_pref("datareporting.policy.dataSubmissionPolicyAccepted", false);
 user_pref("datareporting.policy.dataSubmissionEnabled", false);
 user_pref("datareporting.sessions.current.clean", false);
+user_pref("datareporting.usage.uploadEnabled", false);
 
 user_pref("reader.parse-on-load.enabled", false);
 user_pref("reader.parse-on-load.force-enabled", false);
