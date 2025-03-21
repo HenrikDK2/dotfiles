@@ -56,6 +56,16 @@ user_pref("browser.urlbar.placeholderName.private", "DuckDuckGo");
 user_pref("browser.sessionstore.resume_from_crash", false);
 user_pref("browser.sessionhistory.max_entries", 20);
 user_pref("browser.send_pings", false);
+user_pref("browser.discovery.enabled", false);
+user_pref("browser.newtabpage.activity-stream.showWeather", false);
+user_pref("browser.newtabpage.activity-stream.showSponsored", false);
+user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
+user_pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
+user_pref("browser.region.update.enabled", false);
+user_pref("browser.discovery.enabled", false);
+user_pref("browser.uitour.enabled", false);
+user_pref("browser.translations.enable", false);
+user_pref("browser.urlbar.addons.featureGate", false);
 user_pref(
   "browser.uiCustomization.state",
   '{"placements":{"widget-overflow-fixed-list":[],"unified-extensions-area":["ublock0_raymondhill_net-browser-action","moz-addon-prod_7tv_app-browser-action","sponsorblocker_ajay_app-browser-action","_76ef94a4-e3d0-4c6f-961a-d38a429a332b_-browser-action","_f957b9dd-119f-432f-becf-49deef9c3ca9_-browser-action","languagetool-webextension_languagetool_org-browser-action","user-agent-switcher_ninetailed_ninja-browser-action","_762f9885-5a13-4abd-9c77-433dcd38b8fd_-browser-action","_74145f27-f039-47ce-a470-a662b129930a_-browser-action","idcac-pub_guus_ninja-browser-action"],"nav-bar":["back-button","forward-button","stop-reload-button","customizableui-special-spring1","urlbar-container","customizableui-special-spring2","save-to-pocket-button","downloads-button","unified-extensions-button","_900554ae-d728-40cd-b9cf-593d810ea14a_-browser-action","stable_allmangasreader_com-browser-action","_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action","reset-pbm-toolbar-button"],"toolbar-menubar":["menubar-items"],"TabsToolbar":["tabbrowser-tabs","new-tab-button","alltabs-button"],"PersonalToolbar":["personal-bookmarks"]},"seen":["developer-button","profiler-button","_76ef94a4-e3d0-4c6f-961a-d38a429a332b_-browser-action","_900554ae-d728-40cd-b9cf-593d810ea14a_-browser-action","_f957b9dd-119f-432f-becf-49deef9c3ca9_-browser-action","canvasblocker_kkapsner_de-browser-action","languagetool-webextension_languagetool_org-browser-action","stable_allmangasreader_com-browser-action","user-agent-switcher_ninetailed_ninja-browser-action","ublock0_raymondhill_net-browser-action","_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action","_762f9885-5a13-4abd-9c77-433dcd38b8fd_-browser-action","_74145f27-f039-47ce-a470-a662b129930a_-browser-action","moz-addon-prod_7tv_app-browser-action","sponsorblocker_ajay_app-browser-action","reset-pbm-toolbar-button","idcac-pub_guus_ninja-browser-action"],"dirtyAreaCache":["nav-bar","PersonalToolbar","unified-extensions-area","toolbar-menubar","TabsToolbar"],"currentVersion":20,"newElementCount":2}'
@@ -123,6 +133,7 @@ user_pref("extensions.htmlaboutaddons.inline-options.enabled", false);
 user_pref("app.shield.optoutstudies.enabled", false);
 user_pref("app.normandy.enabled", false);
 user_pref("app.normandy.api_url", "");
+user_pref("app.update.auto", false);
 
 user_pref("media.ffmpeg.vaapi.enabled", true);
 user_pref("media.ffmpeg.vaapi-drm-display.enabled", true);
