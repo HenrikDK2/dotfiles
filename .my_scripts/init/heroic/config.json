@@ -29,7 +29,7 @@
     ],
     "wrapperOptions": [
       {
-        "exe": "/home/#NAME/.my_scripts/redist.sh",
+        "exe": "/home/#NAME/.config/heroic/redist.sh",
         "args": ""
       }
     ],
