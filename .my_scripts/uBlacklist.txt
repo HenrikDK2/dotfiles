@@ -1,3 +1,7 @@
+# This file is for the Firefox extension uBlacklist, so I can recover my settings.
+
+# -----------------------------------------------------------------------------
+
 # Subscriptions
 
 # https://github.com/arosh/ublacklist-stackoverflow-translation
