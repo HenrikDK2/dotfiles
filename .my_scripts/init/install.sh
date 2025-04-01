@@ -31,10 +31,7 @@ source "$HOME/.my_scripts/init/scripts/cachyos-repo.sh"
 # Enable custom mirror service for better download speeds
 source "$HOME/.my_scripts/init/scripts/mirrors.sh"
 
-# Choice between linux-zen, or compile the kernel from source
-source "$HOME/.my_scripts/init/scripts/kernel.sh"
-
-# Add bootloader entries
+# Add bootloader entries, and install kernel
 source "$HOME/.my_scripts/init/scripts/bootloader.sh"
 
 # Install packages
