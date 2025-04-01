@@ -121,6 +121,7 @@ packages=(
 kernel_packages=(
 	"linux-zen"
 	"linux"
+	"linux-cachyos.*"
 	"linux-lts"
 	"linux-hardened"
 	"linux-rt"

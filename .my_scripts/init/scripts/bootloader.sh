@@ -93,15 +93,8 @@ fi
 echo "timeout 3" | sudo tee "/boot/loader/loader.conf" > /dev/null
 
 # Check for installed kernel packages and append the default kernel entry to the loader config
-# If either kernels aren't found, proceed to install linux-zen kernel
-if pacman -Qq | grep -q "^linux-tkg$"; then
-    echo "default tkg.conf" | sudo tee -a "/boot/loader/loader.conf" > /dev/null
-elif pacman -Qq | grep -q "^linux-zen$"; then
-    echo "default zen.conf" | sudo tee -a "/boot/loader/loader.conf" > /dev/null
-else
-	sudo pacman -S linux-zen --noconfirm --needed
-	echo "default zen.conf" | sudo tee -a "/boot/loader/loader.conf" > /dev/null
-fi
+sudo pacman -S linux-cachyos --noconfirm --needed
+echo "default cachyos.conf" | sudo tee -a "/boot/loader/loader.conf" > /dev/null
 
 # Create temp kernel entries
 mkdir ~/.my_scripts/init/entries/tmp
