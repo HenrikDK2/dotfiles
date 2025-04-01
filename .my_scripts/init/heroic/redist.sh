@@ -60,7 +60,7 @@ install_dlls() {
 }
 
 if [ ! -z "$WINE_RUN" ]; then
-    install_dlls "$HOME/.my_scripts/_redist"
+    install_dlls "$HOME/.config/heroic/.redist"
 
     while read -r redist; do
         log "Found redist folder: $redist"
