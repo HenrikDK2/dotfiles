@@ -92,7 +92,7 @@ fi
 # Loader config
 echo "timeout 3" | sudo tee "/boot/loader/loader.conf" > /dev/null
 
-# Check for installed kernel packages and append the default kernel entry to the loader config
+# Install kernel and append the default kernel entry to the loader config
 sudo pacman -S linux-cachyos --noconfirm --needed
 echo "default cachyos.conf" | sudo tee -a "/boot/loader/loader.conf" > /dev/null
 
