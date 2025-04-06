@@ -9,7 +9,9 @@ mako &
 waybar &
 thunderbird &
 
-if command -v discord; then
+if command -v vesktop; then
+	vesktop &
+elif command -v discord; then
 	discord &
 elif command -v discord-canary; then
 	discord-canary &
