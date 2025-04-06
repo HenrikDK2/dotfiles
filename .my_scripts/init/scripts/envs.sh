@@ -226,7 +226,7 @@ done
 #-----------------------------
 
 exclude_packages=(
-    "tidal-hifi-bin"
+    "tidal-hifi-.*"
 	"prismlauncher"
 	"curseforge"
     "piavpn-bin"
