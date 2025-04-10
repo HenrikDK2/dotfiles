@@ -5,17 +5,11 @@ set $down k
 set $up l
 set $right ae
 
-output * {   
-    allow_tearing yes
-    max_render_time off
-}
-
 input * {
     xkb_layout dk
 	accel_profile "flat"
 	pointer_accel 0
 }
-
 
 ### Key bindings
 #
