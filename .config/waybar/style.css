@@ -44,6 +44,10 @@ tooltip {
   background-color: @nord1;
 }
 
+#workspaces {
+	margin-right: 8px;
+}
+
 .modules-left button {
   padding: 0 8px;
 }
