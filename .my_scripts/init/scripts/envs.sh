@@ -30,6 +30,7 @@ packages=(
     # Fonts
     "cantarell-fonts"
     "otf-font-awesome"
+    "ttf-ms-fonts"
     "ttf-jetbrains-mono"
     "ttf-droid"
     "ttf-dejavu"
