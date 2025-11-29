@@ -113,10 +113,13 @@ install_dlls() {
         install_file "$dotnet45"
     fi
 
+    # Install all other files in parallel
     while IFS= read -r -d '' file; do
         [[ "$file" == "$dotnet45" ]] && continue
-        install_file "$file"
+        install_file "$file" &
     done < <(find "$REDIST_DOWNLOAD_DIR" -type f \( -iname "*.exe" -o -iname "*.msi" \) -print0)
+
+    wait  # Wait for all background jobs to finish
 }
 
 main() {
