@@ -1,0 +1,72 @@
+configuration {
+  show-icons: true;
+  icon-theme: "Papirus";
+  drun-match-fields: "name";
+  drun-display-format: "{name}";
+}
+
+* {
+  font: "Cantarell Bold 15";
+
+  bg0:rgba(53, 60, 74, 0.5);
+  bg1: rgb(97, 158, 158);
+
+  fg0: #dedede;
+  fg1: #ffffff;
+  fg2: #dedede80;
+
+  background-color: transparent;
+  text-color: @fg0;
+
+  margin: 0;
+  padding: 0;
+  spacing: 0;
+}
+
+window {
+  background-color: @bg0;
+  location: center;
+  width: 640;
+  border-radius: 8;
+}
+
+inputbar {
+  font: "Cantarell 20";
+  padding: 12px;
+  margin: 0 0 0 12px;
+  spacing: 12px;
+  children: [entry];
+}
+
+entry,
+element-icon,
+element-text {
+  vertical-align: 0.5;
+}
+
+entry {
+  font: inherit;
+  placeholder: "Search";
+  placeholder-color: @fg2;
+}
+
+listview {
+  lines: 6;
+  columns: 1;
+  fixed-height: false;
+}
+
+element {
+  padding: 8px 16px;
+  spacing: 16px;
+  background-color: transparent;
+}
+
+element selected {
+  background-color: @bg1;
+  text-color: @fg1;
+}
+
+element-icon {
+  size: 1.5em;
+}

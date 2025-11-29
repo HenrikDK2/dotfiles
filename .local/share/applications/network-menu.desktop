@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Network Menu
+Comment=Manage your networks via ConnMan and Rofi
+Exec=bash -c "$HOME/.config/rofi/network_menu.sh"
+Icon=network-wired
+Terminal=false
+Type=Application
+Categories=Network;Utility;
+StartupNotify=true

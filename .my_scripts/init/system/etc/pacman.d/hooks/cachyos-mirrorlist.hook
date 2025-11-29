@@ -1,0 +1,11 @@
+[Trigger]
+Type = Package
+Operation = Remove
+Target = cachyos-mirrorlist
+Target = cachyos-v3-mirrorlist
+Target = cachyos-v4-mirrorlist
+
+[Action]
+Description = Remove changes to pacman.conf
+When = PostTransaction
+Exec = /etc/pacman.d/scripts/cachyos-mirrorlist.sh

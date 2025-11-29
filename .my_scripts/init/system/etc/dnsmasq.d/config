@@ -1,0 +1,22 @@
+listen-address=::1,127.0.0.1
+port=53
+
+no-resolv
+cache-size=10000
+domain-needed
+bogus-priv
+addn-hosts=/etc/hosts.deny
+
+conf-file=/usr/share/dnsmasq/trust-anchors.conf
+dnssec
+
+server=1.1.1.1
+server=1.0.0.1
+
+# --- Fix for printers/Avahi ---
+# Don't let dnsmasq handle .local, leave it for mDNS/Avahi
+domain-needed
+bogus-priv
+# Special: never forward/answer .local queries
+local=/
+

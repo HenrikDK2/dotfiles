@@ -1,0 +1,32 @@
+{
+  "Typescript React Arrow Function": {
+    "prefix": "raf",
+    "body": [
+      "import React from 'react'",
+      "",
+      "interface ${0:component}Props {",
+      "  children?: React.ReactNode;",
+      "}",
+      "",
+      "export const ${0:component}: React.FC<${0:component}Props> = () => {",
+      "  return <div></div>",
+      "}"
+    ],
+    "description": "Typescript react arrow function"
+  },
+  "Typescript Preact Arrow Function": {
+    "prefix": "paf",
+    "body": [
+      "import { ComponentChildren, FunctionComponent } from 'preact';",
+      "",
+      "interface ${0:component}Props {",
+      "  children?: ComponentChildren;",
+      "}",
+      "",
+      "export const ${0:component}: FunctionComponent<${0:component}Props> = () => {",
+      "  return <div></div>",
+      "}"
+    ],
+    "description": "Typescript preact arrow function"
+  }
+}

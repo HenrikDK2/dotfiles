@@ -1,0 +1,146 @@
+{
+  "height": 30,
+  "layer": "bottom",
+  "margin": "10px 20px -10px 20px",
+  "modules-left": [
+    "custom/shutdown",
+    "custom/reboot",
+    "custom/suspend",
+    "sway/workspaces",
+    "sway/mode",
+    "sway/window",
+    "hyprland/workspaces",
+    "hyprland/mode",
+    "hyprland/window"
+  ],
+  "modules-center": [],
+  "exclusive": true,
+  "modules-right": [
+    "pulseaudio",
+    "backlight",
+    "network",
+    "custom/vpn",
+    "cpu",
+    "memory",
+    "battery",
+    "clock",
+    "tray",
+  ],
+  "sway/mode": {
+    "format": "<span style=\"italic\">{}</span>"
+  },
+  "sway/window": {
+    "max-length": 50
+  },
+  "custom/vpn": {
+    "format": "|      {}",
+    "tooltip-format": "{icon}",
+    "exec": "~/.config/waybar/modules/vpn.sh",
+    "return-type": "json",
+    "tooltip": true,
+    "interval": 5
+  },
+  "custom/shutdown": {
+    "format": "",
+    "on-click": "shutdown now",
+    "tooltip": false
+  },
+  "custom/reboot": {
+    "format": "",
+    "on-click": "reboot",
+    "tooltip": false
+  },
+  "custom/suspend": {
+    "format": "",
+    "on-click": "hyprlock",
+    "tooltip": false
+  },
+  "tray": {
+    "spacing": 10
+  },
+  "clock": {
+    "interval": 60,
+    "format": "  {:%F   %H:%M}",
+    "tooltip-format": "<small><tt>{calendar}</tt></small>",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 3,
+      "weeks-pos": "right",
+      "format": {
+        "months": "<span size='16pt' rise='16pt' color='#ffead3'><b>{}</b></span>",
+        "days": "<span size='15pt' color='#e5eaf0'><b>{}</b></span>",
+        "weeks": "<span color='#8fbbba'><b>W{:%U}</b></span>",
+        "weekdays": "<span size='15pt' color='#ffcc66'><b>{}</b></span>",
+        "today": "<span size='15pt' color='#99ffdd'><b><u>{}</u></b></span>"
+      }
+    }
+  },
+  "cpu": {
+    "format": "  {usage}%",
+    "tooltip": false
+  },
+  "memory": {
+    "format": "  {percentage}%"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon}  {capacity}%",
+    "format-charging": "  {capacity}%",
+    "format-plugged": "  {capacity}%",
+    "format-alt": "{time} {icon}",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "network": {
+    "format-wifi": "  {signalStrength}%",
+    "format-ethernet": "  {ifname}",
+    "on-click": "$HOME/.config/rofi/network_launcher.sh",
+    "format-linked": "  {ifname} (No IP)",
+    "format-disconnected": "⚠  Disconnected"
+  },
+  "backlight": {
+    "format": "",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%      {format_source}",
+    "format-bluetooth": "{icon}  {volume}%  {format_source}",
+    "format-bluetooth-muted": "  {icon}  {format_source}",
+    "format-muted": "   {format_source}",
+    "format-source": "  {volume}%",
+    "format-source-muted": "",
+    "scroll-step": 5,
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "on-click": "pavucontrol"
+  }
+}

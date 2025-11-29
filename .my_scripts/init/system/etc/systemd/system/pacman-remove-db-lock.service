@@ -1,0 +1,10 @@
+[Unit]
+Description=Remove pacman db.lck on boot
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rm -f /var/lib/pacman/db.lck
+
+[Install]
+WantedBy=multi-user.target

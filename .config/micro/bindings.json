@@ -1,0 +1,5 @@
+{
+    "Alt-/": "lua:comment.comment",
+    "Ctrl-R": "command:runit",
+    "CtrlUnderscore": "lua:comment.comment"
+}

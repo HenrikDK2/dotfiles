@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Log rotation and cleanup
+echo "===> Rotating journal logs..."
+sudo journalctl --rotate
+
+echo "===> Vacuuming old journal logs..."
+sudo journalctl --vacuum-time=1s
+
+# Perform soft reboot
+echo "===> Initiating soft reboot..."
+sudo systemctl soft-reboot

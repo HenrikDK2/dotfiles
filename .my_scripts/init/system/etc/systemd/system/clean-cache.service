@@ -1,0 +1,6 @@
+[Unit]
+Description=Clean cache
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/pacman -Scc --noconfirm

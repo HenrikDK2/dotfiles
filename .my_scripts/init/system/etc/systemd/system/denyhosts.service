@@ -1,0 +1,23 @@
+[Unit]
+Description=Get the ultimate unified hosts file
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=604800
+ExecStart=/usr/local/bin/denyhosts.sh
+
+# Lowest priority
+Nice=19
+CPUQuota=5%
+CPUWeight=1
+CPUSchedulingPolicy=idle
+IOWeight=1
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+
+[Install]
+WantedBy=multi-user.target

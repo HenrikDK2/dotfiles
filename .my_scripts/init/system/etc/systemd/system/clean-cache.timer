@@ -1,0 +1,10 @@
+[Unit]
+Description=Clean cache weekly, but only after 1 hour uptime
+
+[Timer]
+OnBootSec=1h
+OnUnitActiveSec=1w
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,30 @@
+{
+  "window.zoomLevel": 2,
+  "git.confirmSync": false,
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+  "security.workspace.trust.enabled": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "redhat.telemetry.enabled": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "explorer.confirmDragAndDrop": false,
+  "editor.formatOnSave": true,
+  "css.lint.unknownAtRules": "ignore",
+  "security.workspace.trust.untrustedFiles": "newWindow",
+  "workbench.preferredLightColorTheme": "Default Dark+",
+  "window.titleBarStyle": "custom",
+  "git.ignoreRebaseWarning": true,
+  "reactSnippets.settings.prettierEnabled": true,
+  "prettier.printWidth": 120,
+  "search.followSymlinks": false,
+  "workbench.startupEditor": "none",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "git.openRepositoryInParentFolders": "always",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "rust-client.channel": "beta",
+  "explorer.confirmDelete": false
+}

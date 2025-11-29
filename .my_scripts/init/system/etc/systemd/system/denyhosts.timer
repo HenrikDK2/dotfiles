@@ -1,0 +1,9 @@
+[Unit]
+Description=Run denyhosts service after boot
+
+[Timer]
+OnBootSec=5min
+Unit=denyhosts.service
+
+[Install]
+WantedBy=timers.target

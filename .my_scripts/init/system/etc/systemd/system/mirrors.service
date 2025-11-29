@@ -1,0 +1,21 @@
+[Unit]
+Description=Sort mirrors by fastest
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mirrors.sh
+
+# Lowest priority
+Nice=19
+CPUQuota=5%
+CPUWeight=1
+CPUSchedulingPolicy=idle
+IOWeight=1
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+
+[Install]
+WantedBy=multi-user.target

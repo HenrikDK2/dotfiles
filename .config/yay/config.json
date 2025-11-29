@@ -1,0 +1,11 @@
+{
+  "sudobin": "sudo",
+  "sudoflags": "",
+  "sudoloop": true,
+  "removemake": "no",
+  "cleanmenu": false,
+  "diffmenu": false,
+  "devel":  true,
+  "editmenu": false,
+  "editor": "micro"
+}
