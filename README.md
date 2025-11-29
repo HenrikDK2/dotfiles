@@ -13,7 +13,7 @@ My dotfiles are intended for personal usage, but feel free to make use of them a
 
 - These configuration/system files have only been tested on a fresh install of Arch Linux.
 
-- Keep in mind that this project is designed specifically for my setup on a **Desktop PC** with **AMD** hardware. Additionally, the installation script assumes an Ethernet connection.
+- Keep in mind that this project is designed specifically for my setup on a **Desktop PC** with **AMD** hardware.
 
 ### Installation guide
 
