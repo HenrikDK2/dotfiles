@@ -63,7 +63,7 @@ push_commit() {
 	fi
 
 	if [[ "$status" =~ "no changes added to commit" ]]; then
-		git add .
+		(cd $(git rev-parse --show-toplevel) && git add .)
 	fi 
 	
     read -p "Commit message: " msg
