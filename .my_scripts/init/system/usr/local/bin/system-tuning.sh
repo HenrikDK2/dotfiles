@@ -138,13 +138,10 @@ sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1  # Ignore malformed ICMP 
 ### Future warning to self ####
 ###############################
 
-# Below sysctl network security tweaks to reduce fingerprinting limits
-# download speed on Arma Reforger Workshop downloads, I wouldn't recommend 
-# to enable this, this may also affects downloads in other games.
-
+# Enable below sysctl network security tweaks to reduce fingerprinting limits
+# It reduces download speed on Arma Reforger Workshop, and possibly other services/games 
 #sysctl -w net.ipv4.tcp_sack=0 
 #sysctl -w net.ipv4.tcp_window_scaling=0
-
                           
 echo ""
 echo "=== Optimization Complete ==="
