@@ -56,9 +56,6 @@ source "$HOME/.my_scripts/init/scripts/bootloader.sh"
 # Install packages
 source "$HOME/.my_scripts/init/scripts/packages.sh"
 
-# ClamAV
-source "$HOME/.my_scripts/init/scripts/clamav.sh"
-
 # Setup autologin (Optional)
 source "$HOME/.my_scripts/init/scripts/auto_login.sh"
 

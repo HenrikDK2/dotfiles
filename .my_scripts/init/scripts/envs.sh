@@ -64,7 +64,6 @@ packages=(
 	"blesh-git"
     "btop"
     "cabextract"
-    "clamav"
     "fastfetch"
     "fuse"
     "grim"
