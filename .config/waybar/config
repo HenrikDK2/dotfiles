@@ -41,7 +41,7 @@
     "interval": 5
   },
   "custom/shutdown": {
-    "format": "",
+    "format": "",
     "on-click": "shutdown now",
     "tooltip": false
   },
