@@ -216,7 +216,9 @@ while true; do
     fi
 done
 
-#-----------------------------
+#-------------------------------
+# Packages to keep on reinstall
+#-------------------------------
 
 exclude_packages=(
     "yay"
