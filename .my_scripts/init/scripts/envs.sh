@@ -35,9 +35,6 @@ packages=(
     "ttf-droid"
     "ttf-dejavu"
 
-    # Icons
-    "papirus-icon-theme"
-
     # Sound
     "pipewire"
     "pipewire-audio"
