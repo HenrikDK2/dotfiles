@@ -16,8 +16,6 @@ My dotfiles are intended for personal usage, but feel free to make use of them a
 
 **Warning!** Executing the following steps will replace your existing files with my configuration files.
 
-The install script expects Arch Linux to be setup with `systemd-boot`.
-
 1. Navigate to home directory. `/home/<username>`
 
 2. Run the following commands:
