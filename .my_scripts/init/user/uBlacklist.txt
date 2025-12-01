@@ -1,0 +1,16 @@
+# This file is for the Firefox extension uBlacklist, so I can recover my settings.
+
+# -----------------------------------------------------------------------------
+
+# Subscriptions
+
+# https://github.com/arosh/ublacklist-stackoverflow-translation
+# https://raw.githubusercontent.com/arosh/ublacklist-github-translation/refs/heads/master/uBlacklist.txt
+# https://raw.githubusercontent.com/quenhus/uBlock-Origin-dev-filter/refs/heads/main/dist/other_format/uBlacklist/all.txt
+# https://raw.githubusercontent.com/popcar2/BadWebsiteBlocklist/refs/heads/main/uBlacklist.txt
+
+# ------------------------------------------------------------------------------
+
+*://*.redditmedia.com/*
+*://*.quora.com/*
+*://*.fiio.com/*

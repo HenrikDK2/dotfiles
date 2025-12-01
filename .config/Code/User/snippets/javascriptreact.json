@@ -1,0 +1,7 @@
+{
+  "Typescript React Arrow Function": {
+    "prefix": "raf",
+    "body": ["import React from 'react'", "", "export const ${0:component} = () => {", "  return <div></div>", "}"],
+    "description": "React arrow function"
+  }
+}

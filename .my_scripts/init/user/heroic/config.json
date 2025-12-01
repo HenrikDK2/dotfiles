@@ -1,0 +1,68 @@
+{
+  "defaultSettings": {
+    "checkUpdatesInterval": 10,
+    "enableUpdates": false,
+    "addDesktopShortcuts": false,
+    "addStartMenuShortcuts": false,
+    "autoInstallDxvk": true,
+    "autoInstallVkd3d": true,
+    "autoInstallDxvkNvapi": true,
+    "addSteamShortcuts": false,
+    "preferSystemLibs": false,
+    "checkForUpdatesOnStartup": false,
+    "autoUpdateGames": false,
+    "customWinePaths": [],
+    "defaultInstallPath": "/home/#NAME/Games/Heroic",
+    "libraryTopSection": "disabled",
+    "defaultSteamPath": "/home/#NAME/.steam/steam",
+    "defaultWinePrefix": "/home/#NAME/Games/Heroic/Prefixes/default",
+    "hideChangelogsOnStartup": true,
+    "language": "en",
+    "maxWorkers": 0,
+    "minimizeOnLaunch": false,
+    "nvidiaPrime": false,
+    "enviromentOptions": [
+      {
+        "key": "AMD_VULKAN_ICD",
+        "value": "RADV"
+      }
+    ],
+    "wrapperOptions": [
+      {
+        "exe": "/home/#NAME/.config/heroic/redist.sh",
+        "args": ""
+      }
+    ],
+    "showFps": false,
+    "useGameMode": false,
+    "wineCrossoverBottle": "Heroic",
+    "winePrefix": "/home/#NAME/Games/Heroic/Prefixes/default",
+    "wineVersion": {
+      "bin": "/usr/share/steam/compatibilitytools.d/proton-ge-custom/proton",
+      "name": "Proton - proton-ge-custom",
+      "type": "proton"
+    },
+    "enableEsync": true,
+    "enableFsync": true,
+    "enableMsync": false,
+    "eacRuntime": true,
+    "battlEyeRuntime": true,
+    "framelessWindow": false,
+    "beforeLaunchScriptPath": "",
+    "afterLaunchScriptPath": "",
+    "userInfo": {
+      "name": "#NAME"
+    },
+    "useSteamRuntime": true,
+    "showMangohud": false,
+    "discordRPC": true,
+    "experimentalFeatures": {
+      "enableNewDesign": false,
+      "enableHelp": false,
+      "automaticWinetricksFixes": true,
+      "cometSupport": true,
+      "umuSupport": true
+    }
+  },
+  "version": "v0"
+}

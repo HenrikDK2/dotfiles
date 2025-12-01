@@ -1,0 +1,10 @@
+[Unit]
+Description=Update Flatpaks daily
+
+[Timer]
+# Runs at midnight every day
+OnCalendar=*-*-* 00:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,18 @@
+[Unit]
+Description=Amd overclock
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/amd-overclock.sh
+
+# Lowest priority
+Nice=19
+CPUQuota=5%
+CPUWeight=1
+CPUSchedulingPolicy=idle
+IOWeight=1
+IOSchedulingClass=idle
+IOSchedulingPriority=7
+
+[Install]
+WantedBy=multi-user.target
