@@ -29,6 +29,7 @@ packages=(
 flathub_packages=(
 	"com.mastermindzh.tidal-hifi"
 	"com.valvesoftware.Steam"
+	"com.heroicgameslauncher.hgl"
 	"com.valvesoftware.Steam.CompatibilityTool.Proton-GE"
 )
 
@@ -47,11 +48,12 @@ source "$DIR/scripts/functions.sh"
 separator "Copying custom system files..."
 sudo cp -r "$DIR/system/"* /
 
-separator "${yellow}Enabling custom services...${reset}"
+separator "Enabling custom services..."
 sudo systemctl enable \
 	gameboost.service \
 	system-tuning.service \
-	fstrim.timer
+	fstrim.timer \
+	dnf-automatic.timer
 
 systemctl enable --user flatpak-update.timer
 
