@@ -95,6 +95,7 @@ alias audit='$HOME/.my_scripts/scripts/audit.sh'
 alias reset="git_hard_reset_to_commit"
 alias install='sudo dnf install -y'
 alias uninstall='sudo dnf remove -y'
+alias running_system_services="systemctl list-units --type=service --state=active --no-pager | grep running"
 
 if [ ! -f $HOME/.local/share/blesh/ble.sh ]; then
 	curl -L https://github.com/akinomyoga/ble.sh/releases/download/nightly/ble-nightly.tar.xz | tar xJf -
