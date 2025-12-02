@@ -11,13 +11,17 @@ reset='\033[0m'
 
 packages=(
 	"dnf-automatic"
+	"NetworkManager-openvpn.x86_64"
+
 	"code"
 	"discord"
 	"mangohud"
 	"gamescope"
 	"qbittorrent"
-	"NetworkManager-openvpn.x86_64"
 	"btop"
+
+	"fuse"
+	"fuse-libs"
 	"mpg123"
 	"zstd"
 )
