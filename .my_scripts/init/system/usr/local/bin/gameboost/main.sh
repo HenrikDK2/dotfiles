@@ -114,9 +114,21 @@ verify_game_process() {
 [[ -f "$GAMEBOOST_FLAG" ]] && rm -f "$GAMEBOOST_FLAG"
 > "$LOG_FILE"
 
-log_message "GameBoost script started."
+# Unmask potentially masked services
+services=(
+  upower.service
+  avahi-daemon.service
+  auditd.service
+)
+
+for svc in "${services[@]}"; do
+    systemctl unmask "$svc" 2>/dev/null
+    systemctl start "$svc"
+done
 
 # Main loop
+log_message "GameBoost script started."
+
 while true; do
     if [[ -z "$CURRENT_PID" ]]; then
         detect_game_process

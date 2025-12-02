@@ -18,48 +18,40 @@ if [ -d "$GPU" ]; then
 fi
 
 # Enable SELinux while playing games
-setenforce 0
+setenforce 1
 
 # Start system services
 system_services=(
     systemd-journald.socket
     systemd-journald-dev-log.socket
     systemd-journald-audit.socket
-    systemd-journald
+    systemd-journald.service
 
-    clamav-daemon.socket
-    clamav-daemon
-    clamav-freshclam
+    abrtd.service
+    abrt-journal-core.service
+    abrt-oops.service
+    abrt-xorg.service
 
-    libvirtd-admin.socket
-    libvirtd-ro.socket
-    libvirtd.socket
-    libvirtd
+    auditd.service
 
-    chronyd.service
+	ModemManager.service
+    accounts-daemon.service
+    atd.service
+    crond.service
+    dbus-:1.2-org.freedesktop.problems@0.service
+    gssproxy.service
+    rsyslog.service
+    udisks2.service
+	cups.service
+   	chronyd.service
     smartd.service
-    
-    cups
-    avahi-daemon
-
-    udisks2
-    upower
-    systemd-timesyncd
-    docker
-    containerd
+    upower.service
 )
 
-# Start user services
-user_services=(
-    gvfs-daemon
-    gvfs-metadata
-)
-
-# Get all active user IDs with sessions
-user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
-
-# Unmask upower
+# Unmask Services
 systemctl unmask upower.service 2>/dev/null
+systemctl unmask avahi-daemon.service 2>/dev/null
+systemctl unmask auditd.service 2>/dev/null
 
 for ((i=0; i<2; i++)); do
     any_inactive=false
@@ -70,16 +62,6 @@ for ((i=0; i<2; i++)); do
             any_inactive=true
             systemctl start "$svc" 2>/dev/null || true
         fi
-    done
-
-    # Start user services for all active sessions
-    for uid in "${user_ids[@]}"; do
-        for svc in "${user_services[@]}"; do
-            if ! systemctl --user --machine=${uid}@.host is-active --quiet "$svc" 2>/dev/null; then
-                any_inactive=true
-                systemctl --user --machine=${uid}@.host start "$svc" 2>/dev/null || true
-            fi
-        done
     done
 
     [ "$any_inactive" = false ] && break
@@ -93,7 +75,3 @@ fi
 
 # Kill lingering winedevice.exe
 [ "$(pgrep -fl '\.exe$' | wc -l)" -eq 1 ] && pgrep -x winedevice.exe >/dev/null && killall -9 winedevice.exe 2>/dev/null
-
-# Clear RAM
-killall -q -9 chrome_crashpad 2>/dev/null
-echo 3 > /proc/sys/vm/drop_caches

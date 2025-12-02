@@ -51,7 +51,6 @@ separator "${yellow}Enabling custom services...${reset}"
 sudo systemctl enable \
 	gameboost.service \
 	system-tuning.service \
-	unmask-upower.service \
 	fstrim.timer
 
 systemctl enable --user flatpak-update.timer

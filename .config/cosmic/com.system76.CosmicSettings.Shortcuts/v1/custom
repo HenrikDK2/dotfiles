@@ -3,14 +3,14 @@
         modifiers: [
             Super,
         ],
-        key: "a",
-    ): Disable,
+        key: "f",
+    ): Maximize,
     (
         modifiers: [
             Super,
         ],
-        key: "f",
-    ): Maximize,
+        key: "t",
+    ): Disable,
     (
         modifiers: [
             Super,
@@ -21,12 +21,30 @@
         modifiers: [
             Super,
         ],
+        key: "F11",
     ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "t",
+        key: "n",
+    ): System(HomeFolder),
+    (
+        modifiers: [
+            Super,
+        ],
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "Return",
+    ): System(Terminal),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "a",
     ): Disable,
     (
         modifiers: [
@@ -35,6 +53,20 @@
         ],
         key: "space",
     ): ToggleWindowFloating,
+    (
+        modifiers: [
+            Ctrl,
+            Alt,
+        ],
+        key: "Delete",
+        description: Some("btop"),
+    ): Spawn("cosmic-term -- btop"),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "m",
+    ): Spawn("~/.my_scripts/scripts/toggle_mic.sh"),
     (
         modifiers: [
             Super,
@@ -49,46 +81,14 @@
     ): Close,
     (
         modifiers: [
-            Ctrl,
-            Alt,
-        ],
-        key: "Delete",
-        description: Some("btop"),
-    ): Spawn("cosmic-term -- btop"),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "Return",
-    ): System(Terminal),
-    (
-        modifiers: [
             Super,
         ],
         key: "space",
-    ): System(AppLibrary),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "n",
-    ): System(HomeFolder),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "m",
-    ): Spawn("~/.my_scripts/scripts/toggle_mic.sh"),
+    ): System(Launcher),
     (
         modifiers: [
             Super,
         ],
         key: "q",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "F11",
     ): Disable,
 }

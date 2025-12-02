@@ -25,49 +25,49 @@ setenforce 0
 # Stop unnecessary background processes
 processes=(cmst mullvad-gui blueman-applet blueman-manager blueman-tray chrome_crashpad)
 for p in "${processes[@]}"; do
-    pkill -9 "$p" 2>/dev/null
+    pkill -9 "$p" 2>/dev/nully
 done
 
 # Stop system services
 system_services=(
-    systemd-journald.socket
-    systemd-journald-dev-log.socket
-    systemd-journald-audit.socket
-    systemd-journald
+	# DONT STOP JOURNALD SERVICES, CAUSES SYSTEM CRASH WITH COSMIC NETWORK APPLET
+    #systemd-journald.socket
+    #systemd-journald-dev-log.socket
+    #systemd-journald-audit.socket
+    #systemd-journald.service
 
-    clamav-daemon.socket
-    clamav-daemon
-    clamav-freshclam
+    abrtd.service
+    abrt-journal-core.service
+    abrt-oops.service
+    abrt-xorg.service
 
-    libvirtd-admin.socket
-    libvirtd-ro.socket
-    libvirtd.socket
-    libvirtd
+    avahi-daemon.service
+    avahi-daemon.socket
+   	cups.service
 
+    auditd.service
+
+   	alsa-state.service
+    accounts-daemon.service
+    atd.service
+    crond.service
+    dbus-:1.2-org.freedesktop.problems@0.service
+    gssproxy.service
+    rsyslog.service
+    udisks2.service
    	chronyd.service
     smartd.service
-
-    cups
-    avahi-daemon
-
-    udisks2
-    upower
-    systemd-timesyncd
-    docker
-    containerd
+    upower.service
 )
 
-# Stop user services
-user_services=(
-    gvfs-daemon
-    gvfs-metadata
-)
-
-# Get all active user IDs with sessions
-user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
-
-# Mask upower
+# Mask Services
 systemctl mask upower.service 2>/dev/null
+systemctl mask avahi-daemon.service 2>/dev/null
+systemctl mask auditd.service 2>/dev/null
+
+if mmcli -L | grep -q "No modems were found"; then
+    systemctl stop ModemManager.service
+fi
 
 for ((i=0; i<3; i++)); do
     any_active=false
@@ -80,20 +80,6 @@ for ((i=0; i<3; i++)); do
         fi
     done
 
-    # Stop user services for all active sessions
-    for uid in "${user_ids[@]}"; do
-        for svc in "${user_services[@]}"; do
-            if systemctl --user --machine=${uid}@.host is-active --quiet "$svc"; then
-                any_active=true
-                systemctl --user --machine=${uid}@.host stop "$svc"
-            fi
-        done
-    done
-
     [ "$any_active" = false ] && break
     sleep 1
 done
-
-# Clear RAM
-pkill -9 chrome_crashpad
-echo 3 > /proc/sys/vm/drop_caches
