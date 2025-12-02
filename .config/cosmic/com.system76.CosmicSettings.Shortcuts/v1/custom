@@ -3,36 +3,13 @@
         modifiers: [
             Super,
         ],
-        key: "f",
-    ): Maximize,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "t",
+        key: "a",
     ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "slash",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "F11",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "n",
-    ): System(HomeFolder),
-    (
-        modifiers: [
-            Super,
-        ],
+        key: "g",
     ): Disable,
     (
         modifiers: [
@@ -44,34 +21,42 @@
         modifiers: [
             Super,
         ],
-        key: "a",
+        key: "q",
     ): Disable,
     (
         modifiers: [
             Super,
-            Shift,
         ],
-        key: "space",
-    ): ToggleWindowFloating,
-    (
-        modifiers: [
-            Ctrl,
-            Alt,
-        ],
-        key: "Delete",
-        description: Some("btop"),
-    ): Spawn("cosmic-term -- btop"),
+        key: "c",
+    ): ToggleTiling,
     (
         modifiers: [
             Super,
         ],
-        key: "m",
-    ): Spawn("~/.my_scripts/scripts/toggle_mic.sh"),
+        key: "f",
+    ): Maximize,
     (
         modifiers: [
             Super,
         ],
-        key: "g",
+        key: "n",
+    ): System(HomeFolder),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "t",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "F11",
     ): Disable,
     (
         modifiers: [
@@ -83,12 +68,39 @@
         modifiers: [
             Super,
         ],
-        key: "space",
-    ): System(Launcher),
+        key: "slash",
+    ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "q",
+        key: "y",
     ): Disable,
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "space",
+    ): ToggleWindowFloating,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "m",
+    ): Spawn("~/.my_scripts/scripts/toggle_mic.sh"),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "space",
+    ): System(Launcher),
+    (
+        modifiers: [
+            Ctrl,
+            Alt,
+        ],
+        key: "Delete",
+        description: Some("btop"),
+    ): Spawn("cosmic-term -- btop"),
 }

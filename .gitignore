@@ -33,9 +33,6 @@
 .config/micro/buffers
 .config/micro/backups
 
-!.config/discord/
-!.config/discord/settings.json
-
 !.config/cosmic/
 !.config/cosmic/**
 
