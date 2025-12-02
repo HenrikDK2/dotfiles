@@ -31,6 +31,7 @@ flathub_packages=(
 	"com.valvesoftware.Steam"
 	"com.heroicgameslauncher.hgl"
 	"com.valvesoftware.Steam.CompatibilityTool.Proton-GE"
+	"org.freedesktop.Platform.VulkanLayer.gamescope"
 )
 
 packages_to_remove=(
