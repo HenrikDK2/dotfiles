@@ -19,6 +19,18 @@ function clear_screen() {
     tput cup "$offset" 0
 }
 
+function separator() {
+    local title="$1"
+
+    # Line length = title length + 3 spaces
+    local line_length=$(( ${#title} + 3 ))
+    local line=$(printf "%*s" "$line_length" "" | tr ' ' '=')
+
+    echo -e "${blue}${line}${reset}"
+    echo -e "${yellow} ${title} ${reset}"   # 1 space on each side
+    echo -e "${blue}${line}${reset}"
+}
+
 function confirm() {
     while true; do
         read -p " [y/n] " yn

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# ANSI escape codes for yellow color
-yellow='\033[1;33m'
-reset='\033[0m' # reset to default color
 original_conf_file="$HOME/.my_scripts/init/system/etc/amd-overclock.original"
 conf_file="/etc/amd-overclock.conf"
 
