@@ -44,11 +44,8 @@ system_services=(
     libvirtd.socket
     libvirtd
 
-    chronyd.service
-    NetworkManager-wait-online.service
-    geoclue.service
+   	chronyd.service
     smartd.service
-    ModemManager.service
 
     cups
     avahi-daemon

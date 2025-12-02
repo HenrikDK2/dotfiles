@@ -35,6 +35,9 @@ system_services=(
     libvirtd-ro.socket
     libvirtd.socket
     libvirtd
+
+    chronyd.service
+    smartd.service
     
     cups
     avahi-daemon
