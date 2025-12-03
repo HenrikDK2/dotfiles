@@ -6,5 +6,6 @@ Some(([
     "com.system76.CosmicAppletNetwork",
     "com.system76.CosmicAppletBattery",
     "com.system76.CosmicAppletNotifications",
+    "com.system76.CosmicAppletAudio",
     "com.system76.CosmicAppletTime",
 ]))
