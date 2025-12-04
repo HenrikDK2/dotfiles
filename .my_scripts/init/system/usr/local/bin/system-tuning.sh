@@ -87,9 +87,17 @@ echo 0 > /sys/kernel/mm/ksm/run # Disable KSM to avoid CPU overhead if virtual m
 if is_laptop; then
     sysctl -w vm.laptop_mode=1                         # Enable laptop mode for better power management
     sysctl -w kernel.timer_migration=1                 # Allow timer migration for better power management
+
+	if ! systemctl is-enabled --quiet switcheroo-control.service; then
+	    sudo systemctl enable --now switcheroo-control.service
+	fi
 else
     sysctl -w vm.laptop_mode=0                         # Disable laptop mode
     sysctl -w kernel.timer_migration=0                 # Pin timers to cores (prevents CPU sleep)
+
+	if systemctl is-enabled --quiet switcheroo-control.service; then
+	    sudo systemctl disable --now switcheroo-control.service
+	fi
 fi
 
 # --------------------
