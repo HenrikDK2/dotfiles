@@ -1,9 +1,9 @@
 [Unit]
-Description=Update Flatpaks daily
+Description=Update Flatpaks
 
 [Timer]
-# Runs at midnight every day
-OnCalendar=*-*-* 00:00:00
+OnBootSec=15min
+OnUnitActiveSec=12h
 Persistent=true
 
 [Install]
