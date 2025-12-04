@@ -12,6 +12,7 @@ plugins=(
     "formulahendry.code-runner"
     "styled-components.vscode-styled-components"
     "formulahendry.auto-rename-tag"
+    "cipchk.cssrem"
     "formulahendry.auto-close-tag"
     "esbenp.prettier-vscode"
     "eamodio.gitlens"
