@@ -8,6 +8,7 @@ if [ "$(get_primary_gpu)" = "amd" ] && ! systemctl is-enabled amd-overclock >/de
 	printf "Do you want to enable AMD overclocking via. system service?"
 
 	if confirm; then
+		separator "Configuring AMD overclock service..."
 		sudo cp -f $original_conf_file $conf_file
 	
 		# Comment out each variable in the config file

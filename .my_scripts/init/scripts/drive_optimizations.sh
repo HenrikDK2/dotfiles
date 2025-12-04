@@ -1,5 +1,7 @@
 #!/bin/bash
 
+separator "Optimizing drives..."
+
 # Loop through /etc/fstab
 while IFS= read -r line; do
   # Skip comments and blank lines

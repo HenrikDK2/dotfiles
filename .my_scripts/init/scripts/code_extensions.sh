@@ -23,6 +23,8 @@ plugins=(
 # Get the list of installed extensions
 installed_plugins=$(cd "$HOME" && code --list-extensions)
 
+separator "Installing default VSCode extensions..."
+
 # Loop through plugins and install only if not already installed
 for plugin in "${plugins[@]}"; do
     if ! echo "$installed_plugins" | grep -q "$plugin"; then

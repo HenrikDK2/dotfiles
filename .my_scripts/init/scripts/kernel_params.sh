@@ -49,6 +49,7 @@ kernel_params=(
 	"amdgpu.ppfeaturemask=0xffffffff"
 )
 
+separator "Configuring kernel parameters..."
 
 # 2️⃣ Join parameters into a single string
 params_str="${kernel_params[*]}"

@@ -4,11 +4,13 @@
 
 # Optimized Thunderbird profile
 if [ ! -d "$HOME/.thunderbird" ]; then
+	separator "Configuring thunderbird profile..."
     cp -r "$DIR/user/.thunderbird" "$HOME/.thunderbird"
 fi
 
 # Optimized Firefox profile
 if [ ! -d "$HOME/.mozilla" ]; then 
+	separator "Configuring firefox profile..."
     cp -r $DIR/user/.mozilla ~/.mozilla;
 	sed -i "s|/home/henrik|$HOME|g" $HOME/.mozilla/firefox/vem3poti.dev-edition-default/extensions.json
 	sed -i "s|/home/henrik|$HOME|g" $HOME/.mozilla/firefox/vem3poti.dev-edition-default/prefs.js

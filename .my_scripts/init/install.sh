@@ -75,16 +75,13 @@ gpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vsc
 
 sudo dnf upgrade -y --refresh
 
-separator "Installing & Removing Packages..."
+separator "Installing & removing packages..."
 sudo dnf install -y "${packages[@]}"
 flatpak install -y flathub "${flathub_packages[@]}"
 sudo dnf remove -y "${packages_to_remove[@]}"
 
-separator "Configuring Automatic Updates..."
-sudo cp -f /usr/share/dnf5/dnf5-plugins/automatic.conf /etc/dnf/automatic.conf
-sudo sed -i 's/^apply_updates =.*/apply_updates = yes/' /etc/dnf/automatic.conf
-
-separator "Running Additional Scripts..."
+source "$DIR/scripts/video_playback_fix.sh"
+source "$DIR/scripts/automatic_updates.sh"
 source "$DIR/scripts/code_extensions.sh"
 source "$DIR/scripts/heroic.sh"
 source "$DIR/scripts/qbittorrent.sh"

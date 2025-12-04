@@ -1,5 +1,7 @@
 #!/bin/bash
 
+separator "Configuring firewall..."
+
 # Reset firewalld (remove all custom rules and set default zone to public)
 sudo firewall-cmd --permanent --delete-all-zones
 sudo firewall-cmd --set-default-zone=public
