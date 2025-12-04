@@ -89,15 +89,24 @@ if is_laptop; then
     sysctl -w kernel.timer_migration=1                 # Allow timer migration for better power management
 
 	if ! systemctl is-enabled --quiet switcheroo-control.service; then
-	    sudo systemctl enable --now switcheroo-control.service
+	    systemctl enable --now switcheroo-control.service
 	fi
 else
     sysctl -w vm.laptop_mode=0                         # Disable laptop mode
     sysctl -w kernel.timer_migration=0                 # Pin timers to cores (prevents CPU sleep)
 
 	if systemctl is-enabled --quiet switcheroo-control.service; then
-	    sudo systemctl disable --now switcheroo-control.service
+	    systemctl disable --now switcheroo-control.service
 	fi
+fi
+
+# Disable or enable pcscd.service depending on if smart card readers exist
+if opensc-tool -l 2>&1 | grep -q "No smart card readers."; then
+    [ "$(systemctl show -p ActiveState --value pcscd.service)" = "active" ] && \
+        systemctl disable --now pcscd.service
+else
+    [ "$(systemctl show -p ActiveState --value pcscd.service)" != "active" ] && \
+        systemctl enable --now pcscd.service
 fi
 
 # --------------------
