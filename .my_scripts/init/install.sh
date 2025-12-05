@@ -19,7 +19,7 @@ packages=(
 	"gamescope"
 	"qbittorrent"
 	"btop"
-
+	
 	"fuse"
 	"fuse-libs"
 	"mpg123"
@@ -83,7 +83,6 @@ sudo dnf remove -y "${packages_to_remove[@]}"
 source "$DIR/scripts/video_playback_fix.sh"
 source "$DIR/scripts/automatic_updates.sh"
 source "$DIR/scripts/code_extensions.sh"
-source "$DIR/scripts/heroic.sh"
 source "$DIR/scripts/qbittorrent.sh"
 source "$DIR/scripts/mozilla.sh"
 source "$DIR/scripts/drive_optimizations.sh"

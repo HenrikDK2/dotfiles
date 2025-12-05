@@ -1,8 +1,8 @@
 (
     output: "all",
-    source: Path("/home/Henrik/Wallpapers"),
+    source: Path("/home/Henrik/Wallpapers/4.png"),
     filter_by_theme: true,
-    rotation_frequency: 900,
+    rotation_frequency: 300,
     filter_method: Lanczos,
     scaling_mode: Zoom,
     sampling_method: Alphanumeric,
