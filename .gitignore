@@ -9,10 +9,6 @@
 !.my_scripts/**
 !.config
 
-!Games
-!Games/Heroic
-!Games/Heroic/redist.sh
-
 !Wallpapers
 !Wallpapers/**
 
