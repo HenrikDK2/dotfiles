@@ -1,0 +1,9 @@
+[Context]
+filesystems=xdg-config/gtk-4.0:ro;
+
+[Environment]
+PULSE_LOG=0                      # Disable PulseAudio debug logging
+G_MESSAGES_DEBUG=none            # Disable GLib debug messages
+QT_LOGGING_RULES="*=false"       # Disable Qt debug logging
+GST_DEBUG=0                      # Disable GStreamer debug messages
+FLATPAK_ENABLE_SLOW_FILESYSTEM=0 # Reduce sandbox filesystem overhead

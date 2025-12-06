@@ -12,6 +12,12 @@
 !Wallpapers
 !Wallpapers/**
 
+!.local/
+!.local/share/
+!.local/share/flatpak
+!.local/share/flatpak/overrides
+!.local/share/flatpak/overrides/global
+
 !.config/MangoHud/
 !.config/MangoHud/MangoHud.conf
 
@@ -35,6 +41,8 @@
 
 !.config/cosmic/
 !.config/cosmic/**
+.config/cosmic/com.system76.CosmicFiles/v1/show_details
+
 
 !.config/Code
 !.config/Code/User
