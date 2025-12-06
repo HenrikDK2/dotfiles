@@ -38,7 +38,6 @@ packages_to_remove=(
 	"libreoffice*"
 	"rhythmbox.*"
 	"irqbalance"
-	"malcontent*"
 	"system-config-language.*"
 	"nheko.*"
 )
@@ -53,8 +52,7 @@ separator "Enabling custom services..."
 sudo systemctl enable \
 	gameboost.service \
 	system-tuning.service \
-	fstrim.timer \
-	dnf-automatic.timer
+	fstrim.timer
 
 systemctl enable --user flatpak-update.timer
 
@@ -79,6 +77,7 @@ separator "Installing & removing packages..."
 sudo dnf install -y "${packages[@]}"
 flatpak install -y flathub "${flathub_packages[@]}"
 sudo dnf remove -y "${packages_to_remove[@]}"
+sudo systemctl enable dnf-automatic.timer
 
 source "$DIR/scripts/video_playback_fix.sh"
 source "$DIR/scripts/automatic_updates.sh"
