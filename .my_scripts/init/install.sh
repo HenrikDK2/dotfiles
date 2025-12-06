@@ -45,6 +45,10 @@ packages_to_remove=(
 # Commmonly shared functions used by all scripts
 source "$DIR/scripts/functions.sh"
 
+separator "Configuring user files..."
+echo "Configuring config files to match your home directory"
+find "$HOME/.config" -type f -exec sed -i "s#/home/[^/]*#$HOME#g" {} +
+
 separator "Copying custom system files..."
 sudo cp -r "$DIR/system/"* /
 
