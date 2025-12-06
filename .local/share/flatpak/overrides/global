@@ -2,10 +2,4 @@
 filesystems=xdg-config/gtk-4.0:ro;
 
 [Environment]
-PULSE_LOG=0
-G_MESSAGES_DEBUG=none
-QT_LOGGING_RULES="*=false"
-GST_DEBUG=0
 FLATPAK_ENABLE_SLOW_FILESYSTEM=0
-G_DEBUG=fatal-warnings
-MESA_DEBUG=0
