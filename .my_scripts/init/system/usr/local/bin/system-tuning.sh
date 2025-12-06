@@ -101,7 +101,7 @@ else
 fi
 
 # Disable or enable pcscd.service depending on if smart card readers exist
-if opensc-tool -l 2>&1 | grep -q "No smart card readers."; then
+if opensc-tool -l 2>&1 | grep -q "No smart card readers found."; then
     [ "$(systemctl show -p ActiveState --value pcscd.service)" = "active" ] && \
         systemctl disable --now pcscd.service
 else
