@@ -1,5 +1,5 @@
 Defaults passwd_tries=10, passwd_timeout=60, timestamp_timeout=60
+Defaults env_keep += "EDITOR VISUAL DIFFPROG SYSTEMD_EDITOR MICRO_CONFIG_HOME MICRO_TRUECOLOR"
 %wheel ALL=(ALL:ALL) ALL
 %wheel ALL = NOPASSWD: /usr/local/bin/soft-reboot
 %wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper
-clamav ALL=(root) NOPASSWD: /usr/bin/touch /tmp/audit.flag
