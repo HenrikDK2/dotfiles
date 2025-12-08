@@ -26,7 +26,7 @@ KERNEL_PARAMS=(
     "amdgpu.ppfeaturemask=0xffffffff"
 )
 
-detect_microcode() {
+function detect_microcode() {
     if grep -q "AuthenticAMD" /proc/cpuinfo; then
         echo "amd:amd-ucode.img"
     elif grep -q "GenuineIntel" /proc/cpuinfo; then
@@ -36,19 +36,19 @@ detect_microcode() {
     fi
 }
 
-get_root_uuid() {
+function get_root_uuid() {
     local rootdev
     rootdev=$(findmnt / -o SOURCE -n)
     ROOT_UUID=$(blkid -o value -s UUID "$rootdev")
 }
 
-get_swap_uuid() {
+function get_swap_uuid() {
     local swapdev
     swapdev=$(swapon --show=NAME --noheadings || true)
     [ -n "$swapdev" ] && SWAP_UUID=$(blkid -o value -s UUID "$swapdev") || SWAP_UUID=""
 }
 
-enable_hibernation() {
+function enable_hibernation() {
     sed -i 's/HOOKS=(\(.*\) autodetect/HOOKS=(\1 resume autodetect/' /etc/mkinitcpio.conf
 }
 
@@ -66,9 +66,8 @@ get_root_uuid
 get_swap_uuid
 
 PARAM_STR="${KERNEL_PARAMS[*]}"
-
 if [ ! -d "/boot/loader" ]; then
-    sudo bootctl install
+    bootctl install
 fi
 
 echo "timeout 0" | tee /boot/loader/loader.conf >/dev/null
@@ -76,16 +75,12 @@ echo "default linux-zen.conf" | tee -a /boot/loader/loader.conf >/dev/null
 
 for entry in "${KERNELS[@]}"; do
     IFS=":" read -r name kernel img <<< "$entry"
-
     OUT="$TMPDIR/${name}.conf"
-
     {
         echo "title Arch Linux ($name)"
         echo "linux $kernel"
-
         [ -n "$MICROCODE_IMG" ] && echo "initrd /$MICROCODE_IMG"
         echo "initrd $img"
-
         if [ -n "${SWAP_UUID:-}" ]; then
             enable_hibernation
             echo "options root=UUID=$ROOT_UUID resume=UUID=$SWAP_UUID rw $PARAM_STR"
@@ -100,6 +95,6 @@ rm -rf "$TMPDIR"
 
 # Fix boot partition permissions & random seed file permissions
 chmod 700 /boot
-chmod 600 /boot/loader/random-seed
+[ -f /boot/loader/random-seed ] && chmod 600 /boot/loader/random-seed
 
 echo "✔ Boot entries generated successfully."
