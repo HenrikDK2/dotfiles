@@ -37,7 +37,6 @@ PACKAGES=(
     "nemo"
     "nemo-fileroller"
     "npm"
-    "profile-sync-daemon"
     "polkit"
     "polkit-gnome"
     "rofi"
