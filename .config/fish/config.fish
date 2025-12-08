@@ -53,8 +53,9 @@ end
 
 function push_commit
     set status_output (git status)
+    set diff_output (git diff)
     
-    if test -z (git diff); and not string match -q "*Changes to be committed*" $status_output
+    if test -z "$diff_output"; and not string match -q "*Changes to be committed*" $status_output
         git status
         return 1
     end
