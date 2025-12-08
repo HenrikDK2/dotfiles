@@ -98,4 +98,8 @@ done
 cp "$TMPDIR"/*.conf /boot/loader/entries/
 rm -rf "$TMPDIR"
 
+# Fix boot partition permissions & random seed file permissions
+chmod 700 /boot
+chmod 600 /boot/loader/random-seed
+
 echo "✔ Boot entries generated successfully."
