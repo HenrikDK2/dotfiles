@@ -3,6 +3,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TIMEZONE="Europe/Copenhagen"
 USERNAME="henrik"
+HOME="/home/$USERNAME"
 PACKAGES=(
 	"linux-firmware"
 	"linux-zen"
