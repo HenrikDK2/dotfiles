@@ -21,19 +21,6 @@ My dotfiles are intended for personal usage, but feel free to make use of them a
 
 The install script expects Arch Linux to be setup with `systemd-boot`.
 
-1. Follow the Arch Wiki installation guide up to [section 3.7](https://wiki.archlinux.org/title/Installation_guide#Root_password)
+1. Follow the Arch Wiki installation guide up to [section 3.2](https://wiki.archlinux.org/title/Installation_guide#Chroot)
 
-2. Create an user with group 'wheel' `useradd -m -G wheel <username>`
-
-3. Navigate to home directory. `/home/<username>`
-
-4. Run the following commands:
-
-   ```
-   git init
-   git remote add origin https://github.com/HenrikDK2/dotfiles.git
-   git fetch --all
-   git checkout master --force
-   ```
-
-5. Now you're almost done! As ROOT, execute the installation script `/home/<username>/.my_scripts/init/install.sh` and follow the simple instructions to complete the installation process.
+2. Run install script in any folder.
