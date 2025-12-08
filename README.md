@@ -21,6 +21,6 @@ My dotfiles are intended for personal usage, but feel free to make use of them a
 
 The install script expects Arch Linux to be setup with `systemd-boot`.
 
-1. Follow the Arch Wiki installation guide up to [section 3.2](https://wiki.archlinux.org/title/Installation_guide#Chroot)
-
-2. Run install script in any folder.
+1. Follow the Arch Wiki installation guide up to [section 3.2](https://wiki.archlinux.org/title/Installation_guide#Chroot).
+2. Create an user account, and clone project into your home directory.
+3. Run install script as root.
