@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Ensure files have correct permissions
-chmod 700 /usr/local/bin/update.sh
-chown root:root /usr/local/bin/update.sh
+chmod 700 /usr/local/bin/auto-update.sh
+chown root:root /usr/local/bin/auto-update.sh
 
 chmod 600 /etc/systemd/system/auto-update.service
 chmod 600 /etc/systemd/system/auto-update.timer
