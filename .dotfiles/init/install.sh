@@ -25,6 +25,7 @@ PACKAGES=(
     "cabextract"
     "fastfetch"
     "fuse"
+    "fish"
     "grim"
     "gvfs"
     "git"
@@ -172,6 +173,9 @@ locale-gen
 
 # Set hostname
 echo "arch" | tee /etc/hostname
+
+# Set default shell to fish
+chsh -s $(which fish)
 
 # User system services
 mkdir -p "$USER_SYSTEMD_DIR/default.target.wants"

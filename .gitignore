@@ -30,6 +30,9 @@
 !.config/discord/
 !.config/discord/settings.json
 
+!.config/fish/
+!.config/fish/config.fish
+
 !.config/systemd/
 !.config/systemd/user/
 !.config/systemd/user/*.d/
