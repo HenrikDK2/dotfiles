@@ -166,8 +166,8 @@ hwclock --systohc
 # Set localization
 sed -i 's/^#da_DK.UTF-8 UTF-8/da_DK.UTF-8 UTF-8/' /etc/locale.gen
 sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-echo "LANG=da_DK.UTF-8" | tee /etc/locale.conf
-echo "LC_TIME=en_US.UTF-8" | tee -a /etc/locale.conf
+echo "LANG=en_US.UTF-8" | tee /etc/locale.conf
+echo "LC_TIME=da_DK.UTF-8" | tee -a /etc/locale.conf
 echo "KEYMAP=dk" | tee /etc/vconsole.conf
 locale-gen
 
