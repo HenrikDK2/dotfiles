@@ -19,7 +19,7 @@ fi
 
 # Start system services
 system_services=(
-	auditd
+	auditd.service
     systemd-journald.socket
     systemd-journald-dev-log.socket
     systemd-journald-audit.socket
@@ -53,8 +53,8 @@ user_services=(
 # Get all active user IDs with sessions
 user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
 
-# Unmask upower
-systemctl unmask upower.service 2>/dev/null
+# Unmask upower / auditd
+systemctl unmask upower.service auditd.service 2>/dev/null
 
 for ((i=0; i<2; i++)); do
     any_inactive=false

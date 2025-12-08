@@ -148,7 +148,6 @@ systemctl enable \
     ufw.service \
     gameboost.service \
     NetworkManager.service \
-    cap_sys_nice.service \
     pacman-remove-db-lock.service \
     system-tuning.service \
     fstrim.timer \
