@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TIMEZONE="Europe/Copenhagen"
 USERNAME="henrik"
@@ -44,7 +46,6 @@ PACKAGES=(
     "scrot"
     "seahorse"
     "slurp"
-    "steam"
     "swappy"
     "hyprland"
     "hyprlock"
@@ -150,15 +151,6 @@ systemctl mask \
     rtkit-daemon \
     ldconfig
 
-# Enable user services
-systemctl --user enable \
-    wireplumber \
-    psd
-
-# Mask unwanted user services
-systemctl --user mask \
-    at-spi-dbus-bus
-
 # Set timezone
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 hwclock --systohc
@@ -186,6 +178,11 @@ if ! id "$USERNAME" &>/dev/null; then
     passwd "$USERNAME"
 fi
 
+# Run systemctl --user commands as the new user
+loginctl enable-linger "$USERNAME"
+sudo -u "$USERNAME" systemctl --user enable wireplumber psd
+sudo -u "$USERNAME" systemctl --user mask at-spi-dbus-bus
+
 source $SCRIPT_DIR/scripts/bootloader.sh
 source $SCRIPT_DIR/scripts/mozilla.sh
 source $SCRIPT_DIR/scripts/qbittorrent.sh
@@ -199,7 +196,7 @@ source $SCRIPT_DIR/scripts/gpu_drivers.sh
 mkinitcpio -P
 
 # Make user part of the games group (Allows proton to set niceness of process)
-usermod -a -G games $(whoami)
+usermod -a -G games "$USERNAME"
 
 # Enable network time sync
 timedatectl set-ntp true
