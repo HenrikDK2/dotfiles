@@ -1,11 +1,10 @@
 #!/bin/bash
 
-set -e
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TIMEZONE="Europe/Copenhagen"
 USERNAME="henrik"
 HOME="/home/$USERNAME"
+USER_SYSTEMD_DIR="/$HOME/.config/systemd/user"
 PACKAGES=(
 	"linux-firmware"
 	"linux-zen"
@@ -28,6 +27,7 @@ PACKAGES=(
     "fuse"
     "grim"
     "gvfs"
+    "git"
     "gvfs-mtp"
     "imv"
     "mako"
@@ -61,6 +61,7 @@ PACKAGES=(
     # Misc
     "qbittorrent"
     "thunderbird"
+    "firefox"
     "code"
 
     # Gaming
@@ -85,14 +86,6 @@ PACKAGES=(
 	"ttf-droid"
 	"ttf-dejavu"
 )
-
-function is_chroot() {
-	if [ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]; then
-		return 0
-	else
-		return 1
-	fi
-}
 
 # $1 - offset from top (default: 0)
 function clear_screen() {
@@ -180,15 +173,11 @@ locale-gen
 # Set hostname
 echo "arch" | tee /etc/hostname
 
-# Setup password for root user
-if is_chroot; then
-	passwd
-fi
-
-# Run commands in user context
-loginctl enable-linger "$USERNAME"
-systemd-run --machine="$USERNAME@.host" --user --wait systemctl --user enable wireplumber psd
-systemd-run --machine="$USERNAME@.host" --user --wait systemctl --user mask at-spi-dbus-bus
+# User system services
+mkdir -p "$USER_SYSTEMD_DIR/default.target.wants"
+ln -sf /usr/lib/systemd/user/wireplumber.service "$USER_SYSTEMD_DIR/default.target.wants/"
+ln -sf /usr/lib/systemd/user/psd.service "$USER_SYSTEMD_DIR/default.target.wants/"
+ln -sf /dev/null "$USER_SYSTEMD_DIR/at-spi-dbus-bus.service"
 
 source $SCRIPT_DIR/scripts/bootloader.sh
 source $SCRIPT_DIR/scripts/mozilla.sh
