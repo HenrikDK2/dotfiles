@@ -178,10 +178,10 @@ if ! id "$USERNAME" &>/dev/null; then
     passwd "$USERNAME"
 fi
 
-# Run systemctl --user commands as the new user
+# Run commands in user context
 loginctl enable-linger "$USERNAME"
-sudo -u "$USERNAME" systemctl --user enable wireplumber psd
-sudo -u "$USERNAME" systemctl --user mask at-spi-dbus-bus
+systemd-run --machine="$USERNAME@.host" --user --wait systemctl --user enable wireplumber psd
+systemd-run --machine="$USERNAME@.host" --user --wait systemctl --user mask at-spi-dbus-bus
 
 source $SCRIPT_DIR/scripts/bootloader.sh
 source $SCRIPT_DIR/scripts/mozilla.sh
