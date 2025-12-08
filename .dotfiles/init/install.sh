@@ -190,7 +190,6 @@ source $SCRIPT_DIR/scripts/qbittorrent.sh
 source $SCRIPT_DIR/scripts/drive_optimizations.sh
 source $SCRIPT_DIR/scripts/auto_update.sh
 source $SCRIPT_DIR/scripts/firewall.sh
-source $SCRIPT_DIR/scripts/auto_login.sh
 source $SCRIPT_DIR/scripts/gpu_drivers.sh
 
 # This will regenerate the initial ramdisk environment for all installed kernels
