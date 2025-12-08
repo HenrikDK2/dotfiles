@@ -84,6 +84,7 @@ filter_journalctl() {
 	    "Inconsistent IP pool management \(start not found\)"
 	    "amdgpu: Overdrive is enabled"
 	    "usb 1-3.3: device descriptor read/64, error -32"
+	    "Failed to find module 'nvidia-uvm'"
 	    "disabled by hub \(EMI\?\), re-enabling"
 	    "Failed to start Timed resync"
 	    "usb "
