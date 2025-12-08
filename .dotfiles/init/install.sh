@@ -137,6 +137,7 @@ fi
 # Copy system configs & install system packages
 cp -rf $SCRIPT_DIR/system/* /
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
+/usr/local/bin/proton-ge-latest.sh
 
 # Enable essential system services
 systemctl enable \

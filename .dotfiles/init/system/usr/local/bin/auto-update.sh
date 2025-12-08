@@ -3,7 +3,7 @@ set -euo pipefail -o noclobber
 IFS=$'\n\t'
 
 # Network check function with max attempts
-wait_for_network() {
+function wait_for_network() {
     local max_attempts=10
     local attempt=0
 
@@ -33,6 +33,9 @@ if command -v flatpak &>/dev/null; then
     echo "Updating Flatpaks..."
     flatpak update --noninteractive --assumeyes
 fi
+
+# Update ProtonGE-latest
+/usr/local/bin/proton-ge-latest.sh
 
 # System packages updates
 echo "Updating system..."
