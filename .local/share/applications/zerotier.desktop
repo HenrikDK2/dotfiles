@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=ZeroTier
+Comment=Manage ZeroTier
+Exec=bash -c "$HOME/.config/rofi/network_menu.sh zerotier"
+Icon=network-wired
+Terminal=false
+Type=Application
+Categories=Network;Utility;
+StartupNotify=true

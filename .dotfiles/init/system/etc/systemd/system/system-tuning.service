@@ -1,0 +1,12 @@
+[Unit]
+Description=Apply system tuning
+DefaultDependencies=no
+Before=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/system-tuning.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

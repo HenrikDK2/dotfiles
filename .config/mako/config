@@ -1,0 +1,45 @@
+sort=-time
+layer=overlay
+background-color=#424b5d
+width=350
+height=140
+default-timeout=15000
+ignore-timeout=1
+border-size=3
+border-color=#8fbbba
+border-radius=5
+icons=1
+max-icon-size=64
+padding=14
+font=Cantarell 11
+outer-margin=32,0,0,0
+margin=20
+
+[urgency=low]
+default-timeout=5000
+
+[urgency=normal]
+default-timeout=15000
+
+[urgency=high]
+default-timeout=40000
+
+[urgency=critical]
+default-timeout=9999999
+
+[app-name="discord"]
+default-timeout=40000
+
+[category=audit]
+on-button-left=exec alacritty -e bash -c "makoctl dismiss -g audit; ~/.my_scripts/scripts/audit.sh; exec bash"
+
+[app-name="RuneLite"]
+anchor=top-center
+margin=0
+default-timeout=60000
+
+[app-name="Thunderbird" body~="Authentication failure while connecting to server.*"]
+invisible=1
+
+[app-name="Thunderbird" body~="Failed to connect to server.*"]
+invisible=1

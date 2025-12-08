@@ -1,0 +1,16 @@
+@import "theme.rasi"
+
+listview {
+  lines: 0;
+  columns: 0;
+  display: none;
+  fixed-height: false;
+}
+
+entry {
+  placeholder: "";
+}
+
+textbox {
+  padding: 8px 24px;
+}

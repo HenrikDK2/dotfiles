@@ -1,0 +1,13 @@
+[Unit]
+Description=Automatic system updates
+After=network-online.target graphical-session.target
+Wants=network-online.target graphical-session.target
+ConditionPathExists=!/tmp/gameboost-running.flag
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=24h
+Persistent=true
+
+[Install]
+WantedBy=timers.target
