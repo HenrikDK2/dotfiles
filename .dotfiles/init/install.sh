@@ -31,6 +31,7 @@ PACKAGES=(
     "git"
     "gvfs-mtp"
     "imv"
+    "flatpak"
     "mako"
     "man-db"
     "micro"
@@ -60,18 +61,11 @@ PACKAGES=(
     "7zip"
 
     # Misc
+    "discord"
     "qbittorrent"
     "thunderbird"
     "firefox"
     "code"
-
-    # Gaming
-    "discord"
-    "wine"
-    "gamescope"
-    "lib32-mangohud"
-    "mangohud"
-    "steam"
 
 	# Audio
 	"pipewire"
@@ -86,6 +80,15 @@ PACKAGES=(
 	"ttf-jetbrains-mono"
 	"ttf-droid"
 	"ttf-dejavu"
+)
+
+flathub_packages=(
+	"com.mastermindzh.tidal-hifi"
+	"com.valvesoftware.Steam"
+	"com.heroicgameslauncher.hgl"
+	"com.valvesoftware.Steam.CompatibilityTool.Proton-GE"
+	"org.freedesktop.Platform.VulkanLayer.MangoHud"
+	"org.freedesktop.Platform.VulkanLayer.gamescope"
 )
 
 # $1 - offset from top (default: 0)
@@ -137,7 +140,7 @@ fi
 # Copy system configs & install system packages
 cp -rf $SCRIPT_DIR/system/* /
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
-/usr/local/bin/proton-ge-latest.sh
+flatpak install -y flathub "${flathub_packages[@]}"
 
 # Enable essential system services
 systemctl enable \

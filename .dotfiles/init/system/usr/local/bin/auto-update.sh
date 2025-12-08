@@ -34,9 +34,6 @@ if command -v flatpak &>/dev/null; then
     flatpak update --noninteractive --assumeyes
 fi
 
-# Update ProtonGE-latest
-/usr/local/bin/proton-ge-latest.sh
-
 # System packages updates
 echo "Updating system..."
 pacman -Syu --ask 4 
