@@ -23,9 +23,6 @@
 !.config/wireplumber
 !.config/wireplumber/**
 
-!.config/yay/
-!.config/yay/config.json
-
 !.config/MangoHud/
 !.config/MangoHud/MangoHud.conf
 
