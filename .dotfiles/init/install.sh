@@ -82,7 +82,7 @@ PACKAGES=(
 	"ttf-dejavu"
 )
 
-flathub_packages=(
+FLATHUB_PACKAGES=(
 	"com.mastermindzh.tidal-hifi"
 	"com.valvesoftware.Steam"
 	"com.heroicgameslauncher.hgl"
@@ -140,7 +140,7 @@ fi
 # Copy system configs & install system packages
 cp -rf $SCRIPT_DIR/system/* /
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
-flatpak install -y flathub "${flathub_packages[@]}"
+flatpak install -y flathub "${FLATHUB_PACKAGES[@]}"
 
 # Enable essential system services
 systemctl enable \
