@@ -1,5 +1,14 @@
 #!/bin/bash
 
+is_laptop() {
+    # Check for presence of a battery device
+    if [ -d "/sys/class/power_supply/BAT0" ] || [ -d "/sys/class/power_supply/BAT1" ]; then
+        return 0  # true: laptop
+    else
+        return 1  # false: desktop
+    fi
+}
+
 # Adjust priorities of pids passed from main.sh
 for pid in "$@"; do
 	renice -n -11 -p "$pid" >/dev/null 2>&1
@@ -26,6 +35,7 @@ done
 
 # Stop system services
 system_services=(
+	auditd
     systemd-journald.socket
     systemd-journald-dev-log.socket
     systemd-journald-audit.socket
@@ -86,6 +96,26 @@ for ((i=0; i<3; i++)); do
     [ "$any_active" = false ] && break
     sleep 1
 done
+
+if ! is_laptop; then
+	# Disable SATA link power management
+	for host in /sys/class/scsi_host/host*/link_power_management_policy; do
+	    echo max_performance > "$host" 2>/dev/null
+	done
+
+	# NVMe power state management
+	for nvme in /sys/block/nvme*/device/power_state; do
+	    echo 0 > "$nvme" 2>/dev/null
+	done
+
+	# Disable PCIe power management
+	for pci in /sys/bus/pci/devices/*/power/control; do
+	    echo on > "$pci" 2>/dev/nullt
+	done
+
+	# Set PCIe ASPM to performance
+	echo performance > /sys/module/pcie_aspm/parameters/policy 2>/dev/null
+fi
 
 # Clear RAM
 pkill -9 chrome_crashpad

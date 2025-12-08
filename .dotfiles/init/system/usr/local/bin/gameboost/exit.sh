@@ -19,6 +19,7 @@ fi
 
 # Start system services
 system_services=(
+	auditd
     systemd-journald.socket
     systemd-journald-dev-log.socket
     systemd-journald-audit.socket
@@ -87,6 +88,27 @@ fi
 
 # Kill lingering winedevice.exe
 [ "$(pgrep -fl '\.exe$' | wc -l)" -eq 1 ] && pgrep -x winedevice.exe >/dev/null && killall -9 winedevice.exe 2>/dev/null
+
+# Restore SATA link power management
+for host in /sys/class/scsi_host/host*/link_power_management_policy; do
+    echo med_power_with_dipm > "$host" 2>/dev/null
+done
+
+# Restore NVMe power state management (auto)
+for nvme in /sys/block/nvme*/device/power_state; do
+    echo -1 > "$nvme" 2>/dev/null  # -1 = auto/default
+done
+
+# Restore PCIe power management to auto
+for pci in /sys/bus/pci/devices/*/power/control; do
+    echo auto > "$pci" 2>/dev/null
+done
+
+# Restore PCIe ASPM to default
+echo default > /sys/module/pcie_aspm/parameters/policy 2>/dev/null
+
+# Reset PCIe ASPM to default (usually powersave or powersupersave)
+echo default > /sys/module/pcie_aspm/parameters/policy 2>/dev/null
 
 # Clear RAM
 killall -q -9 chrome_crashpad 2>/dev/null
