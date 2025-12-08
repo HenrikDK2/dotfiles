@@ -118,6 +118,21 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+# Check if user exists
+if ! id "$USERNAME" &>/dev/null; then
+    echo "User '$USERNAME' does not exist. Exiting...."
+    exit 1
+fi
+
+# Check if .dotfiles is inside home directory
+if ! [ -d "$HOME/.dotfiles" ]; then
+    echo "Dotfiles are not initialized at '$HOME/.dotfiles'"
+	exit 1
+fi
+
+# Make sure user is part of %wheel group
+usermod -a -G wheel "$USERNAME"
+
 # Enable multilib, DisableDownloadTimeout, and ParallelDownloads
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
@@ -168,13 +183,6 @@ echo "arch" | tee /etc/hostname
 # Setup password for root user
 if is_chroot; then
 	passwd
-fi
-
-# Check if user exists
-if ! id "$USERNAME" &>/dev/null; then
-    echo "User '$USERNAME' does not exist. Creating..."
-    useradd -m -G wheel "$USERNAME"
-    passwd "$USERNAME"
 fi
 
 # Run commands in user context
