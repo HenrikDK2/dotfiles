@@ -34,8 +34,10 @@ if command -v flatpak &>/dev/null; then
     flatpak update --noninteractive --assumeyes
 fi
 
-# Check and update system-devices (udev rules for read/write controllers directly from valve)
-/usr/local/bin/steam-devices.sh
+# Update local_pkgs
+for script in /usr/local/bin/local_pkgs/*.sh; do
+    "$script"
+done
 
 # System packages updates
 echo "Updating system..."

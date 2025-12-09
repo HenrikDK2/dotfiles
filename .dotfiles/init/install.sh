@@ -100,10 +100,14 @@ timedatectl set-ntp true
 
 # Copy system configs & install system packages
 cp -rf $SCRIPT_DIR/system/* /
+sudo chmod -R 755 /usr/local/bin
+sudo chown -R root:root /usr/local/bin
 
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
 flatpak install -y flathub "${FLATHUB_PACKAGES[@]}"
-/usr/local/bin/steam-devices.sh 
+for script in /usr/local/bin/local_pkgs/*.sh; do
+    "$script"
+done
 
 # Enable essential system services
 systemctl enable \
@@ -111,6 +115,7 @@ systemctl enable \
     ufw.service \
     gameboost.service \
     NetworkManager.service \
+    cups.service \
     pacman-remove-db-lock.service \
     system-tuning.service \
     fstrim.timer \

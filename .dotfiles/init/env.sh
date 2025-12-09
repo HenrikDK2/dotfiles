@@ -43,6 +43,11 @@ PACKAGES=(
 	"modemmanager"
 	"ufw"
 
+	# Printer
+	"cups"
+	"ghostscript"
+	"cmake"
+
 	# Bluetooth (system-tuning service disable this service on boot, if no bluetooth capable device is detected)
 	"bluez"
 	"bluez-utils"
