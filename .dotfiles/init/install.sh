@@ -1,107 +1,9 @@
-
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TIMEZONE="Europe/Copenhagen"
-USERNAME="henrik"
-GITHUB_REPO="https://github.com/HenrikDK2/dotfiles.git"
-GITHUB_REPO_SSH="git@github.com:HenrikDK2/dotfiles.git"
-HOME="/home/$USERNAME"
-USER_SYSTEMD_DIR="/$HOME/.config/systemd/user"
 
-# Colors
-YELLOW='\033[1;33m'
-RED='\033[1;31m'
-GREEN='\033[1;32m'
-BLUE='\033[1;34m'
-RESET='\033[0m'
-
-PACKAGES=(
-	"linux-firmware"
-	"linux-zen"
-	"base"
-	"base-devel"
-
-	# Network
-	"networkmanager"
-	"networkmanager-openvpn"
-	"network-manager-applet"
-	"ufw"
-
-	# System
-    "alacritty"
-    "jq"
-	"bash-completion"
-    "btop"
-    "cabextract"
-    "fastfetch"
-    "fuse"
-    "fish"
-    "grim"
-    "gvfs"
-    "git"
-    "gvfs-mtp"
-    "imv"
-    "flatpak"
-    "mako"
-    "man-db"
-    "micro"
-    "mpv"
-    "nemo"
-    "nemo-fileroller"
-    "npm"
-    "polkit"
-    "polkit-gnome"
-    "rofi"
-    "rofi-calc"
-    "socat"
-    "scrot"
-    "seahorse"
-    "slurp"
-    "swappy"
-    "hyprland"
-    "hyprlock"
-    "swaybg"
-    "unrar"
-    "unzip"
-    "waybar"
-    "xdg-desktop-portal-hyprland"
-    "xdg-desktop-portal-gtk" # xdg-desktop-portal-hyprland doesn't offer a fileChooser
-    "xorg-xwayland"
-    "papirus-icon-theme"
-    "wl-clipboard"
-    "7zip"
-
-    # Misc
-    "discord"
-    "qbittorrent"
-    "thunderbird"
-    "firefox"
-    "code"
-
-	# Audio
-	"pipewire"
-	"pipewire-audio"
-	"pipewire-pulse"
-	"wireplumber"
-	"pavucontrol"
-
-	# Fonts
-	"cantarell-fonts"
-	"otf-font-awesome"
-	"ttf-jetbrains-mono"
-	"ttf-droid"
-	"ttf-dejavu"
-)
-
-FLATHUB_PACKAGES=(
-	"com.mastermindzh.tidal-hifi"
-	"com.valvesoftware.Steam"
-	"com.heroicgameslauncher.hgl"
-	"com.valvesoftware.Steam.CompatibilityTool.Proton-GE"
-	"org.freedesktop.Platform.VulkanLayer.MangoHud"
-	"org.freedesktop.Platform.VulkanLayer.gamescope"
-)
+# All variables listed in here (packages, user, localization and more...)
+source $SCRIPT_DIR/env.sh
 
 # $1 - offset from top (default: 0)
 function clear_screen() {
@@ -145,7 +47,6 @@ fi
 if ! id "$USERNAME" &>/dev/null; then
     echo "Creating user '$USERNAME'..."
     useradd -m -G wheel $USERNAME
-    
 
 	# Set password for new user if none exist
 	if ! passwd -S $USERNAME 2>/dev/null | grep -q "P"; then
@@ -165,6 +66,9 @@ if ! [ -d "$HOME/.dotfiles" ]; then
     (cd $HOME && git init && git remote add origin $GITHUB_REPO && git fetch && git reset origin/master --hard)
     sudo chown -R $USERNAME:$USERNAME $HOME && chmod 700 $HOME
     (cd $HOME && git remote set-url origin $GITHUB_REPO_SSH)
+
+	# Replace current set envs on new dotfiles
+    cp -f "$SCRIPT_DIR/env.sh" "$HOME/.dotfiles/init/env.sh"
 fi
 
 # Enable multilib, DisableDownloadTimeout, and ParallelDownloads
@@ -174,8 +78,28 @@ if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
 	pacman -Suuy
 fi
 
+# Set timezone
+ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+hwclock --systohc
+
+# Set localization
+for locale in "${LOCALES[@]}"; do
+    sed -i "s/^#$locale/$locale/" /etc/locale.gen
+done
+echo "LANG=$LANG" | tee /etc/locale.conf
+echo "LC_TIME=$LC_TIME" | tee -a /etc/locale.conf
+echo "KEYMAP=$KEYMAP" | tee /etc/vconsole.conf
+locale-gen
+
+# Set hostname
+echo "$HOSTNAME" | tee /etc/hostname
+
+# Enable network time sync
+timedatectl set-ntp true
+
 # Copy system configs & install system packages
 cp -rf $SCRIPT_DIR/system/* /
+
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
 flatpak install -y flathub "${FLATHUB_PACKAGES[@]}"
 /usr/local/bin/steam-devices.sh 
@@ -200,21 +124,6 @@ systemctl mask \
     rtkit-daemon \
     ldconfig
 
-# Set timezone
-ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
-hwclock --systohc
-
-# Set localization
-sed -i 's/^#da_DK.UTF-8 UTF-8/da_DK.UTF-8 UTF-8/' /etc/locale.gen
-sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-echo "LANG=en_US.UTF-8" | tee /etc/locale.conf
-echo "LC_TIME=da_DK.UTF-8" | tee -a /etc/locale.conf
-echo "KEYMAP=dk" | tee /etc/vconsole.conf
-locale-gen
-
-# Set hostname
-echo "arch" | tee /etc/hostname
-
 # Set default shell to fish
 usermod -s /usr/bin/fish $USERNAME
 usermod -s /usr/bin/fish root
@@ -235,9 +144,6 @@ source $SCRIPT_DIR/scripts/gpu_drivers.sh
 
 # This will regenerate the initial ramdisk environment for all installed kernels
 mkinitcpio -P
-
-# Enable network time sync
-timedatectl set-ntp true
 
 # Remove initial pacsave/pacnew files
 find /etc \( -name "*.pacnew" -o -name "*.pacsave" \) -print0 | xargs -0 rm -f
