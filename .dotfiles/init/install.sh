@@ -134,20 +134,20 @@ if ! ping -c 1 "8.8.8.8" >/dev/null 2>&1; then
     exit 1
 fi
 
-# Set password if none for root
+# Set password for root if none exist
 if ! passwd -S root 2>/dev/null | grep -q "P"; then
 	clear_screen
     printf "Please set a ${RED}root${RESET} password:\n\n"
     passwd root
 fi
 
-# Check if user exists, if not, then install repo in user directory
+# Check if user exists, if not, then create user
 if ! id "$USERNAME" &>/dev/null; then
     echo "Creating user '$USERNAME'..."
     useradd -m -G wheel $USERNAME
     
 
-	# Set password if none for new user
+	# Set password for new user if none exist
 	if ! passwd -S $USERNAME 2>/dev/null | grep -q "P"; then
 		clear_screen
 	    printf "Please set a ${GREEN}$USERNAME${RESET} password:\n\n"
@@ -155,7 +155,7 @@ if ! id "$USERNAME" &>/dev/null; then
 	fi
 fi
 
-# Check if .dotfiles is inside home directory
+# Check if .dotfiles is inside home directory, if not, then initialize git repo
 if ! [ -d "$HOME/.dotfiles" ]; then
     # Removes git warnings
     git config --global init.defaultBranch main
