@@ -45,6 +45,7 @@ PACKAGES=(
 
 	# Printer
 	"cups"
+	"avahi"
 	"ghostscript"
 	"nss-mdns"
 	"system-config-printer"

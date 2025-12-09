@@ -112,10 +112,10 @@ done
 # Enable essential system services
 systemctl enable \
     avahi-daemon.service \
+    cups.service \
     ufw.service \
     gameboost.service \
     NetworkManager.service \
-    cups.service \
     pacman-remove-db-lock.service \
     system-tuning.service \
     fstrim.timer \
