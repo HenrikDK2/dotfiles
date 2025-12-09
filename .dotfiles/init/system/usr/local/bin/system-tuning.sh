@@ -92,6 +92,23 @@ else
     sysctl -w kernel.timer_migration=0                 # Pin timers to cores (prevents CPU sleep)
 fi
 
+# Disable/Enable depending on if a capable bluetooth device is detected 
+if [ -z "$(ls -A /sys/class/bluetooth/)" ]; then
+	systemctl disable --now bluetooth.service
+else
+	systemctl enable --now bluetooth.service
+fi
+
+# Disable/Enable depending on if a capable modem device is detected 
+if \
+   ls /dev/cdc-wdm* /dev/ttyUSB* /dev/ttyACM* /dev/wwan* 1>/dev/null 2>&1 \
+   || nmcli device | grep -q "gsm"
+then
+	systemctl enable --now ModemManager.service
+else
+    systemctl disable --now ModemManager.service
+fi
+
 # --------------------
 # SECURITY HARDENING
 # --------------------

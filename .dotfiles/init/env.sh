@@ -40,8 +40,14 @@ PACKAGES=(
 	"networkmanager"
 	"networkmanager-openvpn"
 	"network-manager-applet"
+	"modemmanager"
 	"ufw"
 
+	# Bluetooth (system-tuning service disable this service on boot, if no bluetooth capable device is detected)
+	"bluez"
+	"bluez-utils"
+	"blueman"
+	
 	# System
     "alacritty"
     "jq"
