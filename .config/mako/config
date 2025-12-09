@@ -30,6 +30,9 @@ default-timeout=9999999
 [app-name="discord"]
 default-timeout=40000
 
+[app-name="NetworkManager Applet" summary="VPN Login Message"]
+invisible=1
+
 [category=audit]
 on-button-left=exec alacritty -e bash -c "makoctl dismiss -g audit; ~/.my_scripts/scripts/audit.sh; exec bash"
 
