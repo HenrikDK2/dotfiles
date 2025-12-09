@@ -105,3 +105,6 @@
 !.local/share/applications/bvnc.desktop
 !.local/share/applications/electron*.desktop
 !.local/share/applications/fish.desktop
+!.local/share/applications/xgps.desktop
+!.local/share/applications/xgpsspeed.desktop
+
