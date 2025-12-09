@@ -80,7 +80,7 @@ format_section() {
 }
 
 filter_journalctl() {
-	# These patterns are what are consider non issues, might be race conditions --
+	# These patterns are what I consider non issues, might be race conditions --
 	# that I can't do much about or harmless warnings reported as errors
 	local patterns=(
 	    "gkr-pam: unable to locate daemon control file"
