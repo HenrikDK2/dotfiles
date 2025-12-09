@@ -154,4 +154,4 @@ end
 
 # Steam launch options comment
 # file.exe - Path to a custom .exe file, relative to the game's .exe directory.
-# cmd=(gamescope -w 2560 -h 1440 -- gamemoderun %command%); cmd[-1]=file.exe; "${cmd[@]}"
+# cmd=(gamescope -w 2560 -h 1440 -- %command%); cmd[-1]=file.exe; "${cmd[@]}"
