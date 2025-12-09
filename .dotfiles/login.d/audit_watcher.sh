@@ -31,7 +31,7 @@ while true; do
 
         if [[ "$current_mtime" != "$last_mtime" ]]; then
             last_mtime=$current_mtime
-            exec $HOME/.my_scripts/scripts/audit.sh -b &
+            exec $HOME/.dotfiles/scripts/audit.sh -b &
         fi
 
         sleep 5

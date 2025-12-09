@@ -10,7 +10,7 @@ ionice -c 3 -p $$ >/dev/null 2>&1
 
 WAYBAR_CFG_DEFAULT="$HOME/.config/waybar/config"
 WAYBAR_CFG_EXCLUSIVE="$HOME/.config/waybar/config_exclusive"
-SCRIPT_DIR="$HOME/.my_scripts/login.d"
+SCRIPT_DIR="$HOME/.dotfiles/login.d"
 
 WAYBAR_PID=0
 last_toggle_scripts_time=0

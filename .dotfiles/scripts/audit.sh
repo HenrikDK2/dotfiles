@@ -12,13 +12,14 @@ BACKGROUND=false
 
 # Create a hash of current issues to track if they've changed
 LOG_HASH_FILE="/tmp/audit_script_last_log_hash"
+AUDIT_FLAG="/tmp/audit.flag"
 
 while getopts ":qb" opt; do
     case $opt in
         q)
             DISABLE_NOTIFICATIONS=true
             ;;
-        b)  # Will run in backgound, if any issues are detected, then it will run in the foreground
+        b)  # Will run in background, if any issues are detected, then it will run in the foreground
             BACKGROUND=true
             DISABLE_NOTIFICATIONS=true
             ;;
@@ -90,6 +91,7 @@ filter_journalctl() {
 	    "disabled by hub \(EMI\?\), re-enabling"
 	    "Failed to start Timed resync"
 	    "Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
+	    "nm-openvpn\\[.*\\]: event_wait : Interrupted system call \\(fd=-1,code=4\\)"
 	)
     local pattern=$(IFS='|'; echo "${patterns[*]}")
     journalctl -b -p 3 --no-pager | grep -Ev "$pattern" | tail -n 20
@@ -154,6 +156,20 @@ done
 format_section "ClamAV scan results" "$clamav_results"
 
 #########################
+### UPDATE FLAG FILE ###
+#########################
+
+# Always update the flag file with current status (issues or no issues)
+# This allows the monitoring script to detect changes
+if [ "${#NOTIFY_MESSAGES[@]}" -gt 0 ]; then
+    # Write current hash to flag file when issues exist
+    echo "$CURRENT_HASH" > "$AUDIT_FLAG"
+else
+    # Remove flag file when no issues exist
+    rm -f "$AUDIT_FLAG"
+fi
+
+#########################
 ### SEND NOTIFICATION ###
 #########################
 
@@ -184,7 +200,6 @@ if [ "$BACKGROUND" = true ] && [ "${#NOTIFY_MESSAGES[@]}" -gt 0 ]; then
     if [ "$CURRENT_HASH" != "$PREVIOUS_HASH" ]; then
         # Save the current hash to track that the user has been notified
         echo "$CURRENT_HASH" > "$LOG_HASH_FILE"
-        alacritty -e bash -i -c "$HOME/.my_scripts/scripts/audit.sh; exec bash" &
+        alacritty -e bash -i -c "$HOME/.dotfiles/scripts/audit.sh; exec bash" &
     fi
 fi
-

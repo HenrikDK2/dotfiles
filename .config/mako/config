@@ -34,7 +34,7 @@ default-timeout=40000
 invisible=1
 
 [category=audit]
-on-button-left=exec alacritty -e bash -c "makoctl dismiss -g audit; ~/.my_scripts/scripts/audit.sh; exec bash"
+on-button-left=exec alacritty -e bash -c "makoctl dismiss -g audit; ~/.dotfiles/scripts/audit.sh; exec bash"
 
 [app-name="RuneLite"]
 anchor=top-center

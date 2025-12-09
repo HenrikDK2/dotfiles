@@ -65,4 +65,4 @@ hyprctl dispatch exec "[workspace 2 silent] steam" &
 
 # Run audit script
 sleep 2
-$HOME/.my_scripts/scripts/audit.sh -q
+$HOME/.dotfiles/scripts/audit.sh -q
