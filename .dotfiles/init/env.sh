@@ -46,7 +46,7 @@ PACKAGES=(
 	# Printer
 	"cups"
 	"ghostscript"
-	"cmake"
+	"system-config-printer"
 
 	# Bluetooth (system-tuning service disable this service on boot, if no bluetooth capable device is detected)
 	"bluez"
