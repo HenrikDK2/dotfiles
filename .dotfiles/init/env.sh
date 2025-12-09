@@ -1,3 +1,5 @@
+#!/bin/bash
+
 USERNAME="henrik"
 HOSTNAME="arch"
 
