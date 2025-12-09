@@ -7,15 +7,15 @@
 	"React": {
 		"prefix": "!react",
 		"body": [
-			"import React from 'react'",
+			"import React from 'react';",
 	 		"",
 			"interface $1Props {",
-			"  children: React.ReactElement",
+			"  children: React.ReactElement;",
 			"}",
 			"",
-			"export const $1: React.FC<$1Props> = ({children}) => {",
-			"  return <div>{children}</div>",
-			"}"
+			"export const $1: React.FC<$1Props> = ({ children }) => {",
+			"  return <div>{children}</div>;",
+			"};"
 	 	],
 	 	"description": "React Template"
 	}
