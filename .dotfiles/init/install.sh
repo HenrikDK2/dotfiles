@@ -141,6 +141,7 @@ fi
 cp -rf $SCRIPT_DIR/system/* /
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
 flatpak install -y flathub "${FLATHUB_PACKAGES[@]}"
+/usr/local/bin/steam-devices.sh 
 
 # Enable essential system services
 systemctl enable \
