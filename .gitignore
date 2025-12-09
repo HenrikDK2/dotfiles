@@ -63,6 +63,12 @@
 !.config/Code/User/snippets
 !.config/Code/User/snippets/**
 
+!.config/Code - OSS
+!.config/Code - OSS/User
+!.config/Code - OSS/User/settings.json
+!.config/Code - OSS/User/snippets
+!.config/Code - OSS/User/snippets/**
+
 !.config/btop
 !.config/btop/btop.conf
 
