@@ -5,7 +5,7 @@
 
 ## ⚠️ Critical Warnings
 
-**HARDWARE COMPATIBILITY:** These configurations are specifically designed for **AMD processors and AMD graphics cards** on a **Desktop PC**. If you are using different hardware, these configurations **may have problems** and might not work as expected.
+**HARDWARE COMPATIBILITY:** These configurations are specifically designed for **AMD/Intel processors and AMD graphics cards** on a **Desktop PC**. If you are using different hardware, these configurations **may have problems** and might not work as expected.
 
 **RISK:** Use these configurations at your own risk. I am not responsible for any issues that may occur from using these files.
 
