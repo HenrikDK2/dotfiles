@@ -41,7 +41,7 @@ SECONDARY_UUID=$(nmcli connection show "$PRIMARY_CONN" | grep '^connection.secon
 
 # Wait for VPN if defined
 if [ -n "$SECONDARY_UUID" ]; then
-    sleep 2 # Need a buffer before connection to VPN
+    sleep 2 # Need a buffer before connecting to VPN
     nmcli connection up uuid "$SECONDARY_UUID"
     
     # Wait until VPN is active
