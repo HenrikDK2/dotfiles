@@ -1,6 +1,6 @@
 #!/bin/bash
 
-is_laptop() {
+function is_laptop() {
     # Check for presence of a battery device
     if [ -d "/sys/class/power_supply/BAT0" ] || [ -d "/sys/class/power_supply/BAT1" ]; then
         return 0  # true: laptop
@@ -8,6 +8,31 @@ is_laptop() {
         return 1  # false: desktop
     fi
 }
+
+function service_exists() {
+    systemctl list-unit-files --type=service | grep -q "^$1"
+}
+
+# Disable/Enable depending on if a capable bluetooth device is detected
+if service_exists "bluetooth.service"; then
+    if [ -z "$(ls -A /sys/class/bluetooth/ 2>/dev/null)" ]; then
+        systemctl disable --now bluetooth.service
+    else
+        systemctl enable --now bluetooth.service
+    fi
+fi
+
+# Disable/Enable depending on if a capable modem device is detected
+if service_exists "ModemManager.service"; then
+    if \
+       ls /dev/cdc-wdm* /dev/ttyUSB* /dev/ttyACM* /dev/wwan* 1>/dev/null 2>&1 \
+       || nmcli device 2>/dev/null | grep -q "gsm"
+    then
+        systemctl enable --now ModemManager.service
+    else
+        systemctl disable --now ModemManager.service
+    fi
+fi
 
 # Get total memory in KB
 total_memory=$(grep MemTotal /proc/meminfo | awk '{print $2}')
@@ -90,23 +115,6 @@ if is_laptop; then
 else
     sysctl -w vm.laptop_mode=0                         # Disable laptop mode
     sysctl -w kernel.timer_migration=0                 # Pin timers to cores (prevents CPU sleep)
-fi
-
-# Disable/Enable depending on if a capable bluetooth device is detected 
-if [ -z "$(ls -A /sys/class/bluetooth/)" ]; then
-	systemctl disable --now bluetooth.service
-else
-	systemctl enable --now bluetooth.service
-fi
-
-# Disable/Enable depending on if a capable modem device is detected 
-if \
-   ls /dev/cdc-wdm* /dev/ttyUSB* /dev/ttyACM* /dev/wwan* 1>/dev/null 2>&1 \
-   || nmcli device | grep -q "gsm"
-then
-	systemctl enable --now ModemManager.service
-else
-    systemctl disable --now ModemManager.service
 fi
 
 # --------------------
