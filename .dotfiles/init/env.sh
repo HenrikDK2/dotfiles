@@ -46,6 +46,7 @@ PACKAGES=(
 	# Printer
 	"cups"
 	"ghostscript"
+	"nss-mdns"
 	"system-config-printer"
 
 	# Bluetooth (system-tuning service disable this service on boot, if no bluetooth capable device is detected)
