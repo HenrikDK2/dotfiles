@@ -85,9 +85,10 @@ filter_journalctl() {
 	    "amdgpu: Overdrive is enabled"
 	    "usb 1-3.3: device descriptor read/64, error -32"
 	    "Failed to find module 'nvidia-uvm'"
+	    "Failed to write OSC sequence to TTY, ignoring: Resource temporarily unavailable"
+	    "Activation request for 'org.freedesktop.nm_dispatcher' failed."
 	    "disabled by hub \(EMI\?\), re-enabling"
 	    "Failed to start Timed resync"
-	    "usb "
 	    "Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
 	)
     local pattern=$(IFS='|'; echo "${patterns[*]}")
