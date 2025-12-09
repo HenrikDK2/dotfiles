@@ -180,7 +180,8 @@ locale-gen
 echo "arch" | tee /etc/hostname
 
 # Set default shell to fish
-chsh -s $(which fish)
+usermod -s /usr/bin/fish $USERNAME
+usermod -s /usr/bin/fish root
 
 # User system services
 mkdir -p "$USER_SYSTEMD_DIR/default.target.wants"
