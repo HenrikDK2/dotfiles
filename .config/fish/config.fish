@@ -74,6 +74,21 @@ function push_commit
     git status
 end
 
+function cd
+    builtin cd $argv
+
+    # Deactivate old venv if any
+    if functions -q deactivate
+        deactivate
+    end
+
+    # Activate new venv if present
+    if test -f bin/activate.fish; and type -q virtualenv; and type -q python
+        source bin/activate.fish
+    end
+end
+
+
 #############################
 ### ENVIRONMENT VARIABLES ###
 #############################
@@ -119,22 +134,22 @@ alias reset='git_hard_reset_to_commit'
 ### MISC ###
 ############
 
-# FastFetch - Runs if there is only one window in the workspace
-if status is-interactive; and pgrep -x "hyprland" >/dev/null; and test (tput cols) -ge 90; and test (tput lines) -ge 25
-    set current_workspace (hyprctl activeworkspace -j | jq -r '.id')
-    set window_count (hyprctl clients -j | jq --arg ws "$current_workspace" 'map(select(.workspace.id == ($ws | tonumber))) | length')
-
-    if test $window_count -eq 1
-        fastfetch
-        echo
-    end
-end
-
-# Fish uses its own key bindings system
-# These replace the bash bind commands for Ctrl+Left/Right
 if status is-interactive
-    bind \e\[1\;5C forward-word
-    bind \e\[1\;5D backward-word
+    # Automatically enter python env
+    if test -f bin/activate.fish; and type -q virtualenv; and type -q python
+        source bin/activate.fish
+    end
+
+    # FastFetch - Runs if there is only one window in the workspace
+    if pgrep -x "hyprland" >/dev/null; and test (tput cols) -ge 90; and test (tput lines) -ge 25
+        set current_workspace (hyprctl activeworkspace -j | jq -r '.id')
+        set window_count (hyprctl clients -j | jq --arg ws "$current_workspace" 'map(select(.workspace.id == ($ws | tonumber))) | length')
+    
+        if test $window_count -eq 1
+            fastfetch
+            echo
+        end
+    end
 end
 
 # Steam launch options comment
