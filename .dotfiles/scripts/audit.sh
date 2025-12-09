@@ -80,6 +80,8 @@ format_section() {
 }
 
 filter_journalctl() {
+	# These patterns are what are consider non issues, might be race conditions --
+	# that I can't do much about or harmless warnings reported as errors
 	local patterns=(
 	    "gkr-pam: unable to locate daemon control file"
 	    "Inconsistent IP pool management \(start not found\)"
@@ -92,6 +94,10 @@ filter_journalctl() {
 	    "Failed to start Timed resync"
 	    "Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
 	    "nm-openvpn\\[.*\\]: event_wait : Interrupted system call \\(fd=-1,code=4\\)"
+	    "Activation request for 'org.bluez' failed."
+	    "Failed to start Portal service \\(GTK/GNOME implementation\\)."
+	    "Activation request for 'org.freedesktop.impl.portal.desktop.gtk' failed."
+	    "AEAD Decrypt error: bad packet ID \\(may be a replay\\)"
 	    "terminated abnormally without generating a coredump" # Coredump is disabled, so this is generated when programs are killed
 	    
 	)
