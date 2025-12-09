@@ -26,13 +26,13 @@ while [ -z "$PRIMARY_CONN" ] && [ $ELAPSED -lt $TIMEOUT ]; do
         if [ -z "$PRIMARY_CONN" ]; then
             TIME_LEFT=$((TIMEOUT - ELAPSED))
             START_WAIT=$(date +%s)
+            
             until nmcli connection show | awk '{print $1}' | grep -qx "$PRIMARY_DEV" || [ $(( $(date +%s) - START_WAIT )) -ge $TIME_LEFT ]; do
                 sleep 1
             done
         fi
     fi
 
-    sleep 1
     ELAPSED=$((ELAPSED + 1))
 done
 
@@ -41,23 +41,14 @@ SECONDARY_UUID=$(nmcli connection show "$PRIMARY_CONN" | grep '^connection.secon
 
 # Wait for VPN if defined
 if [ -n "$SECONDARY_UUID" ]; then
-    echo "Waiting for secondary VPN '$SECONDARY_UUID' to connect..."
-    
-    # Trigger VPN connection if not already active
-    if ! nmcli connection show --active | grep -q "$SECONDARY_UUID"; then
-        nmcli connection up uuid "$SECONDARY_UUID"
-    fi
+    sleep 2 # Need a buffer before connection to VPN
+    nmcli connection up uuid "$SECONDARY_UUID"
     
     # Wait until VPN is active
-    ELAPSED=0
     while ! nmcli connection show --active | grep -q "$SECONDARY_UUID" && [ $ELAPSED -lt $TIMEOUT ]; do
         sleep 1
         ELAPSED=$((ELAPSED + 1))
     done
-
-    if nmcli connection show --active | grep -q "$SECONDARY_UUID"; then
-        echo "VPN '$SECONDARY_UUID' connected."
-    fi
 fi
 
 # Launch applications
