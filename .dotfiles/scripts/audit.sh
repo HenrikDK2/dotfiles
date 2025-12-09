@@ -92,6 +92,8 @@ filter_journalctl() {
 	    "Failed to start Timed resync"
 	    "Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
 	    "nm-openvpn\\[.*\\]: event_wait : Interrupted system call \\(fd=-1,code=4\\)"
+	    "terminated abnormally without generating a coredump" # Coredump is disabled, so this is generated when programs are killed
+	    
 	)
     local pattern=$(IFS='|'; echo "${patterns[*]}")
     journalctl -b -p 3 --no-pager | grep -Ev "$pattern" | tail -n 20
