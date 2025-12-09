@@ -2,6 +2,7 @@
 Description=Apply system tuning
 DefaultDependencies=no
 Before=multi-user.target
+After=basic.target  # Ensure the system has reached a basic state (aka. devices up and running)
 
 [Service]
 Type=oneshot
