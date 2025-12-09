@@ -11,7 +11,7 @@ My dotfiles are intended for personal usage, but feel free to make use of them a
 
 ### Important considerations before installing
 
-- These configuration/system files have only been tested on a fresh install of Arch Linux.
+- These configuration/system files have only been tested on a fresh install of Arch Linux or an existing install.
 
 - Keep in mind that this project is designed specifically for my setup on a **Desktop PC** with **AMD** hardware.
 
@@ -19,8 +19,7 @@ My dotfiles are intended for personal usage, but feel free to make use of them a
 
 **Warning!** Executing the following steps will replace your existing files with my configuration files.
 
-The install script expects Arch Linux to be setup with `systemd-boot`.
 
 1. Follow the Arch Wiki installation guide up to [section 3.2](https://wiki.archlinux.org/title/Installation_guide#Chroot).
-2. Create an user account, and clone project into your home directory.
-3. Run install script as root.
+2. Clone project into /tmp or somewhere else for now.
+3. Run install script `.dotfiles/init/install.sh` as root.

@@ -1,10 +1,21 @@
+
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TIMEZONE="Europe/Copenhagen"
 USERNAME="henrik"
+GITHUB_REPO="https://github.com/HenrikDK2/dotfiles.git"
+GITHUB_REPO_SSH="git@github.com:HenrikDK2/dotfiles.git"
 HOME="/home/$USERNAME"
 USER_SYSTEMD_DIR="/$HOME/.config/systemd/user"
+
+# Colors
+YELLOW='\033[1;33m'
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+BLUE='\033[1;34m'
+RESET='\033[0m'
+
 PACKAGES=(
 	"linux-firmware"
 	"linux-zen"
@@ -111,25 +122,50 @@ function clear_screen() {
     tput cup "$offset" 0
 }
 
+# Script requires root
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root." >&2
     exit 1
 fi
 
-# Check if user exists
-if ! id "$USERNAME" &>/dev/null; then
-    echo "User '$USERNAME' does not exist. Exiting...."
+# Script requires internet connection
+if ! ping -c 1 "8.8.8.8" >/dev/null 2>&1; then
+    echo "No internet connection."
     exit 1
+fi
+
+# Set password if none for root
+if ! passwd -S root 2>/dev/null | grep -q "P"; then
+	clear_screen
+    printf "Please set a ${RED}root${RESET} password:\n\n"
+    passwd root
+fi
+
+# Check if user exists, if not, then install repo in user directory
+if ! id "$USERNAME" &>/dev/null; then
+    echo "Creating user '$USERNAME'..."
+    useradd -m -G wheel $USERNAME
+    
+
+	# Set password if none for new user
+	if ! passwd -S $USERNAME 2>/dev/null | grep -q "P"; then
+		clear_screen
+	    printf "Please set a ${GREEN}$USERNAME${RESET} password:\n\n"
+	    passwd $USERNAME
+	fi
 fi
 
 # Check if .dotfiles is inside home directory
 if ! [ -d "$HOME/.dotfiles" ]; then
-    echo "Dotfiles are not initialized at '$HOME/.dotfiles'"
-	exit 1
-fi
+    # Removes git warnings
+    git config --global init.defaultBranch main
+    git config --global --add safe.directory $HOME
 
-# Make sure user is part of %wheel group
-usermod -a -G wheel "$USERNAME"
+	# Initialize repo in home directory
+    (cd $HOME && git init && git remote add origin $GITHUB_REPO && git fetch && git reset origin/master --hard)
+    sudo chown -R $USERNAME:$USERNAME $HOME && chmod 700 $HOME
+    (cd $HOME && git remote set-url origin $GITHUB_REPO_SSH)
+fi
 
 # Enable multilib, DisableDownloadTimeout, and ParallelDownloads
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
@@ -199,9 +235,6 @@ source $SCRIPT_DIR/scripts/gpu_drivers.sh
 
 # This will regenerate the initial ramdisk environment for all installed kernels
 mkinitcpio -P
-
-# Make user part of the games group (Allows proton to set niceness of process)
-usermod -a -G games "$USERNAME"
 
 # Enable network time sync
 timedatectl set-ntp true
