@@ -47,5 +47,5 @@ This repository contains my complete system configuration, including dotfiles an
 
 4. Run the installation script as root:
    ```bash
-   cd /tmp/dotfiles/.dotfiles/init/install.sh
+   /tmp/dotfiles/.dotfiles/init/install.sh
    ```
