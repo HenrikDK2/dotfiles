@@ -47,13 +47,10 @@ fi
 if ! id "$USERNAME" &>/dev/null; then
     echo "Creating user '$USERNAME'..."
     useradd -m -G wheel $USERNAME
-
-	# Set password for new user if none exist
-	if ! passwd -S $USERNAME 2>/dev/null | grep -q "P"; then
-		clear_screen
-	    printf "Please set a ${GREEN}$USERNAME${RESET} password:\n\n"
-	    passwd $USERNAME
-	fi
+	
+	clear_screen
+    printf "Please set a ${GREEN}$USERNAME${RESET} password:\n\n"
+    passwd $USERNAME
 fi
 
 # Check if .dotfiles is inside home directory, if not, then initialize git repo
@@ -100,8 +97,8 @@ timedatectl set-ntp true
 
 # Copy system configs & install system packages
 cp -rf $SCRIPT_DIR/system/* /
-sudo chmod -R 755 /usr/local/bin
-sudo chown -R root:root /usr/local/bin
+chmod -R 755 /usr/local/bin
+chown -R root:root /usr/local/bin
 
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
 flatpak install -y flathub "${FLATHUB_PACKAGES[@]}"
