@@ -107,25 +107,10 @@ for script in /usr/local/bin/local_pkgs/*.sh; do
 done
 
 # Enable essential system services
-systemctl enable \
-    avahi-daemon.service \
-    cups.service \
-    ufw.service \
-    gameboost.service \
-    NetworkManager.service \
-    pacman-remove-db-lock.service \
-    system-tuning.service \
-    fstrim.timer \
-    clean-cache.timer
+systemctl enable "${SYSTEM_SERVICES_TO_ENABLE[@]}"
 
 # Mask unwanted services
-systemctl mask \
-    systemd-userdbd \
-    systemd-resolved \
-    systemd-userdbd.socket \
-    accounts-daemon \
-    rtkit-daemon \
-    ldconfig
+systemctl mask "${SYSTEM_SERVICES_TO_MASK[@]}"
 
 # Set default shell to fish
 usermod -s /usr/bin/fish $USERNAME

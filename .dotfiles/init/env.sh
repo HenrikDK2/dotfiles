@@ -129,3 +129,28 @@ FLATHUB_PACKAGES=(
 	"org.freedesktop.Platform.VulkanLayer.MangoHud"
 	"org.freedesktop.Platform.VulkanLayer.gamescope"
 )
+
+SYSTEM_SERVICES_TO_ENABLE=(
+    "avahi-daemon.service"
+    "cups.service"
+    
+    "ufw.service"
+    "NetworkManager.service"
+
+    "gameboost.service"
+    "system-tuning.service"
+
+    "pacman-remove-db-lock.service"
+    "fstrim.timer"
+    "clean-cache.timer"
+)
+
+SYSTEM_SERVICES_TO_MASK=(
+    "systemd-userdbd.service"
+    "systemd-userdbd.socket"
+
+    "systemd-resolved.service"
+    "accounts-daemon.service"
+    "rtkit-daemon.service"
+    "ldconfig.service"
+)
