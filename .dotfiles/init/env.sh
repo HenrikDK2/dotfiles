@@ -128,6 +128,7 @@ FLATHUB_PACKAGES=(
 	"com.valvesoftware.Steam.CompatibilityTool.Proton-GE"
 	"org.freedesktop.Platform.VulkanLayer.MangoHud"
 	"org.freedesktop.Platform.VulkanLayer.gamescope"
+	"com.github.tchx84.Flatseal"
 )
 
 SYSTEM_SERVICES_TO_ENABLE=(

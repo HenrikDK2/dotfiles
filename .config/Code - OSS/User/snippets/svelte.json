@@ -1,0 +1,19 @@
+{
+	"Svelte Template": {
+		"prefix": "!svelte",
+		"body": [
+			"<script lang='ts'>",
+			"",
+			"</script>",
+			"",
+			"<main>",
+			"",
+			"</main>",
+			"",
+			"<style>",
+			"",
+			"</style>"
+		],
+		"description": "Svelte Template"
+	}
+}

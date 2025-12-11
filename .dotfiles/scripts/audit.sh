@@ -81,7 +81,7 @@ format_section() {
 
 filter_journalctl() {
 	# These patterns are what I consider non issues, might be race conditions --
-	# that I can't do much about or harmless warnings reported as errors
+	# GameBoost disabling service, or harmless warnings reported as errors
 	local patterns=(
 	    "gkr-pam: unable to locate daemon control file"
 	    "Inconsistent IP pool management \(start not found\)"
@@ -95,9 +95,13 @@ filter_journalctl() {
 	    "Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
 	    "nm-openvpn\\[.*\\]: event_wait : Interrupted system call \\(fd=-1,code=4\\)"
 	    "Activation request for 'org.bluez' failed."
+	    "systemd-journald-audit.socket: Socket service systemd-journald.service already active, refusing."
 	    "Failed to start Portal service \\(GTK/GNOME implementation\\)."
+	    "Failed to listen on Journal Audit Socket."
+	    "Failed to print table: Broken pipe"
 	    "Activation request for 'org.freedesktop.impl.portal.desktop.gtk' failed."
 	    "AEAD Decrypt error: bad packet ID \\(may be a replay\\)"
+	    "gkr-pam: couldn't unlock the login keyring."
 	    "terminated abnormally without generating a coredump" # Coredump is disabled, so this is generated when programs are killed
 	    
 	)
