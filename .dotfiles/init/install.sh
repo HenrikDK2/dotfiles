@@ -124,6 +124,7 @@ ln -sf /dev/null "$USER_SYSTEMD_DIR/at-spi-dbus-bus.service"
 
 source $SCRIPT_DIR/scripts/bootloader.sh
 source $SCRIPT_DIR/scripts/mozilla.sh
+source $SCRIPT_DIR/scripts/heroic.sh
 source $SCRIPT_DIR/scripts/qbittorrent.sh
 source $SCRIPT_DIR/scripts/drive_optimizations.sh
 source $SCRIPT_DIR/scripts/auto_update.sh
