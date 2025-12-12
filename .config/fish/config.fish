@@ -18,6 +18,10 @@ end
 ### GIT FUNCTION ###
 ####################
 
+####################
+### GIT FUNCTIONS ###
+####################
+
 function git_hard_reset_to_commit
     clear
 
@@ -39,7 +43,7 @@ function git_hard_reset_to_commit
     end
 
     echo "⚠️ This will reset your local branch to $commit_hash and force-push to origin. Continue? (y/N)"
-    read -r confirm
+    read -l confirm
     if test "$confirm" != "y"; and test "$confirm" != "Y"
         echo "❌ Aborted."
         return 1
