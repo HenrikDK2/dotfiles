@@ -9,6 +9,7 @@ readonly GAME_PATTERNS=(
     "minecraft.+\.jar"
     "/Games/.+\.(AppImage|x86_64|i386)$"
     "/steamapps/common/.+\.(AppImage|x86_64|i386)"
+    "C:/.*.exe"
 )
 
 readonly EXCLUDED_PATTERNS=(
