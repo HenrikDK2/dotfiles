@@ -122,8 +122,15 @@ services=(
 )
 
 for svc in "${services[@]}"; do
-    systemctl unmask "$svc" 2>/dev/null
-    systemctl start "$svc"
+    # Check if service is masked
+    if systemctl is-enabled "$svc" 2>&1 | grep -q masked; then
+        systemctl unmask "$svc"
+    fi
+
+    # Start only if inactive
+    if ! systemctl is-active --quiet "$svc"; then
+        systemctl start "$svc"
+    fi
 done
 
 # Main loop

@@ -20,10 +20,6 @@ fi
 # Start system services
 system_services=(
 	auditd.service
-    systemd-journald.socket
-    systemd-journald-dev-log.socket
-    systemd-journald-audit.socket
-    systemd-journald
 
     clamav-daemon.socket
     clamav-daemon
