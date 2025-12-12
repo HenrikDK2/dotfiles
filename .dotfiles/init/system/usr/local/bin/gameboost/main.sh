@@ -17,6 +17,8 @@ readonly EXCLUDED_PATTERNS=(
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
     "/windows/system32/.*"
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
+    "/*[Ll]auncher*.exe"
+    "/*[Ll]aunch[Pp]ad*.exe"
 )
 
 # Build optimized regex patterns from arrays (done once at startup)
