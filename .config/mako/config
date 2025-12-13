@@ -33,6 +33,9 @@ default-timeout=40000
 [app-name="NetworkManager Applet" summary="VPN Login Message"]
 invisible=1
 
+[app-name="NetworkManager Applet" summary="Connection Established"]
+invisible=1
+
 [category=audit]
 on-button-left=exec alacritty -e bash -c "makoctl dismiss -g audit; ~/.dotfiles/scripts/audit.sh; exec bash"
 

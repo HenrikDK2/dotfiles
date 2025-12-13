@@ -10,45 +10,34 @@ done
 mako &
 nm-applet &
 
-# Wait for primary connection
-echo "Waiting for primary network connection..."
-PRIMARY_CONN=""
-TIMEOUT=10
-ELAPSED=0
+# Connect to primary network
+PRIMARY_CONN=$(nmcli -t -f NAME,AUTOCONNECT connection show | grep -v "lo" | grep ":yes" | head -n 1 | cut -d: -f1)
 
-while [ -z "$PRIMARY_CONN" ] && [ $ELAPSED -lt $TIMEOUT ]; do
-    PRIMARY_DEV=$(ip route | grep '^default' | awk '{print $5}')
-
-    if [ -n "$PRIMARY_DEV" ]; then
-        PRIMARY_CONN=$(nmcli -t -f NAME,DEVICE connection show --active | grep "$PRIMARY_DEV" | cut -d: -f1)
-        
-        # If PRIMARY_CONN is still empty, check if the connection ID exists in nmcli
-        if [ -z "$PRIMARY_CONN" ]; then
-            TIME_LEFT=$((TIMEOUT - ELAPSED))
-            START_WAIT=$(date +%s)
-            
-            until nmcli connection show | awk '{print $1}' | grep -qx "$PRIMARY_DEV" || [ $(( $(date +%s) - START_WAIT )) -ge $TIME_LEFT ]; do
-                sleep 1
-            done
-        fi
-    fi
-
-    ELAPSED=$((ELAPSED + 1))
-done
-
-# Get default VPN connection (auto in networkmanager)
-SECONDARY_UUID=$(nmcli connection show "$PRIMARY_CONN" | grep '^connection.secondaries:' | awk '{print $2}')
-
-# Wait for VPN if defined
-if [ -n "$SECONDARY_UUID" ]; then
-    sleep 2 # Need a buffer before connecting to VPN
-    nmcli connection up uuid "$SECONDARY_UUID"
+if [ -n "$PRIMARY_CONN" ]; then
+    nmcli connection up "$PRIMARY_CONN" 2>/dev/null
     
-    # Wait until VPN is active
-    while ! nmcli connection show --active | grep -q "$SECONDARY_UUID" && [ $ELAPSED -lt $TIMEOUT ]; do
+    # Wait for connection (max 10s)
+    for i in {1..10}; do
+        if nmcli -t -f NAME,STATE connection show --active | grep -q "^${PRIMARY_CONN}:activated$"; then
+            echo "Connected to $PRIMARY_CONN (${i}s)"
+            break
+        fi
         sleep 1
-        ELAPSED=$((ELAPSED + 1))
     done
+    
+    # Connect to VPN if configured
+    SECONDARY_UUID=$(nmcli -t -f connection.secondaries connection show "$PRIMARY_CONN" | cut -d: -f2)
+    
+    if [ -n "$SECONDARY_UUID" ]; then
+        sleep 2
+        nmcli connection up uuid "$SECONDARY_UUID"
+        
+        # Wait for VPN (max 10s)
+        for i in {1..10}; do
+            nmcli connection show --active | grep -q "$SECONDARY_UUID" && break
+            sleep 1
+        done
+    fi
 fi
 
 # Launch applications
