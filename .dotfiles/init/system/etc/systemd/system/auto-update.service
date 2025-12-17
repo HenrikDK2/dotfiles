@@ -10,7 +10,6 @@ Type=oneshot
 
 ExecStart=/bin/bash -c '/bin/systemd-inhibit --what=shutdown:sleep:idle:handle-power-key:handle-suspend-key:handle-hibernate-key:handle-lid-switch --who="Update Service" --why="System update in progress" --mode=block /bin/sleep infinity & echo $! > /var/run/update-inhibit.pid'
 ExecStart=/usr/local/bin/auto-update.sh
-ExecStartPost=/bin/touch /tmp/audit.flag
 ExecStartPost=/bin/bash -c 'kill $(cat /var/run/update-inhibit.pid) && rm /var/run/update-inhibit.pid'
 SuccessExitStatus=0 1
 

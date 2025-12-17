@@ -6,7 +6,7 @@ ConditionPathExists=!/tmp/gameboost-running.flag
 
 [Timer]
 OnBootSec=5m
-OnUnitActiveSec=24h
+OnUnitActiveSec=8h
 Persistent=true
 
 [Install]
