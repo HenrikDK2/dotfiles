@@ -53,4 +53,4 @@ hyprctl dispatch exec "[workspace 2 silent] discord" &
 hyprctl dispatch exec "[workspace 2 silent] steam" &
 
 # Audit script to check for system issues (Only runs in foreground if detected)
-$HOME/.dotfiles/scripts/audit.sh -q
+$HOME/.dotfiles/scripts/audit.sh -b
