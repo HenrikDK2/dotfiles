@@ -112,9 +112,19 @@ echo 0 > /sys/kernel/mm/ksm/run # Disable KSM to avoid CPU overhead if virtual m
 if is_laptop; then
     sysctl -w vm.laptop_mode=1                         # Enable laptop mode for better power management
     sysctl -w kernel.timer_migration=1                 # Allow timer migration for better power management
+
+	# Enable TLP service for battery savings when using a laptop
+	if ! service_exists "tlp.service"; then
+		systemctl enable --now tlp.service
+	fi
 else
     sysctl -w vm.laptop_mode=0                         # Disable laptop mode
     sysctl -w kernel.timer_migration=0                 # Pin timers to cores (prevents CPU sleep)
+
+ 	# Disable TLP service for battery savings when using a dekstop
+    if service_exists "tlp.service"; then
+    	systemctl disable --now tlp.service
+    fi
 fi
 
 # --------------------

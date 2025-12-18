@@ -99,6 +99,10 @@ PACKAGES=(
     "papirus-icon-theme"
     "wl-clipboard"
     "7zip"
+    
+	# TLP is only enabled when using a laptop
+    "tlp" 
+    "tlp-rdw"
 
     # Misc
     "discord"
