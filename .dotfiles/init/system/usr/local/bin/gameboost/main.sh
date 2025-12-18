@@ -16,7 +16,7 @@ readonly EXCLUDED_PATTERNS=(
     "wineserver"
     "pressure-vessel/bin/pressure-vessel-wrap"
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
-    "/windows/system32/.*"
+    "C:/windows/.*"
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
     "/*[Ll]auncher*.exe"
     "/*[Ll]aunch[Pp]ad*.exe"
