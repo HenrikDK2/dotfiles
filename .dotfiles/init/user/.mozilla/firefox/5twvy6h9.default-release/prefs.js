@@ -14,6 +14,10 @@ user_pref("toolkit.telemetry.updatePing.enabled", false);
 user_pref("toolkit.telemetry.enabled", false);
 user_pref("toolkit.telemetry.pioneer-new-studies-available", false);
 user_pref("toolkit.telemetry.hybridContent.enabled", false);
+user_pref("identity.fxaccounts.telemetry.clientAssociationPing.enabled", false);
+user_pref("nimbus.telemetry.targetingContextEnabled", false);
+user_pref("telemetry.fog.init_on_shutdown", false);
+
 user_pref("toolkit.cosmeticAnimations.enabled", false);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 
