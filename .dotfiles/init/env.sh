@@ -32,6 +32,7 @@ USER_SYSTEMD_DIR="$HOME/.config/systemd/user"
 
 PACKAGES=(
 	"linux-firmware"
+	"linux-lts" # Backup
 	"linux-zen"
 	"base"
 	"base-devel"
