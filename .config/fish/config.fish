@@ -117,6 +117,7 @@ set -gx ANDROID_HOME $HOME/Android/Sdk
 set -gx OBS_VKCAPTURE 1
 set -gx DOTNET_SYSTEM_GLOBALIZATION_INVARIANT false
 set -gx FREETYPE_PROPERTIES "hinting=true:hintstyle=hintslight:antialias=rgb:subpixel_rendering=rgb"
+set -gx GTK_A11Y "none"
 set -U fish_greeting
 
 # Add ~/.local/bin to PATH
