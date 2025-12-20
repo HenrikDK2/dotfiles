@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Remember to use lsfg-vk config ui
+
 mkdir -pv $HOME/.config/lsfg-vk
 
 # Heroic Games Launcher
