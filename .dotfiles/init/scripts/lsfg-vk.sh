@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Remember to use lsfg-vk config ui
-# You might have to restart Steam/Heroic after making changes to config
+# You might have to restart Steam/Heroic after making changes to config .dll path
 
 mkdir -pv $HOME/.config/lsfg-vk
 
