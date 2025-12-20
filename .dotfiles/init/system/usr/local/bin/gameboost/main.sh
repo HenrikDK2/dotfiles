@@ -20,6 +20,11 @@ readonly EXCLUDED_PATTERNS=(
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
     "/*[Ll]auncher*.exe"
     "/*[Ll]aunch[Pp]ad*.exe"
+    "[Ss]etup\.exe"
+    "[Ii]nstall.*\.exe"
+    "[Uu]ninstall.*\.exe"
+    ".*[Uu]pdate.*\.exe"
+    ".*[Rr]edist.*\.exe"
 )
 
 # Build optimized regex patterns from arrays (done once at startup)
