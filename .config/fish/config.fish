@@ -15,10 +15,6 @@ if status is-login; and test -z "$DISPLAY"; and test (tty) = "/dev/tty1"
 end
 
 ####################
-### GIT FUNCTION ###
-####################
-
-####################
 ### GIT FUNCTIONS ###
 ####################
 
