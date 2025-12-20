@@ -126,6 +126,8 @@ fish_add_path -p $HOME/.local/bin
 alias upgraded='grep -i upgraded /var/log/pacman.log'
 alias installed='grep -i installed /var/log/pacman.log'
 alias audit='~/.dotfiles/scripts/audit.sh -q'
+alias install="sudo pacman -S"
+alias uninstall="sudo pacman -Rsn"
 alias build='npm run build'
 alias start='npm run start || npm run dev'
 alias push='push_commit'
