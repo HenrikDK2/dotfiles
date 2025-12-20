@@ -135,6 +135,7 @@ FLATHUB_PACKAGES=(
 	"org.freedesktop.Platform.VulkanLayer.gamescope"
 	"com.github.Matoking.protontricks"
 	"com.github.tchx84.Flatseal"
+	"org.freedesktop.Platform.VulkanLayer.lsfgvk"
 )
 
 SYSTEM_SERVICES_TO_ENABLE=(

@@ -24,6 +24,10 @@
 !.config/fastfetch/
 !.config/fastfetch/config.jsonc
 
+!.config
+!.config/lsfg-vk/
+!.config/lsfg-vk/conf.toml
+
 !.config/wireplumber
 !.config/wireplumber/**
 
