@@ -16,6 +16,9 @@
 !.dotfiles
 !.dotfiles/**
 
+!Games/
+!Games/.gitkeep
+
 # .CONFIG
 !.config
 !.config/fastfetch/
