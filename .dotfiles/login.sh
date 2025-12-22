@@ -1,8 +1,10 @@
 #!/bin/bash
 
+hyprlock
+
 # Run all login scripts in background
 for script in $HOME/.dotfiles/login.d/*.sh; do
-    "$script" &
+   "$script" &
 done
 
 # Start background services
