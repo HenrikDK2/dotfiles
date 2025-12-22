@@ -2,7 +2,7 @@
   "editor.fontSize": 18,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 2,
   "window.zoomPerWindow": false,
   "svelte.enable-ts-plugin": true,
   "[c]": {
@@ -68,5 +68,8 @@
     "spwn": "spwn build",
     "pkl": "cd $dir && pkl eval -f yaml $fileName -o $fileNameWithoutExt.yaml",
     "gleam": "gleam run -m $fileNameWithoutExt"
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
   }
 }

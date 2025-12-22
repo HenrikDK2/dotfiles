@@ -116,8 +116,9 @@ set -gx FREETYPE_PROPERTIES "hinting=true:hintstyle=hintslight:antialias=rgb:sub
 set -gx GTK_A11Y "none"
 set -U fish_greeting
 
-# Add ~/.local/bin to PATH
+# Add PATHS to fish
 fish_add_path -p $HOME/.local/bin
+fish_add_path -p $HOME/.cargo/bin
 
 ###############
 ### ALIASES ###
