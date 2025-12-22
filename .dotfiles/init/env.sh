@@ -88,6 +88,7 @@ PACKAGES=(
     "slurp"
     "swappy"
     "hyprland"
+    "hypridle"
     "hyprlock"
     "swaybg"
     "unrar"

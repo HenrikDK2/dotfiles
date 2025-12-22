@@ -53,6 +53,7 @@ function start_services() {
     local user_services=(
         gvfs-daemon
         gvfs-metadata
+        hypridle
     )
     
     local user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))

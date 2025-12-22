@@ -42,6 +42,7 @@ function stop_services() {
     local user_services=(
         gvfs-daemon
         gvfs-metadata
+        hypridle
     )
     
     local user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
@@ -90,7 +91,7 @@ function set_amd_gpu_performance() {
 }
 
 function kill_background_processes() {
-    local processes=(cmst mullvad-gui blueman-applet blueman-manager blueman-tray chrome_crashpad)
+    local processes=(cmst hypridle mullvad-gui blueman-applet blueman-manager blueman-tray chrome_crashpad)
     
     for p in "${processes[@]}"; do
         pkill -9 "$p" 2>/dev/null

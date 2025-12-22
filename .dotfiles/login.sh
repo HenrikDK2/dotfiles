@@ -4,6 +4,7 @@
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 mako &
 nm-applet &
+hypridle &
 
 # Lock screen
 hyprlock

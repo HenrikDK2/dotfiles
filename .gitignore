@@ -49,6 +49,7 @@
 !.config/hypr/
 !.config/hypr/hyprland.conf
 !.config/hypr/hyprlock.conf
+!.config/hypr/hypridle.conf
 !.config/hypr/layout.sh
 !.config/hypr/split_floating.sh
 
