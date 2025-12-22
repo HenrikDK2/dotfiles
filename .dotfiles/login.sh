@@ -1,16 +1,17 @@
 #!/bin/bash
 
+# Start background services in parallel
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+mako &
+nm-applet &
+
+# Lock screen
 hyprlock
 
 # Run all login scripts in background
 for script in $HOME/.dotfiles/login.d/*.sh; do
    "$script" &
 done
-
-# Start background services
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-mako &
-nm-applet &
 
 # Connect to primary network
 PRIMARY_CONN=$(nmcli -t -f NAME,AUTOCONNECT connection show | grep -v "lo" | grep ":yes" | head -n 1 | cut -d: -f1)
