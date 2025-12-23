@@ -60,6 +60,7 @@ PACKAGES=(
     "alacritty"
     "jq"
 	"bash-completion"
+    "brightnessctl"
     "btop"
     "cabextract"
     "fastfetch"
