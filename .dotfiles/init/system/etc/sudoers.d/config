@@ -3,3 +3,4 @@ Defaults env_keep += "EDITOR VISUAL DIFFPROG SYSTEMD_EDITOR MICRO_CONFIG_HOME MI
 %wheel ALL=(ALL:ALL) ALL
 %wheel ALL = NOPASSWD: /usr/local/bin/soft-reboot
 %wheel ALL = NOPASSWD: /usr/bin/psd-overlay-helper
+ALL ALL=(ALL) NOPASSWD: /usr/sbin/tlp bat, /usr/sbin/tlp power-saver

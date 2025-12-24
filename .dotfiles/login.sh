@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Start background services in parallel
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-mako &
-nm-applet &
-hypridle &
-
 # Lock screen
 hyprlock
+
+# Start background services in parallel
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+nm-applet &
+mako &
+hypridle &
 
 # Run all login scripts in background
 for script in $HOME/.dotfiles/login.d/*.sh; do
