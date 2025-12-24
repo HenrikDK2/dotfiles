@@ -1,10 +1,10 @@
-@define-color nord0 #3b4252;
-@define-color nord1 #353c4a;
-@define-color nord2 #e5eaf0;
-@define-color nord3 #8fbbba;
-@define-color nord-safe #53b500;
-@define-color nord-critical #bf616a;
-@define-color nord-warning #ebcb8b;
+@define-color nord_bg        #353c4a;
+@define-color nord_bg_dark   #3b4252;
+@define-color nord_text      #e5eaf0;
+@define-color nord_highlight #8fbbba;
+@define-color nord_safe      #53b500;
+@define-color nord_critical  #bf616a;
+@define-color nord_warning   #ebcb8b;
 
 * {
   font-family: "Cantarell", "Font Awesome 7 Free";
@@ -12,7 +12,7 @@
   font-weight: 700;
   transition: all 0.2s ease;
   background-color: transparent;
-  color: @nord2;
+  color: @nord_text;
 }
 
 button,
@@ -27,8 +27,8 @@ button,
 #custom-shutdown,
 #custom-reboot,
 #custom-suspend,
-#custom-vpn{
-  background-color: @nord1;
+#custom-vpn {
+  background-color: @nord_bg;
   margin: 0 4px;
   padding: 0 12px;
   border-radius: 4px;
@@ -41,7 +41,7 @@ button,
 }
 
 tooltip {
-  background-color: @nord1;
+  background-color: @nord_bg;
 }
 
 #workspaces {
@@ -53,14 +53,14 @@ tooltip {
 }
 
 #workspaces button {
-  border-bottom: 2px solid @nord1;
+  border-bottom: 2px solid @nord_bg;
   padding: 0 6px;
 }
 
 #workspaces button.focused,
 #workspaces button.active {
-  background-color: @nord0;
-  border-bottom: 2px solid @nord3;
+  background-color: @nord_bg_dark;
+  border-bottom: 2px solid @nord_highlight;
 }
 
 #memory,
@@ -81,11 +81,10 @@ tooltip {
   margin: 0 4px 0 0;
 }
 
-
 #tray menu {
-  background-color: @nord1;
+  background-color: @nord_bg;
   padding: 10px 5px;
-  border: 2px solid @nord1;
+  border: 2px solid @nord_bg;
 }
 
 label#window {
@@ -94,10 +93,10 @@ label#window {
 
 #battery.warning,
 #pulseaudio.muted {
-  background-color: @nord-warning;
-  color: @nord0;
+  background-color: @nord_warning;
+  color: @nord_bg_dark;
 }
 
 #battery.critical {
-  color: @nord0;
+  color: @nord_critical;
 }
