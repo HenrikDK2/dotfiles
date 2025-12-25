@@ -21,6 +21,23 @@ user_pref("telemetry.fog.init_on_shutdown", false);
 user_pref("toolkit.cosmeticAnimations.enabled", false);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 
+// Disable disgusting AI dogshit from my browser
+user_pref("browser.ml.enable", false);
+user_pref("browser.ml.chat.enabled", false);
+user_pref("browser.ml.chat.sidebar", false);
+user_pref("browser.ml.chat.shortcuts", false);
+user_pref("browser.ml.chat.shortcuts.custom", false);
+user_pref("browser.ml.chat.page", false);
+user_pref("browser.ml.chat.page.footerBadge", false);
+user_pref("browser.ml.chat.page.menuBadge", false);
+user_pref("browser.ml.chat.menu", false);
+user_pref("browser.ml.linkPreview.enabled", false);
+user_pref("extensions.ml.enabled", false);
+user_pref("browser.tabs.groups.smart.enabled", false);
+user_pref("browser.tabs.groups.smart.userEnable", false);
+user_pref("browser.ml.pageAssist.enabled", false);
+user_pref("browser.ml.modelHubRootUrl", "");
+
 user_pref("browser.fullscreen.animateUp", false);
 user_pref("browser.fullscreen.animate", 0);
 user_pref("browser.sessionstore.max_windows_undo", 0);
