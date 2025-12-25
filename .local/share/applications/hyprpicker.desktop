@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Color picker
+Comment=Pick a color and copy it to the clipboard
+Exec=sh -c "sleep 0.15;hyprpicker -a -q"
+Icon=sk1-color-picker
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupNotify=false

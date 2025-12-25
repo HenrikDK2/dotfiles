@@ -89,6 +89,7 @@ PACKAGES=(
     "slurp"
     "swappy"
     "hyprland"
+    "hyprpicker"
     "hypridle"
     "hyprlock"
     "swaybg"
