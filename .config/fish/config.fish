@@ -132,6 +132,7 @@ alias zed="zeditor"
 alias uninstall="sudo pacman -Rsn"
 alias build='npm run build'
 alias start='npm run start || npm run dev'
+alias preview='npm run preview'
 alias push='push_commit'
 alias reset='git_hard_reset_to_commit'
 
