@@ -11,7 +11,7 @@ if status is-login; and test -z "$DISPLAY"; and test (tty) = "/dev/tty1"
     truncate -s 0 $LOG_FILE
     
     # Run Hyprland and log output
-    exec hyprland &> $LOG_FILE
+    exec start-hyprland &> $LOG_FILE
 end
 
 ####################

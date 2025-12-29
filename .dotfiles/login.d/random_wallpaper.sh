@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if pgrep -x "sway" >/dev/null || pgrep -x "hyprland" >/dev/null; then
+if pgrep -x "sway" >/dev/null || pgrep -x "hyprland" >/dev/null || pgrep -x "start-hyprland"; then
 
 	# Set lowest CPU & I/O priority
 	nice -n 19 -p $$ >/dev/null 2>&1
