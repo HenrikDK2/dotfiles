@@ -107,7 +107,9 @@ set -gx MOZ_WEBRENDER 1
 set -gx PROTON_FORCE_LARGE_ADDRESS_AWARE 1
 set -gx LD_PRELOAD ""
 
+set -gx FLATPAK_GL_DRIVERS "mesa-git"
 set -gx AMD_VULKAN_ICD "RADV"
+
 set -gx XDG_DOWNLOAD_DIR "$HOME/Downloads"
 set -gx ANDROID_HOME $HOME/Android/Sdk
 set -gx OBS_VKCAPTURE 1

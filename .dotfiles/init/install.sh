@@ -132,6 +132,7 @@ flatpak override --user --env=LSFG_CONFIG=$HOME/.config/lsfg-vk/conf.toml com.va
 source $SCRIPT_DIR/scripts/bootloader.sh
 source $SCRIPT_DIR/scripts/auto_login.sh
 source $SCRIPT_DIR/scripts/lsfg-vk.sh
+source $SCRIPT_DIR/scripts/flatpak_mesa_git.sh
 source $SCRIPT_DIR/scripts/mozilla.sh
 source $SCRIPT_DIR/scripts/heroic.sh
 source $SCRIPT_DIR/scripts/qbittorrent.sh
