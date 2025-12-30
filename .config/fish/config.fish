@@ -111,6 +111,8 @@ set -gx FLATPAK_GL_DRIVERS "mesa-git"
 set -gx AMD_VULKAN_ICD "RADV"
 
 set -gx XDG_DOWNLOAD_DIR "$HOME/Downloads"
+set -gx XDG_DATA_DIRS "/usr/local/share:/usr/share:$HOME/.local/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share" rofi -theme ./styles/theme.rasi -show drun
+
 set -gx ANDROID_HOME $HOME/Android/Sdk
 set -gx OBS_VKCAPTURE 1
 set -gx DOTNET_SYSTEM_GLOBALIZATION_INVARIANT false
