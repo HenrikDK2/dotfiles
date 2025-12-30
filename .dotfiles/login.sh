@@ -7,7 +7,7 @@ hyprlock
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 nm-applet &
 mako &
-[ ! -f "$HOME/.config/hypr/.disable_hypridle" ] && hypridle &
+hypridle &
 
 # Run all login scripts in background
 for script in $HOME/.dotfiles/login.d/*.sh; do
