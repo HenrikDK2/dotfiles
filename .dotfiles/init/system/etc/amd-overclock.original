@@ -12,7 +12,7 @@
 # Exercise caution and increment slowly; conduct stress tests.
 
 # Voltage offset (in millivolts)
-VOLTAGE_OFFSET=-30
+VOLTAGE_OFFSET=-50
 
 # Core clock (in MHz)
 #CORE_CLOCK=2950
