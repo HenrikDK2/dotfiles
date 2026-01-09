@@ -122,13 +122,6 @@ ln -sf /usr/lib/systemd/user/wireplumber.service "$USER_SYSTEMD_DIR/default.targ
 ln -sf /usr/lib/systemd/user/psd.service "$USER_SYSTEMD_DIR/default.target.wants/"
 ln -sf /dev/null "$USER_SYSTEMD_DIR/at-spi-dbus-bus.service"
 
-# lsfg-vk setup
-mkdir -pv $HOME/.config/lsfg-vk
-flatpak override --user --filesystem=$HOME/.config/lsfg-vk:rw com.heroicgameslauncher.hgl
-flatpak override --user --env=LSFG_CONFIG=$HOME/.config/lsfg-vk/conf.toml com.valvesoftware.Steam
-flatpak override --user --filesystem=$HOME/.config/lsfg-vk:rw com.heroicgameslauncher.hgl
-flatpak override --user --env=LSFG_CONFIG=$HOME/.config/lsfg-vk/conf.toml com.valvesoftware.Steam
-
 source $SCRIPT_DIR/scripts/bootloader.sh
 source $SCRIPT_DIR/scripts/auto_login.sh
 source $SCRIPT_DIR/scripts/lsfg-vk.sh
