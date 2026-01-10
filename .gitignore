@@ -61,6 +61,12 @@
 .config/micro/buffers
 .config/micro/backups
 
+!.config/zed
+!.config/zed/keymap.json
+!.config/zed/settings.json
+!.config/zed/snippets
+!.config/zed/snippets/*
+
 !.config/Code
 !.config/Code/User
 !.config/Code/User/settings.json
