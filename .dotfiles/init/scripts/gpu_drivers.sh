@@ -55,38 +55,9 @@ nvidia_drivers () {
 }
 
 amd_drivers () {
-    gpu_packages=("mesa" "lib32-mesa" "vulkan-radeon" "lib32-vulkan-radeon" "vulkan-icd-loader" "lib32-vulkan-icd-loader" "libva-utils")
+    gpu_packages=("mesa" "lib32-mesa" "vulkan-radeon" "lib32-vulkan-radeon" "vulkan-icd-loader" "lib32-vulkan-icd-loader" "libva-utils" "lact")
     sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
-
-    ##############################
-	# Enables overclocking below
-	##############################
-	original_conf_file="$SCRIPT_DIR/system/etc/amd-overclock.original"
-	conf_file="/etc/amd-overclock.conf"
-
-	if [ ! -f "$conf_file" ]; then
-		cp -f $original_conf_file $conf_file
-		
-		# Comment out each variable in the config file
-		sed -i 's/^\(VOLTAGE_OFFSET=.*\)/#\1/' "$conf_file"
-		sed -i 's/^\(CORE_CLOCK=.*\)/#\1/' "$conf_file"
-		sed -i 's/^\(MEMORY_CLOCK=.*\)/#\1/' "$conf_file"
-		sed -i 's/^\(MAX_WATTS_POWERLIMIT=.*\)/#\1/' "$conf_file"
-
-		clear_screen
-		printf "Overclock values will be commented out by default.\n\n"
-		printf "You will need to modify ${YELLOW}$conf_file${RESET}"
-
-		printf "\n\n"
-		read -p "Press enter to continue"
-
-		# Edit config file 
-	    pacman -Syu micro --ask 4 --needed
-		micro $conf_file
-
-		# Enable service
-		systemctl enable amd-overclock.service
-	fi
+    systemctl enable lactd
 }
 
 intel_drivers () {
