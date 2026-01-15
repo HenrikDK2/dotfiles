@@ -9,6 +9,7 @@ readonly GAME_PATTERNS=(
     "minecraft.+\.jar"
     "/Games/.+\.(AppImage|x86_64|i386)$"
     "/steamapps/common/.+\.(AppImage|x86_64|i386)"
+    "Hytale/.*/(HytaleClient|HytaleServer\.jar)"
     "C:/.*.exe"
 )
 
