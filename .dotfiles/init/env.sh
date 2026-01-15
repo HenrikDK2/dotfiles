@@ -29,6 +29,7 @@ GITHUB_REPO="https://github.com/HenrikDK2/dotfiles.git"
 
 HOME="/home/$USERNAME"
 USER_SYSTEMD_DIR="$HOME/.config/systemd/user"
+USER=$USERNAME
 
 PACKAGES=(
 	"linux-firmware"
