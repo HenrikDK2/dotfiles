@@ -1,13 +1,13 @@
 [Default Applications]
 inode/directory=nemo.desktop
 x-scheme-handler/msteams=teams.desktop
-x-scheme-handler/mailto=userapp-Thunderbird-YGBLH3.desktop
-message/rfc822=userapp-Thunderbird-YGBLH3.desktop
-x-scheme-handler/mid=userapp-Thunderbird-YGBLH3.desktop
-x-scheme-handler/webcal=userapp-Thunderbird-4EQKH3.desktop
-text/calendar=userapp-Thunderbird-4EQKH3.desktop
-application/x-extension-ics=userapp-Thunderbird-4EQKH3.desktop
-x-scheme-handler/webcals=userapp-Thunderbird-4EQKH3.desktop
+x-scheme-handler/mailto=userapp-Thunderbird-6VANJ3.desktop
+message/rfc822=userapp-Thunderbird-6VANJ3.desktop
+x-scheme-handler/mid=userapp-Thunderbird-6VANJ3.desktop
+x-scheme-handler/webcal=userapp-Thunderbird-VB3MJ3.desktop
+text/calendar=userapp-Thunderbird-VB3MJ3.desktop
+application/x-extension-ics=userapp-Thunderbird-VB3MJ3.desktop
+x-scheme-handler/webcals=userapp-Thunderbird-VB3MJ3.desktop
 text/html=firefox.desktop
 x-scheme-handler/http=firefox.desktop
 x-scheme-handler/https=firefox.desktop
@@ -39,10 +39,10 @@ x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop
 x-scheme-handler/discord=vesktop.desktop
 
 [Added Associations]
-x-scheme-handler/mailto=userapp-Thunderbird-YGBLH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
-x-scheme-handler/mid=userapp-Thunderbird-YGBLH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
-x-scheme-handler/webcal=userapp-Thunderbird-4EQKH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-54CUO2.desktop;userapp-Thunderbird-H24ET2.desktop;
-x-scheme-handler/webcals=userapp-Thunderbird-4EQKH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-54CUO2.desktop;userapp-Thunderbird-H24ET2.desktop;
+x-scheme-handler/mailto=userapp-Thunderbird-6VANJ3.desktop;userapp-Thunderbird-YGBLH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
+x-scheme-handler/mid=userapp-Thunderbird-6VANJ3.desktop;userapp-Thunderbird-YGBLH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
+x-scheme-handler/webcal=userapp-Thunderbird-VB3MJ3.desktop;userapp-Thunderbird-4EQKH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-54CUO2.desktop;userapp-Thunderbird-H24ET2.desktop;
+x-scheme-handler/webcals=userapp-Thunderbird-VB3MJ3.desktop;userapp-Thunderbird-4EQKH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-54CUO2.desktop;userapp-Thunderbird-H24ET2.desktop;
 image/png=imv.desktop;
 image/jpeg=imv.desktop;
 image/gif=imv.desktop;
