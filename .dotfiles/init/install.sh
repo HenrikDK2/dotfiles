@@ -140,5 +140,8 @@ mkinitcpio -P
 # Remove initial pacsave/pacnew files
 find /etc \( -name "*.pacnew" -o -name "*.pacsave" \) -print0 | xargs -0 rm -f
 
+# Fix permission issues
+chown -R "$USER:$USER" $HOME
+
 # Reboot
 for i in {5..1}; do echo "Rebooting in $i..."; sleep 1; done; reboot
