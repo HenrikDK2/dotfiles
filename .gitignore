@@ -4,6 +4,9 @@
 !.gitignore
 !.gitconfig
 
+!.bashrc
+!.bash_profile
+
 !.icons
 !.icons/**
 

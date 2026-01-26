@@ -123,6 +123,7 @@ set -U fish_greeting
 # Add PATHS to fish
 fish_add_path -p $HOME/.local/bin
 fish_add_path -p $HOME/.cargo/bin
+fish_add_path -p /home/linuxbrew/.linuxbrew/bin
 
 ###############
 ### ALIASES ###
