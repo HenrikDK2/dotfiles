@@ -41,5 +41,10 @@ for CONFIG in "${CONFIG_PATHS[@]}"; do
       end
     ' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
 
+    # Enable useSteamRuntime
+    jq '
+      .defaultSettings.useSteamRuntime = true
+    ' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+
     echo "Done."
 done
