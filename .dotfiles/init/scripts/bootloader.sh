@@ -8,6 +8,8 @@ KERNELS=(
 
 KERNEL_PARAMS=(
     "loglevel=3"
+    "apparmor=1"
+    "security=apparmor"
     "debugfs=off"
     "vsyscall=none"
     "processor.ignore_ppc=1"

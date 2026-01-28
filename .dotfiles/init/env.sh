@@ -105,6 +105,7 @@ PACKAGES=(
 
 	# Sandboxing
     "firejail"
+    "apparmor"
     "xdg-dbus-proxy"
     
 	# TLP is only enabled when using a laptop
@@ -145,6 +146,8 @@ SYSTEM_SERVICES_TO_ENABLE=(
     "ufw.service"
     "NetworkManager.service"
 	"NetworkManager-wait-online.service"
+
+	"apparmor.service"
 	
     "gameboost.service"
     "system-tuning.service"
