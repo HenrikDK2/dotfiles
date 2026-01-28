@@ -84,6 +84,7 @@ filter_journalctl() {
 	    "Failed to write OSC sequence to TTY, ignoring: Resource temporarily unavailable"
 	    "Activation request for 'org.freedesktop.nm_dispatcher' failed."
 	    "disabled by hub \(EMI\?\), re-enabling"
+	    "type:fuse.portal - invalid whitelist mount"
 	    "Failed to start Timed resync"
 	    "Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
 	    "nm-openvpn\\[.*\\]: event_wait : Interrupted system call \\(fd=-1,code=4\\)"
