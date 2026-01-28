@@ -47,7 +47,7 @@ dynamic_layout() {
 }
 
 secret_firefox_instance() {
-    pgrep -x firefox >/dev/null || hyprctl dispatch exec "[workspace special silent] firefox --private-window" &
+    pgrep -x firefox >/dev/null || hyprctl dispatch exec "[workspace special silent] /usr/bin/firefox --private-window &" &
 }
 
 toggle_waybar() {
