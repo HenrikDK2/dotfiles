@@ -102,6 +102,10 @@ PACKAGES=(
     "papirus-icon-theme"
     "wl-clipboard"
     "7zip"
+
+	# Sandboxing
+    "firejail"
+    "xdg-dbus-proxy"
     
 	# TLP is only enabled when using a laptop
     "tlp" 
