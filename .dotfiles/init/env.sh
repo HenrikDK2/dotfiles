@@ -72,7 +72,6 @@ PACKAGES=(
     "git"
     "gvfs-mtp"
     "imv"
-    "flatpak"
     "mako"
     "man-db"
     "micro"
@@ -114,6 +113,7 @@ PACKAGES=(
     "thunderbird"
     "firefox"
     "code"
+	"steam"
 
 	# Audio
 	"pipewire"
@@ -128,18 +128,6 @@ PACKAGES=(
 	"ttf-jetbrains-mono"
 	"ttf-droid"
 	"ttf-dejavu"
-)
-
-FLATHUB_PACKAGES=(
-	"com.mastermindzh.tidal-hifi"
-	"com.valvesoftware.Steam"
-	"com.heroicgameslauncher.hgl"
-	"com.valvesoftware.Steam.CompatibilityTool.Proton-GE"
-	"org.freedesktop.Platform.VulkanLayer.MangoHud"
-	"org.freedesktop.Platform.VulkanLayer.gamescope"
-	"com.github.Matoking.protontricks"
-	"com.github.tchx84.Flatseal"
-	"org.freedesktop.Platform.VulkanLayer.lsfgvk"
 )
 
 SYSTEM_SERVICES_TO_ENABLE=(

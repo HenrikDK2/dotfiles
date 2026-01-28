@@ -57,7 +57,6 @@ nvidia_drivers () {
 amd_drivers () {
     gpu_packages=("mesa" "lib32-mesa" "vulkan-radeon" "lib32-vulkan-radeon" "vulkan-icd-loader" "lib32-vulkan-icd-loader" "libva-utils" "lact")
     sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
-    systemctl enable lactd
 }
 
 intel_drivers () {

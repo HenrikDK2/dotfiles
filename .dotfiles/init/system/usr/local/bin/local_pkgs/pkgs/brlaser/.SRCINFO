@@ -1,0 +1,16 @@
+pkgbase = brlaser
+	pkgdesc = Brother laser printer driver
+	pkgver = 6.2.8
+	pkgrel = 1
+	url = https://github.com/Owl-Maintain/brlaser
+	arch = x86_64
+	arch = armv7h
+	arch = aarch64
+	license = GPL-2.0-or-later
+	makedepends = cmake
+	depends = cups
+	depends = ghostscript
+	source = brlaser-6.2.8.tar.gz::https://github.com/Owl-Maintain/brlaser/archive/refs/tags/v6.2.8.tar.gz
+	sha512sums = 6cbfb2376dbbc06f55a605a160b946ca810191d9a88c1380adb5fcbac10e37c36ec77604ab0ee0fb2595d86306f87d322b0cea314166a8a2d3999bd43b9365ce
+
+pkgname = brlaser

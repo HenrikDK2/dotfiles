@@ -100,11 +100,9 @@ cp -rf $SCRIPT_DIR/system/* /
 chmod -R 755 /usr/local/bin
 chown -R root:root /usr/local/bin
 
+# Install system pkgs
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
-flatpak install -y flathub "${FLATHUB_PACKAGES[@]}"
-for script in /usr/local/bin/local_pkgs/*.sh; do
-    "$script"
-done
+/usr/local/bin/local_pkgs/main.sh
 
 # Enable essential system services
 systemctl enable "${SYSTEM_SERVICES_TO_ENABLE[@]}"
@@ -124,8 +122,6 @@ ln -sf /dev/null "$USER_SYSTEMD_DIR/at-spi-dbus-bus.service"
 
 source $SCRIPT_DIR/scripts/bootloader.sh
 source $SCRIPT_DIR/scripts/auto_login.sh
-source $SCRIPT_DIR/scripts/lsfg-vk.sh
-source $SCRIPT_DIR/scripts/flatpak_mesa_git.sh
 source $SCRIPT_DIR/scripts/mozilla.sh
 source $SCRIPT_DIR/scripts/heroic.sh
 source $SCRIPT_DIR/scripts/qbittorrent.sh

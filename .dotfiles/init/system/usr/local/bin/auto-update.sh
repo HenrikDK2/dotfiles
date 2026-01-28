@@ -35,9 +35,7 @@ if command -v flatpak &>/dev/null; then
 fi
 
 # Update local_pkgs
-for script in /usr/local/bin/local_pkgs/*.sh; do
-    "$script"
-done
+/usr/local/bin/local_pkgs/main.sh
 
 # System packages updates
 echo "Updating system..."

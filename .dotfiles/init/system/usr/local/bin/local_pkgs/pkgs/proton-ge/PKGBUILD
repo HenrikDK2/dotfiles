@@ -1,0 +1,28 @@
+pkgname=proton-ge-custom-bin
+pkgver=GE_Proton10_29
+pkgrel=1
+pkgdesc='A fancy custom distribution of Valves Proton with various patches'
+arch=('x86_64')
+url='https://github.com/GloriousEggroll/proton-ge-custom'
+license=('BSD' 'LGPL' 'MIT' 'MPL')
+depends=('steam')
+provides=('proton')
+conflicts=('proton-ge-custom')
+options=(!strip)
+_pkgver=${pkgver//_/-}
+_installdir=usr/share/steam/compatibilitytools.d
+source=("${_pkgver}.tar.gz::${url}/releases/download/${_pkgver}/${_pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+package() {
+    # Install the Proton-GE directory with standardized name
+    install -d "${pkgdir}/${_installdir}"
+    cp -r "${srcdir}/${_pkgver}" "${pkgdir}/${_installdir}/GE-Proton-Latest"
+    
+    # Modify compatibilitytool.vdf to show GE-Proton-Latest as display name
+    sed -i 's/"display_name".*"'"${_pkgver}"'"/"display_name" "GE-Proton-Latest"/' \
+        "${pkgdir}/${_installdir}/GE-Proton-Latest/compatibilitytool.vdf"
+    
+    # Set proper permissions
+    chmod -R u+rwX,go+rX,go-w "${pkgdir}/${_installdir}/GE-Proton-Latest"
+}
