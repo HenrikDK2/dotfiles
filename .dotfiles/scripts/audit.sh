@@ -86,6 +86,7 @@ filter_journalctl() {
 	    "disabled by hub \(EMI\?\), re-enabling"
 	    "type:fuse.portal - invalid whitelist mount"
 	    "Failed to start Timed resync"
+	    "arch kernel: audit: error in audit_log_subj_ctx"
 	    "Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
 	    "nm-openvpn\\[.*\\]: event_wait : Interrupted system call \\(fd=-1,code=4\\)"
 	    "Activation request for 'org.bluez' failed."
