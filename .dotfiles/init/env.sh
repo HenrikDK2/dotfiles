@@ -113,7 +113,11 @@ PACKAGES=(
     "thunderbird"
     "firefox"
     "code"
+
+	# Gaming
 	"steam"
+    "gamescope"
+    "mangohud"
 
 	# Audio
 	"pipewire"
