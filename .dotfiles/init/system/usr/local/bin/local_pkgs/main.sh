@@ -235,7 +235,7 @@ build_and_install_package() {
     fi
 
     log INFO "[$PKGNAME] Installing package..."
-    pacman -U --noconfirm "${pkg_files[@]}"
+    pacman -U --ask 4 "${pkg_files[@]}"
     rm -rf "$build_dir"
     log INFO "[$PKGNAME] Installed successfully"
     echo "==============================="
