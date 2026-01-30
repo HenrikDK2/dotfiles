@@ -40,10 +40,3 @@ private-tmp
 
 seccomp.32 !process_vm_readv
 seccomp !chroot,!mount,!name_to_handle_at,!pivot_root,!process_vm_readv,!ptrace,!umount2
-
-
-
-
-
-
-
