@@ -21,6 +21,7 @@ whitelist ${HOME}/.config/heroic
 whitelist ${HOME}/.config/lsfg-vk
 whitelist ${HOME}/.local/state/Heroic
 whitelist ${HOME}/.local/share/umu
+whitelist ${HOME}/.local/share/vulkan
 
 protocol unix,inet,inet6,netlink
 
@@ -31,7 +32,7 @@ netfilter
 nodvd
 nogroups
 nonewprivs
-noroot
+# noroot - Causes weird issues with filemanager, so keep it disabled
 notv
 
 private-dev
