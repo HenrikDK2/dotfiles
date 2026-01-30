@@ -18,3 +18,6 @@ firecfg
 # Disabled for Steam, since it causes issues with some games.
 # I also had issues connecting to Epic Games in some online titles.
 rm /usr/local/bin/steam
+
+# Delete empty folders created by firecfg
+find ~/ -type d -print0 | sort -rz | xargs -0 rmdir 2>/dev/null
