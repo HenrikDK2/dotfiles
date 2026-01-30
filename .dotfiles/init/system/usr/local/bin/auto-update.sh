@@ -28,6 +28,9 @@ function wait_for_network() {
 # Wait for network before proceeding
 wait_for_network || exit 1
 
+# System packages updates
+pacman -Syu --ask 4 
+
 # Flatpak updates
 if command -v flatpak &>/dev/null; then
     echo "Updating Flatpaks..."
@@ -36,9 +39,3 @@ fi
 
 # Update local_pkgs
 /usr/local/bin/local_pkgs/main.sh
-
-# System packages updates
-echo "Updating system..."
-pacman -Syu --ask 4 
-echo "✅ Update process finished."
-exit 0
