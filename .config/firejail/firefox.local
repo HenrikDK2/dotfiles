@@ -1,0 +1,8 @@
+dbus-user.talk org.freedesktop.portal.*
+dbus-user.talk org.Nemo
+dbus-user.talk org.freedesktop.FileManager1
+dbus-user.talk org.freedesktop.UPower
+dbus-user.talk org.freedesktop.Notifications
+
+# Fixes networking issues during VPN switches
+ignore netfilter

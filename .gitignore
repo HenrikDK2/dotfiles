@@ -30,7 +30,6 @@
 !.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/*/*.png
 !.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/*/*.desktop
 
-
 !Games/
 !Games/.gitkeep
 
@@ -38,6 +37,9 @@
 !.config
 !.config/fastfetch/
 !.config/fastfetch/config.jsonc
+
+!.config/firejail
+!.config/firejail/**
 
 !.config/wireplumber
 !.config/wireplumber/**

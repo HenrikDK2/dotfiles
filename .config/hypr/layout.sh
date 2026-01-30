@@ -47,7 +47,21 @@ dynamic_layout() {
 }
 
 secret_firefox_instance() {
-    pgrep -x firefox >/dev/null || hyprctl dispatch exec "[workspace special silent] firefox --private-window" &
+	if ! pgrep -x firefox >/dev/null; then
+		hyprctl dispatch exec "[workspace special silent] firefox"
+
+		# Hacky fix for firejail
+		while true; do
+		    win=$(hyprctl clients | awk '/firefox/ {print $2}' | head -n1)
+
+		    if [ -n "$win" ]; then
+		        hyprctl dispatch movetoworkspacesilent special, class:$win
+		        break
+		    fi
+
+		    sleep 0.01
+		done
+	fi
 }
 
 toggle_waybar() {
@@ -70,10 +84,8 @@ toggle_scripts() {
 
     if (( fullscreen_window_count >= 1 )); then
         pkill -f random_wallpaper.sh 2>/dev/null
-        pkill -f audit_watcher.sh 2>/dev/null
     else
         pgrep -f random_wallpaper.sh >/dev/null || "$SCRIPT_DIR/random_wallpaper.sh" &
-        pgrep -f audit_watcher.sh >/dev/null || "$SCRIPT_DIR/audit_watcher.sh" &
     fi
 }
 

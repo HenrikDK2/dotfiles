@@ -102,6 +102,11 @@ PACKAGES=(
     "papirus-icon-theme"
     "wl-clipboard"
     "7zip"
+
+	# Sandboxing
+    "firejail"
+    "apparmor"
+    "xdg-dbus-proxy"
     
 	# TLP is only enabled when using a laptop
     "tlp" 
@@ -141,6 +146,8 @@ SYSTEM_SERVICES_TO_ENABLE=(
     "ufw.service"
     "NetworkManager.service"
 	"NetworkManager-wait-online.service"
+
+	"apparmor.service"
 	
     "gameboost.service"
     "system-tuning.service"
@@ -153,7 +160,6 @@ SYSTEM_SERVICES_TO_ENABLE=(
 SYSTEM_SERVICES_TO_MASK=(
     "systemd-userdbd.service"
     "systemd-userdbd.socket"
-
     "systemd-resolved.service"
     "accounts-daemon.service"
     "rtkit-daemon.service"
