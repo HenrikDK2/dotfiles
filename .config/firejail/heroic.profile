@@ -3,6 +3,19 @@ include allow-java.inc # blacklisted by disable-devel.inc
 include allow-python2.inc # blacklisted by disable-interpreters.inc
 include allow-python3.inc # blacklisted by disable-interpreters.inc
 
+# Allow Steam from disable-programs.inc
+noblacklist ${HOME}/.Steam
+noblacklist ${HOME}/.Steampath
+noblacklist ${HOME}/.Steampid
+noblacklist ${HOME}/.cache/steam
+noblacklist ${HOME}/.config/steam
+noblacklist ${HOME}/.local/share/Steam
+noblacklist ${HOME}/.local/share/steam
+noblacklist ${HOME}/.steam
+noblacklist ${HOME}/.steampath
+noblacklist ${HOME}/.steampid
+noblacklist ${RUNUSER}/steam
+
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
@@ -22,6 +35,10 @@ whitelist ${HOME}/.config/lsfg-vk
 whitelist ${HOME}/.local/state/Heroic
 whitelist ${HOME}/.local/share/umu
 whitelist ${HOME}/.local/share/vulkan
+
+# Required for Proton Runtimes + EAC, and versions
+whitelist ${HOME}/.local/share/Steam
+whitelist ${HOME}/.steam
 
 protocol unix,inet,inet6,netlink
 
