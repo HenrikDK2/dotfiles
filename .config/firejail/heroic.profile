@@ -1,4 +1,4 @@
-# allow.inc files should always be first
+# noblacklist / allow.inc files always on top
 include allow-java.inc # blacklisted by disable-devel.inc
 include allow-python2.inc # blacklisted by disable-interpreters.inc
 include allow-python3.inc # blacklisted by disable-interpreters.inc

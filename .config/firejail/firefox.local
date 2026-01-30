@@ -1,3 +1,14 @@
+# noblacklist / allow.inc files always on top
+noblacklist ${RUNUSER}/*firefox*
+noblacklist ${RUNUSER}/psd/*firefox*
+noblacklist ${HOME}/.mozilla
+noblacklist ${HOME}/.cache/mozilla
+
+include disable-common.inc
+include disable-devel.inc
+include disable-interpreters.inc
+include disable-programs.inc
+
 dbus-user.talk org.freedesktop.portal.*
 dbus-user.talk org.Nemo
 dbus-user.talk org.freedesktop.FileManager1
