@@ -48,19 +48,7 @@ dynamic_layout() {
 
 secret_firefox_instance() {
 	if ! pgrep -x firefox >/dev/null; then
-		hyprctl dispatch exec "[workspace special silent] firefox"
-
-		# Hacky fix for firejail
-		while true; do
-		    win=$(hyprctl clients | awk '/firefox/ {print $2}' | head -n1)
-
-		    if [ -n "$win" ]; then
-		        hyprctl dispatch movetoworkspacesilent special, class:$win
-		        break
-		    fi
-
-		    sleep 0.01
-		done
+		hyprctl dispatch exec "[workspace special silent] firejail /usr/bin/firefox"
 	fi
 }
 

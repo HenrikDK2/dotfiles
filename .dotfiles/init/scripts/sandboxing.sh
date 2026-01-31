@@ -8,10 +8,6 @@ if ! grep -q '^log_group = audit' /etc/audit/auditd.conf; then
     echo 'log_group = audit' >> /etc/audit/auditd.conf
 fi
 
-# Fixes issues with firejail
-chown root:root /etc/localtime
-chmod 644 /etc/localtime
-
 # Enforce rules
 firecfg
 
@@ -21,3 +17,7 @@ rm /usr/local/bin/steam
 
 # Delete empty folders created by firecfg
 find ~/ -type d -print0 | sort -rz | xargs -0 rmdir 2>/dev/null
+
+# Fixes issues with firejail
+chown -h root:root /etc/localtime
+chmod 644 /etc/localtime

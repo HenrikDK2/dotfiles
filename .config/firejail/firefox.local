@@ -17,3 +17,6 @@ dbus-user.talk org.freedesktop.Notifications
 
 # Fixes networking issues during VPN switches
 ignore netfilter
+
+# Causes issues with hyprland (Not able to start in secret workspace)
+ignore noroot
