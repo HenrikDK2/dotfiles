@@ -3,6 +3,7 @@ noblacklist ${RUNUSER}/*firefox*
 noblacklist ${RUNUSER}/psd/*firefox*
 noblacklist ${HOME}/.mozilla
 noblacklist ${HOME}/.cache/mozilla
+whitelist ${HOME}/Documents/*.json
 
 include disable-common.inc
 include disable-devel.inc
