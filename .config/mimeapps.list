@@ -39,6 +39,7 @@ x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop
 x-scheme-handler/discord=vesktop.desktop
 x-scheme-handler/heroic=heroic.desktop
 x-scheme-handler/tidal=tidal-hifi.desktop
+application/pdf=firefox.desktop
 
 [Added Associations]
 x-scheme-handler/mailto=userapp-Thunderbird-6VANJ3.desktop;userapp-Thunderbird-YGBLH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
@@ -65,3 +66,4 @@ x-scheme-handler/nntp=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-GX6UO2
 x-scheme-handler/feed=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-CKFVO2.desktop;userapp-Thunderbird-IAOFT2.desktop;
 application/rss+xml=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-CKFVO2.desktop;userapp-Thunderbird-IAOFT2.desktop;
 application/x-extension-rss=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-CKFVO2.desktop;userapp-Thunderbird-IAOFT2.desktop;
+application/pdf=firefox.desktop;
