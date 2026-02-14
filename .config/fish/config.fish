@@ -152,7 +152,7 @@ if status is-interactive
     end
 
     # FastFetch - Runs if there is only one window in the workspace
-    if pgrep -x "hyprland" >/dev/null; and test (tput cols) -ge 90; and test (tput lines) -ge 25
+    if pgrep -x "Hyprland" >/dev/null; and test (tput cols) -ge 90; and test (tput lines) -ge 25
         set current_workspace (hyprctl activeworkspace -j | jq -r '.id')
         set window_count (hyprctl clients -j | jq --arg ws "$current_workspace" 'map(select(.workspace.id == ($ws | tonumber))) | length')
     
