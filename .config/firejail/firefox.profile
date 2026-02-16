@@ -42,6 +42,7 @@ nogroups
 nonewprivs
 noinput
 notv
+protocol unix,inet,inet6,netlink
 seccomp !chroot
 
 dbus-system none
