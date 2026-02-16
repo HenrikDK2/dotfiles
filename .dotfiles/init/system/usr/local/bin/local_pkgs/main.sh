@@ -190,6 +190,18 @@ check_if_update_needed() {
     [[ "$latest_version" != "$installed" ]]
 }
 
+update_pkgbuild_version() {
+    local pkgbuild_file="$1"
+    local new_ver="$2"
+
+    sed -i "s/^pkgver=.*/pkgver=${new_ver}/" "$pkgbuild_file"
+
+    # Reset pkgrel to 1 whenever upstream version changes.
+    sed -i "s/^pkgrel=.*/pkgrel=1/" "$pkgbuild_file"
+
+    log INFO "[$PKGNAME] PKGBUILD updated → pkgver=${new_ver} pkgrel=1"
+}
+
 build_and_install_package() {
     local pkg_dir="$1"
     local pkgbuild_file="$pkg_dir/PKGBUILD"
@@ -212,7 +224,9 @@ build_and_install_package() {
         return
     fi
 
-    log INFO "[$PKGNAME] Update needed: $src_version"
+    log INFO "[$PKGNAME] Update needed: $installed → $src_version (via $helper)"
+    update_pkgbuild_version "$pkgbuild_file" "$src_version"
+
     local build_dir="/tmp/makepkg-${PKGNAME}-$$"
     mkdir -p "$build_dir"
     cp -r "$pkg_dir"/* "$build_dir/"
