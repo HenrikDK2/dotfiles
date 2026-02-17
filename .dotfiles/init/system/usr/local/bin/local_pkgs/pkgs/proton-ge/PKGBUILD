@@ -1,5 +1,5 @@
 pkgname=proton-ge-custom-bin
-pkgver=GE_Proton10_29
+pkgver=GE_Proton10_32
 pkgrel=1
 pkgdesc='A fancy custom distribution of Valves Proton with various patches'
 arch=('x86_64')
@@ -19,9 +19,12 @@ package() {
     install -d "${pkgdir}/${_installdir}"
     cp -r "${srcdir}/${_pkgver}" "${pkgdir}/${_installdir}/GE-Proton-Latest"
     
-    # Modify compatibilitytool.vdf to show GE-Proton-Latest as display name
-    sed -i 's/"display_name".*"'"${_pkgver}"'"/"display_name" "GE-Proton-Latest"/' \
-        "${pkgdir}/${_installdir}/GE-Proton-Latest/compatibilitytool.vdf"
+	# Rewrite BOTH internal name and display name to GE-Proton-Latest
+	sed -i \
+	    -e '0,/"GE-Proton[^"]*"/s//"GE-Proton-Latest"/' \
+	    -e 's/"display_name".*/"display_name" "GE-Proton-Latest"/' \
+	    "${pkgdir}/${_installdir}/GE-Proton-Latest/compatibilitytool.vdf"
+
     
     # Set proper permissions
     chmod -R u+rwX,go+rX,go-w "${pkgdir}/${_installdir}/GE-Proton-Latest"
