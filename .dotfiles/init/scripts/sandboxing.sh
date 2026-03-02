@@ -20,4 +20,5 @@ find ~/ -type d -print0 | sort -rz | xargs -0 rmdir 2>/dev/null
 
 # Fixes issues with firejail
 chown -h root:root /etc/localtime
+chown -R root:root /usr/share/zoneinfo
 chmod 644 /etc/localtime
