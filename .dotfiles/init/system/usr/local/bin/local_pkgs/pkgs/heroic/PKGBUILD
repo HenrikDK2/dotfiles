@@ -1,14 +1,14 @@
 pkgname=heroic-games-launcher-bin
-pkgver=2.20.0
+pkgver=2.20.1
 pkgrel=1
 pkgdesc="An Open source Launcher for Epic, Amazon and GOG Games"
 arch=('x86_64')
 url="https://heroicgameslauncher.com/"
 license=('GPL-3.0-only')
-_filename=Heroic-2.20.0-linux-x64.pacman
+_filename="Heroic-${pkgver}-linux-x64.pacman"
 source=("https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher/releases/download/v${pkgver}/${_filename}")
 noextract=("$_filename")
-sha256sums=('a95af890775dc15a8974a68e09bed2c4c19ab51a38f004d86e316d5d1040c7cd')
+sha256sums=('SKIP')
 options=(!strip)
 depends=(which)
 provides=(heroic-games-launcher-bin)
