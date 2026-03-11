@@ -1,0 +1,8 @@
+noblacklist ${HOME}/Documents
+noblacklist ${HOME}/Downloads
+
+whitelist ${HOME}/Documents/*.json
+whitelist ${HOME}/Downloads
+
+mkdir ${HOME}/Downloads
+mkdir ${HOME}/Documents

@@ -4,6 +4,8 @@ noblacklist ${HOME}/cache/.mozilla
 noblacklist ${HOME}/.local/share/pki
 noblacklist ${HOME}/.mailcap
 noblacklist ${HOME}/.pki
+noblacklist ${HOME}/Documents
+noblacklist ${DOWNLOADS}
 
 # noexec in HOME and RUNUSER breaks DRM binaries.
 ?BROWSER_ALLOW_DRM: ignore noexec ${HOME}
@@ -29,6 +31,9 @@ include whitelist-run-common.inc
 include whitelist-runuser-common.inc
 include whitelist-usr-share-common.inc
 include whitelist-var-common.inc
+
+mkdir ${HOME}/Downloads
+mkdir ${HOME}/Documents
 
 private-tmp
 disable-mnt
