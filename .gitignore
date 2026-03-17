@@ -24,6 +24,7 @@
 !.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/
 !.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/*/
 !.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/*/PKGBUILD
+!.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/*/version.sh
 !.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/*/*.install
 !.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/*/*.SRCINFO
 !.dotfiles/init/system/usr/local/bin/local_pkgs/pkgs/*/LICENSE

@@ -42,14 +42,6 @@ find_pkgbuilds() {
     fi
 }
 
-normalize_version() {
-    local ver="$1"
-    ver="${ver#*:}"
-    ver=$(echo "$ver" | sed 's/-[0-9]$//')
-    ver="${ver//-/_}"
-    echo "$ver"
-}
-
 get_package_info() {
     local pkgbuild_file="$1"
 
@@ -58,136 +50,48 @@ get_package_info() {
         return 1
     }
 
-    [[ -n "$pkgname" ]] || { log ERROR "Could not determine pkgname from $pkgbuild_file"; return 1; }
-    [[ -n "$pkgver" ]]  || { log ERROR "Could not determine pkgver from $pkgbuild_file"; return 1; }
-    [[ -n "$pkgrel" ]]  || { log ERROR "Could not determine pkgrel from $pkgbuild_file"; return 1; }
+    [[ -n "${pkgname:-}" ]] || { log ERROR "Could not determine pkgname from $pkgbuild_file"; return 1; }
+    [[ -n "${pkgver:-}"  ]] || { log ERROR "Could not determine pkgver from $pkgbuild_file"; return 1; }
+    [[ -n "${pkgrel:-}"  ]] || { log ERROR "Could not determine pkgrel from $pkgbuild_file"; return 1; }
 
     PKGNAME="$pkgname"
     PKGVER="$pkgver"
     PKGREL="$pkgrel"
-    EPOCH="${epoch:-0}"
-    FULL_VERSION=$(normalize_version "$PKGVER")
 }
 
 get_installed_version() {
     local pkgname="$1"
-    local installed
-    installed=$(pacman -Q "$pkgname" 2>/dev/null | awk '{print $2}' || echo "")
-    normalize_version "$installed"
+    pacman -Q "$pkgname" 2>/dev/null | awk '{print $2}' | sed 's/-[^-]*$//' || echo ""
 }
 
-github_helper() {
-    local pkgname="$1"
-    local installed="$2"
-    local source_url="$3"
+get_upstream_version() {
+    local pkg_dir="$1"
+    local pkgname="$2"
+    local version_script="$pkg_dir/version.sh"
 
-    [[ -z "$source_url" ]] && return
-    [[ "$source_url" =~ github\.com/([^/]+)/([^/]+) ]] || return
-
-    local owner="${BASH_REMATCH[1]}"
-    local repo="${BASH_REMATCH[2]}"
-    local api_url="https://api.github.com/repos/$owner/$repo/releases/latest"
-    
-    log DEBUG "[$pkgname] Detected owner=$owner repo=$repo"
-    log DEBUG "[$pkgname] GitHub API URL: $api_url"
-
-    local latest_tag
-    latest_tag=$(curl -sf "$api_url" | jq -r '.tag_name' 2>/dev/null) || return
-
-    [[ -z "$latest_tag" || "$latest_tag" == "null" ]] && return
-
-    latest_tag="${latest_tag#v}"
-    latest_tag=$(normalize_version "$latest_tag")
-    log DEBUG "[$pkgname] Normalized latest_tag: $latest_tag"
-
-    echo "$latest_tag|GitHub"
-}
-
-git_helper() {
-    local pkgname="$1"
-    local pkg_dir="$2"
-    local installed="$3"
-    
-    [[ ! -d "$pkg_dir/.git" ]] && return
-
-    local has_updates=0
-    (
-        cd "$pkg_dir" || exit 2
-        git fetch origin -q || exit 2
-        [[ "$(git rev-parse @)" != "$(git rev-parse @{u})" ]] && has_updates=1
-    ) || return
-
-    [[ $has_updates -eq 1 ]] && echo "$installed|Git"
-}
-
-aur_helper() {
-    local pkgname="$1"
-    local installed="$2"
-    local api_url="https://aur.archlinux.org/rpc/?v=5&type=info&arg[]=$pkgname"
-    
-    local aur_version
-    aur_version=$(curl -sf "$api_url" | jq -r '.results[0].Version // empty' 2>/dev/null) || return
-    [[ -z "$aur_version" ]] && return
-    
-    aur_version=$(normalize_version "${aur_version#*:}")
-    echo "$aur_version|AUR"
-}
-
-check_if_update_needed() {
-    local pkgname="$1"
-    local pkg_dir="$2"
-    local source_url="${3:-}"
-    local installed
-    installed=$(get_installed_version "$pkgname")
-    local latest_version=""
-    local helper=""
-    local no_version_helpers=()
-
-    local result
-    result=$(github_helper "$pkgname" "$installed" "$source_url" 2>/dev/null) || true
-    if [[ -n "$result" ]]; then
-        latest_version="${result%%|*}"
-        helper="${result##*|}"
-    else
-        no_version_helpers+=("GitHub")
+    if [[ ! -f "$version_script" ]]; then
+        echo -e "\e[31m[WARN] [$pkgname] No version.sh found — skipping\e[0m" >&2
+        return 1
     fi
 
-    if [[ -z "$latest_version" ]]; then
-        result=$(git_helper "$pkgname" "$pkg_dir" "$installed" 2>/dev/null) || true
-        if [[ -n "$result" ]]; then
-            latest_version="${result%%|*}"
-            helper="${result##*|}"
-        else
-            no_version_helpers+=("Git")
-        fi
+    if [[ ! -x "$version_script" ]]; then
+        echo -e "\e[31m[WARN] [$pkgname] version.sh is not executable — skipping\e[0m" >&2
+        return 1
     fi
 
-    if [[ -z "$latest_version" ]]; then
-        result=$(aur_helper "$pkgname" "$installed" 2>/dev/null) || true
-        if [[ -n "$result" ]]; then
-            latest_version="${result%%|*}"
-            helper="${result##*|}"
-        else
-            no_version_helpers+=("AUR")
-        fi
+    local upstream
+    upstream=$(bash "$version_script" 2>/dev/null) || {
+        log ERROR "[$pkgname] version.sh failed"
+        return 1
+    }
+
+    upstream="${upstream// /}"
+    if [[ -z "$upstream" ]]; then
+        log ERROR "[$pkgname] version.sh produced no output"
+        return 1
     fi
 
-    if [[ ${#no_version_helpers[@]} -gt 0 ]]; then
-        local joined_helpers
-        joined_helpers=$(printf " | %s" "${no_version_helpers[@]}")
-        joined_helpers="${joined_helpers:3}"
-        log DEBUG "[$pkgname] Helpers with no version: $joined_helpers"
-    fi
-
-    if [[ -z "$latest_version" ]]; then
-        latest_version="$installed"
-        helper="None"
-    fi
-
-    log DEBUG "[$pkgname] Installed=$installed Latest=$latest_version Helper=$helper"
-    echo "${latest_version}|${helper}"
-
-    [[ "$latest_version" != "$installed" ]]
+    echo "$upstream"
 }
 
 update_pkgbuild_version() {
@@ -195,8 +99,6 @@ update_pkgbuild_version() {
     local new_ver="$2"
 
     sed -i "s/^pkgver=.*/pkgver=${new_ver}/" "$pkgbuild_file"
-
-    # Reset pkgrel to 1 whenever upstream version changes.
     sed -i "s/^pkgrel=.*/pkgrel=1/" "$pkgbuild_file"
 
     log INFO "[$PKGNAME] PKGBUILD updated → pkgver=${new_ver} pkgrel=1"
@@ -205,27 +107,31 @@ update_pkgbuild_version() {
 build_and_install_package() {
     local pkg_dir="$1"
     local pkgbuild_file="$pkg_dir/PKGBUILD"
+
     get_package_info "$pkgbuild_file" || return
-    local source_url="${source[0]:-}"
 
     echo
     echo "========== [$PKGNAME] =========="
-    
-    local check
-    check=$(check_if_update_needed "$PKGNAME" "$pkg_dir" "$source_url") || true
-    local src_version="${check%%|*}"
-    local helper="${check##*|}"
-    local installed
-    installed=$(get_installed_version "$PKGNAME")
 
-    if [[ "$src_version" == "$installed" ]]; then
-        log INFO "[$PKGNAME] ✅ Up-to-date: $src_version (verified by $helper)"
+    local upstream
+    if ! upstream=$(get_upstream_version "$pkg_dir" "$PKGNAME"); then
         echo "==============================="
         return
     fi
 
-    log INFO "[$PKGNAME] Update needed: $installed → $src_version (via $helper)"
-    update_pkgbuild_version "$pkgbuild_file" "$src_version"
+    local installed
+    installed=$(get_installed_version "$PKGNAME")
+
+    log DEBUG "[$PKGNAME] installed=$installed upstream=$upstream"
+
+    if [[ "$upstream" == "$installed" ]]; then
+        log INFO "[$PKGNAME] ✅ Up-to-date: $upstream"
+        echo "==============================="
+        return
+    fi
+
+    log INFO "[$PKGNAME] Update needed: $installed → $upstream"
+    update_pkgbuild_version "$pkgbuild_file" "$upstream"
 
     local build_dir="/tmp/makepkg-${PKGNAME}-$$"
     mkdir -p "$build_dir"
@@ -242,13 +148,13 @@ build_and_install_package() {
     cd "$build_dir"
     mapfile -t pkg_files < <(find . -maxdepth 1 -type f -name "*.pkg.tar.*" ! -name "*-debug-*")
     if [[ ${#pkg_files[@]} -eq 0 ]]; then
-        log ERROR "[$PKGNAME] No package files found"
+        log ERROR "[$PKGNAME] No package files found after build"
         rm -rf "$build_dir"
         echo "==============================="
         return 1
     fi
 
-    log INFO "[$PKGNAME] Installing package..."
+    log INFO "[$PKGNAME] Installing..."
     pacman -U --ask 4 "${pkg_files[@]}"
     rm -rf "$build_dir"
     log INFO "[$PKGNAME] Installed successfully"
@@ -262,6 +168,7 @@ main() {
 
     for pkg_dir in "${PKGBUILD_DIRS[@]}"; do
         build_and_install_package "$pkg_dir"
+        sleep 1
     done
 }
 
