@@ -16,9 +16,12 @@ include disable-devel.inc
 include disable-interpreters.inc
 include disable-programs.inc
 
+mkdir ${HOME}/Downloads
+mkdir ${HOME}/Documents
+
 whitelist ${DOWNLOADS}
 whitelist ${HOME}/.mozilla
-whitelist ${HOME}/Documents/*.json
+whitelist ${HOME}/Documents
 whitelist ${HOME}/.local/share/pki
 whitelist ${HOME}/.mailcap
 whitelist ${HOME}/.pki
@@ -31,9 +34,6 @@ include whitelist-run-common.inc
 include whitelist-runuser-common.inc
 include whitelist-usr-share-common.inc
 include whitelist-var-common.inc
-
-mkdir ${HOME}/Downloads
-mkdir ${HOME}/Documents
 
 private-tmp
 disable-mnt
