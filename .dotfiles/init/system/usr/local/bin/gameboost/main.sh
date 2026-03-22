@@ -17,6 +17,7 @@ readonly EXCLUDED_PATTERNS=(
     "wineserver"
     "pressure-vessel/bin/pressure-vessel-wrap"
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
+    "(link2ea://launchgame|/Electronic Arts/EA Desktop)" # EA Games Launcher
     "C:/windows/.*"
     "Vortex/Vortex.exe"
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
