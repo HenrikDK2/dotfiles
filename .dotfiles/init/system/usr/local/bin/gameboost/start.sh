@@ -8,13 +8,6 @@ function is_laptop() {
     fi
 }
 
-function adjust_process_priorities() {
-    for pid in "$@"; do
-        renice -n -11 -p "$pid" >/dev/null 2>&1
-        ionice -c 1 -n 0 -p "$pid" >/dev/null 2>&1
-    done
-}
-
 function stop_services() {
     local system_services=(
         auditd.service
@@ -134,8 +127,6 @@ function tlp_performance() {
 }
 
 function main() {
-    adjust_process_priorities "$@"
-    
 	if is_laptop; then
 		tlp_performance
 	else
