@@ -63,7 +63,7 @@ notify_user() {
     local uid=$(id -u "$user")
     local dbus="unix:path=/run/user/$uid/bus"
     
-    sudo -u "$user" DBUS_SESSION_BUS_ADDRESS="$dbus" DISPLAY=:0 notify-send "GameBoost" "$1"
+    sudo -u "$user" DBUS_SESSION_BUS_ADDRESS="$dbus" DISPLAY=:0 notify-send --app-name=GameBoost "GameBoost" "$1"
     log_message "Notification sent: $1"
 }
 
