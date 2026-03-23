@@ -19,7 +19,7 @@ margin=20
 default-timeout=5000
 
 [urgency=normal]
-default-timeout=15000
+default-timeout=10000
 
 [urgency=high]
 default-timeout=40000
