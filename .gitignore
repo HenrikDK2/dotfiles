@@ -129,6 +129,7 @@
 # Fonts
 !.local/share/fonts
 !.local/share/fonts/**
+.local/share/fonts/**/.uuid
 
 # User services
 !.local/share/dbus-1
