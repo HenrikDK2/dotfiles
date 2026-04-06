@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbel>
+<xbel xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks" xmlns:kdepriv="http://www.kde.org/kdepriv" xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info">
+ <bookmark href="file:///home/henrik">
+  <title>Hjemmemappe</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="user-home"/>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="file:///home/henrik/.var/app">
+  <title>app</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="inode-directory"/>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="file:///home/henrik">
+  <title>Hjemmemappe</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="user-home"/>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="file:///home/henrik/.config">
+  <title>.config</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="inode-directory"/>
+   </metadata>
+  </info>
+ </bookmark>
+ <bookmark href="file:///home/henrik/.var/app/org.mozilla.Thunderbird/.thunderbird/oy0znqo4.default-esr">
+  <title>oy0znqo4.default-esr</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="inode-directory"/>
+   </metadata>
+  </info>
+ </bookmark>
+</xbel>

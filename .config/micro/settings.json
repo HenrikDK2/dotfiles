@@ -1,0 +1,5 @@
+{
+    "colorscheme": "nordic",
+    "plugin.exec-run": "on",
+    "mkparents": true
+}

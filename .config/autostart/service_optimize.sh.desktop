@@ -1,0 +1,6 @@
+[Desktop Entry]
+Exec=/home/henrik/.config/dotfiles/kde/service_optimize.sh
+Icon=application-x-shellscript
+Name=service_optimize.sh
+Type=Application
+X-KDE-AutostartScript=true

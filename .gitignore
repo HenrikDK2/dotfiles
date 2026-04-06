@@ -1,0 +1,199 @@
+# General
+*
+!README.md
+!.hidden
+!.gitignore
+
+# Icons & themes
+!.icons
+!.icons/**
+!.themes
+!.themes/**
+
+# Wallpapers
+!Wallpapers
+!Wallpapers/**
+
+# Games
+!Games/
+!Games/.gitkeep
+!Games/steamapps
+
+# Config directory
+!.config
+
+# Local share
+!.local/
+!.local/share
+
+# Dotfiles
+!.config/dotfiles
+!.config/dotfiles/**
+
+# Fastfetch
+!.config/fastfetch/
+!.config/fastfetch/config.jsonc
+
+# Firejail
+!.config/firejail
+!.config/firejail/**
+
+# Wireplumber
+!.config/wireplumber
+!.config/wireplumber/**
+
+# MangoHud
+!.config/MangoHud/
+!.config/MangoHud/MangoHud.conf
+
+# Fish shell
+!.config/fish/
+!.config/fish/config.fish
+
+# Systemd user units
+!.config/systemd/
+!.config/systemd/user/
+!.config/systemd/user/*.d/
+!.config/systemd/user/*.d/*
+!.config/systemd/user.conf
+
+# GTK configs
+!.config/gtk-*
+!.config/gtk-*/**
+.config/gtk-*/bookmarks
+
+# Media
+!.config/mpv/
+!.config/mpv/mpv.conf
+
+# Hyprland
+!.config/hypr/
+!.config/hypr/hyprland.conf
+!.config/hypr/hyprlock.conf
+!.config/hypr/hypridle.conf
+!.config/hypr/layout.sh
+!.config/hypr/split_floating.sh
+
+# Swappy
+!.config/swappy
+!.config/swappy/**
+
+# Micro editor
+!.config/micro
+!.config/micro/**
+.config/micro/buffers
+.config/micro/backups
+
+# Zed editor
+!.config/zed
+!.config/zed/keymap.json
+!.config/zed/settings.json
+!.config/zed/snippets
+!.config/zed/snippets/*
+
+# VS Code / Code - OSS
+!.config/Code
+!.config/Code/User
+!.config/Code/User/settings.json
+!.config/Code/User/snippets
+!.config/Code/User/snippets/**
+!.config/Code - OSS
+!.config/Code - OSS/User
+!.config/Code - OSS/User/settings.json
+!.config/Code - OSS/User/snippets
+!.config/Code - OSS/User/snippets/**
+
+# System monitoring
+!.config/btop
+!.config/btop/btop.conf
+
+# Rofi
+!.config/rofi
+!.config/rofi/**
+
+# Waybar
+!.config/waybar
+!.config/waybar/**
+
+# Notifications
+!.config/mako
+!.config/mako/**
+
+# Terminal emulator
+!.config/alacritty/
+!.config/alacritty/alacritty.toml
+
+# Mime apps
+!.config/mimeapps.list
+
+# Fonts
+!.local/share/fonts
+!.local/share/fonts/**
+
+# User services
+!.local/share/dbus-1
+!.local/share/dbus-1/**
+
+# ---------------------------
+# KDE Plasma configs (safe for version control)
+# ---------------------------
+
+# Plasma workspace and panels (layout, widgets, general settings)
+!.config/plasma-org.kde.plasma.desktop-appletsrc
+!.config/plasmashellrc
+!.config/kwinrc
+!.config/kdeglobals
+!.config/katerc
+!.config/kglobalshortcutsrc
+!.config/konsolerc
+!.config/krunnerrc
+!.config/ksmserverrc
+!.config/kwinrulesrc
+
+# KDE Autostart
+!.config/autostart
+!.config/autostart/com.discordapp.Discord.desktop
+!.config/autostart/install.sh.desktop
+!.config/autostart/org.mozilla.Thunderbird.desktop
+!.config/autostart/service_optimize.sh.desktop
+!.config/autostart/steam.desktop
+!.config/autostart/virtual_desktop.sh.desktop
+!.config/autostart/autoconnect_network.sh.desktop
+
+# kwin scripts
+!.local/share/kwin
+!.local/share/kwin/**
+
+# GTK settings (for GTK apps in KDE)
+!.config/gtk-3.0/
+!.config/gtk-3.0/**
+!.config/gtk-4.0/
+!.config/gtk-4.0/**
+
+# X settings daemon
+!.config/xsettingsd/
+!.config/xsettingsd/xsettingsd.conf
+
+# KDE color schemes and themes
+!.config/kdedefaults/
+!.config/kdedefaults/**
+!.config/kdecolors/
+!.config/kdecolors/**
+!.config/color-schemes/
+!.config/color-schemes/**
+
+# KDE window rules & shortcuts
+!.config/khotkeysrc
+
+# KDE notifications (UI preferences)
+!.config/plasmanotifyrc
+!.config/knotifications5rc
+
+# Dolphin file manager
+!.config/dolphinrc
+!.local/share/dolphin/
+!.local/share/dolphin/bookmarks.xml
+
+# Konsole terminal emulator
+!.local/share/konsole/
+!.local/share/konsole/Profile 1.profile

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Exec=/home/henrik/.config/dotfiles/kde/autoconnect_network.sh
+Icon=application-x-shellscript
+Name=autoconnect_network.sh
+Type=Application
+X-KDE-AutostartScript=true

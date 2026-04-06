@@ -1,0 +1,11 @@
+[Applications][com.mastermindzh.tidal-hifi]
+Seen=true
+
+[Applications][org.mozilla.firefox]
+Seen=true
+
+[Applications][org.qbittorrent.qBittorrent]
+Seen=true
+
+[Notifications]
+ShowPopupTimeout=false

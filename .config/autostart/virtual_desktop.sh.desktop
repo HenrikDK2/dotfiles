@@ -1,0 +1,6 @@
+[Desktop Entry]
+Exec=/home/henrik/.config/dotfiles/kde/virtual_desktop.sh
+Icon=application-x-shellscript
+Name=virtual_desktop.sh
+Type=Application
+X-KDE-AutostartScript=true

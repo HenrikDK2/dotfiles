@@ -1,0 +1,53 @@
+[677ed615-336e-44bf-adc4-da6d75d49e1a]
+Description=Vinduesindstillinger for discord
+clientmachine=localhost
+desktops=77220749-52ad-434b-a161-a2314548fa7e
+desktopsrule=3
+title=Friends - Discord
+types=1
+windowrole=browser-window
+windowrolematch=1
+wmclass=discord
+wmclassmatch=1
+
+[93fbd0d0-8437-4eb3-a79a-ad27a51f336d]
+Description=Vinduesindstillinger for org.mozilla.Thunderbird
+desktops=77220749-52ad-434b-a161-a2314548fa7e
+desktopsrule=3
+types=1
+wmclass=\sorg.mozilla.Thunderbird
+wmclasscomplete=true
+wmclassmatch=1
+
+[General]
+count=4
+rules=677ed615-336e-44bf-adc4-da6d75d49e1a,93fbd0d0-8437-4eb3-a79a-ad27a51f336d,e8f4a863-b0f4-469b-8f36-d258de1a2b4e,afdd38dc-845a-4d1e-ac00-7fb565ba939d
+
+[afdd38dc-845a-4d1e-ac00-7fb565ba939d]
+Description=Global
+blockcompositing=true
+blockcompositingrule=2
+tearingrule=2
+
+[e872e995-8cf5-4cc4-a23d-840eaa5dde17]
+Description=Vinduesindstillinger for discord
+clientmachine=localhost
+desktops=f5786b0a-1903-4031-b1ae-99309b861fc2
+desktopsrule=3
+position=3842,4
+positionrule=3
+size=1274,1432
+sizerule=3
+title=Friends - Discord
+types=1
+windowrole=browser-window
+windowrolematch=1
+wmclass=discord
+wmclassmatch=1
+
+[e8f4a863-b0f4-469b-8f36-d258de1a2b4e]
+Description=Steam
+desktops=77220749-52ad-434b-a161-a2314548fa7e
+desktopsrule=3
+wmclass=steam
+wmclassmatch=1

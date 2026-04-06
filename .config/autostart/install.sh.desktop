@@ -1,0 +1,6 @@
+[Desktop Entry]
+Exec=/home/henrik/.config/dotfiles/install.sh
+Icon=application-x-shellscript
+Name=install.sh
+Type=Application
+X-KDE-AutostartScript=true

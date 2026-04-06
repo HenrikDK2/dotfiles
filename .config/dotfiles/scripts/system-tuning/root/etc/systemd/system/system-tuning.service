@@ -1,0 +1,11 @@
+[Unit]
+Description=Apply system tuning
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/var/local/system-tuning.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
