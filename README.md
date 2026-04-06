@@ -37,7 +37,7 @@ This repository contains my complete system configuration, including dotfiles an
 
 2. Clone this repository to a temporary location:
    ```bash
-   git clone https://github.com/HenrikDK2/dotfiles /tmp/dotfiles
+   git clone -b arch-hyprland https://github.com/HenrikDK2/dotfiles /tmp/dotfiles
    ```
 
 3. Configure your preferences:
