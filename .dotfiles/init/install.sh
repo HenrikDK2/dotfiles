@@ -61,7 +61,7 @@ if ! [ -d "$HOME/.dotfiles" ]; then
 
 	# Initialize repo in home directory
 	rm -rf "$HOME/.git"
-    (cd $HOME && git init && git remote add origin $GITHUB_REPO && git fetch && git reset origin/master --hard)
+    (cd $HOME && git init && git remote add origin $GITHUB_REPO && git fetch && git reset origin/arch-hyprland --hard)
     sudo chown -R $USERNAME:$USERNAME $HOME && chmod 700 $HOME
     (cd $HOME && git remote set-url origin $GITHUB_REPO_SSH)
 
