@@ -29,7 +29,7 @@ wait_for_internet() {
 main() {
     wait_for_internet
 
-    section "Setting Default Shell"
+    section "Setting default shell"
     sudo usermod -s /usr/bin/fish "$USER"
 
     section "Packages"
@@ -41,7 +41,7 @@ main() {
     section "Custom system tuning service"
     "$SCRIPT_DIR/scripts/system-tuning/install.sh"
 
-    section "Drive Optimizations"
+    section "Drive optimizations"
     "$SCRIPT_DIR/scripts/drive_optimizations.sh"
 
     section "Mozilla"
@@ -50,7 +50,10 @@ main() {
     section "qBittorrent"
     "$SCRIPT_DIR/scripts/qbittorrent.sh"
 
-    section "Fix Paths"
+    section "Kernel parameters"
+    "$SCRIPT_DIR/scripts/kernel_parameters.sh"
+
+    section "Fix paths"
     "$SCRIPT_DIR/scripts/fix_paths.sh"
 
     section "Finalizing"
