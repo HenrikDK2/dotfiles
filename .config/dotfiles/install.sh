@@ -50,6 +50,9 @@ main() {
     section "qBittorrent"
     "$SCRIPT_DIR/scripts/qbittorrent.sh"
 
+    section "Zerotier"
+    "$SCRIPT_DIR/scripts/zerotier.sh"
+    
     section "Kernel parameters"
     "$SCRIPT_DIR/scripts/kernel_parameters.sh"
 
