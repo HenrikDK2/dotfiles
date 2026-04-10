@@ -47,6 +47,9 @@ main() {
     section "Mozilla"
     "$SCRIPT_DIR/scripts/mozilla.sh"
 
+	section "Heroic"
+    "$SCRIPT_DIR/scripts/heroic.sh"
+
     section "qBittorrent"
     "$SCRIPT_DIR/scripts/qbittorrent.sh"
 
