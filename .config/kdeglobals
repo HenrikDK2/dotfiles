@@ -116,6 +116,7 @@ smallestReadableFont=Inter 24pt Medium,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 toolBarFont=Inter 24pt Medium,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 
 [KDE]
+ShowDeleteCommand=false
 contrast=4
 frameContrast=0.2
 
@@ -135,6 +136,10 @@ Sort hidden files last=false
 Sort reversed=false
 Speedbar Width=176
 View Style=DetailTree
+
+[PreviewSettings]
+EnableRemoteFolderThumbnail=false
+MaximumRemoteSize=0
 
 [WM]
 activeBackground=36,39,47

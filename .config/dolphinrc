@@ -11,3 +11,6 @@ MenuBar=Disabled
 
 [PlacesPanel]
 IconSize=32
+
+[PreviewSettings]
+Plugins=audiothumbnail,blenderthumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,heif,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mobithumbnail,opendocumentthumbnail,gsthumbnail,rom-properties,rawthumbnail,RomThumbnailCreator-kf6,svgthumbnail,ffmpegthumbs,exe-thumbnailer
