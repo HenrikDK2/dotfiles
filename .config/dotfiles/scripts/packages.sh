@@ -18,6 +18,7 @@ error()   { echo -e "${RED}${BOLD}[ERR ]${RESET}  $*"; }
 FLATPAK_PACKAGES=(
     "com.discordapp.Discord"
     "com.mastermindzh.tidal-hifi"
+    "com.heroicgameslauncher.hgl"
     "io.github.ilya_zlobintsev.LACT"
     "org.mozilla.Thunderbird"
     "org.mozilla.firefox"
