@@ -3,6 +3,7 @@ echo "Disabling and masking selected services..."
 
 SYSTEM_SERVICES=(
     systemd-oomd.service
+    NetworkManager-wait-online.service
 )
 
 USER_SERVICES=(
