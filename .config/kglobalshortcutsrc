@@ -269,6 +269,9 @@ switch to next activity=,,Switch to Next Activity
 switch to previous activity=,,Switch to Previous Activity
 toggle do not disturb=,,Toggle do not disturb
 
+[services][net.local.konsole.desktop]
+_launch=Ctrl+Alt+Del
+
 [services][org.kde.dolphin.desktop]
 _launch=Meta+N
 
@@ -279,8 +282,4 @@ _launch=Meta+Return
 _launch=Search\tMeta+Space\tAlt+Space\tAlt+F2
 
 [services][org.kde.plasma-systemmonitor.desktop]
-_launch=Meta+Esc\tCtrl+Alt+Del
-
-[services][org.kde.spectacle.desktop]
-CurrentMonitorScreenShot=
-OpenWithoutScreenshot=
+_launch=none
