@@ -166,6 +166,7 @@ SYSTEM_SERVICES_TO_MASK=(
     "systemd-userdbd.service"
     "systemd-userdbd.socket"
     "systemd-resolved.service"
+	"NetworkManager-wait-online.service"
     "accounts-daemon.service"
     "rtkit-daemon.service"
     "ldconfig.service"
