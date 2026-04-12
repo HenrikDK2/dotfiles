@@ -57,16 +57,36 @@ fi
 
 if ! [ -d "$HOME/.dotfiles" ]; then
 	section "Initializing dotfiles"
-    git config --global init.defaultBranch main
-    git config --global --add safe.directory $HOME
 
-    rm -rf "$HOME/.git"
-    (cd $HOME && git init && git remote add origin $GITHUB_REPO && git fetch && git reset origin/arch-hyprland --hard)
-    sudo chown -R $USERNAME:$USERNAME $HOME && chmod 700 $HOME
-    (cd $HOME && git remote set-url origin $GITHUB_REPO_SSH)
+	# Configure git
+	git config --global init.defaultBranch main
+	git config --global --add safe.directory "$HOME"
 
-    cp -f "$SCRIPT_DIR/env.sh" "$HOME/.dotfiles/init/env.sh"
-    chown -R $USER:$USER $HOME
+	# Initialize repo and fetch dotfiles
+	rm -rf "$HOME/.git"
+	(
+	    cd "$HOME"
+	    git init
+	    git remote add origin "$GITHUB_REPO"
+	    git fetch
+	    git reset --hard origin/arch-hyprland
+	    git checkout arch-hyprland
+	)
+
+	# Fix ownership and permissions
+	sudo chown -R "$USERNAME:$USERNAME" "$HOME"
+	chmod 700 "$HOME"
+
+	# Switch remote to SSH
+	(
+	    cd "$HOME"
+	    git remote remove origin
+	    git remote add origin "$GITHUB_REPO_SSH"
+	)
+
+	# Copy environment config and restore ownership
+	cp -f "$SCRIPT_DIR/env.sh" "$HOME/.dotfiles/init/env.sh"
+	chown -R "$USER:$USER" "$HOME"
 fi
 
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
