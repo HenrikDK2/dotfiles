@@ -16,10 +16,10 @@ user_pref("toolkit.telemetry.pioneer-new-studies-available", false);
 user_pref("toolkit.telemetry.hybridContent.enabled", false);
 user_pref("identity.fxaccounts.telemetry.clientAssociationPing.enabled", false);
 user_pref("nimbus.telemetry.targetingContextEnabled", false);
-user_pref("telemetry.fog.init_on_shutdown", false);
-
 user_pref("toolkit.cosmeticAnimations.enabled", false);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+
+user_pref("telemetry.fog.init_on_shutdown", false);
 
 // Disable disgusting AI dogshit from my browser
 user_pref("browser.ml.enable", false);
@@ -55,7 +55,10 @@ user_pref("browser.newtabpage.activity-stream.telemetry.ut.events", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 user_pref("browser.newtabpage.activity-stream.feeds.snippets", false);
+user_pref("browser.newtabpage.activity-stream.telemetry.privatePing.enabled", false);
+user_pref("browser.newtabpage.activity-stream.telemetry.privatePing.redactNewtabPing.enabled", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.providers.snippets", "");
+user_pref("browser.search.serpEventTelemetryCategorization.enabled", false);
 user_pref("browser.panorama.animate_zoom", false);
 user_pref("browser.ping-centre.telemetry", false);
 user_pref("browser.ping-centre.storage.enabled", false);

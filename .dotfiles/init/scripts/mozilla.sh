@@ -1,7 +1,8 @@
 #!/bin/bash
 
-PROFILE="50xh7im2.default"
-PROFILE2="kqrb4oc9.default-release"
+PROFILE="noum2xsj.default"
+PROFILE2="5twvy6h9.default-release"
+START_LAYOUT=false
 
 merge_prefs() {
     local src="$1" dst="$2"
@@ -20,9 +21,21 @@ merge_prefs() {
     echo "  ✔ Merged prefs: $dst"
 }
 
+# If running in user env, prevent layout from starting firefox
+if pgrep -x layout.sh; then
+	START_LAYOUT=true
+	killall layout.sh 2>/dev/null
+fi
+
 # Kill both thunderbird and firefox
 procs="firefox firefox-bin thunderbird thunderbird-bin"
 killall $procs 2>/dev/null
+
+for p in $procs; do
+	while pgrep -x "$p" > /dev/null 2>&1; do
+		sleep 0.5
+	done
+done
 
 # Firefox
 DOTFILES_FIREFOX="$SCRIPT_DIR/user/mozilla/firefox"
@@ -72,3 +85,7 @@ for THUNDERBIRD_PATH in "${THUNDERBIRD_PATHS[@]}"; do
         done < <(find "$THUNDERBIRD_PATH" -mindepth 2 -maxdepth 2 -name "prefs.js" -print0)
     fi
 done
+
+if [ "$START_LAYOUT" = true ]; then
+	setsid ~/.config/hypr/layout.sh &>/dev/null &
+fi
