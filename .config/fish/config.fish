@@ -74,6 +74,18 @@ function push_commit
     git status
 end
 
+function zerotier-cli
+    set service zerotier-one
+
+    sudo -v
+
+    if not systemctl is-active --quiet $service
+        sudo systemctl start $service
+    end
+
+    sudo zerotier-cli $argv
+end
+
 function cd
     builtin cd $argv
 
