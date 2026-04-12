@@ -83,6 +83,7 @@ PACKAGES=(
     "polkit-gnome"
     "rofi"
     "rofi-calc"
+    "smartmontools"
     "socat"
     "scrot"
     "seahorse"
@@ -142,6 +143,8 @@ PACKAGES=(
 SYSTEM_SERVICES_TO_ENABLE=(
     "avahi-daemon.service"
     "cups.service"
+
+	"smartd.service"
     
     "ufw.service"
     "NetworkManager.service"

@@ -28,59 +28,67 @@ function set_amd_gpu_auto() {
 
 function start_services() {
     local system_services=(
-        auditd.service
+        auditd
+        smartd
         
-        clamav-daemon.socket
         clamav-daemon
         clamav-freshclam
         
-        libvirtd-admin.socket
-        libvirtd-ro.socket
-        libvirtd.socket
+        libvirtd-admin
+        libvirtd-ro
         libvirtd
 
-        tlp
         cups
         avahi-daemon
-        
-        udisks2
+
+        tlp
         upower
+
+        systemd-journald
         systemd-timesyncd
+
+        udisks2
         docker
         containerd
     )
     
+    # User-related services to start
     local user_services=(
         gvfs-daemon
         gvfs-metadata
         hypridle
     )
     
+    # Get active user session IDs
     local user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
+
+    # Unmask services that need to be enabled
     systemctl unmask upower.service auditd.service 2>/dev/null
     
+    # Loop to check and start services until all are active
     for ((i=0; i<2; i++)); do
-        local any_inactive=false
-        
-        # Start system services
-        for svc in "${system_services[@]}"; do
-            if ! systemctl is-active --quiet "$svc"; then
-                any_inactive=true
-                systemctl start "$svc" 2>/dev/null || true
-            fi
-        done
-        
-        # Start user services for all active sessions
+
+        # 1. Start .socket, .target, .mount, and .service units for system services
+		for svc in "${system_services[@]}"; do
+		    for unit_type in socket target mount service; do
+		        for unit in $(systemctl list-units --type=$unit_type --all --quiet | grep -oP "\b$svc\.\S+" || true); do
+		            if ! systemctl is-active --quiet "$unit" 2>/dev/null; then
+		                systemctl start "$unit" 2>/dev/null || true
+		            fi
+		        done
+		    done
+		done
+
+		# Start user services
         for uid in "${user_ids[@]}"; do
             for svc in "${user_services[@]}"; do
-                if ! systemctl --user --machine=${uid}@.host is-active --quiet "$svc" 2>/dev/null; then
+                if ! systemctl --user --machine=${uid}@.host is-active --quiet "$svc".service 2>/dev/null; then
                     any_inactive=true
-                    systemctl --user --machine=${uid}@.host start "$svc" 2>/dev/null || true
+                    systemctl --user --machine=${uid}@.host start "$svc".service 2>/dev/null || true
                 fi
             done
         done
         
-        [ "$any_inactive" = false ] && break
         sleep 1
     done
 }

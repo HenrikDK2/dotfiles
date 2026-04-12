@@ -10,60 +10,66 @@ function is_laptop() {
 
 function stop_services() {
     local system_services=(
-        auditd.service
-        
-        clamav-daemon.socket
+        auditd
+        smartd
+
         clamav-daemon
         clamav-freshclam
 
-        libvirtd-admin.socket
-        libvirtd-ro.socket
-        libvirtd.socket
+        docker
+        containerd
+        libvirtd-admin
+        libvirtd-ro
         libvirtd
 
         cups
         avahi-daemon
 
         tlp
-        udisks2
         upower
+        
         systemd-timesyncd
-        docker
-        containerd
+        systemd-journald
+
+        udisks2
     )
-    
+
     local user_services=(
         gvfs-daemon
         gvfs-metadata
         hypridle
     )
-    
+
+    # Get active user session IDs
     local user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
 
+    # Mask services that need to be permanently disabled
     systemctl mask upower.service auditd.service 2>/dev/null
     
-    for ((i=0; i<3; i++)); do
-        local any_active=false
+    # Loop to check and stop services until no active units are found
+    while true; do
         
-        # Stop system services
+        # 1. Stop .socket, .target, .mount, .service units for system services
         for svc in "${system_services[@]}"; do
-            if systemctl is-active --quiet "$svc"; then
-                any_active=true
-                systemctl stop "$svc" 2>/dev/null || true
-            fi
+            for unit_type in socket target mount service; do
+                for unit in $(systemctl list-units --type=$unit_type --all --quiet | grep -oP "\b$svc\.\S+" || true); do
+                    if systemctl is-active --quiet "$unit"; then
+                        systemctl stop "$unit" 2>/dev/null || true
+                    fi
+                done
+            done
         done
-        
+
         # Stop user services for all active sessions
         for uid in "${user_ids[@]}"; do
             for svc in "${user_services[@]}"; do
-                if systemctl --user --machine=${uid}@.host is-active --quiet "$svc"; then
+                if systemctl --user --machine=${uid}@.host is-active --quiet "$svc".service; then
                     any_active=true
-                    systemctl --user --machine=${uid}@.host stop "$svc"
+                    systemctl --user --machine=${uid}@.host stop "$svc".service
                 fi
             done
         done
         
-        [ "$any_active" = false ] && break
         sleep 1
     done
 }
