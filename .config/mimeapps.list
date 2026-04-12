@@ -42,6 +42,8 @@ x-scheme-handler/tidal=tidal-hifi.desktop
 application/pdf=firefox.desktop
 application/x-openvpn-profile=nm-import-ovpn.desktop
 application/vnd.microsoft.portable-executable=protontricks-launch.desktop
+x-scheme-handler/nxm=vortex-steamtinkerlaunch-dl.desktop
+x-scheme-handler/nxm-protocol=vortex-steamtinkerlaunch-dl.desktop
 
 [Added Associations]
 x-scheme-handler/mailto=userapp-Thunderbird-6VANJ3.desktop;userapp-Thunderbird-YGBLH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
