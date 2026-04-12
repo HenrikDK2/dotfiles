@@ -7,6 +7,8 @@ chown root:root /usr/local/bin/auto-update.sh
 chmod 600 /etc/systemd/system/auto-update.service
 chmod 600 /etc/systemd/system/auto-update.timer
 chown root:root /etc/systemd/system/auto-update.{service,timer}
+echo "Fixing permission"
 
 # Enable timers
 systemctl enable auto-update.timer
+echo "Starting service timer"

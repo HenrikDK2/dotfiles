@@ -57,6 +57,10 @@ nvidia_drivers () {
 amd_drivers () {
     gpu_packages=("mesa" "lib32-mesa" "vulkan-radeon" "lib32-vulkan-radeon" "vulkan-icd-loader" "lib32-vulkan-icd-loader" "libva-utils" "lact")
     sed -i "s/MODULES=()/MODULES=(amdgpu)/" /etc/mkinitcpio.conf
+
+	if pacman -Qi nvidia-utils &>/dev/null; then
+	    pacman -Rns nvidia-utils lib32-nvidia-utils --noconfirm
+	fi
 }
 
 intel_drivers () {
