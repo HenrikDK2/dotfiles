@@ -98,6 +98,9 @@ fi
 
 section "Setting timezone"
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+chown -h root:root /etc/localtime
+chown -R root:root /usr/share/zoneinfo
+chmod 644 /etc/localtime
 hwclock --systohc
 echo "New timezone: $TIMEZONE"
 

@@ -17,8 +17,3 @@ rm /usr/local/bin/steam
 
 # Delete empty folders created by firecfg
 find ~/ -type d -print0 | sort -rz | xargs -0 rmdir 2>/dev/null
-
-# Fixes issues with firejail
-sudo chown -h root:root /etc/localtime
-sudo chown -R root:root /usr/share/zoneinfo
-sudo chmod 644 /etc/localtime
