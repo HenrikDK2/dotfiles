@@ -99,7 +99,8 @@ filter_journalctl() {
 	    "AEAD Decrypt error: bad packet ID \\(may be a replay\\)"
 	    "gkr-pam: couldn't unlock the login keyring."
 	    "terminated abnormally without generating a coredump" # Coredump is disabled, so this is generated when programs are killed
-		"write UDPv4 .* Network is unreachable"    
+		"write UDPv4 .* Network is unreachable"
+		"Failed to check if symlink source path '/run/host/io.systemd.*' exists: Link has been severed"
 	)
     local pattern=$(IFS='|'; echo "${patterns[*]}")
     journalctl -b -p 3 --no-pager | grep -Ev "$pattern" | tail -n 20
