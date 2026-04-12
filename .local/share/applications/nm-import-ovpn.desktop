@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Import OpenVPN Profile
+Exec=nm-connection-editor --import %f
+Type=Application
+MimeType=application/x-openvpn-profile;
+NoDisplay=true

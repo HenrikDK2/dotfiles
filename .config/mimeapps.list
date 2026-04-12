@@ -40,6 +40,7 @@ x-scheme-handler/discord=vesktop.desktop
 x-scheme-handler/heroic=heroic.desktop
 x-scheme-handler/tidal=tidal-hifi.desktop
 application/pdf=firefox.desktop
+application/x-openvpn-profile=nm-import-ovpn.desktop
 
 [Added Associations]
 x-scheme-handler/mailto=userapp-Thunderbird-6VANJ3.desktop;userapp-Thunderbird-YGBLH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;
