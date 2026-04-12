@@ -124,6 +124,8 @@ PACKAGES=(
 	"steam"
     "gamescope"
     "mangohud"
+    "protontricks"
+   	"zerotier-one"
 
 	# Audio
 	"pipewire"
