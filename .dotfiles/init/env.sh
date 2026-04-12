@@ -150,7 +150,6 @@ SYSTEM_SERVICES_TO_ENABLE=(
     
     "ufw.service"
     "NetworkManager.service"
-	"NetworkManager-wait-online.service"
 
 	"apparmor.service"
 	
