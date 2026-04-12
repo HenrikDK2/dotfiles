@@ -186,7 +186,7 @@ find /etc \( -name "*.pacnew" -o -name "*.pacsave" \) -print0 | xargs -0 rm -f
 echo "Done."
 
 section "Fixing permissions"
-find $HOME -path "$HOME/.dotfiles" -prune -o -exec chown "$USER:$USER" {} + 2>/dev/null
+find $HOME -path "$HOME/.dotfiles" -prune -o -exec chown "$USER:$USER" {} + 2>/dev/null || true
 echo "Done."
 
 section "Rebooting"
