@@ -36,6 +36,19 @@ z_warn()  { zenity --warning  --title="$TITLE" --width=450 --text="$1"; }
 z_err()   { zenity --error    --title="$TITLE" --width=450 --text="$1"; }
 z_yesno() { zenity --question --title="$TITLE" --width=400 --text="$1"; }
 
+format_path() {
+    local path="$1"
+
+    # normalize both paths first
+    local home="${HOME%/}"
+    path="${path%/}"
+
+    if [[ "$path" == "$home"* ]]; then
+        echo "~${path#$home}"
+    else
+        echo "$path"
+    fi
+}
 
 # Read the game name from its local Steam manifest; fall back to the raw AppID.
 appid_to_name() {
@@ -95,7 +108,7 @@ show_main_screen() {
 	    seen["$exe"]=1
 
 	    name=$(appid_to_name "$appid")
-	    rows+=("$exe" "$appid" "$name" "$exe")
+	    rows+=("$exe" "$appid" "$name" "$(format_path "$exe")")
 	done < <(find "$COMPATDATA" -iname "ModOrganizer.exe" -print0 2>/dev/null)
 
     if [[ ${#rows[@]} -eq 0 ]]; then
@@ -112,7 +125,7 @@ show_main_screen() {
 		    --text="Select an instance to launch, or use the buttons below." \
 		    --column="(key)" --column="AppID" --column="Game" --column="Path" \
 		    --hide-column=1 --print-column=1 \
-		    --width=900 --height=500 \
+		    --width=1100 --height=600 \
 		    --ok-label="Start" \
 		    --cancel-label="Exit" \
 		    --extra-button="Open Folder" \
@@ -132,7 +145,7 @@ show_main_screen() {
 				    --text="Select the instance whose folder you want to open:" \
 				    --column="(key)" --column="AppID" --column="Game" --column="Path" \
 				    --hide-column=1 --print-column=1 \
-				    --width=900 --height=500 \
+				    --width=1100 --height=600 \
 				    "${rows[@]}" 2>/dev/null)
 				    
                 if [[ -n "$target" ]]; then
