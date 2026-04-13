@@ -226,6 +226,7 @@ run_installer() {
     protontricks-launch --appid "$appid" "$MO2_INSTALLER_CACHE"
 
     if [[ -f "$dest_dir/ModOrganizer.exe" ]]; then
+    	cp -r "$HOME/.local/share/modorganizer/files/." "$dest_dir"
         z_info "✔ Installation successful for <b>$name</b>!\n\n$dest_dir/ModOrganizer.exe"
     else
         z_warn "Installer finished but ModOrganizer.exe was not found at:\n$dest_dir\n\nDid you install to C:\\Modding\\MO2?"

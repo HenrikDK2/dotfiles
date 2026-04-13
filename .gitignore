@@ -124,6 +124,9 @@
 !.local/share/dbus-1
 !.local/share/dbus-1/**
 
+!.local/share/modorganizer
+!.local/share/modorganizer/**
+
 !.local/share/applications
 !.local/share/applications/cups.desktop
 !.local/share/applications/modorganizer-launcher.desktop
