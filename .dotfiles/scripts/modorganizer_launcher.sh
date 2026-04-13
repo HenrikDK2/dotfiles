@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
-# launch-mo2.sh — Launch/install ModOrganizer 2 via protontricks-launch
-# Game names are read from local Steam .acf manifests (no internet needed).
 
 STEAMAPPS="${STEAMAPPS_PATH:-$HOME/Games/steamapps}"
 COMPATDATA="$STEAMAPPS/compatdata"
 MO2_EXE_RELATIVE="pfx/drive_c/Modding/MO2/ModOrganizer.exe"
 MO2_INSTALLER_URL="https://github.com/ModOrganizer2/modorganizer/releases/latest/download/Mod.Organizer-2.5.2.exe"
-MO2_INSTALLER_CACHE="/tmp/ModOrganizer2-installer.exe"
+MO2_INSTALLER_CACHE="$HOME/.cache/ModOrganizer2-installer.exe"
 TITLE="ModOrganizer 2 — Proton Launcher"
 
 # AppIDs that are runtimes/tools, not games — hidden everywhere in the UI.
@@ -38,7 +36,6 @@ z_warn()  { zenity --warning  --title="$TITLE" --width=450 --text="$1"; }
 z_err()   { zenity --error    --title="$TITLE" --width=450 --text="$1"; }
 z_yesno() { zenity --question --title="$TITLE" --width=400 --text="$1"; }
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
 
 # Read the game name from its local Steam manifest; fall back to the raw AppID.
 appid_to_name() {
@@ -63,10 +60,8 @@ is_ignored() {
     return 1
 }
 
-# Extract the AppID number embedded in a compatdata path.
 appid_from_path() { echo "$1" | grep -oP '(?<=/compatdata/)\d+(?=/pfx/)'; }
 
-# Open the MO2 folder for a given exe path in the system file manager.
 open_folder_for_exe() {
     local exe_path="$1"
     local folder; folder=$(dirname "$exe_path")
@@ -84,7 +79,6 @@ open_folder_for_exe() {
     else z_err "No file manager found.\nPath:\n$folder"; fi
 }
 
-# ── Main screen: instance list + Install + Open Folder buttons ────────────────
 show_main_screen() {
     local -a rows
     local exe appid name
@@ -167,7 +161,6 @@ launch_instance() {
     protontricks-launch --appid "$appid" "$exe_path" &
 }
 
-# ── Install screen: pick a prefix, then run the installer ────────────────────
 show_install_screen() {
     local -a rows
     local appid name status
@@ -200,7 +193,6 @@ show_install_screen() {
         [[ -z "$selected" ]] && return   # Cancel → back to main screen
 
         run_installer "$selected" && return   # Success/error → back to main screen
-        # run_installer returns 1 when user declined reinstall → loop back here
     done
 }
 
@@ -234,35 +226,38 @@ run_installer() {
 }
 
 download_installer() {
-    [[ -s "$MO2_INSTALLER_CACHE" ]] && return 0   # Already cached
+    [[ -s "$MO2_INSTALLER_CACHE" ]] && return 0
 
-    local downloader
-    if   command -v wget &>/dev/null; then downloader="wget"
-    elif command -v curl &>/dev/null; then downloader="curl"
-    else z_err "Neither wget nor curl found.\nInstall one and try again."; return 1
+    if ! command -v curl &>/dev/null; then
+        z_err "curl is required but not installed."
+        return 1
     fi
 
     (
-        if [[ "$downloader" == "wget" ]]; then
-            wget -q --show-progress -O "$MO2_INSTALLER_CACHE" "$MO2_INSTALLER_URL" 2>&1 \
-                | grep -oP '\d+(?=%)' | while read -r p; do echo "$p"; echo "# Downloading... $p%"; done
-        else
-            curl -L --progress-bar -o "$MO2_INSTALLER_CACHE" "$MO2_INSTALLER_URL" 2>&1 \
-                | grep -oP '\d+\.\d+(?=%)' | while read -r p; do printf "%.0f\n" "$p"; echo "# Downloading... ${p}%"; done
-        fi
-        echo "100"; echo "# Done."
-    ) | zenity --progress --title="$TITLE" --text="Downloading MO2 installer..." \
-               --percentage=0 --auto-close --width=450
+        curl -L "$MO2_INSTALLER_URL" -o "$MO2_INSTALLER_CACHE" \
+            --silent --show-error \
+            --write-out "%{percent_download}\n" 2>/dev/null |
+		while read -r p; do
+		    [[ "$p" =~ ^[0-9]+(\.[0-9]+)?$ ]] || continue
+		    printf "%.0f\n" "$p"
+		    echo "# Downloading... ${p}%"
+		done
+
+        echo "100"
+        echo "# Done."
+    ) | zenity --progress \
+        --title="$TITLE" \
+        --text="Downloading MO2 installer..." \
+        --percentage=0 \
+        --auto-close \
+        --width=450
 
     if [[ ! -s "$MO2_INSTALLER_CACHE" ]]; then
-        z_err "Download failed.\nCheck your internet connection and try again."
+        z_err "Download failed."
         rm -f "$MO2_INSTALLER_CACHE"
         return 1
     fi
 }
 
-# ── Entry point ───────────────────────────────────────────────────────────────
 command -v zenity &>/dev/null || { echo "Error: zenity not found. Install with: sudo apt install zenity" >&2; exit 1; }
-
 show_main_screen
-
