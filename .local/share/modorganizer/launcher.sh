@@ -203,6 +203,31 @@ show_install_screen() {
     done
 }
 
+preserve_and_clean_mo2_dir() {
+    local dir="$1"
+
+    [[ ! -d "$dir" ]] && return 0
+
+    shopt -s dotglob nullglob
+
+    for item in "$dir"/*; do
+        local base
+        base=$(basename "$item")
+
+        case "$base" in
+            profiles|mods|downloads)
+                # Keep these
+                continue
+                ;;
+            *)
+                rm -rf "$item"
+                ;;
+        esac
+    done
+
+    shopt -u dotglob nullglob
+}
+
 run_installer() {
     local appid="$1"
     local name; name=$(appid_to_name "$appid")
@@ -213,10 +238,14 @@ run_installer() {
         return 0
     fi
 
-    if [[ -f "$dest_dir/ModOrganizer.exe" ]]; then
-        z_yesno "MO2 is already installed for <b>$name</b>.\n\nReinstall anyway?" || return 1
-    fi
-
+	if [[ -f "$dest_dir/ModOrganizer.exe" ]]; then
+	    if z_yesno "MO2 is already installed for <b>$name</b>.\n\nReinstall and preserve profiles/mods/downloads?"; then
+	        preserve_and_clean_mo2_dir "$dest_dir"
+	    else
+	        return 1
+	    fi
+	fi
+	
     download_installer || return 0
 
     z_info "The MO2 installer will now open for <b>$name</b>.\n\n\
