@@ -19,8 +19,11 @@ readonly EXCLUDED_PATTERNS=(
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
     "(link2ea://launchgame|/Electronic Arts/EA Desktop)" # EA Games Launcher
     "C:/windows/.*"
+
     "Vortex/Vortex.exe"
-    "ModOrganizer.exe"
+    "(ModOrganizer.exe)"
+	"MO2/explorer++"
+    
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
     "/*[Ll]auncher*.exe"
     "/*[Ll]aunch[Pp]ad*.exe"
