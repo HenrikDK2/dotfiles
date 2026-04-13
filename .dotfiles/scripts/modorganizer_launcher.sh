@@ -38,16 +38,10 @@ z_yesno() { zenity --question --title="$TITLE" --width=400 --text="$1"; }
 
 format_path() {
     local path="$1"
-
-    # normalize both paths first
-    local home="${HOME%/}"
-    path="${path%/}"
-
-    if [[ "$path" == "$home"* ]]; then
-        echo "~${path#$home}"
-    else
-        echo "$path"
-    fi
+    case "$path" in
+        "$HOME"/*) echo "~${path#"$HOME"}" ;;
+        *) echo "$path" ;;
+    esac
 }
 
 # Read the game name from its local Steam manifest; fall back to the raw AppID.
