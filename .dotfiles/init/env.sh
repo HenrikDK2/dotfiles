@@ -102,6 +102,7 @@ PACKAGES=(
     "xorg-xwayland"
     "papirus-icon-theme"
     "wl-clipboard"
+    "yad"
     "7zip"
 
 	# Sandboxing

@@ -30,11 +30,10 @@ IGNORED_APPIDS=(
     993090    # Lossless Scaling
 )
 
-# ── Zenity wrappers ───────────────────────────────────────────────────────────
-z_info()  { zenity --info     --title="$TITLE" --width=450 --text="$1"; }
-z_warn()  { zenity --warning  --title="$TITLE" --width=450 --text="$1"; }
-z_err()   { zenity --error    --title="$TITLE" --width=450 --text="$1"; }
-z_yesno() { zenity --question --title="$TITLE" --width=400 --text="$1"; }
+y_info()  { yad --info     --title="$TITLE" --width=450 --text="$1" --button="OK:0"; }
+y_warn()  { yad --info     --title="$TITLE" --width=450 --text="$1" --image=dialog-warning --button="OK:0"; }
+y_err()   { yad --error    --title="$TITLE" --width=450 --text="$1" --button="OK:0"; }
+y_yesno() { yad --question --title="$TITLE" --width=400 --text="$1" --button="Yes:0" --button="No:1"; }
 
 format_path() {
     local path="$1"
@@ -73,7 +72,7 @@ open_folder_for_exe() {
     local exe_path="$1"
     local folder; folder=$(dirname "$exe_path")
     if [[ ! -d "$folder" ]]; then
-        z_err "Folder not found:\n$folder"
+        y_err "Folder not found:\n$folder"
         return
     fi
     # Try common file managers in order; fall back to xdg-open.
@@ -83,30 +82,29 @@ open_folder_for_exe() {
     elif command -v nemo      &>/dev/null; then nemo      "$folder" &
     elif command -v pcmanfm   &>/dev/null; then pcmanfm   "$folder" &
     elif command -v xdg-open  &>/dev/null; then xdg-open  "$folder" &
-    else z_err "No file manager found.\nPath:\n$folder"; fi
+    else y_err "No file manager found.\nPath:\n$folder"; fi
 }
 
 show_main_screen() {
     local -a rows
     local exe appid name
 
-	# Find all ModOrganizer.exe instances (any location), no distinction.
-	declare -A seen
+    declare -A seen
 
-	while IFS= read -r -d '' exe; do
-	    appid=$(appid_from_path "$exe")
-	    is_ignored "$appid" && continue
+    while IFS= read -r -d '' exe; do
+        appid=$(appid_from_path "$exe")
+        is_ignored "$appid" && continue
 
-	    # Deduplicate
-	    [[ -n "${seen[$exe]}" ]] && continue
-	    seen["$exe"]=1
+        # Deduplicate
+        [[ -n "${seen[$exe]}" ]] && continue
+        seen["$exe"]=1
 
-	    name=$(appid_to_name "$appid")
-	    rows+=("$exe" "$appid" "$name" "$(format_path "$exe")")
-	done < <(find "$COMPATDATA" -iname "ModOrganizer.exe" -print0 2>/dev/null)
+        name=$(appid_to_name "$appid")
+        rows+=("$exe" "$appid" "$name" "$(format_path "$exe")")
+    done < <(find "$COMPATDATA" -iname "ModOrganizer.exe" -print0 2>/dev/null)
 
     if [[ ${#rows[@]} -eq 0 ]]; then
-        z_warn "No ModOrganizer 2 instances found.\n\nUse 'Install MO2' to set one up."
+        y_warn "No ModOrganizer 2 instances found.\n\nUse 'Install MO2' to set one up."
         show_install_screen
         return
     fi
@@ -114,44 +112,38 @@ show_main_screen() {
     # Loop so that "Open Folder" can re-show the dialog without closing permanently.
     while true; do
         local selected
-		selected=$(zenity --list \
-		    --title="$TITLE" \
-		    --text="Select an instance to launch, or use the buttons below." \
-		    --column="(key)" --column="AppID" --column="Game" --column="Path" \
-		    --hide-column=1 --print-column=1 \
-		    --width=1150 --height=600 \
-		    --ok-label="Start" \
-		    --cancel-label="Exit" \
-		    --extra-button="Open Folder" \
-		    --extra-button="Install MO2" \
-		    "${rows[@]}" 2>/dev/null)
+        selected=$(yad --list \
+            --title="$TITLE" \
+            --text="Select an instance to launch, or use the buttons below." \
+            --column="(key)" --column="AppID" --column="Game" --column="Path" \
+            --hide-column=1 --print-column=1 \
+            --width=1150 --height=600 \
+            --button="Open Folder:2" \
+            --button="Install MO2:3" \
+            --button="Start:0" \
+            --button="Exit:1" \
+            "${rows[@]}" 2>/dev/null)
 
-        case "$selected" in
-            "Install MO2")
-                show_install_screen
+        local exit_code=$?
+
+        # Strip trailing pipe that yad appends to row output
+        selected="${selected%|}"
+
+        case $exit_code in
+            0)  # Start
+                [[ -z "$selected" ]] && continue
+                launch_instance "$selected"
                 return
                 ;;
-            "Open Folder")
-                # Re-show the dialog just for folder selection, without an OK action.
-                local target
-				target=$(zenity --list \
-				    --title="$TITLE — Open Folder" \
-				    --text="Select the instance whose folder you want to open:" \
-				    --column="(key)" --column="AppID" --column="Game" --column="Path" \
-				    --hide-column=1 --print-column=1 \
-				    --width=1150 --height=600 \
-				    "${rows[@]}" 2>/dev/null)
-				    
-                if [[ -n "$target" ]]; then
-                    open_folder_for_exe "$target"
-                fi
-                # Fall through to loop — main dialog reopens.
+            1|252)  # Exit / window closed
+                exit 0
                 ;;
-            "")
-                exit 0   # Cancel / window closed
+            2)  # Open Folder — act directly on the selected row
+                [[ -n "$selected" ]] && open_folder_for_exe "$selected"
+                # Fall through to loop — main dialog reopens
                 ;;
-            *)
-                launch_instance "$selected"
+            3)  # Install MO2
+                show_install_screen
                 return
                 ;;
         esac
@@ -162,7 +154,7 @@ launch_instance() {
     local exe_path="$1"
     local appid; appid=$(appid_from_path "$exe_path")
     if [[ -z "$appid" ]]; then
-        z_err "Could not determine AppID from path:\n$exe_path"
+        y_err "Could not determine AppID from path:\n$exe_path"
         return
     fi
     protontricks-launch --appid "$appid" "$exe_path" &
@@ -182,24 +174,36 @@ show_install_screen() {
     done < <(find "$COMPATDATA" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null | sort -z)
 
     if [[ ${#rows[@]} -eq 0 ]]; then
-        z_warn "No Steam prefixes found under:\n$COMPATDATA\n\nRun a game via Proton at least once first."
+        y_warn "No Steam prefixes found under:\n$COMPATDATA\n\nRun a game via Proton at least once first."
         return
     fi
 
     # Loop so that declining a reinstall returns here instead of the main screen.
     while true; do
         local selected
-        selected=$(zenity --list \
+        selected=$(yad --list \
             --title="$TITLE — Install MO2" \
             --text="Select the game prefix to install ModOrganizer 2 into:" \
             --column="AppID" --column="Game" --column="MO2 Status" \
             --print-column=1 \
             --width=650 --height=550 \
+            --button="Install:0" \
+            --button="Back:1" \
             "${rows[@]}" 2>/dev/null)
 
-        [[ -z "$selected" ]] && { show_main_screen; return; }
+        local exit_code=$?
+        selected="${selected%|}"
 
-        run_installer "$selected" && return   # Success/error → back to main screen
+        case $exit_code in
+            1|252)  # Back / window closed
+                show_main_screen
+                return
+                ;;
+            0)  # Install
+                [[ -z "$selected" ]] && continue
+                run_installer "$selected" && return   # Success/error → back to main screen
+                ;;
+        esac
     done
 }
 
@@ -228,37 +232,36 @@ preserve_and_clean_mo2_dir() {
     shopt -u dotglob nullglob
 }
 
+find_mo2_exe() {
+    find "$COMPATDATA/$1/pfx" -iname "ModOrganizer.exe" -print -quit 2>/dev/null
+}
+
 run_installer() {
     local appid="$1"
     local name; name=$(appid_to_name "$appid")
-    local dest_dir="$COMPATDATA/$appid/pfx/drive_c/Modding/MO2"
 
     if [[ ! -d "$COMPATDATA/$appid/pfx" ]]; then
-        z_err "No Proton prefix found for <b>$name</b> (AppID $appid).\n\nRun the game at least once in Steam first."
+        y_err "No Proton prefix found for <b>$name</b> (AppID $appid).\n\nRun the game at least once in Steam first."
         return 0
     fi
 
-	if [[ -f "$dest_dir/ModOrganizer.exe" ]]; then
-	    if z_yesno "MO2 is already installed for <b>$name</b>.\n\nReinstall and preserve profiles/mods/downloads?"; then
-	        preserve_and_clean_mo2_dir "$dest_dir"
-	    else
-	        return 1
-	    fi
-	fi
-	
+    local existing; existing=$(find_mo2_exe "$appid")
+    if [[ -n "$existing" ]]; then
+        if y_yesno "MO2 is already installed for <b>$name</b>.\n\nReinstall and preserve profiles/mods/downloads?"; then
+            preserve_and_clean_mo2_dir "$(dirname "$existing")"
+        else
+            return 1
+        fi
+    fi
+
     download_installer || return 0
-
-    z_info "The MO2 installer will now open for <b>$name</b>.\n\n\
-<b>Important:</b> When asked for an install path, use:\n\n\
-    <b>C:\\Modding\\MO2</b>"
-
     protontricks-launch --appid "$appid" "$MO2_INSTALLER_CACHE"
 
-    if [[ -f "$dest_dir/ModOrganizer.exe" ]]; then
-    	cp -r "$HOME/.local/share/modorganizer/files/." "$dest_dir"
-        z_info "✔ Installation successful for <b>$name</b>!\n\n$dest_dir/ModOrganizer.exe"
+    local dest; dest=$(find_mo2_exe "$appid")
+    if [[ -n "$dest" ]]; then
+        cp -r "$HOME/.local/share/modorganizer/files/." "$(dirname "$dest")"
     else
-        z_warn "Installer finished but ModOrganizer.exe was not found at:\n$dest_dir\n\nDid you install to C:\\Modding\\MO2?"
+        y_warn "Installer finished but ModOrganizer.exe was not found anywhere in the prefix.\n\nDid the installer complete successfully?"
     fi
 }
 
@@ -266,7 +269,7 @@ download_installer() {
     [[ -s "$MO2_INSTALLER_CACHE" ]] && return 0
 
     if ! command -v curl &>/dev/null; then
-        z_err "curl is required but not installed."
+        y_err "curl is required but not installed."
         return 1
     fi
 
@@ -274,27 +277,28 @@ download_installer() {
         curl -L "$MO2_INSTALLER_URL" -o "$MO2_INSTALLER_CACHE" \
             --silent --show-error \
             --write-out "%{percent_download}\n" 2>/dev/null |
-		while read -r p; do
-		    [[ "$p" =~ ^[0-9]+(\.[0-9]+)?$ ]] || continue
-		    printf "%.0f\n" "$p"
-		    echo "# Downloading... ${p}%"
-		done
+        while read -r p; do
+            [[ "$p" =~ ^[0-9]+(\.[0-9]+)?$ ]] || continue
+            printf "%.0f\n" "$p"
+            echo "# Downloading... ${p}%"
+        done
 
         echo "100"
         echo "# Done."
-    ) | zenity --progress \
+    ) | yad --progress \
         --title="$TITLE" \
         --text="Downloading MO2 installer..." \
         --percentage=0 \
         --auto-close \
-        --width=450
+        --width=450 \
+        --button="Cancel:1"
 
     if [[ ! -s "$MO2_INSTALLER_CACHE" ]]; then
-        z_err "Download failed."
+        y_err "Download failed."
         rm -f "$MO2_INSTALLER_CACHE"
         return 1
     fi
 }
 
-command -v zenity &>/dev/null || { echo "Error: zenity not found. Install with: sudo apt install zenity" >&2; exit 1; }
+command -v yad &>/dev/null || { echo "Error: yad not found. Install with: sudo apt install yad" >&2; exit 1; }
 show_main_screen
