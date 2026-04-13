@@ -125,7 +125,7 @@ show_main_screen() {
 		    --text="Select an instance to launch, or use the buttons below." \
 		    --column="(key)" --column="AppID" --column="Game" --column="Path" \
 		    --hide-column=1 --print-column=1 \
-		    --width=1100 --height=600 \
+		    --width=1150 --height=600 \
 		    --ok-label="Start" \
 		    --cancel-label="Exit" \
 		    --extra-button="Open Folder" \
@@ -145,7 +145,7 @@ show_main_screen() {
 				    --text="Select the instance whose folder you want to open:" \
 				    --column="(key)" --column="AppID" --column="Game" --column="Path" \
 				    --hide-column=1 --print-column=1 \
-				    --width=1100 --height=600 \
+				    --width=1150 --height=600 \
 				    "${rows[@]}" 2>/dev/null)
 				    
                 if [[ -n "$target" ]]; then
