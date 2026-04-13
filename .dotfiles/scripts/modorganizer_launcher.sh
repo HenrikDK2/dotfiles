@@ -83,23 +83,20 @@ show_main_screen() {
     local -a rows
     local exe appid name
 
-    # Standard installs at the expected path.
-    while IFS= read -r -d '' exe; do
-        appid=$(appid_from_path "$exe")
-        is_ignored "$appid" && continue
-        name=$(appid_to_name "$appid")
-        rows+=("$exe" "$appid" "$name" "✔ Standard" "$exe")
-    done < <(find "$COMPATDATA" -path "*/$MO2_EXE_RELATIVE" -print0 2>/dev/null)
+	# Find all ModOrganizer.exe instances (any location), no distinction.
+	declare -A seen
 
-    # Non-standard installs (ModOrganizer.exe found elsewhere in any prefix).
-    declare -A seen; for exe in "${rows[@]}"; do seen["$exe"]=1; done
-    while IFS= read -r -d '' exe; do
-        appid=$(appid_from_path "$exe")
-        is_ignored "$appid" && continue
-        [[ -n "${seen[$exe]}" ]] && continue
-        name=$(appid_to_name "$appid")
-        rows+=("$exe" "$appid" "$name" "⚠ Non-standard" "$exe")
-    done < <(find "$COMPATDATA" -iname "ModOrganizer.exe" -print0 2>/dev/null)
+	while IFS= read -r -d '' exe; do
+	    appid=$(appid_from_path "$exe")
+	    is_ignored "$appid" && continue
+
+	    # Deduplicate
+	    [[ -n "${seen[$exe]}" ]] && continue
+	    seen["$exe"]=1
+
+	    name=$(appid_to_name "$appid")
+	    rows+=("$exe" "$appid" "$name" "$exe")
+	done < <(find "$COMPATDATA" -iname "ModOrganizer.exe" -print0 2>/dev/null)
 
     if [[ ${#rows[@]} -eq 0 ]]; then
         z_warn "No ModOrganizer 2 instances found.\n\nUse 'Install MO2' to set one up."
@@ -110,15 +107,17 @@ show_main_screen() {
     # Loop so that "Open Folder" can re-show the dialog without closing permanently.
     while true; do
         local selected
-        selected=$(zenity --list \
-            --title="$TITLE" \
-            --text="Select an instance to launch, or use the buttons below." \
-            --column="(key)" --column="AppID" --column="Game" --column="Status" --column="Path" \
-            --hide-column=1 --print-column=1 \
-            --width=900 --height=500 \
-            --extra-button="Open Folder" \
-            --extra-button="Install MO2" \
-            "${rows[@]}" 2>/dev/null)
+		selected=$(zenity --list \
+		    --title="$TITLE" \
+		    --text="Select an instance to launch, or use the buttons below." \
+		    --column="(key)" --column="AppID" --column="Game" --column="Path" \
+		    --hide-column=1 --print-column=1 \
+		    --width=900 --height=500 \
+		    --ok-label="Start" \
+		    --cancel-label="Exit" \
+		    --extra-button="Open Folder" \
+		    --extra-button="Install MO2" \
+		    "${rows[@]}" 2>/dev/null)
 
         case "$selected" in
             "Install MO2")
@@ -190,7 +189,7 @@ show_install_screen() {
             --width=650 --height=550 \
             "${rows[@]}" 2>/dev/null)
 
-        [[ -z "$selected" ]] && return   # Cancel → back to main screen
+        [[ -z "$selected" ]] && { show_main_screen; return; }
 
         run_installer "$selected" && return   # Success/error → back to main screen
     done
