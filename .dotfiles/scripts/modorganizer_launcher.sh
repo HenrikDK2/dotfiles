@@ -66,7 +66,25 @@ is_ignored() {
 # Extract the AppID number embedded in a compatdata path.
 appid_from_path() { echo "$1" | grep -oP '(?<=/compatdata/)\d+(?=/pfx/)'; }
 
-# ── Main screen: instance list + Install button ───────────────────────────────
+# Open the MO2 folder for a given exe path in the system file manager.
+open_folder_for_exe() {
+    local exe_path="$1"
+    local folder; folder=$(dirname "$exe_path")
+    if [[ ! -d "$folder" ]]; then
+        z_err "Folder not found:\n$folder"
+        return
+    fi
+    # Try common file managers in order; fall back to xdg-open.
+    if   command -v nautilus  &>/dev/null; then nautilus  --no-desktop "$folder" &
+    elif command -v thunar    &>/dev/null; then thunar    "$folder" &
+    elif command -v dolphin   &>/dev/null; then dolphin   "$folder" &
+    elif command -v nemo      &>/dev/null; then nemo      "$folder" &
+    elif command -v pcmanfm   &>/dev/null; then pcmanfm   "$folder" &
+    elif command -v xdg-open  &>/dev/null; then xdg-open  "$folder" &
+    else z_err "No file manager found.\nPath:\n$folder"; fi
+}
+
+# ── Main screen: instance list + Install + Open Folder buttons ────────────────
 show_main_screen() {
     local -a rows
     local exe appid name
@@ -95,22 +113,48 @@ show_main_screen() {
         return
     fi
 
-    # Column 1 (the exe path) is hidden and used as the return value on OK.
-    local selected
-    selected=$(zenity --list \
-        --title="$TITLE" \
-        --text="Select an instance to launch, or click <b>Install MO2</b> to add a new one." \
-        --column="(key)" --column="AppID" --column="Game" --column="Status" --column="Path" \
-        --hide-column=1 --print-column=1 \
-        --width=900 --height=500 \
-        --extra-button="Install MO2" \
-        "${rows[@]}" 2>/dev/null)
+    # Loop so that "Open Folder" can re-show the dialog without closing permanently.
+    while true; do
+        local selected
+        selected=$(zenity --list \
+            --title="$TITLE" \
+            --text="Select an instance to launch, or use the buttons below." \
+            --column="(key)" --column="AppID" --column="Game" --column="Status" --column="Path" \
+            --hide-column=1 --print-column=1 \
+            --width=900 --height=500 \
+            --extra-button="Open Folder" \
+            --extra-button="Install MO2" \
+            "${rows[@]}" 2>/dev/null)
 
-    case "$selected" in
-        "Install MO2") show_install_screen ;;
-        "")            exit 0 ;;                         # Cancel / window closed
-        *)             launch_instance "$selected" ;;
-    esac
+        case "$selected" in
+            "Install MO2")
+                show_install_screen
+                return
+                ;;
+            "Open Folder")
+                # Re-show the dialog just for folder selection, without an OK action.
+                local target
+                target=$(zenity --list \
+                    --title="$TITLE — Open Folder" \
+                    --text="Select the instance whose folder you want to open:" \
+                    --column="(key)" --column="AppID" --column="Game" --column="Status" --column="Path" \
+                    --hide-column=1 --print-column=1 \
+                    --width=900 --height=500 \
+                    "${rows[@]}" 2>/dev/null)
+                if [[ -n "$target" ]]; then
+                    open_folder_for_exe "$target"
+                fi
+                # Fall through to loop — main dialog reopens.
+                ;;
+            "")
+                exit 0   # Cancel / window closed
+                ;;
+            *)
+                launch_instance "$selected"
+                return
+                ;;
+        esac
+    done
 }
 
 launch_instance() {
@@ -221,3 +265,4 @@ download_installer() {
 command -v zenity &>/dev/null || { echo "Error: zenity not found. Install with: sudo apt install zenity" >&2; exit 1; }
 
 show_main_screen
+
