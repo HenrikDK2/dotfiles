@@ -28,9 +28,10 @@ function clear_screen() {
     tput cup "$offset" 0
 }
 
-if [[ $EUID -ne 0 ]]; then
-    echo "This script must be run as root." >&2
-    exit 1
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script needs to be run as root (su)"
+    su -c "$0 $@"
+    exit 0
 fi
 
 if ! ping -c 1 "8.8.8.8" >/dev/null 2>&1; then
@@ -98,9 +99,6 @@ fi
 
 section "Setting timezone"
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
-chown -h root:root /etc/localtime
-chown -R root:root /usr/share/zoneinfo
-chmod 644 /etc/localtime
 hwclock --systohc
 echo "New timezone: $TIMEZONE"
 
@@ -119,9 +117,7 @@ timedatectl set-ntp true
 echo "Done"
 
 section "Copying system configs"
-TMP_DIR="$(mktemp)"
-mkdir -p $TMP_DIR && cp -rf $SCRIPT_DIR/system/* $TMP_DIR && chmod -R 755 $TMP_DIR && chown -R root:root $TMP_DIR
-mv $TMP_DIR/* /usr/local/bin/ && rm -rf $TMP_DIR
+cp -rf $SCRIPT_DIR/system/* /
 
 section "Installing system packages"
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed

@@ -48,8 +48,6 @@ install_fonts() {
     ((INSTALLED++)) || true
   done < <(find "$TTF_SRC" -maxdepth 1 -name "*.ttf.gz" -print0 | sort -z)
 
-  info "Updating font cache …"
-  fc-cache -f "$FONT_DIR"
   rm -rf "$TMP_DIR"
   info "Done! Installed: $INSTALLED font(s)  |  Skipped (already present): $SKIPPED"
   info "Fonts available in: $FONT_DIR"

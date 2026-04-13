@@ -1,23 +1,20 @@
 #!/bin/bash
-
 # Possible Heroic installations and their corresponding config paths
 declare -A HEROIC_INSTALLS=(
   ["native"]="$HOME/.config/heroic/config.json"
   ["flatpak"]="$HOME/.var/app/com.heroicgameslauncher.hgl/config/heroic/config.json"
 )
-
 # Check if native Heroic is installed
 is_native_installed() {
     command -v heroic &>/dev/null
 }
-
 # Check if Heroic Flatpak is installed
 is_flatpak_installed() {
     flatpak list 2>/dev/null | grep -q "com.heroicgameslauncher.hgl"
 }
-
 for INSTALL_TYPE in "${!HEROIC_INSTALLS[@]}"; do
     CONFIG="${HEROIC_INSTALLS[$INSTALL_TYPE]}"
+    NEWLY_CREATED=false
 
     # Skip if this variant is not installed
     if [ "$INSTALL_TYPE" = "native" ] && ! is_native_installed; then
@@ -45,6 +42,7 @@ for INSTALL_TYPE in "${!HEROIC_INSTALLS[@]}"; do
         echo "Config not found, creating: $CONFIG"
         mkdir -p "$(dirname "$CONFIG")"
         echo '{}' > "$CONFIG"
+        NEWLY_CREATED=true
     fi
 
     echo "Processing: $CONFIG"
@@ -83,6 +81,18 @@ for INSTALL_TYPE in "${!HEROIC_INSTALLS[@]}"; do
     jq '
       .defaultSettings.useSteamRuntime = true
     ' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+
+    # Set wineVersion only for newly created configs
+    if [ "$NEWLY_CREATED" = true ]; then
+        echo "Setting default wineVersion (GE-Proton-Latest)..."
+        jq '
+          .defaultSettings.wineVersion = {
+            "bin": "/usr/share/steam/compatibilitytools.d/GE-Proton-Latest/proton",
+            "name": "GE-Proton-Latest",
+            "type": "proton"
+          }
+        ' "$CONFIG" > "$CONFIG.tmp" && mv "$CONFIG.tmp" "$CONFIG"
+    fi
 
     echo "Done."
 done
