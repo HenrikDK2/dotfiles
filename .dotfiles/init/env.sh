@@ -152,6 +152,7 @@ SYSTEM_SERVICES_TO_ENABLE=(
     "NetworkManager.service"
 
 	"apparmor.service"
+	"fix-firejail.service"
 	
     "gameboost.service"
     "system-tuning.service"

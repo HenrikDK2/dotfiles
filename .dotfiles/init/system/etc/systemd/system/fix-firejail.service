@@ -1,0 +1,12 @@
+[Unit]
+Description=Fix Firejail permissions at boot
+After=local-fs.target
+Wants=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/chown -R root:root /usr/share/zoneinfo
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
