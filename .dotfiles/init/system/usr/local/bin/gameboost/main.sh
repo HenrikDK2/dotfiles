@@ -20,6 +20,7 @@ readonly EXCLUDED_PATTERNS=(
     "(link2ea://launchgame|/Electronic Arts/EA Desktop)" # EA Games Launcher
     "C:/windows/.*"
     "Vortex/Vortex.exe"
+    "ModOrganizer.exe"
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
     "/*[Ll]auncher*.exe"
     "/*[Ll]aunch[Pp]ad*.exe"

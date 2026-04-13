@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ModOrganizer 2 Launcher
+Comment=Launch or install ModOrganizer 2 via Proton
+Exec=bash -c '$HOME/.dotfiles/scripts/modorganizer_launcher.sh'
+Icon=wine
+Terminal=false
+Type=Application
+Categories=Game;Utility;
