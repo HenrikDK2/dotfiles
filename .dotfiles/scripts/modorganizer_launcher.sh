@@ -127,13 +127,14 @@ show_main_screen() {
             "Open Folder")
                 # Re-show the dialog just for folder selection, without an OK action.
                 local target
-                target=$(zenity --list \
-                    --title="$TITLE — Open Folder" \
-                    --text="Select the instance whose folder you want to open:" \
-                    --column="(key)" --column="AppID" --column="Game" --column="Status" --column="Path" \
-                    --hide-column=1 --print-column=1 \
-                    --width=900 --height=500 \
-                    "${rows[@]}" 2>/dev/null)
+				target=$(zenity --list \
+				    --title="$TITLE — Open Folder" \
+				    --text="Select the instance whose folder you want to open:" \
+				    --column="(key)" --column="AppID" --column="Game" --column="Path" \
+				    --hide-column=1 --print-column=1 \
+				    --width=900 --height=500 \
+				    "${rows[@]}" 2>/dev/null)
+				    
                 if [[ -n "$target" ]]; then
                     open_folder_for_exe "$target"
                 fi
