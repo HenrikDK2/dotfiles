@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
 
-# Github
-curl -sf "https://api.github.com/repos/Mastermindzh/tidal-hifi/releases/latest" \
-  | jq -r '.tag_name' \
-  | sed 's/^v//; s/-Mavy//g'
+# GitHub
+version=$(
+  curl -sf "https://api.github.com/repos/Mastermindzh/tidal-hifi/releases/latest" \
+    | jq -r '.tag_name // empty' \
+    | sed 's/^v//; s/-Mavy//g'
+)
 
+# AUR fallback
+if [[ -z "$version" ]]; then
+  version=$(
+    curl -sf "https://aur.archlinux.org/rpc/v5/info?arg[]=tidal-hifi" \
+      | jq -r '.results[0].Version // empty'
+  )
+fi
+
+echo "$version"

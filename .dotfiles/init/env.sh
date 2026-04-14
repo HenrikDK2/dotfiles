@@ -106,7 +106,6 @@ PACKAGES=(
     "7zip"
 
 	# Sandboxing
-    "firejail"
     "apparmor"
     "xdg-dbus-proxy"
     
@@ -152,8 +151,9 @@ SYSTEM_SERVICES_TO_ENABLE=(
     "ufw.service"
     "NetworkManager.service"
 
+	"auditd.service"
 	"apparmor.service"
-	"fix-firejail.service"
+	"fix-permissions.service"
 	
     "gameboost.service"
     "system-tuning.service"

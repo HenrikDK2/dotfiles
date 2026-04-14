@@ -10,7 +10,6 @@ KERNEL_PARAMS=(
     "loglevel=3"
     "apparmor=1"
     "security=apparmor"
-    "audit=0"
     "debugfs=off"
     "vsyscall=none"
     "processor.ignore_ppc=1"

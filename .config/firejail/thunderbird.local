@@ -1,9 +1,0 @@
-noblacklist ${HOME}/Documents
-noblacklist ${HOME}/Downloads
-
-mkdir ${HOME}/Downloads
-mkdir ${HOME}/Documents
-
-whitelist ${HOME}/Documents
-whitelist ${HOME}/Downloads
-
