@@ -118,7 +118,7 @@ PACKAGES=(
     "qbittorrent"
     "thunderbird"
     "firefox"
-    "code"
+    "zed"
 
 	# Gaming
 	"steam"
