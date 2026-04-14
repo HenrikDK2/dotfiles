@@ -126,7 +126,9 @@
 
 !.local/share/modorganizer
 !.local/share/modorganizer/**
-.local/share/modorganizer/nxmhandler-launch.sh # Created on launch of instance
+
+# Created on launch of instance
+.local/share/modorganizer/nxmhandler-launch.sh 
 
 !.local/share/applications
 !.local/share/applications/cups.desktop
