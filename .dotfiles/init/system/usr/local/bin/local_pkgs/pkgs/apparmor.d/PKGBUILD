@@ -1,6 +1,3 @@
-# Maintainer: Alexandre Pujol <alexandre@pujol.io>
-# shellcheck disable=SC2034,SC2154,SC2164
-
 pkgname=apparmor.d
 pkgver=0.4907.0
 pkgrel=1
