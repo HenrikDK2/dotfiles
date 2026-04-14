@@ -46,12 +46,6 @@ dynamic_layout() {
     fi
 }
 
-secret_firefox_instance() {
-	if ! pgrep -x firefox >/dev/null; then
-		hyprctl dispatch exec "[workspace special silent] firejail /usr/bin/firefox --private-window"
-	fi
-}
-
 toggle_waybar() {
     if (( fullscreen_window_count >= 1 )); then
         pkill -x waybar 2>/dev/null
@@ -92,7 +86,6 @@ handle_event() {
                     ;;
                 closewindow*)
                     toggle_waybar &
-                    secret_firefox_instance &
                     ;;
                 movewindow*)
                     toggle_scripts &
@@ -115,7 +108,6 @@ handle_event() {
 
 dynamic_layout
 update_hypr_variables
-secret_firefox_instance
 toggle_waybar
 
 socat -U -s - UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | \
