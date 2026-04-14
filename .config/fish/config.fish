@@ -74,6 +74,20 @@ function push_commit
     git status
 end
 
+function systemctl
+    if test "$argv[1]" = "soft-reboot"
+        sudo -v
+        echo "===> Rotating journal logs..."
+        sudo journalctl --rotate
+        echo "===> Vacuuming old journal logs..."
+        sudo journalctl --vacuum-time=1s
+        echo "===> Initiating soft reboot..."
+        sudo /usr/bin/systemctl soft-reboot
+    else
+        /usr/bin/systemctl $argv
+    end
+end
+
 function zerotier-cli
     set service zerotier-one
 
