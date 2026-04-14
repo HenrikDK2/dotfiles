@@ -1,0 +1,10 @@
+[Nemo Action]
+Active=true
+Name=Open in Zed
+Comment=Open Zed in the current directory.
+Exec=zeditor %P
+Icon-Name=zed
+Selection=none
+Extensions=dir;
+Quote=double
+Dependencies=zeditor;

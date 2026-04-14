@@ -37,11 +37,7 @@
 			"enabled": true,
 		},
 	},
-	"theme": {
-		"mode": "system",
-		"light": "Ayu Light",
-		"dark": "Tokyo Night",
-	},
+	"theme": "One Dark",
 	"git": {
 		"inline_blame": {
 			"enabled": false,

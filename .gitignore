@@ -127,6 +127,10 @@
 !.local/share/modorganizer
 !.local/share/modorganizer/**
 
+!.local/share/nemo
+!.local/share/nemo/actions
+!.local/share/nemo/actions/*
+
 # Created on launch of instance
 .local/share/modorganizer/nxmhandler-launch.sh 
 
