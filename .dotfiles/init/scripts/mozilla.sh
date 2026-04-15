@@ -41,7 +41,7 @@ done
 DOTFILES_FIREFOX="$SCRIPT_DIR/user/mozilla/firefox"
 FIREFOX_PATHS=(
     "$HOME/.var/app/org.mozilla.firefox/config/mozilla/firefox"
-    "$HOME/.mozilla/firefox"
+    "$HOME/.config/mozilla/firefox"
 )
 FIREFOX_SKIP_KEYS=(
     "browser.uiCustomization.state"

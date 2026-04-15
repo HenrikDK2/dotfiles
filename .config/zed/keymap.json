@@ -23,5 +23,17 @@
     "bindings": {
       "ctrl-t": "terminal_panel::Toggle"
     }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-r": "task::Rerun"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "alt-t": "task::Rerun"
+    }
   }
 ]
