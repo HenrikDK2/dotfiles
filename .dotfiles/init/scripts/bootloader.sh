@@ -9,7 +9,6 @@ KERNELS=(
 KERNEL_PARAMS=(
     "loglevel=3"
     "apparmor=1"
-    "audit=0"
     "security=apparmor"
     "debugfs=off"
     "vsyscall=none"

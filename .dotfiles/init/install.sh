@@ -171,9 +171,6 @@ source $SCRIPT_DIR/scripts/firewall.sh
 section "GPU drivers"
 source $SCRIPT_DIR/scripts/gpu_drivers.sh
 
-section "Sandboxing"
-source $SCRIPT_DIR/scripts/sandboxing.sh
-
 section "Microsoft fonts"
 source $SCRIPT_DIR/scripts/microsoft_fonts.sh
 
