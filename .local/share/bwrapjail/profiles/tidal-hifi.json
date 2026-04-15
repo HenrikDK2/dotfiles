@@ -2,7 +2,7 @@
 	"executable": "/usr/bin/tidal-hifi",
 	"network": {
 		"enabled": true,
-		"isolated": true
+		"isolated": false
 	},
 
 	"security": {
