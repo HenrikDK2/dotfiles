@@ -94,11 +94,12 @@ log INFO "Building bwrap command"
 
 BWRAP_ARGS=(
     bwrap
-    --die-with-parent
     --dev /dev
     --proc /proc
     --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
     --bind /usr/bin/xdg-open /usr/bin/xdg-open
+    --uid 1000
+    --gid 1000
 )
 
 # -----------------------------
@@ -206,7 +207,6 @@ if [[ "$ALLOW_NETWORK" == "true" && "$NETWORK_ISOLATED" == "false" ]]; then
 elif [[ "$ALLOW_NETWORK" == "true" && "$NETWORK_ISOLATED" == "true" ]]; then
     log INFO "Network enabled (isolated)"
     add_bwrap_arg --unshare-user
-
 else
     log INFO "Network disabled"
     add_bwrap_arg --unshare-net
@@ -218,15 +218,16 @@ fi
 
 log INFO "Loading environment variables"
 
-while IFS="=" read -r key value; do
-    key=$(echo "$key" | xargs)
-    value=$(echo "$value" | xargs | tr -d '"')
+while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
 
-    [[ -z "$key" ]] && continue
+    key="${line%%=*}"
+    value="${line#*=}"
 
-    log DEBUG "ENV: $key=$value"
+    log INFO "ENV: $key=$value"
     add_bwrap_arg --setenv "$key" "$value"
-done < <(jq -r '.envs // empty | to_entries[] | "\(.key)=\(.value)"' "$PROFILE_FILE")
+
+done < <(jq -r '.envs[]?' "$PROFILE_FILE")
 
 # -----------------------------
 # DBUS
