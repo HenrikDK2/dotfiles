@@ -16,21 +16,19 @@
 	},
 
 	"audio": {
-		"enabled": false
+		"enabled": true
 	},
 
 	"dbus": {
-		"enabled": false,
-		"portals": {
-			"open_uri": false,
-			"notifications": false,
-			"screenshare": false,
-			"file_picker": false,
-			"print": false,
-			"clipboard": false
-		}
+		"open_uri": false,
+		"notifications": false,
+		"screenshare": false,
+		"file_picker": false,
+		"print": false,
+		"media": true,
+		"clipboard": false
 	},
-	
+
 	"paths": [
 		"rw:$HOME/.config/tidal-hifi",
 
@@ -41,10 +39,10 @@
 		"ro:/bin",
 		"ro:/sbin",
 		"ro:/usr",
-	    "ro:/opt/tidal-hifi",
-	    "ro:/lib",
-	    "ro:/lib64",
-	    "ro:/etc"
+		"ro:/opt/tidal-hifi",
+		"ro:/lib",
+		"ro:/lib64",
+		"ro:/etc"
 	],
 	"envs": []
 }

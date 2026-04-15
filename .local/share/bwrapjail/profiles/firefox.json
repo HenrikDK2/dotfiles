@@ -22,17 +22,15 @@
 	},
 
 	"dbus": {
-		"enabled": true,
-		"portals": {
-			"open_uri": true,
-			"notifications": true,
-			"screenshare": true,
-			"file_picker": true,
-			"print": true,
-			"clipboard": true
-		}
+		"open_uri": true,
+		"notifications": true,
+		"screenshare": true,
+		"file_picker": true,
+		"print": true,
+		"media": true,
+		"clipboard": true
 	},
-	
+
 	"paths": [
 		"rw:$HOME/Downloads",
 		"rw:$HOME/.cache",

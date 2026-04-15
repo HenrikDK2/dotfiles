@@ -20,17 +20,15 @@
 	},
 
 	"dbus": {
-		"enabled": true,
-		"portals": {
-			"open_uri": true,
-			"notifications": true,
-			"screenshare": true,
-			"file_picker": true,
-			"print": true,
-			"clipboard": true
-		}
+		"open_uri": true,
+		"notifications": true,
+		"screenshare": true,
+		"file_picker": true,
+		"print": true,
+		"media": true,
+		"clipboard": true
 	},
-	
+
 	"paths": [
 		"rw:$HOME/.config/discord",
 		"rw:$HOME/Downloads",
@@ -40,10 +38,10 @@
 		"ro:/bin",
 		"ro:/sbin",
 		"ro:/usr",
-	    "ro:/opt/discord",
-	    "ro:/lib",
-	    "ro:/lib64",
-	    "ro:/etc"
+		"ro:/opt/discord",
+		"ro:/lib",
+		"ro:/lib64",
+		"ro:/etc"
 	],
 	"envs": []
 }

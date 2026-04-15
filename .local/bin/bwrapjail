@@ -59,7 +59,7 @@ PROFILE_JSON="$(<"$PROFILE_FILE")"
 # Extract everything in ONE jq call
 read -r ALLOW_GPU ALLOW_WAYLAND ALLOW_X11 \
         ALLOW_NETWORK NETWORK_ISOLATED \
-        ALLOW_DBUS \
+        ALLOW_DBUS ALLOW_AUDIO \
         ALLOW_OPEN_URI ALLOW_FILE_CHOOSER ALLOW_PRINT \
         ALLOW_NOTIFICATIONS ALLOW_SCREENSHARE ALLOW_CLIPBOARD <<EOF
 $(jq -r '
@@ -69,6 +69,7 @@ $(jq -r '
     .network.enabled,
     .network.isolated,
     .dbus.enabled,
+    .audio.enabled,
     .dbus.portals.open_uri,
     .dbus.portals.filechooser,
     .dbus.portals.print,
@@ -91,7 +92,6 @@ BWRAP_ARGS=(
     --proc /proc
     --dev /dev
     --tmpfs /tmp
-    --bind /usr/bin/xdg-open /usr/bin/xdg-open
 )
 
 # -----------------------------
@@ -217,7 +217,11 @@ if [[ "$ALLOW_DBUS" == "true" ]]; then
         [[ "${2:-}" == "true" ]] && PROXY_ARGS+=( --talk="$1" )
     }
 
-    add_portal org.freedesktop.portal.OpenURI "$ALLOW_OPEN_URI"
+	[[ "ALLOW_OPEN_URI" = true ]] && (
+		add_bwrap_arg --bind /usr/bin/xdg-open /usr/bin/xdg-open
+		add_portal org.freedesktop.portal.OpenURI "$ALLOW_OPEN_URI"
+	)
+  
     add_portal org.freedesktop.portal.FileChooser "$ALLOW_FILE_CHOOSER"
     add_portal org.freedesktop.portal.Print "$ALLOW_PRINT"
     add_portal org.freedesktop.portal.Notification "$ALLOW_NOTIFICATIONS"
@@ -243,9 +247,7 @@ fi
 # -----------------------------
 
 add_bwrap_arg -- "${CMD[@]}"
-
 log INFO "Command: ${BWRAP_ARGS[*]}"
-
 BWRAP_PID=""
 
 cleanup() {
