@@ -16,7 +16,7 @@
 	},
 
 	"audio": {
-		"enabled": true
+		"enabled": false
 	},
 
 	"dbus": {
@@ -37,7 +37,6 @@
 		"ro:/run",
 		"rw:/run/user/1000/dconf/user",
 
-		
 		"ro:/sys",
 		"ro:/bin",
 		"ro:/sbin",
