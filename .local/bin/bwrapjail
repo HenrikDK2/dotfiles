@@ -126,6 +126,17 @@ while IFS= read -r entry; do
     path="${path/#\~/$HOME}"
     path="${path/\$HOME/$HOME}"
 
+	case "$path" in
+	    /dev|/dev/*)
+	        log WARN "Skipping /dev mount (managed by bwrap --dev)"
+	        continue
+	        ;;
+	    /proc|/proc/*)
+	        log WARN "Skipping /proc mount (managed by bwrap --proc)"
+	        continue
+	        ;;
+	esac
+
     case "$mode" in
         ro)
             log INFO "Adding read-only bind: $path"
