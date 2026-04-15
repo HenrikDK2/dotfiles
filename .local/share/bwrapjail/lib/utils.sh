@@ -39,7 +39,7 @@ load_json_no_comments() {
     echo "$tmp_file"
 }
 
-get_profile_from_cmd() {
+get_profile_file() {
     local cmd_name="$1"
     shopt -s nullglob
 
@@ -114,7 +114,7 @@ generate_for_profile() {
     local profile="$1"
     local profile_file
 
-    profile_file="$(get_profile_from_cmd "$profile")"
+    profile_file="$(get_profile_file "$profile")"
 
     if [[ ! -f "$profile_file" ]]; then
         log ERROR "Profile not found: $profile"

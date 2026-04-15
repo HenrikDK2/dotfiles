@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 SYMLINK_DIR="$HOME/.local/bin"
 PROFILES_DIR="$HOME/.local/share/bwrapjail/profiles"
 
@@ -42,7 +40,7 @@ esac
 
 check_dependencies || exit 1
 
-PROFILE_FILE="$(get_profile_from_cmd "$CMD_NAME" "$CMD_PATH")"
+PROFILE_FILE="$(get_profile_file "$CMD_NAME" "$CMD_PATH")"
 
 if [[ -z "$PROFILE_FILE" || ! -f "$PROFILE_FILE" ]]; then
     log ERROR "No profile matches command: $CMD_NAME ($CMD_PATH)"
@@ -50,6 +48,7 @@ if [[ -z "$PROFILE_FILE" || ! -f "$PROFILE_FILE" ]]; then
 fi
 
 log INFO "Using profile: $CMD_NAME"
+generate_symlinks "$CMD_NAME"
 
 # -----------------------------
 # LOAD PROFILE ONCE (BIG WIN)
