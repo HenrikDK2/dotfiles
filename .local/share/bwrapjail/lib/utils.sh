@@ -28,8 +28,6 @@ log() {
     echo -e "${color}[$timestamp] [$script_name] [$level] $message${color_reset}"
 }
 
-
-
 load_json_no_comments() {
     local input_file="$1"
     local tmp_file="$(mktemp)"
@@ -55,43 +53,6 @@ get_profile_from_cmd() {
     done
 
     return 1
-}
-
-get_array() {
-    local section="$1"
-    local key="$2"
-
-    jq -r ".${section}.${key}[]?" "$CONFIG_FILE" |
-    while IFS= read -r path; do
-
-        if [[ -z "$path" ]]; then
-            log ERROR "Empty path in ${section}.${key}" >&2
-            return 1
-        fi
-
-        path="${path/#\~/$HOME}"
-        path="${path/\$HOME/$HOME}"
-
-        printf '%s\n' "$path"
-    done
-}
-
-get_value() {
-    local path="$1"
-    jq -r "$path" "$PROFILE_FILE"
-}
-
-get_bool() {
-    local section="$1"
-    local key="$2"
-    local val=$(jq -r ".$section.$key" "$PROFILE_FILE")
-
-    if [[ "$val" == "null" || -z "$val" ]]; then
-        log ERROR "$key value is empty in $section"
-        exit 1
-    fi
-
-    echo "$val"
 }
 
 check_dependencies() {
