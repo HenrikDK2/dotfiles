@@ -1,0 +1,49 @@
+{
+	"executable": "/usr/bin/discord",
+	"network": {
+		"enabled": true,
+		"isolated": true
+	},
+
+	"security": {
+		"user_namespaces": true
+	},
+
+	"graphics": {
+		"gpu": true,
+		"wayland": true,
+		"x11": true
+	},
+
+	"audio": {
+		"enabled": true
+	},
+
+	"dbus": {
+		"enabled": true,
+		"portals": {
+			"open_uri": true,
+			"notifications": true,
+			"screenshare": true,
+			"file_picker": true,
+			"print": true,
+			"clipboard": true
+		}
+	},
+	
+	"paths": [
+		"rw:$HOME/.config/discord",
+		"rw:$HOME/Downloads",
+
+		"ro:/run",
+		"ro:/sys",
+		"ro:/bin",
+		"ro:/sbin",
+		"ro:/usr",
+	    "ro:/opt/discord",
+	    "ro:/lib",
+	    "ro:/lib64",
+	    "ro:/etc"
+	],
+	"envs": []
+}

@@ -94,12 +94,15 @@ log INFO "Building bwrap command"
 
 BWRAP_ARGS=(
     bwrap
-    --dev /dev
-    --proc /proc
-    --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
-    --bind /usr/bin/xdg-open /usr/bin/xdg-open
-    --uid 1000
-    --gid 1000
+		--uid 1000
+	    --gid 1000
+
+	    --proc /proc
+	    --dev /dev
+	    --tmpfs /tmp
+	    
+	    --bind /usr/bin/xdg-open /usr/bin/xdg-open
+	    --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
 )
 
 # -----------------------------
@@ -110,11 +113,6 @@ log INFO "Loading sandbox paths"
 
 data="$(jq -r '.paths[]?' "$PROFILE_FILE")" || {
     log ERROR "Failed to read .paths array"
-    exit 1
-}
-
-[[ -z "$data" ]] && {
-    log ERROR "No entries found in .paths"
     exit 1
 }
 
@@ -129,11 +127,11 @@ while IFS= read -r entry; do
 
 	case "$path" in
 	    /dev|/dev/*)
-	        log WARN "Skipping /dev mount (managed by bwrap --dev)"
+	        log WARN "Skipping /dev mount (managed by bwrapjail)"
 	        continue
 	        ;;
 	    /proc|/proc/*)
-	        log WARN "Skipping /proc mount (managed by bwrap --proc)"
+	        log WARN "Skipping /proc mount (managed by bwrapjail)"
 	        continue
 	        ;;
 	esac
@@ -147,10 +145,11 @@ while IFS= read -r entry; do
             log INFO "Adding read-write bind: $path"
             add_bwrap_arg --bind "$path" "$path"
             ;;
-        tmpfs)
-            log INFO "Adding tmpfs mount: $path"
-            add_bwrap_arg --tmpfs "$path"
-            ;;
+		tmpfs)
+		    log WARN "Skipping tmpfs mount (managed by bwrapjail)"
+		    add_bwrap_arg --tmpfs "$path"
+		    continue
+		    ;;
         *)
             log ERROR "Invalid mode '$mode' in entry: '$entry'"
             exit 1
@@ -233,10 +232,13 @@ done < <(jq -r '.envs[]?' "$PROFILE_FILE")
 # DBUS
 # -----------------------------
 
-ALLOW_DBUS=$(get_value ".ipc.dbus.enabled")
-ALLOW_OPEN_URI=$(get_value ".ipc.portals.open_uri")
-ALLOW_NOTIFICATIONS=$(get_value ".ipc.portals.notifications")
-ALLOW_SCREENSHARE=$(get_value ".ipc.portals.screenshare")
+ALLOW_DBUS=$(get_value ".dbus.enabled")
+ALLOW_OPEN_URI=$(get_value ".dbus.portals.open_uri")
+ALLOW_FILE_CHOOSER=$(get_value ".dbus.portals.filechooser")
+ALLOW_PRINT=$(get_value ".dbus.portals.print")
+ALLOW_NOTIFICATIONS=$(get_value ".dbus.portals.notifications")
+ALLOW_SCREENSHARE=$(get_value ".dbus.portals.screenshare")
+ALLOW_CLIPBOARD=$(get_value ".dbus.portals.clipboard")
 
 DBUS_PROXY_PID=""
 
@@ -249,10 +251,18 @@ if [[ "$ALLOW_DBUS" == "true" ]]; then
     PROXY_ARGS=()
 
     if [[ "$ALLOW_OPEN_URI" == "true" ]]; then
-        log INFO "Allow OpenURI portal (xdg-open fix)"
+        log INFO "Allow OpenURI portal"
         PROXY_ARGS+=( --talk=org.freedesktop.portal.OpenURI )
-        PROXY_ARGS+=( --talk=org.freedesktop.portal.Desktop )
+    fi
+
+    if [[ "$ALLOW_FILE_CHOOSER" == "true" ]]; then
+        log INFO "Allow FileChooser portal (file picker)"
         PROXY_ARGS+=( --talk=org.freedesktop.portal.FileChooser )
+    fi
+
+    if [[ "$ALLOW_PRINT" == "true" ]]; then
+        log INFO "Allow Print portal"
+        PROXY_ARGS+=( --talk=org.freedesktop.portal.Print )
     fi
 
     if [[ "$ALLOW_NOTIFICATIONS" == "true" ]]; then
@@ -263,6 +273,11 @@ if [[ "$ALLOW_DBUS" == "true" ]]; then
     if [[ "$ALLOW_SCREENSHARE" == "true" ]]; then
         log INFO "Allow ScreenCast portal"
         PROXY_ARGS+=( --talk=org.freedesktop.portal.ScreenCast )
+    fi
+
+    if [[ "$ALLOW_CLIPBOARD" == "true" ]]; then
+        log INFO "Allow Clipboard portal"
+        PROXY_ARGS+=( --talk=org.freedesktop.portal.Clipboard )
     fi
 
     xdg-dbus-proxy \
@@ -288,6 +303,8 @@ fi
 add_bwrap_arg -- "${CMD[@]}"
 
 log INFO "Command: ${BWRAP_ARGS[*]}"
+log INFO "ldd: \n $(ldd $CMD_PATH)"
+
 
 BWRAP_PID=""
 
@@ -313,16 +330,15 @@ if [[ "$ALLOW_NETWORK" == "true" && "$NETWORK_ISOLATED" == "true" ]]; then
         --dns none \
         --no-map-gw \
         -- \
-        "${BWRAP_ARGS[@]}" &
+        "${BWRAP_ARGS[@]}" 2> >(while read -r line; do log ERROR "$line"; done) &
 
     BWRAP_PID=$!
     log INFO "bwrap (via pasta) PID: $BWRAP_PID"
 
 else
     log INFO "Launching sandbox"
-
-    "${BWRAP_ARGS[@]}" &
-
+    
+    "${BWRAP_ARGS[@]}" 2> >(while read -r line; do log ERROR "$line"; done) &
     BWRAP_PID=$!
     log INFO "bwrap PID: $BWRAP_PID"
 fi

@@ -1,0 +1,51 @@
+{
+	"executable": "/usr/bin/tidal-hifi",
+	"network": {
+		"enabled": true,
+		"isolated": true
+	},
+
+	"security": {
+		"user_namespaces": true
+	},
+
+	"graphics": {
+		"gpu": true,
+		"wayland": true,
+		"x11": true
+	},
+
+	"audio": {
+		"enabled": true
+	},
+
+	"dbus": {
+		"enabled": false,
+		"portals": {
+			"open_uri": false,
+			"notifications": false,
+			"screenshare": false,
+			"file_picker": false,
+			"print": false,
+			"clipboard": false
+		}
+	},
+	
+	"paths": [
+		"rw:$HOME/.config/tidal-hifi",
+
+		"ro:/run",
+		"rw:/run/user/1000/dconf/user",
+
+		
+		"ro:/sys",
+		"ro:/bin",
+		"ro:/sbin",
+		"ro:/usr",
+	    "ro:/opt/tidal-hifi",
+	    "ro:/lib",
+	    "ro:/lib64",
+	    "ro:/etc"
+	],
+	"envs": []
+}

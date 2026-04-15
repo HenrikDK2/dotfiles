@@ -21,23 +21,18 @@
 		"enabled": true
 	},
 
-	"ipc": {
-		"dbus": {
-			"enabled": true
-		},
-
+	"dbus": {
+		"enabled": true,
 		"portals": {
 			"open_uri": true,
 			"notifications": true,
 			"screenshare": true,
 			"file_picker": true,
-			"print": true
-		},
-
-		"extras": {
+			"print": true,
 			"clipboard": true
 		}
 	},
+	
 	"paths": [
 		"rw:$HOME/Downloads",
 		"rw:$HOME/.cache",
@@ -50,23 +45,17 @@
 		"rw:$HOME/Games",
 
 		"rw:/run/user",
+		"rw:/var",
 
 		"ro:/usr/bin",
 		"ro:/usr/share",
 		"ro:/usr/lib",
 		"ro:/usr/lib64",
-
-		"rw:/var",
-
 		"ro:/etc",
-
 		"ro:/bin",
 		"ro:/lib",
 		"ro:/lib64",
-
-		"ro:/sys",
-
-		"tmpfs:/tmp"
+		"ro:/sys"
 	],
 	"envs": []
 }
