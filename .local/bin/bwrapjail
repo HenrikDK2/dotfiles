@@ -51,33 +51,43 @@ log INFO "Using profile: $CMD_NAME"
 generate_symlinks "$CMD_NAME"
 
 # -----------------------------
-# LOAD PROFILE ONCE (BIG WIN)
+# LOAD PROFILE
 # -----------------------------
 
 PROFILE_JSON="$(<"$PROFILE_FILE")"
 
-# Extract everything in ONE jq call
-read -r ALLOW_GPU ALLOW_WAYLAND ALLOW_X11 \
-        ALLOW_NETWORK NETWORK_ISOLATED \
-        ALLOW_DBUS ALLOW_AUDIO \
-        ALLOW_OPEN_URI ALLOW_FILE_CHOOSER ALLOW_PRINT \
-        ALLOW_NOTIFICATIONS ALLOW_SCREENSHARE ALLOW_CLIPBOARD <<EOF
-$(jq -r '
+read -r \
+  ALLOW_GPU \
+  ALLOW_WAYLAND \
+  ALLOW_X11 \
+  ALLOW_NETWORK \
+  NETWORK_ISOLATED \
+  ALLOW_DBUS \
+  ALLOW_AUDIO \
+  ALLOW_OPEN_URI \
+  ALLOW_FILE_CHOOSER \
+  ALLOW_PRINT \
+  ALLOW_NOTIFICATIONS \
+  ALLOW_SCREENSHARE \
+  ALLOW_CLIPBOARD \
+<<< "$(jq -r '
+  [
     .graphics.gpu,
     .graphics.wayland,
     .graphics.x11,
     .network.enabled,
     .network.isolated,
-    .dbus.enabled,
+    (.dbus != null),
     .audio.enabled,
-    .dbus.portals.open_uri,
-    .dbus.portals.filechooser,
-    .dbus.portals.print,
-    .dbus.portals.notifications,
-    .dbus.portals.screenshare,
-    .dbus.portals.clipboard
-' <<< "$PROFILE_JSON")
-EOF
+
+    (.dbus // {} | .open_uri),
+    (.dbus // {} | .file_picker),
+    (.dbus // {} | .print),
+    (.dbus // {} | .notifications),
+    (.dbus // {} | .screenshare),
+    (.dbus // {} | .clipboard)
+  ] | @tsv
+' "$PROFILE_FILE")"
 
 # -----------------------------
 # BUILD BWRAP COMMAND
@@ -119,11 +129,11 @@ while IFS= read -r entry; do
     case $mode in
         ro)
             log INFO "Adding read-only bind: $path"
-            add_bwrap_arg --ro-bind "$path" "$path"
+            add_bwrap_arg --ro-bind-try "$path" "$path"
             ;;
         rw)
             log INFO "Adding read-write bind: $path"
-            add_bwrap_arg --bind "$path" "$path"
+            add_bwrap_arg --bind-try "$path" "$path"
             ;;
         tmpfs)
             log WARN "Skipping tmpfs mount (managed by bwrapjail)"
@@ -217,11 +227,11 @@ if [[ "$ALLOW_DBUS" == "true" ]]; then
         [[ "${2:-}" == "true" ]] && PROXY_ARGS+=( --talk="$1" )
     }
 
-	[[ "ALLOW_OPEN_URI" = true ]] && (
+	[[ "$ALLOW_OPEN_URI" = true ]] && (
 		add_bwrap_arg --bind /usr/bin/xdg-open /usr/bin/xdg-open
 		add_portal org.freedesktop.portal.OpenURI "$ALLOW_OPEN_URI"
 	)
-  
+
     add_portal org.freedesktop.portal.FileChooser "$ALLOW_FILE_CHOOSER"
     add_portal org.freedesktop.portal.Print "$ALLOW_PRINT"
     add_portal org.freedesktop.portal.Notification "$ALLOW_NOTIFICATIONS"
@@ -237,7 +247,7 @@ if [[ "$ALLOW_DBUS" == "true" ]]; then
     DBUS_PROXY_PID=$!
 
     add_bwrap_arg --bind "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR"
-    add_bwrap_arg --setenv DBUS_SESSION_BUS_ADDRESS "unix:path=$XDG_RUNTIME_DIR/bus"
+    add_bwrap_arg --setenv DBUS_SESSION_BUS_ADDRESS "unix:path=$PROXY_SOCKET"
 else
     log INFO "DBus disabled entirely"
 fi
@@ -260,8 +270,6 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 if [[ "$ALLOW_NETWORK" == "true" && "$NETWORK_ISOLATED" == "true" ]]; then
-    log INFO "Launching sandbox via pasta"
-
     pasta \
         --config-net \
         --dns none \
@@ -270,11 +278,11 @@ if [[ "$ALLOW_NETWORK" == "true" && "$NETWORK_ISOLATED" == "true" ]]; then
         "${BWRAP_ARGS[@]}" 2> >(while read -r line; do log ERROR "$line"; done) &
 
     BWRAP_PID=$!
+    log INFO "Launching sandbox via. pasta PID: $BWRAP_PID"
 else
-    log INFO "Launching sandbox"
-
     "${BWRAP_ARGS[@]}" 2> >(while read -r line; do log ERROR "$line"; done) &
     BWRAP_PID=$!
+    log INFO "Launching sandbox PID: $BWRAP_PID"
 fi
 
 wait "$BWRAP_PID"

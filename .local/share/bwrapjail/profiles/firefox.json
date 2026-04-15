@@ -8,7 +8,7 @@
 	},
 
 	"security": {
-		"user_namespaces": false
+		"user_namespaces": true
 	},
 
 	"graphics": {
@@ -42,10 +42,10 @@
 		"rw:$HOME/.local/share/applications",
 		"rw:$HOME/Games",
 
-		"rw:/run/user",
+		"rw:/run/user/1000",
 		"rw:/var",
 
-		"ro:/usr/bin",
+		"ro:/usr/bin/",
 		"ro:/usr/share",
 		"ro:/usr/lib",
 		"ro:/usr/lib64",

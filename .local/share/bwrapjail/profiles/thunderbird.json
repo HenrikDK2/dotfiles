@@ -1,8 +1,8 @@
 {
-	"executable": "/usr/bin/discord",
+	"executable": "/usr/bin/thunderbird",
 	"network": {
 		"enabled": true,
-		"isolated": true
+		"isolated": false
 	},
 
 	"security": {
@@ -22,23 +22,24 @@
 	"dbus": {
 		"open_uri": true,
 		"notifications": true,
-		"screenshare": true,
+		"screenshare": false,
 		"file_picker": true,
-		"print": false,
+		"print": true,
 		"media": false,
 		"clipboard": true
 	},
 
 	"paths": [
-		"rw:$HOME/.config/discord",
-		"rw:$HOME/Downloads",
+		"rw:$HOME/.thunderbird",
+		"rw:$HOME/.config/thunderbird",
+		"rw:$HOME/.cache/thunderbird",
 
-		"ro:/run",
+		"ro:/run/user/1000",
 		"ro:/sys",
 		"ro:/bin",
 		"ro:/sbin",
 		"ro:/usr",
-		"ro:/opt/discord",
+		"ro:/opt/thunderbird",
 		"ro:/lib",
 		"ro:/lib64",
 		"ro:/etc"
