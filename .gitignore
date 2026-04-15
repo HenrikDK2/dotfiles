@@ -116,6 +116,7 @@
 # .LOCAL
 !.local/
 !.local/share
+!.local/bin
 
 !.local/share/mime
 !.local/share/mime/application
@@ -126,6 +127,10 @@
 
 !.local/share/modorganizer
 !.local/share/modorganizer/**
+
+!.local/bin/bwrapjail
+!.local/share/bwrapjail/
+!.local/share/bwrapjail/**
 
 !.local/share/nemo
 !.local/share/nemo/actions

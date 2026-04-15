@@ -151,7 +151,6 @@ SYSTEM_SERVICES_TO_ENABLE=(
     "ufw.service"
     "NetworkManager.service"
 
-	"auditd.service"
 	"apparmor.service"
 	"fix-permissions.service"
 	
@@ -165,6 +164,7 @@ SYSTEM_SERVICES_TO_ENABLE=(
 
 SYSTEM_SERVICES_TO_MASK=(
     "systemd-userdbd.service"
+    "auditd.service"
     "systemd-userdbd.socket"
     "systemd-resolved.service"
 	"NetworkManager-wait-online.service"

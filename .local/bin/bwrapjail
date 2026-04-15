@@ -1,0 +1,318 @@
+#!/bin/bash
+
+SYMLINK_DIR="$HOME/.local/bin"
+PROFILES_DIR="$HOME/.local/share/bwrapjail/profiles"
+
+source "$HOME/.local/share/bwrapjail/lib/utils.sh"
+
+# -----------------------------
+# COMMAND PARSING
+# -----------------------------
+
+if [ $# -eq 0 ]; then
+    show_usage 1
+fi
+
+COMMAND="$1"
+shift
+
+CMD=()
+CMD_NAME=""
+CMD_PATH=""
+PROFILE=""
+
+case "$COMMAND" in
+    run)
+        if [ $# -lt 1 ]; then
+            log ERROR "run requires <program> [args...]"
+            show_usage 1
+        fi
+
+        CMD=( "$@" )
+        CMD_PATH="${CMD[0]}"
+        CMD_NAME="$(basename "$CMD_PATH")"
+        ;;
+
+    generate)
+        check_dependencies || exit 1
+        generate_symlinks "$1"
+        exit 0
+        ;;
+
+    list)
+        list_profiles
+        exit 0
+        ;;
+
+    help|--help|-h)
+        show_usage 0
+        ;;
+
+    *)
+        # fallback: direct execution
+        CMD=( "$COMMAND" "$@" )
+        CMD_PATH="${CMD[0]}"
+        CMD_NAME="$(basename "$CMD_PATH")"
+        ;;
+esac
+
+# -----------------------------
+# DEPENDENCY CHECK
+# -----------------------------
+
+check_dependencies || exit 1
+
+# -----------------------------
+# EXEC VALIDATION
+# -----------------------------
+
+EXEC_PATH="$(command -v "${CMD[0]}")"
+
+if [[ -z "$EXEC_PATH" || ! -x "$EXEC_PATH" ]]; then
+    log ERROR "Executable not found in PATH or not executable: ${CMD[0]}"
+    exit 1
+fi
+
+# -----------------------------
+# PROFILE VALIDATION
+# -----------------------------
+
+PROFILE_FILE="$(get_profile_from_cmd "$CMD_NAME" "$CMD_PATH")"
+
+if [[ -z "$PROFILE_FILE" ]]; then
+    log ERROR "No profile matches command: $CMD_NAME ($CMD_PATH)"
+    exit 1
+fi
+
+log INFO "Using profile: $CMD_NAME"
+
+# -----------------------------
+# BUILD BWRAP COMMAND
+# -----------------------------
+
+log INFO "Building bwrap command"
+
+BWRAP_ARGS=(
+    bwrap
+    --die-with-parent
+    --dev /dev
+    --proc /proc
+    --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
+    --bind /usr/bin/xdg-open /usr/bin/xdg-open
+)
+
+# -----------------------------
+# PATHS
+# -----------------------------
+
+log INFO "Loading sandbox paths"
+
+data="$(jq -r '.paths[]?' "$PROFILE_FILE")" || {
+    log ERROR "Failed to read .paths array"
+    exit 1
+}
+
+[[ -z "$data" ]] && {
+    log ERROR "No entries found in .paths"
+    exit 1
+}
+
+while IFS= read -r entry; do
+    [[ -z "$entry" ]] && continue
+
+    mode="${entry%%:*}"
+    path="${entry#*:}"
+
+    path="${path/#\~/$HOME}"
+    path="${path/\$HOME/$HOME}"
+
+    case "$mode" in
+        ro)
+            log INFO "Adding read-only bind: $path"
+            add_bwrap_arg --ro-bind "$path" "$path"
+            ;;
+        rw)
+            log INFO "Adding read-write bind: $path"
+            add_bwrap_arg --bind "$path" "$path"
+            ;;
+        tmpfs)
+            log INFO "Adding tmpfs mount: $path"
+            add_bwrap_arg --tmpfs "$path"
+            ;;
+        *)
+            log ERROR "Invalid mode '$mode' in entry: '$entry'"
+            exit 1
+            ;;
+    esac
+done <<< "$data"
+
+# -----------------------------
+# DISPLAY / GRAPHICS
+# -----------------------------
+
+ALLOW_GPU=$(get_value ".graphics.gpu")
+ALLOW_WAYLAND=$(get_value ".graphics.wayland")
+ALLOW_X11=$(get_value ".graphics.x11")
+
+if [[ "$ALLOW_GPU" == "true" ]]; then
+    log INFO "Enabling GPU access"
+    add_bwrap_arg --dev-bind /dev/dri /dev/dri
+fi
+
+if [[ "$ALLOW_WAYLAND" == "true" && -n "$WAYLAND_DISPLAY" && -n "$XDG_RUNTIME_DIR" ]]; then
+    log INFO "Enabling Wayland display"
+    add_bwrap_arg --bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" \
+                  "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+fi
+
+if [[ "$ALLOW_X11" == "true" && -n "$DISPLAY" ]]; then
+    log INFO "Enabling X11 socket"
+    add_bwrap_arg --bind /tmp/.X11-unix /tmp/.X11-unix
+fi
+
+# -----------------------------
+# AUDIO
+# -----------------------------
+
+ALLOW_AUDIO=$(get_value ".ipc.allow_audio")
+
+if [[ "$ALLOW_AUDIO" == "true" && -d "$XDG_RUNTIME_DIR/pulse" ]]; then
+    log INFO "Enabling PulseAudio"
+    add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR/pulse"
+fi
+
+# -----------------------------
+# NETWORK
+# -----------------------------
+
+ALLOW_NETWORK=$(get_value ".network.enabled")
+NETWORK_ISOLATED=$(get_value ".network.isolated")
+
+if [[ "$ALLOW_NETWORK" == "true" && "$NETWORK_ISOLATED" == "false" ]]; then
+    log INFO "Allow network, not isolated"
+    add_bwrap_arg --share-net
+
+elif [[ "$ALLOW_NETWORK" == "true" && "$NETWORK_ISOLATED" == "true" ]]; then
+    log INFO "Network enabled (isolated)"
+    add_bwrap_arg --unshare-user
+
+else
+    log INFO "Network disabled"
+    add_bwrap_arg --unshare-net
+fi
+
+# -----------------------------
+# ENVIRONMENT VARIABLES
+# -----------------------------
+
+log INFO "Loading environment variables"
+
+while IFS="=" read -r key value; do
+    key=$(echo "$key" | xargs)
+    value=$(echo "$value" | xargs | tr -d '"')
+
+    [[ -z "$key" ]] && continue
+
+    log DEBUG "ENV: $key=$value"
+    add_bwrap_arg --setenv "$key" "$value"
+done < <(jq -r '.envs // empty | to_entries[] | "\(.key)=\(.value)"' "$PROFILE_FILE")
+
+# -----------------------------
+# DBUS
+# -----------------------------
+
+ALLOW_DBUS=$(get_value ".ipc.dbus.enabled")
+ALLOW_OPEN_URI=$(get_value ".ipc.portals.open_uri")
+ALLOW_NOTIFICATIONS=$(get_value ".ipc.portals.notifications")
+ALLOW_SCREENSHARE=$(get_value ".ipc.portals.screenshare")
+
+DBUS_PROXY_PID=""
+
+if [[ "$ALLOW_DBUS" == "true" ]]; then
+    log INFO "Setting up D-Bus proxy"
+
+    DBUS_SOCKET="$XDG_RUNTIME_DIR/bus"
+    PROXY_SOCKET="$XDG_RUNTIME_DIR/bus-proxy-$(uuidgen).sock"
+
+    PROXY_ARGS=()
+
+    if [[ "$ALLOW_OPEN_URI" == "true" ]]; then
+        log INFO "Allow OpenURI portal (xdg-open fix)"
+        PROXY_ARGS+=( --talk=org.freedesktop.portal.OpenURI )
+        PROXY_ARGS+=( --talk=org.freedesktop.portal.Desktop )
+        PROXY_ARGS+=( --talk=org.freedesktop.portal.FileChooser )
+    fi
+
+    if [[ "$ALLOW_NOTIFICATIONS" == "true" ]]; then
+        log INFO "Allow Notifications portal"
+        PROXY_ARGS+=( --talk=org.freedesktop.portal.Notification )
+    fi
+
+    if [[ "$ALLOW_SCREENSHARE" == "true" ]]; then
+        log INFO "Allow ScreenCast portal"
+        PROXY_ARGS+=( --talk=org.freedesktop.portal.ScreenCast )
+    fi
+
+    xdg-dbus-proxy \
+        "$DBUS_SESSION_BUS_ADDRESS" \
+        "$PROXY_SOCKET" \
+        --filter \
+        "${PROXY_ARGS[@]}" &
+
+    DBUS_PROXY_PID=$!
+
+    # Bind runtime dir for portals
+    add_bwrap_arg --bind "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR"
+    add_bwrap_arg --setenv DBUS_SESSION_BUS_ADDRESS "unix:path=$DBUS_SOCKET"
+
+else
+    log INFO "DBus disabled entirely"
+fi
+
+# -----------------------------
+# RUN
+# -----------------------------
+
+add_bwrap_arg -- "${CMD[@]}"
+
+log INFO "Command: ${BWRAP_ARGS[*]}"
+
+BWRAP_PID=""
+
+cleanup() {
+    log INFO "Cleaning up"
+
+    [[ -n "$BWRAP_PID" ]] && kill "$BWRAP_PID" 2>/dev/null
+    [[ -n "$DBUS_PROXY_PID" ]] && kill "$DBUS_PROXY_PID" 2>/dev/null
+
+    [[ -n "$BWRAP_PID" ]] && wait "$BWRAP_PID" 2>/dev/null
+    [[ -n "$DBUS_PROXY_PID" ]] && wait "$DBUS_PROXY_PID" 2>/dev/null
+
+    [[ -n "$PROXY_SOCKET" ]] && rm -f "$PROXY_SOCKET"
+}
+
+trap cleanup EXIT INT TERM
+
+if [[ "$ALLOW_NETWORK" == "true" && "$NETWORK_ISOLATED" == "true" ]]; then
+    log INFO "Launching sandbox via pasta"
+
+    pasta \
+        --config-net \
+        --dns none \
+        --no-map-gw \
+        -- \
+        "${BWRAP_ARGS[@]}" &
+
+    BWRAP_PID=$!
+    log INFO "bwrap (via pasta) PID: $BWRAP_PID"
+
+else
+    log INFO "Launching sandbox"
+
+    "${BWRAP_ARGS[@]}" &
+
+    BWRAP_PID=$!
+    log INFO "bwrap PID: $BWRAP_PID"
+fi
+
+wait "$BWRAP_PID"
