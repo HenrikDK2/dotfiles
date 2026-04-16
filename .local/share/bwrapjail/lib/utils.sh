@@ -56,7 +56,7 @@ Run options:
         Override the entry command executed inside the sandbox.
 
     --debug
-        Enable execution tracing and debugging envs to retrieve detailed runtime logs to \$HOME/sandbox-trace.log.
+        Enable execution tracing and debugging envs to retrieve detailed runtime logs to \$HOME/app.trace.
 
 Examples:
     $(basename "$0") run /usr/bin/firefox
@@ -132,7 +132,6 @@ utils::debug() {
         return 0
     fi
 
-    DEBUG_INIT=1
     utils::log INFO "Starting debugging..."
     utils::print_ldd
     utils::log INFO "Analyzing trace file: $TRACE_FILE"
@@ -144,8 +143,6 @@ utils::debug() {
         grep -E "=[[:space:]]*-1[[:space:]]+[A-Z0-9_]+" "$TRACE_FILE" \
         | grep -v "EINVAL"
     )
-
-    utils::log INFO "Failed syscall count: ${#failed_lines[@]}"
 
     if (( ${#failed_lines[@]} == 0 )); then
         utils::log INFO "No syscall errors detected"
@@ -189,14 +186,9 @@ utils::debug() {
         [[ -z "$syscall" || -z "$err" ]] && continue
 
         if [[ -n "$path" ]]; then
-            utils::log WARN "$syscall failed: $err -> $path"
+            utils::log WARN "$syscall $err -> $path"
         else
-            utils::log WARN "$syscall failed: $err"
+            utils::log WARN "$syscall $err"
         fi
     done <<< "$(printf '%s\n' "${failed_structured[@]}")"
-
-    # =========================================================
-    # SUMMARY
-    # =========================================================
-    utils::log INFO "Total syscall failures: ${#failed_lines[@]}"
 }

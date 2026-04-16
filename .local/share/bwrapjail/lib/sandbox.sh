@@ -43,9 +43,6 @@ sandbox::init_bwrap_base_args() {
     BWRAP_ARGS=(
         bwrap
         --clearenv
-        --unshare-all
-        --share-net
-
         --proc /proc
         --dev /dev
         --tmpfs /tmp
@@ -157,7 +154,9 @@ sandbox::configure_audio() {
 sandbox::configure_network() {
     if [[ "$ALLOW_NETWORK" = false ]]; then
         utils::log INFO "Disabling network access"
-        sandbox::add_bwrap_arg --unshare-net
+        BWRAP_ARGS+=( "--unshare-net" )
+    else
+   		BWRAP_ARGS+=( "--share-net" )
     fi
 }
 
@@ -166,8 +165,12 @@ sandbox::finalize_command() {
     	EXECUTABLE="$COMMAND_OVERRIDE"
     fi
 
-	BWRAP_ARGS+=( -- "$EXECUTABLE" "${EXTRA_ARGS[@]}" )
+	# When it comes to --unshare-all orders matter
+	# I need to have it at the end of the command
 
+    BWRAP_ARGS+=( "--unshare-all" )
+    sandbox::configure_network
+	BWRAP_ARGS+=( -- "$EXECUTABLE" "${EXTRA_ARGS[@]}" )
     utils::log INFO "Command: ${BWRAP_ARGS[*]}"
 }
 
@@ -180,8 +183,9 @@ sandbox::execute() {
             exit 1
         fi
 
-        local trace_name="$(basename "$EXECUTABLE")-$$"
+        local trace_name="$(basename "$EXECUTABLE")"
         TRACE_FILE="$HOME/${trace_name}.trace"
+        echo "" > "$TRACE_FILE"
 
         utils::log INFO "strace enabled -> $TRACE_FILE"
 		LD_DEBUG=libs strace -f -tt -s 128 \
@@ -195,16 +199,18 @@ sandbox::execute() {
     fi
 
     BWRAP_PID=$!
-    [[ "$TRACE_ENABLED" -eq 0 ]] && utils::log INFO "Launching sandbox PID: $BWRAP_PID"
+    [[ "$DEBUG_ENABLED" -eq 0 ]] && utils::log INFO "Launching sandbox PID: $BWRAP_PID"
     wait "$BWRAP_PID"
 }
 
 sandbox::cleanup() {
-    utils::log INFO "Cleaning up"
-    [[ -n "${BWRAP_PID:-}" ]] && kill "$BWRAP_PID" 2>/dev/null || true
-    [[ -n "${DBUS_PROXY_PID:-}" ]] && kill "$DBUS_PROXY_PID" 2>/dev/null || true
-    [[ -n "${PROXY_SOCKET:-}" ]] && rm -f "$PROXY_SOCKET"
-    set +x 2>/dev/null || true
-    [[ "$DEBUG_ENABLED" -eq 1 ]] && utils::debug
-
+	if [[ -z "$HAS_CLEANUP_RUN" ]]; then
+		HAS_CLEANUP_RUN=1
+		utils::debug
+	    utils::log INFO "Cleaning up"
+	    [[ -n "${BWRAP_PID:-}" ]] && kill "$BWRAP_PID" 2>/dev/null || true
+	    [[ -n "${DBUS_PROXY_PID:-}" ]] && kill "$DBUS_PROXY_PID" 2>/dev/null || true
+	    [[ -n "${PROXY_SOCKET:-}" ]] && rm -f "$PROXY_SOCKET"
+	    set +x 2>/dev/null || true
+	fi
 }

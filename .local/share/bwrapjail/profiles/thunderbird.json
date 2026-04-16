@@ -23,6 +23,7 @@
 		"rw:$HOME/Downloads",
 		"rw:$HOME/.thunderbird",
 		"rw:$HOME/.config/thunderbird",
+		"rw:$HOME/.config/mesa_shader_cache",
 		"rw:$HOME/.cache/thunderbird",
 
 		"ro:/usr",

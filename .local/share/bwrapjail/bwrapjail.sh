@@ -80,7 +80,6 @@ case "${1:-}" in
 	    sandbox::configure_wayland
 	    sandbox::configure_x11
 	    sandbox::configure_audio
-	    sandbox::configure_network
 
 	    dbus::configure_portals
 	    dbus::setup_proxy
