@@ -16,6 +16,9 @@ declare PROFILE_JSON=""
 declare EXECUTABLE=""
 declare EXTRA_ARGS=""
 
+declare TRACE_FILE=""
+declare TRACE_ENABLED=0
+
 declare ALLOW_NETWORK=""
 declare ALLOW_AUDIO=""
 declare ALLOW_GPU=""
@@ -53,6 +56,10 @@ case "${1:-}" in
 	                COMMAND_OVERRIDE="$1"
 	                shift
 	                ;;
+				--trace)
+					shift
+    				TRACE_ENABLED=1
+        			;;
 	            *)
 	                ARGS+=( "$1" )
 	                shift

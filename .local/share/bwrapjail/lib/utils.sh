@@ -55,8 +55,12 @@ Run options:
     --command <cmd>
         Override the entry command executed inside the sandbox.
 
+    --trace
+        Enable execution tracing and write detailed runtime logs to \$HOME/sandbox-trace.log.
+
 Examples:
     $(basename "$0") run /usr/bin/firefox
+    $(basename "$0") run /usr/bin/firefox --trace
     $(basename "$0") run /usr/bin/firefox --command /usr/bin/alacritty
     $(basename "$0") generate firefox
     $(basename "$0") generate
@@ -119,4 +123,79 @@ utils::print_ldd() {
 
         utils::log INFO "Consider adding them\n"
     fi
+}
+
+utils::analyze_trace() {
+    [[ ! -f "$TRACE_FILE" ]] && return 0
+
+    if [[ -n "${TRACE_ANALYZED:-}" ]]; then
+        return 0
+    fi
+
+    TRACE_ANALYZED=1
+
+    utils::log INFO "Analyzing trace file: $TRACE_FILE"
+
+    # =========================================================
+    # CAPTURE ALL FAILURES
+    # =========================================================
+    mapfile -t failed_lines < <(
+        grep -E "=[[:space:]]*-1[[:space:]]+[A-Z0-9_]+" "$TRACE_FILE" \
+        | grep -v "EINVAL"
+    )
+
+    utils::log INFO "Failed syscall count: ${#failed_lines[@]}"
+
+    if (( ${#failed_lines[@]} == 0 )); then
+        utils::log INFO "No syscall errors detected"
+        TRACE_ANALYZED=1
+        return 0
+    fi
+
+    # =========================================================
+    # STRUCTURED PARSING
+    # syscall | errno | path
+    # =========================================================
+    mapfile -t failed_structured < <(
+        printf '%s\n' "${failed_lines[@]}" | awk '
+        {
+            syscall = ""
+            err = ""
+            path = ""
+
+            if (match($0, /^([a-zA-Z0-9_]+)\(/, m)) {
+                syscall = m[1]
+            }
+
+            if (match($0, /= *-1 +([A-Z0-9_]+)/, e)) {
+                err = e[1]
+            }
+
+            if (match($0, /"\/[^"]+"/)) {
+                path = substr($0, RSTART+1, RLENGTH-2)
+            }
+
+            key = syscall SUBSEP err SUBSEP path
+
+            if (!(key in seen)) {
+                seen[key] = 1
+                print syscall "\t" err "\t" path
+            }
+        }'
+    )
+
+    while IFS=$'\t' read -r syscall err path; do
+        [[ -z "$syscall" || -z "$err" ]] && continue
+
+        if [[ -n "$path" ]]; then
+            utils::log WARN "$syscall failed: $err -> $path"
+        else
+            utils::log WARN "$syscall failed: $err"
+        fi
+    done <<< "$(printf '%s\n' "${failed_structured[@]}")"
+
+    # =========================================================
+    # SUMMARY
+    # =========================================================
+    utils::log INFO "Total syscall failures: ${#failed_lines[@]}"
 }
