@@ -1,5 +1,8 @@
 {
-	"executable": "/usr/bin/thunderbird",
+	"cmd": {
+		"executable": "/usr/bin/thunderbird",
+		"extra_args": []
+	},
 	"allow_network": true,
 	"allow_audio": true,
 	"graphics": {

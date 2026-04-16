@@ -6,7 +6,7 @@ utils::log() {
     local message="$*"
 
     local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-    local script_name="$(basename "$CMD")-$$"
+    local script_name="$(basename "$EXECUTABLE")-$$"
     local color_reset="\033[0m"
     local color
 

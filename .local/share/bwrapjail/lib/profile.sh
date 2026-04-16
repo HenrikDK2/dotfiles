@@ -1,21 +1,33 @@
 profile::validate() {
-    PROFILE_FILE="$(profile::get_file "$CMD_NAME" "$CMD_PATH")"
+    PROFILE_FILE=""
+    local executable_name="$(basename "$EXECUTABLE")"
+
+    for file in "$PROFILES_DIR"/*.json; do
+        [[ -f "$file" ]] || continue
+        if [[ "$(basename "$file" .json)" == "$executable_name" ]]; then
+            local tmp_file="$(mktemp)"
+            sed '/^\s*\/\//d' "$file" > "$tmp_file"
+            PROFILE_FILE="$tmp_file"
+            break
+        fi
+    done
 
     if [[ -z "$PROFILE_FILE" || ! -f "$PROFILE_FILE" ]]; then
-        utils::log ERROR "No profile matches command: $CMD_NAME ($CMD_PATH)"
+        utils::log ERROR "No profile matches command: $EXECUTABLE"
         exit 1
     fi
-
-    utils::log INFO "Using profile: $CMD_NAME"
+    utils::log INFO "Using profile: $(basename "$EXECUTABLE")"
 }
 
 profile::load_config() {
     PROFILE_JSON="$(<"$PROFILE_FILE")"
 
+    # Read extra_args into an array
+    mapfile -t EXTRA_ARGS < <(jq -r '.cmd.extra_args[]? // empty' "$PROFILE_FILE")
+
     read -r EXECUTABLE \
             ALLOW_NETWORK \
             ALLOW_AUDIO \
-            ISOLATE_NAMESPACES \
             ALLOW_GPU \
             ALLOW_WAYLAND \
             ALLOW_X11 \
@@ -28,15 +40,12 @@ profile::load_config() {
             ALLOW_CLIPBOARD \
     <<< "$(jq -r '
       [
-        (.executable // ""),
+        (.cmd.executable // ""),
         (.allow_network // false),
         (.allow_audio // false),
-        (.isolate_namespaces // false),
-
         (.graphics.allow_gpu // false),
         (.graphics.allow_wayland // false),
         (.graphics.allow_x11 // false),
-
         (.dbus != null),
         (.dbus.open_uri // false),
         (.dbus.file_chooser // false),
@@ -45,22 +54,8 @@ profile::load_config() {
         (.dbus.screenshare // false),
         (.dbus.clipboard // false)
       ]
-      | map(tostring)
       | @tsv
     ' "$PROFILE_FILE")"
-}
-
-profile::get_file() {
-    local cmd_name="$1"
-
-    for file in "$PROFILES_DIR"/*.json; do
-        [[ -f "$file" ]] || continue
-        if [[ "$(basename "$file" .json)" == "$cmd_name" ]]; then
-            local tmp_file="$(mktemp)"
-            sed '/^\s*\/\//d' "$file" > "$tmp_file"
-            echo "$tmp_file"
-        fi
-    done
 }
 
 profile::list() {
@@ -78,8 +73,8 @@ profile::generate() {
 
 	gen() {
 		local name=$(basename "$1")
-	    local file="$PROFILES_DIR/$name.json"
 	    local target="$SYMLINK_DIR/$name"
+	    local file="$PROFILES_DIR/$name.json"
 
 	    # Check if profile exists
 	    if [[ ! -f "$file" ]]; then
@@ -105,21 +100,4 @@ profile::generate() {
     fi
 
 	echo -e ""
-}
-
-profile::detect_from_name() {
-    local program_name="$(basename "$0")"
-    # If called directly as bwrapjail, no auto-detection
-    if [[ "$program_name" == "bwrapjail" || "$program_name" == "bwrapjail.sh" ]]; then
-        return 1
-    fi
-    # Search for profile that includes this program
-    for profile_file in "$PROFILES_DIR"/*.json; do
-        [[ -f "$profile_file" ]] || continue
-        if jq -e --arg prog "$program_name" '.executable | select(. == $prog)' "$profile_file" >/dev/null 2>&1; then
-            basename "$profile_file" .json
-            return 0
-        fi
-    done
-    return 1
 }

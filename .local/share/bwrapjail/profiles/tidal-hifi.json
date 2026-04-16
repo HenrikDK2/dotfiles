@@ -1,5 +1,12 @@
 {
-	"executable": "/usr/bin/tidal-hifi",
+	"cmd": {
+		"executable": "/usr/bin/tidal-hifi",
+		"extra_args": [
+			"--enable-features=UseOzonePlatform",
+			"--ozone-platform-hint=auto",
+			"--enable-features=WaylandWindowDecorations"
+		]
+	},
 	"allow_network": true,
 	"allow_audio": true,
 	"graphics": {
@@ -8,18 +15,19 @@
 		"allow_x11": true
 	},
 	"dbus": {
-		"open_uri": false,
+		"open_uri": true,
 		"notifications": true,
-		"screenshare": false,
-		"file_chooser": false,
-		"print": false,
+		"screenshare": true,
+		"file_chooser": true,
+		"print": true,
 		"media": true,
-		"clipboard": false
+		"clipboard": true
 	},
 	"paths": [
 		"rw:$HOME/.config/tidal-hifi",
 		"rw:$HOME/.cache/fontconfig",
-		"rw:/var/cache/fontconfig"
+		"rw:/var/cache/fontconfig",
+		"rw:/run"
 	],
 	"envs": {
 		"HOME": "$HOME"

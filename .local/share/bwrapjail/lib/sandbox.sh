@@ -3,43 +3,37 @@ sandbox::add_bwrap_arg() {
     local src_pattern="$2"
     local dest_pattern="${3:-$2}"
 
-    # Case 1: glob pattern → expand
-    if [[ "$src_pattern" == *"*"* ]]; then
-        shopt -s nullglob
+    _add_one() {
+        local src="$1"
+        local dest=""
 
-        for src in $src_pattern; do
-            local name="${src##*/}"
-
-            if [[ "$dest_pattern" == *"*"* ]]; then
-                dest="${dest_pattern%\*}$name"
-            else
-                dest="${dest_pattern%/}/$name"
-            fi
-
-            BWRAP_ARGS+=( "$flag" "$src" "$dest" )
-        done
-
-        shopt -u nullglob
-
-    # Case 2: single path → no loop, no globbing
-    else
-        local src="$src_pattern"
-        local dest
-
-        # before Case 2
-        if [[ "$src_pattern" != *"*"* && "$dest_pattern" == *"*"* ]]; then
-            utils::log ERROR "dest_pattern cannot contain '*' when src_pattern is not a glob"
-            exit 1
-        fi
-
+        # ONLY wildcard substitution if explicitly present in dest
         if [[ "$dest_pattern" == *"*"* ]]; then
-            local name="${src##*/}"
-            dest="${dest_pattern%\*}$name"
+        	local name="${src##*/}"
+        	local prefix="${dest_pattern%\*}"
+
+        	dest="${prefix%/}/${name}"
         else
+            # STRICT: no transformation whatsoever
             dest="$dest_pattern"
         fi
 
         BWRAP_ARGS+=( "$flag" "$src" "$dest" )
+    }
+
+    # Case 1: glob expansion (src only)
+    if [[ "$src_pattern" == *"*"* ]]; then
+        shopt -s nullglob
+
+        for src in $src_pattern; do
+            _add_one "$src"
+        done
+
+        shopt -u nullglob
+
+    # Case 2: single path
+    else
+        _add_one "$src_pattern"
     fi
 }
 
@@ -109,14 +103,17 @@ sandbox::configure_paths(){
 }
 
 sandbox::configure_envs() {
-	echo -e ""
+    echo -e ""
     utils::log INFO "Loading environment variables"
 
     # Read envs from profile JSON
     while IFS= read -r key; do
         [[ -z "$key" ]] && continue
 
-        value=$(jq -r ".envs[\"$key\"]" <<< "$PROFILE_JSON")
+        value=$(jq -r --arg key "$key" '.envs[$key] // empty' <<< "$PROFILE_JSON")
+
+        # Skip if value is empty/null
+        [[ -z "$value" || "$value" == "null" ]] && continue
 
         # Resolve $HOME if needed
         value="${value//\$HOME/$HOME}"
@@ -124,7 +121,8 @@ sandbox::configure_envs() {
         utils::log INFO "Setting env $key=$value"
         sandbox::add_bwrap_arg --setenv "$key" "$value"
 
-    done < <(jq -r '.envs | keys[]?' <<< "$PROFILE_JSON")
+    done < <(jq -r '(.envs // {}) | keys[]' <<< "$PROFILE_JSON")
+
     echo -e ""
 }
 
@@ -174,10 +172,10 @@ sandbox::configure_network() {
 
 sandbox::finalize_command() {
 	if [[ -n "$COMMAND_OVERRIDE" ]]; then
-    	CMD=( "$COMMAND_OVERRIDE" )
+    	EXECUTABLE="$COMMAND_OVERRIDE"
     fi
 
-	BWRAP_ARGS+=( -- "${CMD[@]}" )
+	BWRAP_ARGS+=( -- "$EXECUTABLE" "${EXTRA_ARGS[@]}" )
 
 	utils::print_ldd
     utils::log INFO "Command: ${BWRAP_ARGS[*]}"

@@ -1,5 +1,8 @@
 {
-	"executable": "/usr/bin/firefox",
+	"cmd": {
+		"executable": "/usr/bin/firefox",
+		"extra_args": []
+	},
 	"allow_network": true,
 	"allow_audio": true,
 	"graphics": {

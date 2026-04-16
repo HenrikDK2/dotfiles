@@ -3,11 +3,6 @@
 SYMLINK_DIR="$HOME/.local/bin"
 PROFILES_DIR="$HOME/.local/share/bwrapjail/profiles"
 
-declare -a CMD=()
-declare -a CMD_OVERRIDE=()
-declare CMD_PATH=""
-declare CMD_NAME=""
-
 declare -a BWRAP_ARGS=()
 declare BWRAP_PID=""
 
@@ -19,9 +14,10 @@ declare PROFILE_FILE=""
 declare PROFILE_JSON=""
 
 declare EXECUTABLE=""
+declare EXTRA_ARGS=""
+
 declare ALLOW_NETWORK=""
 declare ALLOW_AUDIO=""
-declare ISOLATE_NAMESPACES=""
 declare ALLOW_GPU=""
 declare ALLOW_WAYLAND=""
 declare ALLOW_X11=""
@@ -47,6 +43,7 @@ case "${1:-}" in
 	    [ $# -lt 1 ] && utils::show_usage
 
 	    COMMAND_OVERRIDE=""
+        EXECUTABLE=( $1 )
 	    ARGS=()
 
 	    while [[ $# -gt 0 ]]; do
@@ -65,12 +62,8 @@ case "${1:-}" in
 
 	    [[ ${#ARGS[@]} -lt 1 ]] && utils::show_usage
 
-	    CMD=( "${ARGS[@]}" )
-	    CMD_PATH="${CMD[0]}"
-	    CMD_NAME="$(basename "$CMD_PATH")"
-
 	    profile::validate
-	    profile::generate "$CMD_PATH"
+	    profile::generate
 	    profile::load_config
 
 	    sandbox::init_bwrap_base_args
@@ -91,7 +84,7 @@ case "${1:-}" in
 
     generate)
         shift
-        profile::generate "$1"
+        profile::generate
         ;;
 
     list)
