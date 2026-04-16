@@ -1,59 +1,19 @@
-// user_namespaces & isolated network messes with nxm-handler
-
 {
 	"executable": "/usr/bin/firefox",
-	"network": {
-		"enabled": true,
-		"isolated": false
-	},
-
-	"security": {
-		"user_namespaces": true
-	},
-
+	"allow_network": true,
+	"allow_audio": true,
 	"graphics": {
-		"gpu": true,
-		"wayland": true,
-		"x11": false
+		"allow_gpu": true,
+		"allow_wayland": true,
+		"allow_x11": true
 	},
-
-	"audio": {
-		"enabled": true
-	},
-
 	"dbus": {
-		"open_uri": true,
-		"notifications": true,
-		"screenshare": true,
-		"file_picker": true,
+		"open_uri": false,
+		"notifications": false,
+		"screenshare": false,
+		"file_chooser": false,
 		"print": true,
 		"media": true,
 		"clipboard": true
-	},
-
-	"paths": [
-		"rw:$HOME/Downloads",
-		"rw:$HOME/.cache",
-		"rw:$HOME/.config/mozilla",
-
-		// Needed for nxm-handler
-		"rw:$HOME/.local/share/Steam",
-		"rw:$HOME/.local/share/modorganizer",
-		"rw:$HOME/.local/share/applications",
-		"rw:$HOME/Games",
-
-		"rw:/run/user/1000",
-		"rw:/var",
-
-		"ro:/usr/bin/",
-		"ro:/usr/share",
-		"ro:/usr/lib",
-		"ro:/usr/lib64",
-		"ro:/etc",
-		"ro:/bin",
-		"ro:/lib",
-		"ro:/lib64",
-		"ro:/sys"
-	],
-	"envs": []
+	}
 }
