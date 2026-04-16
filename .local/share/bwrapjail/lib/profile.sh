@@ -82,24 +82,24 @@ profile::generate() {
     # No argument → generate for all
     [[ -z "$profile" ]] && profile="__ALL__"
 
-gen() {
-    local name="$1"
-    local file="$PROFILES_DIR/$name.json"
-    local target="$SYMLINK_DIR/profile"
+	gen() {
+	    local name="$1"
+	    local file="$PROFILES_DIR/$name.json"
+	    local target="$SYMLINK_DIR/profile"
 
-    # Check if profile exists
-    if [[ ! -f "$file" ]]; then
-        utils::log ERROR "Profile not found: $file"
-        exit 1
-    fi
+	    # Check if profile exists
+	    if [[ ! -f "$file" ]]; then
+	        utils::log ERROR "Profile not found: $file"
+	        exit 1
+	    fi
 
-    mkdir -p "$SYMLINK_DIR"
+	    mkdir -p "$SYMLINK_DIR"
 
-    utils::log INFO "Generating symlink for $name"
+	    utils::log INFO "Generating symlink for $name"
 
-    printf 'bwrapjail run "/usr/bin/%s"\n' "$name" > "$target"
-    chmod +x "$target"
-}
+	    printf 'bwrapjail run "/usr/bin/%s"\n' "$name" > "$target"
+	    chmod +x "$target"
+	}
 
 	[[ -n "$1" ]] && gen "$1"
 }
