@@ -55,12 +55,12 @@ Run options:
     --command <cmd>
         Override the entry command executed inside the sandbox.
 
-    --trace
-        Enable execution tracing and write detailed runtime logs to \$HOME/sandbox-trace.log.
+    --debug
+        Enable execution tracing and debugging envs to retrieve detailed runtime logs to \$HOME/sandbox-trace.log.
 
 Examples:
     $(basename "$0") run /usr/bin/firefox
-    $(basename "$0") run /usr/bin/firefox --trace
+    $(basename "$0") run /usr/bin/firefox --debug
     $(basename "$0") run /usr/bin/firefox --command /usr/bin/alacritty
     $(basename "$0") generate firefox
     $(basename "$0") generate
