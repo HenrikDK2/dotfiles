@@ -23,5 +23,14 @@
 		"rw:$HOME/Downloads",
 		"rw:$HOME/.config/discord",
 		"rw:$HOME/.cache/discord",
-	]
+
+		"ro:/var",
+		"ro:/usr",
+		"ro:/lib",
+		"ro:/lib64",
+		"ro:/opt",
+		"ro:/bin",
+		"ro:/etc"
+	],
+	"envs": {}
 }

@@ -23,7 +23,18 @@
 		"media": true,
 		"clipboard": true
 	},
-	"paths": ["rw:$HOME/.config/tidal-hifi", "rw:$HOME/.cache/fontconfig"],
+	"paths": [
+		"rw:$HOME/.config/tidal-hifi",
+		"rw:$HOME/.cache/fontconfig",
+
+		"ro:/var",
+		"ro:/usr",
+		"ro:/lib",
+		"ro:/lib64",
+		"ro:/opt",
+		"ro:/bin",
+		"ro:/etc"
+	],
 	"envs": {
 		"HOME": "$HOME"
 	}

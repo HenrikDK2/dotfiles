@@ -49,15 +49,6 @@ sandbox::init_bwrap_base_args() {
         --proc /proc
         --dev /dev
         --tmpfs /tmp
-
-        --ro-bind /var /var
-        --ro-bind /sys /sys
-        --ro-bind /usr /usr
-        --ro-bind /lib /lib
-        --ro-bind /lib64 /lib64
-        --ro-bind /opt /opt
-        --ro-bind /bin /bin
-        --ro-bind /etc /etc
     )
 }
 

@@ -22,6 +22,15 @@
 	"paths": [
 		"rw:$HOME/Downloads",
 		"rw:$HOME/.config/mozilla",
-		"rw:$HOME/.cache/mozilla"
-	]
+		"rw:$HOME/.cache/mozilla",
+
+		"ro:/var",
+		"ro:/usr",
+		"ro:/lib",
+		"ro:/lib64",
+		"ro:/opt",
+		"ro:/bin",
+		"ro:/etc"
+	],
+	"envs": {}
 }
