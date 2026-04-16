@@ -103,6 +103,8 @@ profile::generate() {
     else
         gen "$profile"
     fi
+
+	echo -e ""
 }
 
 profile::detect_from_name() {

@@ -109,6 +109,7 @@ sandbox::configure_paths(){
 }
 
 sandbox::configure_envs() {
+	echo -e ""
     utils::log INFO "Loading environment variables"
 
     # Read envs from profile JSON
@@ -124,6 +125,7 @@ sandbox::configure_envs() {
         sandbox::add_bwrap_arg --setenv "$key" "$value"
 
     done < <(jq -r '.envs | keys[]?' <<< "$PROFILE_JSON")
+    echo -e ""
 }
 
 sandbox::configure_gpu() {
@@ -177,15 +179,7 @@ sandbox::finalize_command() {
 
 	BWRAP_ARGS+=( -- "${CMD[@]}" )
 
-    # capture ldd output
-    local ldd_output="$(ldd "$EXECUTABLE" 2>&1)"
-
-    # only log if it's a dynamic executable
-    if [[ "$ldd_output" != *"not a dynamic executable"* ]]; then
-        utils::log INFO "ldd output for $EXECUTABLE:"
-        utils::log INFO "$ldd_output"
-    fi
-
+	utils::print_ldd
     utils::log INFO "Command: ${BWRAP_ARGS[*]}"
 }
 

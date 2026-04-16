@@ -88,3 +88,35 @@ utils::dump_vars() {
         printf "%s=%q\n" "$v" "${!v}"
     done
 }
+
+utils::print_ldd() {
+    local ldd_output="$(ldd "$EXECUTABLE" 2>&1)"
+
+    # only log if it's a dynamic executable
+    if [[ "$ldd_output" != *"not a dynamic executable"* ]]; then
+        echo -e ""
+        utils::log INFO "ldd output for $EXECUTABLE"
+
+        # extract unique library paths
+        local libs
+        libs=$(printf '%s\n' "$ldd_output" \
+            | awk '/=>/ {print $3} /^[^ ]/ {print $1}' \
+            | grep '^/' \
+            | sort -u)
+
+        # group into unique folders
+        local dirs
+        dirs=$(printf '%s\n' "$libs" \
+            | xargs -n1 dirname \
+            | sort -u)
+
+        utils::log INFO "Detected required directories:"
+
+        # print nicely, one per line
+        while IFS= read -r dir; do
+            utils::log INFO "  - $dir"
+        done <<< "$dirs"
+
+        utils::log INFO "Consider adding them\n"
+    fi
+}

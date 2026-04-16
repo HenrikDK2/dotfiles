@@ -8,13 +8,13 @@
 		"allow_x11": true
 	},
 	"dbus": {
-		"open_uri": true,
+		"open_uri": false,
 		"notifications": true,
-		"screenshare": true,
-		"file_chooser": true,
-		"print": true,
+		"screenshare": false,
+		"file_chooser": false,
+		"print": false,
 		"media": true,
-		"clipboard": true
+		"clipboard": false
 	},
 	"paths": [
 		"rw:$HOME/.config/tidal-hifi",

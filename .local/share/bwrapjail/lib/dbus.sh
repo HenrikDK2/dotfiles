@@ -5,6 +5,7 @@ dbus::add_portal() {
 
 dbus::configure_portals() {
     local -a ENABLED_PORTALS=()
+    echo -e ""
 
     add_portal_logged() {
         ENABLED_PORTALS+=("$1")
