@@ -15,5 +15,10 @@
 		"print": true,
 		"media": true,
 		"clipboard": true
-	}
+	},
+	"paths": [
+		"rw:$HOME/Downloads",
+		"rw:$HOME/.config/mozilla",
+		"rw:$HOME/.cache/mozilla"
+	]
 }

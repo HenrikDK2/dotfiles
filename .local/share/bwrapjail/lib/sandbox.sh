@@ -25,8 +25,47 @@ sandbox::init_bwrap_base_args() {
         --ro-bind /bin /bin
 
         --bind /etc /etc
-        --bind /home /home
     )
+}
+
+sandbox::configure_paths(){
+	utils::log INFO "Loading sandbox paths"
+
+	while IFS= read -r entry; do
+	    [[ -z "$entry" ]] && continue
+
+	    mode=${entry%%:*}
+	    path=${entry#*:}
+
+	    path=${path/#\~/$HOME}
+	    path=${path//\$HOME/$HOME}
+
+	    case $path in
+	        /dev*|/proc*)
+	            utils::log WARN "Skipping managed mount: $path"
+	            continue
+	            ;;
+	    esac
+
+	    case $mode in
+	        ro)
+	            utils::log INFO "Adding read-only bind: $path"
+	            sandbox::add_bwrap_arg --ro-bind-try "$path" "$path"
+	            ;;
+	        rw)
+	            utils::log INFO "Adding read-write bind: $path"
+	            sandbox::add_bwrap_arg --bind-try "$path" "$path"
+	            ;;
+	        tmpfs)
+	            utils::log WARN "Skipping tmpfs mount (managed by bwrapjail)"
+	            sandbox::add_bwrap_arg --tmpfs "$path"
+	            ;;
+	        *)
+	            utils::log ERROR "Invalid mode '$mode' in entry: $entry"
+	            exit 1
+	            ;;
+	    esac
+	done < <(jq -r '.paths[]?' <<< "$PROFILE_JSON")
 }
 
 sandbox::configure_gpu() {
@@ -74,7 +113,11 @@ sandbox::configure_network() {
 }
 
 sandbox::finalize_command() {
-    sandbox::add_bwrap_arg -- "$EXECUTABLE"
+	if [[ -n "$COMMAND_OVERRIDE" ]]; then
+    	CMD=( "$COMMAND_OVERRIDE" )
+    fi
+
+	sandbox::add_bwrap_arg -- "${CMD[@]}"
 
     # capture ldd output
     local ldd_output="$(ldd "$EXECUTABLE" 2>&1)"
@@ -87,6 +130,7 @@ sandbox::finalize_command() {
 
     utils::log INFO "Command: ${BWRAP_ARGS[*]}"
 }
+
 sandbox::execute() {
     trap sandbox::cleanup EXIT INT TERM
 

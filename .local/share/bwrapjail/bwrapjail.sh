@@ -3,19 +3,21 @@
 SYMLINK_DIR="$HOME/.local/bin"
 PROFILES_DIR="$HOME/.local/share/bwrapjail/profiles"
 
-declare -a BWRAP_ARGS=()
 declare -a CMD=()
+declare -a CMD_OVERRIDE=()
 declare CMD_PATH=""
 declare CMD_NAME=""
-declare DBUS_PROXY_PID=""
+
+declare -a BWRAP_ARGS=()
 declare BWRAP_PID=""
+
+declare DBUS_PROXY_PID=""
 declare PROXY_SOCKET=""
 declare PROXY_ARGS=()
 
 declare PROFILE_FILE=""
 declare PROFILE_JSON=""
 
-# Profile configuration variables
 declare EXECUTABLE=""
 declare ALLOW_NETWORK=""
 declare ALLOW_AUDIO=""
@@ -40,34 +42,51 @@ trap utils::dump_vars EXIT
 utils::check_dependencies || exit 1
 
 case "${1:-}" in
-    run)
-        shift
-        if [ $# -lt 1 ]; then
-            utils::log ERROR "run requires <program> [args...]"
-            utils::show_usage 1
-        fi
+	run)
+	    shift
+	    [ $# -lt 1 ] && utils::show_usage
 
-        CMD=( "$@" )
-        CMD_PATH="${CMD[0]}"
-        CMD_NAME="$(basename "$CMD_PATH")"
+	    COMMAND_OVERRIDE=""
+	    ARGS=()
+
+	    while [[ $# -gt 0 ]]; do
+	        case "$1" in
+	            --command)
+	                shift
+	                COMMAND_OVERRIDE="$1"
+	                shift
+	                ;;
+	            *)
+	                ARGS+=( "$1" )
+	                shift
+	                ;;
+	        esac
+	    done
+
+	    [[ ${#ARGS[@]} -lt 1 ]] && utils::show_usage
+
+	    CMD=( "${ARGS[@]}" )
+	    CMD_PATH="${CMD[0]}"
+	    CMD_NAME="$(basename "$CMD_PATH")"
 
 	    profile::validate
-  		profile::generate "$CMD_PATH"
-		profile::load_config
+	    profile::generate "$CMD_PATH"
+	    profile::load_config
 
-		sandbox::init_bwrap_base_args
-		sandbox::configure_gpu
-		sandbox::configure_wayland
-		sandbox::configure_x11
-		sandbox::configure_audio
-		sandbox::configure_network
+	    sandbox::init_bwrap_base_args
+		sandbox::configure_paths
+	    sandbox::configure_gpu
+	    sandbox::configure_wayland
+	    sandbox::configure_x11
+	    sandbox::configure_audio
+	    sandbox::configure_network
 
-		dbus::configure_portals
-		dbus::setup_proxy
+	    dbus::configure_portals
+	    dbus::setup_proxy
 
-		sandbox::finalize_command
-		sandbox::execute
-        ;;
+	    sandbox::finalize_command
+	    sandbox::execute
+	    ;;
 
     generate)
         shift
@@ -79,6 +98,6 @@ case "${1:-}" in
         ;;
 
     *)
-        utils::show_usage 1
+        utils::show_usage
         ;;
 esac

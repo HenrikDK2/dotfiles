@@ -12,6 +12,9 @@ dbus::configure_portals() {
         dbus::add_portal "$1"
     }
 
+    # Default portal
+    add_portal_logged org.freedesktop.UPower
+
     if [[ "$ALLOW_OPEN_URI" = true ]]; then
         sandbox::add_bwrap_arg --bind /usr/bin/xdg-open /usr/bin/xdg-open
         add_portal_logged org.freedesktop.portal.OpenURI
@@ -41,11 +44,7 @@ dbus::configure_portals() {
         sandbox::add_bwrap_arg --setenv XDG_SESSION_TYPE "wayland"
     fi
 
-    if ((${#ENABLED_PORTALS[@]} > 0)); then
-        utils::log INFO "D-Bus portals enabled (${#ENABLED_PORTALS[@]}): ${ENABLED_PORTALS[*]}"
-    else
-        utils::log INFO "No D-Bus portals enabled"
-    fi
+	utils::log INFO "D-Bus portals enabled (${#ENABLED_PORTALS[@]}): ${ENABLED_PORTALS[*]}"
 }
 
 dbus::setup_proxy() {
@@ -53,10 +52,6 @@ dbus::setup_proxy() {
         utils::log INFO "Setting up D-Bus proxy"
 
         PROXY_SOCKET="$XDG_RUNTIME_DIR/bus-proxy-$(uuidgen).sock"
-
-        local -a proxy_args=()
-        dbus::configure_portals proxy_args
-
         sandbox::add_bwrap_arg --setenv DBUS_SESSION_BUS_ADDRESS "unix:path=$PROXY_SOCKET"
 
         xdg-dbus-proxy \

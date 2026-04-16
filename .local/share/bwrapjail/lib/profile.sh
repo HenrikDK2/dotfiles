@@ -76,10 +76,11 @@ profile::list() {
 profile::generate() {
     local profile="$1"
 
+    # Skip if running argument --command
+   	[[ -n "$COMMAND_OVERRIDE" ]] && return 0
+
     # No argument → generate for all
-    if [[ -z "$profile" ]]; then
-        profile="__ALL__"
-    fi
+    [[ -z "$profile" ]] && profile="__ALL__"
 
     gen() {
         local name="$(basename "$1")"

@@ -41,35 +41,46 @@ utils::check_dependencies() {
 
 utils::show_usage() {
     cat << EOF
-Usage: $(basename "$0") <command> [options]
-
 Commands:
-    run <profile> <program> [args...]    Run a program in a sandboxed environment
-    generate [profile]                   Generate symlinks for sandboxed applications
-    list                                 List available profiles
-    help                                 Show this help message
+    run <program> [args...]
+        Run a program inside a sandboxed environment.
+
+    generate [profile]
+        Generate symlinks for sandboxed applications.
+
+    list
+        List available profiles.
+
+Run options:
+    --command <cmd>
+        Override the entry command executed inside the sandbox.
 
 Examples:
     $(basename "$0") run /usr/bin/firefox
+    $(basename "$0") run /usr/bin/firefox --command /usr/bin/alacritty
     $(basename "$0") generate firefox
-    $(basename "$0") generate            # Generate for all profiles
+    $(basename "$0") generate
 EOF
-    exit "${1:-0}"
+    exit 0
 }
 
 utils::dump_vars() {
-	utils::log ERROR "Program exited unexpectedly"
-	utils::log INFO "Dumping relevant environment variables:"
+    local exit_code="${1:-$?}"
+
+    if [[ "$exit_code" -ne 1 ]]; then
+        return 0
+    fi
+
+    utils::log ERROR "Program exited unexpectedly"
+    utils::log INFO "Dumping relevant environment variables:"
 
     local v
-    for v in "${!BASH_VERSINFO[@]}" "${!FUNCNAME[@]}"; do
-        :
-    done 2>/dev/null
 
     for v in $(compgen -v); do
-        # skip exported variables
+        # skip unset variables (safety check)
         [[ -n "${!v+x}" ]] || continue
 
+        # skip exported variables
         case "$(declare -p "$v" 2>/dev/null)" in
             declare\ -x*) continue ;;
         esac
