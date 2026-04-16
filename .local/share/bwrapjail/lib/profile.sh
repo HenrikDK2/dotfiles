@@ -76,16 +76,10 @@ profile::list() {
 profile::generate() {
     local profile="$1"
 
-    # Skip if running argument --command
-   	[[ -n "$COMMAND_OVERRIDE" ]] && return 0
-
-    # No argument → generate for all
-    [[ -z "$profile" ]] && profile="__ALL__"
-
 	gen() {
-	    local name="$1"
+		local name=$(basename "$1")
 	    local file="$PROFILES_DIR/$name.json"
-	    local target="$SYMLINK_DIR/profile"
+	    local target="$SYMLINK_DIR/$name"
 
 	    # Check if profile exists
 	    if [[ ! -f "$file" ]]; then
@@ -101,7 +95,14 @@ profile::generate() {
 	    chmod +x "$target"
 	}
 
-	[[ -n "$1" ]] && gen "$1"
+    if [[ -z "$profile" ]]; then
+        for file in "$PROFILES_DIR"/*.json; do
+            [[ -e "$file" ]] || continue
+            gen "$(basename "$file" .json)"
+        done
+    else
+        gen "$profile"
+    fi
 }
 
 profile::detect_from_name() {

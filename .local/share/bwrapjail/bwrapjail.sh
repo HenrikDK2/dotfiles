@@ -75,6 +75,7 @@ case "${1:-}" in
 
 	    sandbox::init_bwrap_base_args
 		sandbox::configure_paths
+		sandbox::configure_envs
 	    sandbox::configure_gpu
 	    sandbox::configure_wayland
 	    sandbox::configure_x11

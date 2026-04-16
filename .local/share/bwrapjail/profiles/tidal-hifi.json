@@ -1,5 +1,5 @@
 {
-	"executable": "/usr/bin/firefox",
+	"executable": "/usr/bin/tidal-hifi",
 	"allow_network": true,
 	"allow_audio": true,
 	"graphics": {
@@ -17,8 +17,11 @@
 		"clipboard": true
 	},
 	"paths": [
-		"rw:$HOME/Downloads",
-		"rw:$HOME/.config/mozilla",
-		"rw:$HOME/.cache/mozilla"
-	]
+		"rw:$HOME/.config/tidal-hifi",
+		"rw:$HOME/.cache/fontconfig",
+		"rw:/var/cache/fontconfig"
+	],
+	"envs": {
+		"HOME": "$HOME"
+	}
 }

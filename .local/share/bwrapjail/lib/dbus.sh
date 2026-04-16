@@ -43,6 +43,7 @@ dbus::configure_portals() {
         sandbox::add_bwrap_arg --setenv XDG_SESSION_TYPE "wayland"
     fi
 
+    sandbox::add_bwrap_arg --bind /run/dbus/system_bus_socket /run/dbus/system_bus_socket
 	utils::log INFO "D-Bus portals enabled (${#ENABLED_PORTALS[@]}): ${ENABLED_PORTALS[*]}"
 }
 

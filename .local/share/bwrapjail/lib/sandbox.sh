@@ -1,5 +1,46 @@
 sandbox::add_bwrap_arg() {
-    BWRAP_ARGS+=( "$@" )
+    local flag="$1"
+    local src_pattern="$2"
+    local dest_pattern="${3:-$2}"
+
+    # Case 1: glob pattern → expand
+    if [[ "$src_pattern" == *"*"* ]]; then
+        shopt -s nullglob
+
+        for src in $src_pattern; do
+            local name="${src##*/}"
+
+            if [[ "$dest_pattern" == *"*"* ]]; then
+                dest="${dest_pattern%\*}$name"
+            else
+                dest="${dest_pattern%/}/$name"
+            fi
+
+            BWRAP_ARGS+=( "$flag" "$src" "$dest" )
+        done
+
+        shopt -u nullglob
+
+    # Case 2: single path → no loop, no globbing
+    else
+        local src="$src_pattern"
+        local dest
+
+        # before Case 2
+        if [[ "$src_pattern" != *"*"* && "$dest_pattern" == *"*"* ]]; then
+            utils::log ERROR "dest_pattern cannot contain '*' when src_pattern is not a glob"
+            exit 1
+        fi
+
+        if [[ "$dest_pattern" == *"*"* ]]; then
+            local name="${src##*/}"
+            dest="${dest_pattern%\*}$name"
+        else
+            dest="$dest_pattern"
+        fi
+
+        BWRAP_ARGS+=( "$flag" "$src" "$dest" )
+    fi
 }
 
 sandbox::init_bwrap_base_args() {
@@ -67,6 +108,24 @@ sandbox::configure_paths(){
 	done < <(jq -r '.paths[]?' <<< "$PROFILE_JSON")
 }
 
+sandbox::configure_envs() {
+    utils::log INFO "Loading environment variables"
+
+    # Read envs from profile JSON
+    while IFS= read -r key; do
+        [[ -z "$key" ]] && continue
+
+        value=$(jq -r ".envs[\"$key\"]" <<< "$PROFILE_JSON")
+
+        # Resolve $HOME if needed
+        value="${value//\$HOME/$HOME}"
+
+        utils::log INFO "Setting env $key=$value"
+        sandbox::add_bwrap_arg --setenv "$key" "$value"
+
+    done < <(jq -r '.envs | keys[]?' <<< "$PROFILE_JSON")
+}
+
 sandbox::configure_gpu() {
     if [[ "$ALLOW_GPU" = true ]]; then
         utils::log INFO "Enabling GPU"
@@ -97,8 +156,9 @@ sandbox::configure_x11() {
 
 sandbox::configure_audio() {
     if [[ "$ALLOW_AUDIO" = true ]]; then
-        utils::log INFO "Enabling PulseAudio"
+        utils::log INFO "Enabling PulseAudio & Pipewire"
         sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pulse*" "$XDG_RUNTIME_DIR/pulse*"
+        sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pulse/*" "$XDG_RUNTIME_DIR/pulse/*"
         sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pipewire*" "$XDG_RUNTIME_DIR/pipewire*"
     fi
 }
@@ -115,7 +175,7 @@ sandbox::finalize_command() {
     	CMD=( "$COMMAND_OVERRIDE" )
     fi
 
-	sandbox::add_bwrap_arg -- "${CMD[@]}"
+	BWRAP_ARGS+=( -- "${CMD[@]}" )
 
     # capture ldd output
     local ldd_output="$(ldd "$EXECUTABLE" 2>&1)"
