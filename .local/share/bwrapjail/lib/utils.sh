@@ -151,11 +151,23 @@ utils::debug() {
     fi
 
     # =========================================================
-    # STRUCTURED PARSING
-    # syscall | errno | path
+    # STRUCTURED PARSING (KEEP ALL EVENTS)
+    # group by path subtree, but do NOT deduplicate
     # =========================================================
     mapfile -t failed_structured < <(
         printf '%s\n' "${failed_lines[@]}" | awk '
+        function bucket(p) {
+            if (p == "") return "NO_PATH"
+            if (p ~ "^/usr/share") return "/usr/share"
+            if (p ~ "^/usr") return "/usr"
+            if (p ~ "^/var") return "/var"
+            if (p ~ "^/etc") return "/etc"
+            if (p ~ "^/lib") return "/lib"
+            if (p ~ "^/bin") return "/bin"
+            split(p, a, "/")
+            return "/" a[2]
+        }
+
         {
             syscall = ""
             err = ""
@@ -173,22 +185,34 @@ utils::debug() {
                 path = substr($0, RSTART+1, RLENGTH-2)
             }
 
-            key = syscall SUBSEP err SUBSEP path
+            g = bucket(path)
 
-            if (!(key in seen)) {
-                seen[key] = 1
-                print syscall "\t" err "\t" path
-            }
+            # KEEP EVERY EVENT (no dedup)
+            print g "\t" syscall "\t" err "\t" path
         }'
     )
 
-    while IFS=$'\t' read -r syscall err path; do
+    # =========================================================
+    # GROUP OUTPUT BY SUBTREE
+    # =========================================================
+    declare -A groups
+
+    for line in "${failed_structured[@]}"; do
+        IFS=$'\t' read -r bucket syscall err path <<< "$line"
         [[ -z "$syscall" || -z "$err" ]] && continue
 
-        if [[ -n "$path" ]]; then
-            utils::log WARN "$syscall $err -> $path"
-        else
-            utils::log WARN "$syscall $err"
-        fi
-    done <<< "$(printf '%s\n' "${failed_structured[@]}")"
+        groups["$bucket"]+="$syscall $err -> $path"$'\n'
+    done
+
+    # =========================================================
+    # PRINT RESULTS
+    # =========================================================
+    for b in $(printf '%s\n' "${!groups[@]}" | sort); do
+        utils::log WARN "==================== $b ===================="
+        while IFS= read -r line; do
+            [[ -n "$line" ]] && utils::log WARN "$line"
+        done <<< "${groups[$b]}"
+    done
+
+    TRACE_ANALYZED=1
 }

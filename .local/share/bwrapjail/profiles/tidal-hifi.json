@@ -28,17 +28,19 @@
 		"rw:$HOME/.cache/fontconfig",
 
 		"rw:/var/cache/fontconfig",
+
 		"rw:/usr/share/fontconfig",
+		"ro:/usr/share/fonts",
 
 		"ro:/usr/bin",
-		"ro:/usr/share",
 		"ro:/usr/lib",
 		"ro:/usr/lib32",
 		"ro:/usr/lib64",
 
+		"ro:/opt/tidal-hifi",
+
 		"ro:/lib",
 		"ro:/lib64",
-		"ro:/opt",
 		"ro:/bin",
 		"ro:/etc"
 	],

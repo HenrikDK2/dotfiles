@@ -78,7 +78,7 @@ case "${1:-}" in
 	    profile::load_config
 
 	    sandbox::init_bwrap_base_args
-		sandbox::configure_paths
+		sandbox::configure_profile_paths
 		sandbox::configure_envs
 	    sandbox::configure_gpu
 	    sandbox::configure_wayland

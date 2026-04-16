@@ -45,7 +45,6 @@ sandbox::init_bwrap_base_args() {
         --clearenv
         --new-session
         --hostname mypc
-
         --proc /proc
 
         --dev /dev
@@ -59,7 +58,7 @@ sandbox::init_bwrap_base_args() {
     sandbox::add_bwrap_arg --setenv PS1 '\u@\h:\w\$ '
 }
 
-sandbox::configure_paths(){
+sandbox::configure_profile_paths(){
 	utils::log INFO "Loading sandbox paths"
 
 	while IFS= read -r entry; do
@@ -132,6 +131,10 @@ sandbox::configure_gpu() {
         sandbox::add_bwrap_arg --ro-bind-try /sys/devices/pci* /sys/devices/pci*
         sandbox::add_bwrap_arg --dev-bind /sys/dev/char /sys/dev/char
         sandbox::add_bwrap_arg --dev-bind /dev/dri /dev/dri
+        sandbox::add_bwrap_arg --ro-bind-try /usr/share/vulkan /usr/share/vulkan
+        sandbox::add_bwrap_arg --ro-bind-try /usr/share/glvnd /usr/share/glvnd
+        sandbox::add_bwrap_arg --ro-bind-try /usr/share/libdrm /usr/share/libdrm
+
     fi
 }
 

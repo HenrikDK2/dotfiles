@@ -26,14 +26,31 @@
 
 		"ro:/usr/bin/firefox",
 		"ro:/usr/bin/sh",
-		"ro:/usr/share",
+
+		"ro:/usr/share/fonts",
+		"ro:/usr/share/icons",
+		"ro:/usr/share/cursors",
+		"ro:/usr/share/mime",
+		"ro:/usr/share/locale",
+		"ro:/usr/share/zoneinfo",
+		"ro:/usr/share/mozilla",
+		"ro:/usr/share/fontconfig",
+		"ro:/usr/share/applications",
+		"ro:/usr/share/glycin-loaders",
+		"ro:/usr/share/huiespell",
+		"ro:/usr/share/themes",
+		"ro:/usr/share/xkeyboard-config-2",
+		"ro:/usr/share/glib-2.0",
+		"ro:/usr/share/gtk-3.0",
+		"ro:/usr/share/pixmaps",
+		"ro:/usr/share/ca-certificates",
+
 		"ro:/usr/lib",
 		"ro:/usr/lib64",
 
 		"ro:/var",
 		"ro:/lib",
 		"ro:/lib64",
-		"ro:/opt",
 		"ro:/bin",
 		"ro:/etc"
 	],

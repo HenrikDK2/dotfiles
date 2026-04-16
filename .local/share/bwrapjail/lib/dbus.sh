@@ -37,6 +37,7 @@ dbus::configure_portals() {
         add_portal_logged org.freedesktop.portal.Notification
         add_portal_logged org.freedesktop.portal.Notifications
         add_portal_logged org.freedesktop.Notifications
+
     fi
 
     if [[ "$ALLOW_SCREENSHARE" = true ]]; then

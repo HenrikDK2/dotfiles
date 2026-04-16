@@ -24,11 +24,21 @@
 		"rw:$HOME/.config/discord",
 		"rw:$HOME/.cache/discord",
 
+		"ro:/opt/discord",
+
+		"ro:/usr/bin",
+
+		"ro:/usr/share/discord",
+		"ro:/usr/share/fonts",
+		"ro:/usr/share/fontconfig",
+		"ro:/usr/share/ca-certificates",
+
+		"ro:/usr/lib",
+		"ro:/usr/lib64",
+
 		"ro:/var",
-		"ro:/usr",
 		"ro:/lib",
 		"ro:/lib64",
-		"ro:/opt",
 		"ro:/bin",
 		"ro:/etc"
 	],
