@@ -152,13 +152,13 @@ utils::debug() {
 
     # =========================================================
     # STRUCTURED PARSING (KEEP ALL EVENTS)
-    # group by path subtree, but do NOT deduplicate
     # =========================================================
     mapfile -t failed_structured < <(
         printf '%s\n' "${failed_lines[@]}" | awk '
         function bucket(p) {
             if (p == "") return "NO_PATH"
             if (p ~ "^/usr/share") return "/usr/share"
+            if (p ~ "^/usr/local/share") return "/usr/local/share"
             if (p ~ "^/usr") return "/usr"
             if (p ~ "^/var") return "/var"
             if (p ~ "^/etc") return "/etc"
@@ -185,9 +185,12 @@ utils::debug() {
                 path = substr($0, RSTART+1, RLENGTH-2)
             }
 
-            g = bucket(path)
+            # normalize ONLY for grouping
+            npath = path
+            gsub(/\/+/, "/", npath)
 
-            # KEEP EVERY EVENT (no dedup)
+            g = bucket(npath)
+
             print g "\t" syscall "\t" err "\t" path
         }'
     )
