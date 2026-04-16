@@ -61,7 +61,7 @@ Run options:
 Examples:
     $(basename "$0") run /usr/bin/firefox
     $(basename "$0") run /usr/bin/firefox --debug
-    $(basename "$0") run /usr/bin/firefox --command /usr/bin/alacritty
+    $(basename "$0") run /usr/bin/firefox --command bash -i
     $(basename "$0") generate firefox
     $(basename "$0") generate
 EOF

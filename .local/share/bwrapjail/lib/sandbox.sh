@@ -43,10 +43,21 @@ sandbox::init_bwrap_base_args() {
     BWRAP_ARGS=(
         bwrap
         --clearenv
-        --proc /proc
+        --new-session
+        --hostname mypc
+
+
         --dev /dev
+        --dev-bind /dev/pts /dev/pts
+
+        --proc /proc
         --tmpfs /tmp
+        --symlink /usr/lib64 /lib64
     )
+
+    # Make terminal useable in sandbox
+    sandbox::add_bwrap_arg --setenv TERM "$TERM"
+    sandbox::add_bwrap_arg --setenv PS1 '\u@\h:\w\$ '
 }
 
 sandbox::configure_paths(){
@@ -165,12 +176,9 @@ sandbox::finalize_command() {
     	EXECUTABLE="$COMMAND_OVERRIDE"
     fi
 
-	# When it comes to --unshare-all orders matter
-	# I need to have it at the end of the command
-
     BWRAP_ARGS+=( "--unshare-all" )
     sandbox::configure_network
-	BWRAP_ARGS+=( -- "$EXECUTABLE" "${EXTRA_ARGS[@]}" )
+	BWRAP_ARGS+=( -- "$EXECUTABLE" "${ARGS[@]}${EXTRA_ARGS[@]}" )
     utils::log INFO "Command: ${BWRAP_ARGS[*]}"
 }
 
@@ -193,13 +201,11 @@ sandbox::execute() {
 		  -o "$TRACE_FILE" \
 		  "${BWRAP_ARGS[@]}"
     else
-        "${BWRAP_ARGS[@]}" \
-            2> >(while read -r line; do utils::log ERROR "$line"; done) &
-
+       	utils::log INFO "Launching sandbox PID: $BWRAP_PID"
+        "${BWRAP_ARGS[@]}"
     fi
 
     BWRAP_PID=$!
-    [[ "$DEBUG_ENABLED" -eq 0 ]] && utils::log INFO "Launching sandbox PID: $BWRAP_PID"
     wait "$BWRAP_PID"
 }
 

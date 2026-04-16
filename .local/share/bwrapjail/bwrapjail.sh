@@ -15,6 +15,7 @@ declare PROFILE_JSON=""
 
 declare EXECUTABLE=""
 declare EXTRA_ARGS=""
+declare COMMAND_OVERRIDE=""
 
 declare DEBUG_ENABLED=0
 declare TRACE_FILE=""
@@ -45,29 +46,32 @@ case "${1:-}" in
 	    shift
 	    [ $# -lt 1 ] && utils::show_usage
 
-	    COMMAND_OVERRIDE=""
-        EXECUTABLE=( $1 )
-	    ARGS=()
+		EXECUTABLE="$1"
+		shift
+		ARGS=()
 
-	    while [[ $# -gt 0 ]]; do
-	        case "$1" in
-	            --command)
-	                shift
-	                COMMAND_OVERRIDE="$1"
-	                shift
-	                ;;
-				--debug)
-					shift
-    				DEBUG_ENABLED=1
-        			;;
-	            *)
-	                ARGS+=( "$1" )
-	                shift
-	                ;;
-	        esac
-	    done
+		while [[ $# -gt 0 ]]; do
+		    case "$1" in
+		        --command)
+		            shift
+		            COMMAND_OVERRIDE="$1"
+		            ;;
+		        --debug)
+		            DEBUG_ENABLED=1
+		            ;;
+		        --)
+		            shift
+		            ARGS+=( "$@" )
+		            break
+		            ;;
+		        *)
+		            ARGS+=( "$1" )
+		            ;;
+		    esac
+		    shift
+		done
 
-	    [[ ${#ARGS[@]} -lt 1 ]] && utils::show_usage
+	    [[ -z "$EXECUTABLE" ]] && utils::show_usage
 
 	    profile::validate
 	    profile::generate

@@ -27,7 +27,6 @@
 		"ro:/var",
 		"ro:/usr",
 		"ro:/lib",
-		"ro:/lib64",
 		"ro:/opt",
 		"ro:/bin",
 		"ro:/etc"
