@@ -57,8 +57,7 @@ sandbox::init_bwrap_base_args() {
         --ro-bind /lib64 /lib64
         --ro-bind /opt /opt
         --ro-bind /bin /bin
-
-        --bind /etc /etc
+        --ro-bind /etc /etc
     )
 }
 
@@ -132,6 +131,7 @@ sandbox::configure_gpu() {
         sandbox::add_bwrap_arg --dev-bind-try /dev/nvidia* /dev/nvidia*
         sandbox::add_bwrap_arg --dev-bind-try /dev/kfd /dev/kfd
         sandbox::add_bwrap_arg --ro-bind-try /sys/class/drm /sys/class/drm
+        sandbox::add_bwrap_arg --ro-bind-try /sys/devices/pci* /sys/devices/pci*
         sandbox::add_bwrap_arg --dev-bind /dev/dri /dev/dri
     fi
 }
