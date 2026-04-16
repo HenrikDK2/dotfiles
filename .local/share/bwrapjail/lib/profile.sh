@@ -90,7 +90,7 @@ gen() {
     # Check if profile exists
     if [[ ! -f "$file" ]]; then
         utils::log ERROR "Profile not found: $file"
-        return 1
+        exit 1
     fi
 
     mkdir -p "$SYMLINK_DIR"
