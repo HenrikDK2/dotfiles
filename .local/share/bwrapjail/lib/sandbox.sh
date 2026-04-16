@@ -46,13 +46,13 @@ sandbox::init_bwrap_base_args() {
         --new-session
         --hostname mypc
 
+        --proc /proc
 
         --dev /dev
         --dev-bind /dev/pts /dev/pts
 
-        --proc /proc
+        --tmpfs /run
         --tmpfs /tmp
-        --symlink /usr/lib64 /lib64
     )
 
     # Make terminal useable in sandbox
