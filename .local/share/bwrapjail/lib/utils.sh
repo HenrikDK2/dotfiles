@@ -1,6 +1,6 @@
 #!/bin/bash
 
-log() {
+utils::log() {
     local level="$1"
     shift
     local message="$*"
@@ -28,45 +28,18 @@ log() {
     echo -e "${color}[$timestamp] [$script_name] [$level] $message${color_reset}"
 }
 
-load_json_no_comments() {
-    local input_file="$1"
-    local tmp_file="$(mktemp)"
-
-    # remove full-line // comments
-    sed '/^\s*\/\//d' "$input_file" > "$tmp_file"
-
-    # return path to cleaned file
-    echo "$tmp_file"
-}
-
-get_profile_file() {
-    local cmd_name="$1"
-    shopt -s nullglob
-
-    for file in "$PROFILES_DIR"/*.json; do
-        [[ -f "$file" ]] || continue
-
-        if [[ "$(basename "$file" .json)" == "$cmd_name" ]]; then
-        	echo "$(load_json_no_comments "$file")"
-            return 0
-        fi
-    done
-
-    return 1
-}
-
-check_dependencies() {
+utils::check_dependencies() {
     local missing=0
     for pkg in passt jq bwrap xdg-dbus-proxy; do
         if ! command -v "$pkg" >/dev/null 2>&1; then
-            log ERROR "$pkg not installed"
+            utils::log ERROR "$pkg not installed"
             missing=1
         fi
     done
     return $missing
 }
 
-show_usage() {
+utils::show_usage() {
     cat << EOF
 Usage: $(basename "$0") <command> [options]
 
@@ -80,89 +53,6 @@ Examples:
     $(basename "$0") run /usr/bin/firefox
     $(basename "$0") generate firefox
     $(basename "$0") generate            # Generate for all profiles
-
 EOF
     exit "${1:-0}"
-}
-
-list_profiles() {
-    log INFO "Available profiles:"
-    for profile in "$PROFILES_DIR"/*.json; do
-        [[ -f "$profile" ]] || continue
-        local name=$(basename "$profile" .json)
-        echo "  - $name"
-    done
-    exit 0
-}
-
-generate_symlinks() {
-    local profile="$1"
-
-    if [[ -n "$profile" ]]; then
-        generate_for_profile "$profile"
-    else
-        # Generate for all profiles
-        for profile_file in "$PROFILES_DIR"/*.json; do
-            [[ -f "$profile_file" ]] || continue
-            local profile_name=$(basename "$profile_file" .json)
-            generate_for_profile "$profile_name"
-        done
-    fi
-}
-
-generate_for_profile() {
-    local profile="$1"
-    local profile_file
-
-    profile_file="$(get_profile_file "$profile")"
-
-    if [[ ! -f "$profile_file" ]]; then
-        log ERROR "Profile not found: $profile"
-        return 1
-    fi
-
-    log INFO "Generating wrappers for profile: $profile"
-
-    local program=$(jq -r '.executable' "$profile_file")
-
-    if [[ -z "$program" || "$program" == "null" ]]; then
-        log WARN "No executable defined in profile: $profile"
-        return 0
-    fi
-
-    mkdir -p "$SYMLINK_DIR"
-
-    local program_name="$(basename "$program")"
-    local target_file="$SYMLINK_DIR/$program_name"
-
-cat > "$SYMLINK_DIR/$program_name" <<EOF
-bwrapjail run "/usr/bin/$program_name"
-EOF
-
-    chmod +x "$target_file"
-}
-
-detect_profile_from_name() {
-    local program_name="$(basename "$0")"
-
-    # If called directly as bwrapjail, no auto-detection
-    if [[ "$program_name" == "bwrapjail" || "$program_name" == "bwrapjail.sh" ]]; then
-        return 1
-    fi
-
-    # Search for profile that includes this program
-    for profile_file in "$PROFILES_DIR"/*.json; do
-        [[ -f "$profile_file" ]] || continue
-
-        if jq -e --arg prog "$program_name" '.executable | select(. == $prog)' "$profile_file" >/dev/null 2>&1; then
-            basename "$profile_file" .json
-            return 0
-        fi
-    done
-
-    return 1
-}
-
-add_bwrap_arg() {
-    BWRAP_ARGS+=( "$@" )
 }
