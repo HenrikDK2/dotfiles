@@ -125,15 +125,16 @@ utils::print_ldd() {
     fi
 }
 
-utils::analyze_trace() {
+utils::debug() {
     [[ ! -f "$TRACE_FILE" ]] && return 0
 
-    if [[ -n "${TRACE_ANALYZED:-}" ]]; then
+    if [[ -n "${DEBUG_INIT:-}" ]]; then
         return 0
     fi
 
-    TRACE_ANALYZED=1
-
+    DEBUG_INIT=1
+    utils::log INFO "Starting debugging..."
+    utils::print_ldd
     utils::log INFO "Analyzing trace file: $TRACE_FILE"
 
     # =========================================================

@@ -168,14 +168,13 @@ sandbox::finalize_command() {
 
 	BWRAP_ARGS+=( -- "$EXECUTABLE" "${EXTRA_ARGS[@]}" )
 
-	utils::print_ldd
     utils::log INFO "Command: ${BWRAP_ARGS[*]}"
 }
 
 sandbox::execute() {
     trap sandbox::cleanup EXIT INT TERM
 
-    if [[ "$TRACE_ENABLED" -eq 1 ]]; then
+    if [[ "$DEBUG_ENABLED" -eq 1 ]]; then
         if ! command -v strace >/dev/null 2>&1; then
             utils::log ERROR "strace is not installed (required for --trace)"
             exit 1
@@ -185,19 +184,18 @@ sandbox::execute() {
         TRACE_FILE="$HOME/${trace_name}.trace"
 
         utils::log INFO "strace enabled -> $TRACE_FILE"
-
-		strace -f -tt -s 128 \
+		LD_DEBUG=libs strace -f -tt -s 128 \
 		  -e trace=execve,exit_group,kill,openat,access,stat \
 		  -o "$TRACE_FILE" \
 		  "${BWRAP_ARGS[@]}"
     else
         "${BWRAP_ARGS[@]}" \
             2> >(while read -r line; do utils::log ERROR "$line"; done) &
+
     fi
 
     BWRAP_PID=$!
-
-    utils::log INFO "Launching sandbox PID: $BWRAP_PID"
+    [[ "$TRACE_ENABLED" -eq 0 ]] && utils::log INFO "Launching sandbox PID: $BWRAP_PID"
     wait "$BWRAP_PID"
 }
 
@@ -207,5 +205,6 @@ sandbox::cleanup() {
     [[ -n "${DBUS_PROXY_PID:-}" ]] && kill "$DBUS_PROXY_PID" 2>/dev/null || true
     [[ -n "${PROXY_SOCKET:-}" ]] && rm -f "$PROXY_SOCKET"
     set +x 2>/dev/null || true
-    utils::analyze_trace
+    [[ "$DEBUG_ENABLED" -eq 1 ]] && utils::debug
+
 }
