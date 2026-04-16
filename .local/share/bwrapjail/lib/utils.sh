@@ -56,3 +56,24 @@ Examples:
 EOF
     exit "${1:-0}"
 }
+
+utils::dump_vars() {
+	utils::log ERROR "Program exited unexpectedly"
+	utils::log INFO "Dumping relevant environment variables:"
+
+    local v
+    for v in "${!BASH_VERSINFO[@]}" "${!FUNCNAME[@]}"; do
+        :
+    done 2>/dev/null
+
+    for v in $(compgen -v); do
+        # skip exported variables
+        [[ -n "${!v+x}" ]] || continue
+
+        case "$(declare -p "$v" 2>/dev/null)" in
+            declare\ -x*) continue ;;
+        esac
+
+        printf "%s=%q\n" "$v" "${!v}"
+    done
+}

@@ -3,6 +3,8 @@ sandbox::add_bwrap_arg() {
 }
 
 sandbox::init_bwrap_base_args() {
+	utils::log INFO "Setting up sandbox"
+
     BWRAP_ARGS=(
         bwrap
         --clearenv
@@ -12,15 +14,16 @@ sandbox::init_bwrap_base_args() {
         --dev /dev
         --tmpfs /tmp
 
-        --bind /var /var
         --bind /run/user/1000 /run/user/1000
-        --ro-bind /sys /sys
 
-        --bind /usr /usr
-        --bind /opt /opt
-        --bind /lib /lib
-        --bind /lib64 /lib64
-        --bind /bin /bin
+        --ro-bind /var /var
+        --ro-bind /sys /sys
+        --ro-bind /usr /usr
+        --ro-bind /lib /lib
+        --ro-bind /lib64 /lib64
+        --ro-bind /opt /opt
+        --ro-bind /bin /bin
+
         --bind /etc /etc
         --bind /home /home
     )
@@ -72,9 +75,18 @@ sandbox::configure_network() {
 
 sandbox::finalize_command() {
     sandbox::add_bwrap_arg -- "$EXECUTABLE"
+
+    # capture ldd output
+    local ldd_output="$(ldd "$EXECUTABLE" 2>&1)"
+
+    # only log if it's a dynamic executable
+    if [[ "$ldd_output" != *"not a dynamic executable"* ]]; then
+        utils::log INFO "ldd output for $EXECUTABLE:"
+        utils::log INFO "$ldd_output"
+    fi
+
     utils::log INFO "Command: ${BWRAP_ARGS[*]}"
 }
-
 sandbox::execute() {
     trap sandbox::cleanup EXIT INT TERM
 

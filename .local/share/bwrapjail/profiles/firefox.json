@@ -1,17 +1,17 @@
 {
 	"executable": "/usr/bin/firefox",
 	"allow_network": true,
-	"allow_audio": true,
+	"allow_audio": false,
 	"graphics": {
 		"allow_gpu": true,
 		"allow_wayland": true,
 		"allow_x11": true
 	},
 	"dbus": {
-		"open_uri": false,
-		"notifications": false,
+		"open_uri": true,
+		"notifications": true,
 		"screenshare": true,
-		"file_chooser": false,
+		"file_chooser": true,
 		"print": true,
 		"media": true,
 		"clipboard": true

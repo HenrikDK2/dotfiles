@@ -7,12 +7,13 @@ declare -a BWRAP_ARGS=()
 declare -a CMD=()
 declare CMD_PATH=""
 declare CMD_NAME=""
-declare PROFILE_FILE=""
-declare PROFILE_JSON=""
 declare DBUS_PROXY_PID=""
 declare BWRAP_PID=""
 declare PROXY_SOCKET=""
 declare PROXY_ARGS=()
+
+declare PROFILE_FILE=""
+declare PROFILE_JSON=""
 
 # Profile configuration variables
 declare EXECUTABLE=""
@@ -35,6 +36,7 @@ source "$HOME/.local/share/bwrapjail/lib/profile.sh"
 source "$HOME/.local/share/bwrapjail/lib/sandbox.sh"
 source "$HOME/.local/share/bwrapjail/lib/dbus.sh"
 
+trap utils::dump_vars EXIT
 utils::check_dependencies || exit 1
 
 case "${1:-}" in
@@ -52,7 +54,6 @@ case "${1:-}" in
 	    profile::validate
   		profile::generate "$CMD_PATH"
 		profile::load_config
-
 
 		sandbox::init_bwrap_base_args
 		sandbox::configure_gpu

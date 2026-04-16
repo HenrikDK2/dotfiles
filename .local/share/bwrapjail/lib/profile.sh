@@ -81,34 +81,45 @@ profile::generate() {
         profile="__ALL__"
     fi
 
-    local profile_file
-    profile_file="$(profile::get_file "$profile")" || return 1
-
-    mkdir -p "$SYMLINK_DIR"
-
     gen() {
-        local f="$1" program name target
+        local name="$(basename "$1")"
+        local target="$SYMLINK_DIR/$name"
 
-        program=$(jq -r '.executable' "$f") || return 0
-        [[ -z "$program" || "$program" == "null" ]] && return 0
+        mkdir -p "$SYMLINK_DIR"
 
-        name="$(basename "$program")"
-        target="$SYMLINK_DIR/$name"
+        utils::log INFO "Generating profile for $1"
 
         printf 'bwrapjail run "/usr/bin/%s"\n' "$name" > "$target"
         chmod +x "$target"
     }
 
-    # If a specific profile was resolved, use only that file
+    # If a specific profile was passed
     if [[ -n "$1" ]]; then
-        gen "$profile_file"
-        return
+        [[ -f "$1" ]] || {
+            utils::log ERROR "Profile not found: $1"
+            return 1
+        }
+
+        gen "$1"
+        return 0
     fi
 
-    # Otherwise generate for all json files in directory
-    for f in "$(dirname "$profile_file")"/*.json; do
-        [[ -f "$f" ]] && gen "$f"
+    # Otherwise generate for all json files
+    local dir="$(dirname "$profile")"
+    local files=("$dir"/*.json)
+
+    # Exit if no profiles exist
+    if [[ ${#files[@]} -eq 0 ]]; then
+        utils::log ERROR "No profile JSON files found in $dir"
+        return 1
+    fi
+
+    for f in "${files[@]}"; do
+        [[ -f "$f" ]] || continue
+        gen "$f"
     done
+
+    return 0
 }
 
 profile::detect_from_name() {
