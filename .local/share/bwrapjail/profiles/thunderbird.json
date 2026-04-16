@@ -1,0 +1,25 @@
+{
+	"executable": "/usr/bin/thunderbird",
+	"allow_network": true,
+	"allow_audio": true,
+	"graphics": {
+		"allow_gpu": true,
+		"allow_wayland": true,
+		"allow_x11": true
+	},
+	"dbus": {
+		"open_uri": true,
+		"notifications": true,
+		"screenshare": false,
+		"file_chooser": true,
+		"print": true,
+		"media": false,
+		"clipboard": true
+	},
+	"paths": [
+		"rw:$HOME/Downloads",
+		"rw:$HOME/.thunderbird",
+		"rw:$HOME/.config/thunderbird",
+		"rw:$HOME/.cache/thunderbird"
+	]
+}
