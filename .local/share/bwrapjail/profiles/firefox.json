@@ -24,9 +24,15 @@
 		"rw:$HOME/.config/mozilla",
 		"rw:$HOME/.cache/mozilla",
 
+		"ro:/usr/bin/firefox",
+		"ro:/usr/bin/sh",
+		"ro:/usr/share",
+		"ro:/usr/lib",
+		"ro:/usr/lib64",
+
 		"ro:/var",
-		"ro:/usr",
 		"ro:/lib",
+		"ro:/lib64",
 		"ro:/opt",
 		"ro:/bin",
 		"ro:/etc"
