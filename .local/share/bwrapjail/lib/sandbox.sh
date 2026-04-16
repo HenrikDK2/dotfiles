@@ -10,11 +10,10 @@ sandbox::init_bwrap_base_args() {
         --clearenv
         --unshare-all
         --share-net
+
         --proc /proc
         --dev /dev
         --tmpfs /tmp
-
-        --bind /run/user/1000 /run/user/1000
 
         --ro-bind /var /var
         --ro-bind /sys /sys
@@ -57,7 +56,7 @@ sandbox::configure_paths(){
 	            sandbox::add_bwrap_arg --bind-try "$path" "$path"
 	            ;;
 	        tmpfs)
-	            utils::log WARN "Skipping tmpfs mount (managed by bwrapjail)"
+	            utils::log WARN "Hidding path $path"
 	            sandbox::add_bwrap_arg --tmpfs "$path"
 	            ;;
 	        *)
@@ -85,8 +84,6 @@ sandbox::configure_wayland() {
         sandbox::add_bwrap_arg --setenv WAYLAND_DISPLAY "$WAYLAND_DISPLAY"
         sandbox::add_bwrap_arg --setenv XDG_RUNTIME_DIR "$XDG_RUNTIME_DIR"
         sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
-    else
-        unset WAYLAND_DISPLAY
     fi
 }
 
@@ -101,7 +98,8 @@ sandbox::configure_x11() {
 sandbox::configure_audio() {
     if [[ "$ALLOW_AUDIO" = true ]]; then
         utils::log INFO "Enabling PulseAudio"
-        sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR/pulse"
+        sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pulse*" "$XDG_RUNTIME_DIR/pulse*"
+        sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pipewire*" "$XDG_RUNTIME_DIR/pipewire*"
     fi
 }
 

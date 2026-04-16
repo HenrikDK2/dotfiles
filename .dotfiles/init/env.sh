@@ -156,6 +156,7 @@ SYSTEM_SERVICES_TO_ENABLE=(
 	
     "gameboost.service"
     "system-tuning.service"
+	"upower.service"
 
     "pacman-remove-db-lock.service"
     "fstrim.timer"

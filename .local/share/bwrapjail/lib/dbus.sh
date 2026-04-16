@@ -4,7 +4,6 @@ dbus::add_portal() {
 }
 
 dbus::configure_portals() {
-    PROXY_ARGS=()
     local -a ENABLED_PORTALS=()
 
     add_portal_logged() {
@@ -60,10 +59,8 @@ dbus::setup_proxy() {
             "${proxy_args[@]}" &
 
         DBUS_PROXY_PID=$!
-        sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR"
+        sandbox::add_bwrap_arg --bind "$PROXY_SOCKET" "$PROXY_SOCKET"
     else
         utils::log INFO "DBus disabled entirely"
-        unset DBUS_SESSION_BUS_ADDRESS
-        unset XDG_RUNTIME_DIR
     fi
 }
