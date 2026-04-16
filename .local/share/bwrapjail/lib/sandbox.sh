@@ -49,7 +49,6 @@ sandbox::init_bwrap_base_args() {
         --proc /proc
 
         --dev /dev
-        --dev-bind /dev/pts /dev/pts
 
         --tmpfs /run
         --tmpfs /tmp
@@ -131,6 +130,7 @@ sandbox::configure_gpu() {
         sandbox::add_bwrap_arg --dev-bind-try /dev/kfd /dev/kfd
         sandbox::add_bwrap_arg --ro-bind-try /sys/class/drm /sys/class/drm
         sandbox::add_bwrap_arg --ro-bind-try /sys/devices/pci* /sys/devices/pci*
+        sandbox::add_bwrap_arg --dev-bind /sys/dev/char /sys/dev/char
         sandbox::add_bwrap_arg --dev-bind /dev/dri /dev/dri
     fi
 }
