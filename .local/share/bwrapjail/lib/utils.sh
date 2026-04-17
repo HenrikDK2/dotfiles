@@ -522,60 +522,60 @@ utils::debug() {
 	    fi
 	  done
 	}
-		  declare -A seen
-		  local item path mode
 
-		  for item in "$@"; do
-		    [[ -z "$item" ]] && continue
+	hide_run_runtime_noise() {
+	  declare -A seen
+	  local item path mode
 
-		    mode="${item%%:*}"
-		    path="${item#*:}"
+	  for item in "$@"; do
+	    [[ -z "$item" ]] && continue
 
-		    [[ "$path" == "$item" ]] && path="$item"
-		    [[ -z "$path" ]] && continue
+	    mode="${item%%:*}"
+	    path="${item#*:}"
 
-		    # ---------------------------------------------------------
-		    # RUNTIME IPC FILTER ZONE
-		    # ---------------------------------------------------------
-		    case "$path" in
+	    [[ "$path" == "$item" ]] && path="$item"
+	    [[ -z "$path" ]] && continue
 
-		      # ---------------- RUN USER SCOPE ----------------
-		      /run/user/*|/run/usr/*)
-		        case "$path" in
-		          *pulse*|*pipewire*|*alsa*|*jack*|\
-		          *wayland*|*x11*|*xorg*|\
-		          *dbus*|*bus*|\
-		          *.sock|*.socket)
-		            continue
-		            ;;
-		        esac
-		        ;;
+	    # ---------------------------------------------------------
+	    # RUNTIME IPC FILTER ZONE
+	    # ---------------------------------------------------------
+	    case "$path" in
 
-		      # ---------------- GPU ----------------
-		      $HOME/.local/share/vulkan|$HOME/.cache/mesa_shader_cache|/usr/share/drirc.d|\
-		      $HOME/.cache/radv_builtin_shaders|/usr/share/libdrm|$HOME/.config/lsfg-vk/conf.toml|\
-			  /usr/share/vulkan)
-		          continue
-		          ;;
-		      # ---------------- AUDIO ----------------
-		      $HOME/.config/pulse/cookie|$HOME/.pulse-cookie|/etc/pulse/client.conf)
-		          continue
-		          ;;
-		      # ---------------- X11 SHARED SOCKETS ----------------
-		      /tmp/.X11-unix*|/tmp/.X11)
-		        continue
-		        ;;
-		    esac
+	      # ---------------- RUN USER SCOPE ----------------
+	      /run/user/*|/run/usr/*)
+	        case "$path" in
+	          *pulse*|*pipewire*|*alsa*|*jack*|\
+	          *wayland*|*x11*|*xorg*|\
+	          *dbus*|*bus*|\
+	          *.sock|*.socket)
+	            continue
+	            ;;
+	        esac
+	        ;;
 
-		    # ---------------------------------------------------------
-		    # dedupe
-		    # ---------------------------------------------------------
-		    if [[ -z "${seen[$item]}" ]]; then
-		      seen["$item"]=1
-		      printf "%s\n" "$item"
-		    fi
-		  done
-		}
+	      # ---------------- GPU ----------------
+	      $HOME/.local/share/vulkan|$HOME/.cache/mesa_shader_cache|/usr/share/drirc.d|\
+	      $HOME/.cache/radv_builtin_shaders|/usr/share/libdrm|$HOME/.config/lsfg-vk/conf.toml|\
+		  /usr/share/vulkan)
+	          continue
+	          ;;
+
+	      # ---------------- X11 SHARED SOCKETS ----------------
+	      /tmp/.X11-unix*|/tmp/.X11)
+	        continue
+	        ;;
+	    esac
+
+	    # ---------------------------------------------------------
+	    # dedupe
+	    # ---------------------------------------------------------
+	    if [[ -z "${seen[$item]}" ]]; then
+	      seen["$item"]=1
+	      printf "%s\n" "$item"
+	    fi
+	  done
+	}
+
 
 	output_json_suggestions() {
 	    local item path mode key
