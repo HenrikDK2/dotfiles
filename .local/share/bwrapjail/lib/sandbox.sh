@@ -225,12 +225,10 @@ sandbox::execute() {
 }
 
 sandbox::cleanup() {
-    local exit_code=$?
-
     if [[ -z "$HAS_CLEANUP_RUN" ]]; then
         HAS_CLEANUP_RUN=1
 
-        if [[ "$DEBUG_ENABLED" -eq 1 && $exit_code -ne 0 ]]; then
+        if [[ "$DEBUG_ENABLED" -eq 1 ]]; then
             utils::debug
         fi
 
