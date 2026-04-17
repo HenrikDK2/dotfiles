@@ -550,7 +550,10 @@ utils::debug() {
 			  /usr/share/vulkan)
 		          continue
 		          ;;
-
+		      # ---------------- AUDIO ----------------
+		      $HOME/.config/pulse/cookie|$HOME/.pulse-cookie|/etc/pulse/client.conf)
+		          continue
+		          ;;
 		      # ---------------- X11 SHARED SOCKETS ----------------
 		      /tmp/.X11-unix*|/tmp/.X11)
 		        continue

@@ -30,6 +30,8 @@
 		"ro:/etc/resolv.conf",
 
 		"rw:$HOME/.config/tidal-hifi",
+		"rw:$HOME/.config/gtk-3.0",
+		"rw:$HOME/.cache/fontconfig",
 
 		"ro:/usr/lib",
 		"ro:/usr/lib64",

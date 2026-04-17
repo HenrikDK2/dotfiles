@@ -163,9 +163,12 @@ sandbox::configure_x11() {
 sandbox::configure_audio() {
     if [[ "$ALLOW_AUDIO" = true ]]; then
         utils::log INFO "Enabling PulseAudio & Pipewire"
-        sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pulse*" "$XDG_RUNTIME_DIR/pulse*"
-        sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pulse/*" "$XDG_RUNTIME_DIR/pulse/*"
-        sandbox::add_bwrap_arg --bind "$XDG_RUNTIME_DIR/pipewire*" "$XDG_RUNTIME_DIR/pipewire*"
+        sandbox::add_bwrap_arg --ro-bind-try "$XDG_RUNTIME_DIR/pulse*" "$XDG_RUNTIME_DIR/pulse*"
+        sandbox::add_bwrap_arg --ro-bind-try "$XDG_RUNTIME_DIR/pulse/*" "$XDG_RUNTIME_DIR/pulse/*"
+        sandbox::add_bwrap_arg --ro-bind-try "$XDG_RUNTIME_DIR/pipewire*" "$XDG_RUNTIME_DIR/pipewire*"
+        sandbox::add_bwrap_arg --ro-bind-try "/etc/pulse/*" "/etc/pulse/*"
+        sandbox::add_bwrap_arg --ro-bind-try "$HOME/.pulse-cookie" "$HOME/.pulse-cookie"
+        sandbox::add_bwrap_arg --ro-bind-try "$HOME/.config/pulse/cookie" "$HOME/.config/pulse/cookie"
     fi
 }
 
