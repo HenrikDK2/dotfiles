@@ -18,6 +18,13 @@ dbus::configure_portals() {
     else
         sandbox::add_bwrap_arg --bind /usr/bin/xdg-open /usr/bin/xdg-open
         sandbox::add_bwrap_arg --setenv PATH /usr/bin:/bin:/usr/sbin:/sbin
+
+        sandbox::add_bwrap_arg --bind-try /usr/bin/protontricks-launch /usr/bin/protontricks-launch
+        sandbox::add_bwrap_arg --bind-try /usr/bin/protontricks /usr/bin/protontricks
+        sandbox::add_bwrap_arg --bind-try /usr/share/steam/compatibilitytools.d /usr/share/steam/compatibilitytools.d
+        sandbox::add_bwrap_arg --bind-try $HOME/.local/share/Steam $HOME/.local/share/Steam
+        sandbox::add_bwrap_arg --bind-try $HOME/.local/applications/nxm-handler.desktop $HOME/.local/applications/nxm-handler.desktop
+        sandbox::add_bwrap_arg --bind-try $HOME/Games
     fi
 
     if [[ "$ALLOW_FILE_CHOOSER" = false ]]; then
@@ -45,8 +52,6 @@ dbus::configure_portals() {
     fi
 
     sandbox::add_bwrap_arg --bind /run/dbus/system_bus_socket /run/dbus/system_bus_socket
-
-    PROXY_ARGS=()
 
     for portal in "${DBUS_PORTALS[@]}"; do
         PROXY_ARGS+=(--talk="$portal")
@@ -81,8 +86,7 @@ dbus::setup_proxy() {
     xdg-dbus-proxy \
         "$DBUS_SESSION_BUS_ADDRESS" \
         "$PROXY_SOCKET" \
-        "${PROXY_ARGS[@]}" \
-        --filter &
+        "${PROXY_ARGS[@]}" --filter &
 
     DBUS_PROXY_PID=$!
 
