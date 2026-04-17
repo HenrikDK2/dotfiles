@@ -39,6 +39,10 @@
 
 		"ro:/opt/tidal-hifi",
 
+		"ro:/run/dconf/user/1000",
+		"ro:/run/user/1000/dconf/profile",
+		"ro:/usr/local/share/themes",
+
 		"ro:/lib",
 		"ro:/lib64",
 		"ro:/bin",

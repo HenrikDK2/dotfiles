@@ -125,6 +125,486 @@ utils::print_ldd() {
     fi
 }
 
+utils::debug_build_json_suggestions() {
+    run_pipeline() {
+        local -n _input=$1
+        shift
+
+        local -a data=("${_input[@]}")
+        local stage
+
+        for stage in "$@"; do
+            mapfile -t data < <("$stage" "${data[@]}")
+        done
+
+        printf "%s\n" "${data[@]}"
+    }
+
+    resolve_path() {
+        local p="$1"
+        p="${p//\/\//\/}"
+
+        [[ "$p" == /XXX* ]] && return 1
+        [[ "$p" == "/" ]] && return 1
+
+        echo "$p"
+    }
+
+    home_remap() {
+        local p="$1"
+
+        if [[ "$p" =~ ^/\.[^/]+ ]]; then
+            local candidate="$HOME$p"
+            [[ -e "$candidate" ]] || return 1
+            echo "\$HOME$p"
+            return 0
+        fi
+
+        echo "$p"
+    }
+
+    normalize_path() {
+        local p="$1"
+        p="$(resolve_path "$p")" || return 1
+        p="$(home_remap "$p")" || return 1
+        echo "$p"
+    }
+
+    extract_path() {
+        grep -oE '/[^[:space:]]+' <<< "$1" | head -n1
+    }
+
+    classify_mode() {
+        local line="$1"
+        local syscall="${line%% *}"
+        local mode="ro"
+
+        if [[ "$line" == *"ENOENT"* || "$line" == *"ENOTDIR"* || \
+              "$line" == *"EACCES"* || "$line" == *"EPERM"* ]]; then
+            mode="rw"
+        fi
+
+        if [[ "$syscall" == "execve" || "$syscall" == "dlopen" ]]; then
+            mode="ro"
+        fi
+
+        echo "$mode"
+    }
+
+    is_allowed_path() {
+        local path="$1"
+
+        case "$path" in
+            /|/var|/dev|/bin|/sbin|/lib|/etc|/usr|/opt|/tmp|/run|/home) return 1 ;;
+            /tmp/.mount*|/tmp/.mount/*|/newroot/*|/oldroot/*|/dev/tty) return 1 ;;
+        esac
+
+        return 0
+    }
+
+    parse_groups() {
+        local b line path
+
+        for b in $(printf '%s\n' "${!groups[@]}" | sort); do
+            while IFS= read -r line; do
+                [[ -z "$line" ]] && continue
+                path="$(extract_path "$line")"
+                [[ -z "$path" ]] && continue
+                echo "raw:$line|$path"
+            done <<< "${groups[$b]}"
+        done
+    }
+
+    normalize_stage() {
+        local item path
+
+        for item in "$@"; do
+            path="${item#*|}"
+            path="$(normalize_path "$path")" || continue
+            echo "${item%%|*}:$path"
+        done
+    }
+
+    classify_stage() {
+        local item line path mode
+
+        for item in "$@"; do
+            line="${item#*:}"
+            path="${item##*:}"
+
+            mode="$(classify_mode "$line")"
+            echo "$mode:$path"
+        done
+    }
+
+    resolve_dependencies() {
+        local item real lib key
+        declare -A seen
+
+        for item in "$@"; do
+            echo "$item"
+
+            real="${item#*:}"
+            real="${real/#\~/$HOME}"
+            real="${real//\$HOME/$HOME}"
+
+            [[ -f "$real" ]] || continue
+            file "$real" 2>/dev/null | grep -q "ELF" || continue
+
+            while IFS= read -r line; do
+                lib="$(awk '{for(i=1;i<=NF;i++) if ($i ~ /^\//) {print $i; exit}}' <<< "$line")"
+                [[ -z "$lib" || ! -e "$lib" ]] && continue
+
+                key="ro:$lib"
+                [[ -n "${seen[$key]}" ]] && continue
+                seen["$key"]=1
+
+                echo "$key"
+            done < <(ldd "$real" 2>/dev/null)
+        done
+    }
+
+    filter_paths() {
+        local item path real
+
+        for item in "$@"; do
+            path="${item#*:}"
+
+            # normalize HOME
+            real="${path/#\~/$HOME}"
+            real="${real//\$HOME/$HOME}"
+
+            # -----------------------------------------------------
+            # 1. must exist on filesystem
+            # -----------------------------------------------------
+            [[ -e "$real" ]] || continue
+
+            # -----------------------------------------------------
+            # 2. must not be blocked by policy rules
+            # -----------------------------------------------------
+            is_allowed_path "$path" || continue
+
+            echo "$item"
+        done
+    }
+
+    select_deepest_only() {
+        local -a arr=("$@")
+        local i j a b
+
+        for i in "${!arr[@]}"; do
+            a="${arr[$i]#*:}"
+
+            for j in "${!arr[@]}"; do
+                b="${arr[$j]#*:}"
+
+                [[ "$a" == "$b" ]] && continue
+
+                if [[ "$b" == "$a/"* ]]; then
+                    unset 'arr[$i]'
+                    break
+                fi
+            done
+        done
+
+        printf "%s\n" "${arr[@]}"
+    }
+
+    collapse_items() {
+        local item path dir
+        declare -A groups
+
+        for item in "$@"; do
+            path="${item#*:}"
+            dir="$(dirname "$path")"
+            groups["$dir"]+="$item"$'\n'
+        done
+
+        for dir in "${!groups[@]}"; do
+            while IFS= read -r item; do
+                [[ -n "$item" ]] && echo "$item"
+            done <<< "${groups[$dir]}"
+        done
+    }
+
+    collapse_whitelisted_folders() {
+        local item path w root key prefix
+        local -a WHITELIST=("themes" ".cursors" ".themes" "fonts" ".icons" "fontconfig" "icons" ".fontconfig")
+
+        declare -A group_count
+        declare -A emitted
+
+        # ---------------------------------------------------------
+        # STEP 1: COUNT PREFIX GROUPS
+        # ---------------------------------------------------------
+        for item in "$@"; do
+            path="${item#*:}"
+
+            for w in "${WHITELIST[@]}"; do
+
+                # match directory boundary properly
+                if [[ "$path" == *"/$w/"* || "$path" == *"/$w"* ]]; then
+
+                    # normalize root up to whitelist segment
+                    root="${path%%/$w*}"
+                    key="$root/$w"
+
+                    group_count["$key"]=$((group_count["$key"] + 1))
+                fi
+            done
+        done
+
+        # ---------------------------------------------------------
+        # STEP 2: EMIT COLLAPSED OR RAW
+        # ---------------------------------------------------------
+        for item in "$@"; do
+            path="${item#*:}"
+            local collapsed=0
+
+            for w in "${WHITELIST[@]}"; do
+
+                if [[ "$path" == *"/$w/"* || "$path" == *"/$w"* ]]; then
+
+                    root="${path%%/$w*}"
+                    key="$root/$w"
+
+                    # collapse condition
+                    if [[ "${group_count[$key]}" -gt 1 ]]; then
+                        if [[ -z "${emitted[$key]}" ]]; then
+                            echo "$key"
+                            emitted["$key"]=1
+                        fi
+                        collapsed=1
+                    fi
+
+                    break
+                fi
+            done
+
+            # not part of whitelist collapse → keep original
+            [[ "$collapsed" -eq 0 ]] && echo "$item"
+        done
+    }
+
+    dedupe_paths_exact() {
+        local item
+        declare -A seen
+
+        for item in "$@"; do
+            [[ -n "${seen[$item]}" ]] && continue
+            seen["$item"]=1
+            echo "$item"
+        done
+    }
+
+    filter_existing_profile_paths() {
+        local item path real parent
+        declare -A profile
+
+        while IFS= read -r entry; do
+            path="${entry#*:}"
+            path="${path/#\~/$HOME}"
+            path="${path//\$HOME/$HOME}"
+            profile["$path"]=1
+        done < <(jq -r '.paths[]?' <<< "$PROFILE_JSON")
+
+        for item in "$@"; do
+            path="${item#*:}"
+            real="${path/#\~/$HOME}"
+            real="${real//\$HOME/$HOME}"
+
+            [[ -n "${profile[$real]}" ]] && continue
+
+            parent="$real"
+            while [[ "$parent" != "/" ]]; do
+                parent="$(dirname "$parent")"
+                [[ -n "${profile[$parent]}" ]] && continue 2
+            done
+
+            echo "$item"
+        done
+    }
+
+    output_json_suggestions() {
+        local item path mode key
+        declare -A groups
+        local -a order
+        local -a entries
+
+        while IFS= read -r item; do
+            path="${item#*:}"
+
+            if [[ -e "$path" && -w "$path" ]]; then
+                mode="rw"
+            else
+                mode="ro"
+            fi
+
+            path="${path/#$HOME/\$HOME}"
+
+            if [[ "$path" == \$HOME* ]]; then
+                key="HOME"
+            elif [[ "$path" == /usr/share/* ]]; then
+                key="/usr/share"
+            else
+                key="/$(echo "$path" | cut -d/ -f2)"
+            fi
+
+            if [[ -z "${groups[$key]+x}" ]]; then
+                order+=("$key")
+            fi
+
+            groups["$key"]+=$'\n'"$mode:$path"
+
+        done < <(printf "%s\n" "$@")
+
+        # build ordered list while preserving group separation
+        local -a all_entries
+        local -a group_sizes
+
+        for key in "${order[@]}"; do
+            local count=0
+            while IFS= read -r entry; do
+                [[ -z "$entry" ]] && continue
+                all_entries+=("$entry")
+                ((count++))
+            done <<< "${groups[$key]}"
+            group_sizes+=("$count")
+        done
+
+        echo "["
+
+        local total=${#all_entries[@]}
+
+        for i in "${!all_entries[@]}"; do
+            if [[ $i -eq $((total - 1)) ]]; then
+                printf '  "%s"\n' "${all_entries[i]}"
+            else
+                printf '  "%s",\n' "${all_entries[i]}"
+            fi
+
+            # add blank line after each group (except last group boundary)
+            local running=0
+            for g in "${group_sizes[@]}"; do
+                running=$((running + g))
+                if [[ $i -eq $((running - 1)) && $i -ne $((total - 1)) ]]; then
+                    echo ""
+                fi
+            done
+        done
+
+        echo "]"
+    }
+
+	enforce_single_path_per_subtree() {
+	    local -a input=("$@")
+	    local -a out=()
+
+	    local i j a b
+
+	    # normalize helper
+	    norm() {
+	        local p="$1"
+	        p="${p/#\$HOME/$HOME}"
+	        echo "$p"
+	    }
+
+	    for i in "${!input[@]}"; do
+	        a="${input[$i]#*:}"
+	        a="$(norm "$a")"
+
+	        local keep=1
+
+	        for j in "${!input[@]}"; do
+	            [[ "$i" == "$j" ]] && continue
+
+	            b="${input[$j]#*:}"
+	            b="$(norm "$b")"
+
+	            # CASE 1: a is inside b → drop a
+	            if [[ "$a" == "$b/"* ]]; then
+	                keep=0
+	                break
+	            fi
+
+	            # CASE 2: b is inside a → drop b (optional but stabilizes output)
+	            if [[ "$b" == "$a/"* ]]; then
+	                continue 2
+	            fi
+	        done
+
+	        [[ "$keep" -eq 1 ]] && out+=("${input[$i]}")
+	    done
+
+	    printf "%s\n" "${out[@]}"
+	}
+
+	merge_profile_and_pipeline_paths() {
+	    local item mode path real
+
+	    declare -A seen
+
+	    # ---------------------------------------------------------
+	    # 1. runtime input first
+	    # ---------------------------------------------------------
+	    for item in "$@"; do
+	        echo "$item"
+	        seen["$item"]=1
+	    done
+
+	    # ---------------------------------------------------------
+	    # 2. inject profile paths AFTER runtime
+	    # ---------------------------------------------------------
+	    while IFS= read -r item; do
+	        [[ -z "$item" ]] && continue
+
+	        mode="${item%%:*}"
+	        path="${item#*:}"
+
+	        path="${path/#\$HOME/$HOME}"
+	        path="${path/#\~/$HOME}"
+
+	        real="$mode:$path"
+
+	        [[ -n "${seen[$real]}" ]] && continue
+	        seen["$real"]=1
+
+	        echo "$real"
+	    done < <(jq -r '.paths[]?' <<< "$PROFILE_JSON")
+	}
+
+    # =========================================================
+    # PIPELINE EXECUTION
+    # =========================================================
+    local -a items=()
+
+	mapfile -t items < <(
+	    run_pipeline items \
+	        parse_groups \
+	        normalize_stage \
+	        classify_stage \
+	        resolve_dependencies \
+	        filter_paths \
+	        collapse_whitelisted_folders \
+			merge_profile_and_pipeline_paths \
+	        dedupe_paths_exact \
+	        enforce_single_path_per_subtree \
+	)
+
+	# =========================================================
+	# EMPTY RESULT GUARD (WITH UTILS LOG)
+	# =========================================================
+	if [[ "${#items[@]}" -eq 0 ]]; then
+	    utils::log "debug_build_json_suggestions: no recommendations found"
+	    return 0
+	fi
+
+	echo -e ""
+	utils::log INFO "Profile recommendation:"
+
+	output_json_suggestions "${items[@]}"
+}
+
 utils::debug() {
     [[ ! -f "$TRACE_FILE" ]] && return 0
 
@@ -133,7 +613,6 @@ utils::debug() {
     fi
 
     utils::log INFO "Starting debugging..."
-    utils::print_ldd
     utils::log INFO "Analyzing trace file: $TRACE_FILE"
 
     # =========================================================
@@ -217,5 +696,6 @@ utils::debug() {
         done <<< "${groups[$b]}"
     done
 
-    TRACE_ANALYZED=1
+	utils::debug_build_json_suggestions
+	TRACE_ANALYZED=1
 }

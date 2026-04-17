@@ -199,7 +199,7 @@ sandbox::execute() {
         echo "" > "$TRACE_FILE"
 
         utils::log INFO "strace enabled -> $TRACE_FILE"
-		LD_DEBUG=libs strace -f -tt -s 128 \
+		strace -f -tt -s 128 \
 		  -e trace=execve,exit_group,kill,openat,access,stat \
 		  -o "$TRACE_FILE" \
 		  "${BWRAP_ARGS[@]}"

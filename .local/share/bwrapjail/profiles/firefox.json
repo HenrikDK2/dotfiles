@@ -20,12 +20,17 @@
 		"clipboard": true
 	},
 	"paths": [
+		"rw:$HOME/.config/dconf/user",
+		"rw:$HOME/.cache/fontconfig",
+		"rw:$HOME/.config/gtk-3.0/settings.ini",
 		"rw:$HOME/Downloads",
 		"rw:$HOME/.config/mozilla",
 		"rw:$HOME/.cache/mozilla",
 
 		"ro:/usr/bin/firefox",
 		"ro:/usr/bin/sh",
+		"ro:/usr/lib",
+		"ro:/usr/lib64",
 
 		"ro:/usr/share/fonts",
 		"ro:/usr/share/icons",
@@ -45,13 +50,14 @@
 		"ro:/usr/share/pixmaps",
 		"ro:/usr/share/ca-certificates",
 
-		"ro:/usr/lib",
-		"ro:/usr/lib64",
-
 		"ro:/var",
+
 		"ro:/lib",
+
 		"ro:/lib64",
+
 		"ro:/bin",
+
 		"ro:/etc"
 	],
 	"envs": {}
