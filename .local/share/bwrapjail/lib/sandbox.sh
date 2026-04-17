@@ -184,6 +184,7 @@ sandbox::configure_network() {
 sandbox::finalize_command() {
 	if [[ -n "$COMMAND_OVERRIDE" ]]; then
     	EXECUTABLE="$COMMAND_OVERRIDE"
+     	EXTRA_ARGS=()
     fi
 
     BWRAP_ARGS+=( "--unshare-all" )
