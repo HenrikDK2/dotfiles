@@ -60,7 +60,7 @@ dbus::setup_proxy() {
         xdg-dbus-proxy \
             "$DBUS_SESSION_BUS_ADDRESS" \
             "$PROXY_SOCKET" \
-            "${proxy_args[@]}" &
+            "${PROXY_ARGS[@]}" --filter  &
 
         DBUS_PROXY_PID=$!
         sandbox::add_bwrap_arg --bind "$PROXY_SOCKET" "$PROXY_SOCKET"
