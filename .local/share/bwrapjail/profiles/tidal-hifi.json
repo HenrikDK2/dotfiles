@@ -37,7 +37,8 @@
 		"ro:/usr/lib64",
 
 		"ro:/usr/share/fonts",
-		"ro:/usr/share/fontconfig",
+		"ro:/usr/share/icons",
+		"ro:/usr/share/cursors",
 		"ro:/usr/share/ca-certificates",
 
 		"ro:/usr/bin",
