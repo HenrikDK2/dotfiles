@@ -37,7 +37,8 @@ dbus::configure_portals() {
         add_portal_logged org.freedesktop.portal.Notification
         add_portal_logged org.freedesktop.portal.Notifications
         add_portal_logged org.freedesktop.Notifications
-
+    else
+    	sandbox::add_bwrap_arg --ro-bind  /dev/null /usr/bin/notify-send
     fi
 
     if [[ "$ALLOW_SCREENSHARE" = true ]]; then
