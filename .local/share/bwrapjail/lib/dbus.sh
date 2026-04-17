@@ -16,15 +16,15 @@ dbus::configure_portals() {
     if [[ "$ALLOW_OPEN_URI" = false ]]; then
         dbus::remove_from_default org.freedesktop.portal.OpenURI
     else
-        sandbox::add_bwrap_arg --bind /usr/bin/xdg-open /usr/bin/xdg-open
-        sandbox::add_bwrap_arg --setenv PATH /usr/bin:/bin:/usr/sbin:/sbin
-
-        sandbox::add_bwrap_arg --bind-try /usr/bin/protontricks-launch /usr/bin/protontricks-launch
-        sandbox::add_bwrap_arg --bind-try /usr/bin/protontricks /usr/bin/protontricks
-        sandbox::add_bwrap_arg --bind-try /usr/share/steam/compatibilitytools.d /usr/share/steam/compatibilitytools.d
-        sandbox::add_bwrap_arg --bind-try $HOME/.local/share/Steam $HOME/.local/share/Steam
-        sandbox::add_bwrap_arg --bind-try $HOME/.local/applications/nxm-handler.desktop $HOME/.local/applications/nxm-handler.desktop
-        sandbox::add_bwrap_arg --bind-try $HOME/Games
+	    sandbox::add_bwrap_arg --bind /usr/bin/xdg-open /usr/bin/xdg-open
+	    sandbox::add_bwrap_arg --setenv PATH /usr/bin:/bin:/usr/sbin:/sbin
+	    sandbox::add_bwrap_arg --bind-try /usr/bin/protontricks-launch /usr/bin/protontricks-launch
+	    sandbox::add_bwrap_arg --bind-try /usr/bin/protontricks /usr/bin/protontricks
+	    sandbox::add_bwrap_arg --bind-try /usr/share/steam/compatibilitytools.d /usr/share/steam/compatibilitytools.d
+	    sandbox::add_bwrap_arg --bind-try $HOME/.local/share/Steam $HOME/.local/share/Steam
+	    sandbox::add_bwrap_arg --bind-try $HOME/.local/share/applications/nxm-handler.desktop $HOME/.local/share/applications/nxm-handler.desktop
+	    sandbox::add_bwrap_arg --bind-try $HOME/.local/share/modorganizer $HOME/.local/share/modorganizer
+	    sandbox::add_bwrap_arg --bind-try $HOME/Games $HOME/Games
     fi
 
     if [[ "$ALLOW_FILE_CHOOSER" = false ]]; then
