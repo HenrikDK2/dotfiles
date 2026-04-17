@@ -27,10 +27,8 @@
 		"rw:$HOME/.config/mozilla",
 		"rw:$HOME/.cache/mozilla",
 
-		"ro:/usr/bin/firefox",
-		"ro:/usr/bin/sh",
+		"ro:/usr/bin",
 		"ro:/usr/lib",
-		"ro:/usr/lib64",
 
 		"ro:/usr/share/fonts",
 		"ro:/usr/share/icons",

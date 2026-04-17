@@ -93,609 +93,581 @@ utils::dump_vars() {
     done
 }
 
-utils::print_ldd() {
-    local ldd_output="$(ldd "$EXECUTABLE" 2>&1)"
+utils::debug() {
+	utils::log INFO "Starting debugging..."
 
-    # only log if it's a dynamic executable
-    if [[ "$ldd_output" != *"not a dynamic executable"* ]]; then
-        echo -e ""
-        utils::log INFO "ldd output for $EXECUTABLE"
+	run_pipeline() {
+		local -n _input=$1
+		shift
 
-        # extract unique library paths
-        local libs
-        libs=$(printf '%s\n' "$ldd_output" \
-            | awk '/=>/ {print $3} /^[^ ]/ {print $1}' \
-            | grep '^/' \
-            | sort -u)
+		local -a data=("${_input[@]}")
+		local stage
+		local start end duration
 
-        # group into unique folders
-        local dirs
-        dirs=$(printf '%s\n' "$libs" \
-            | xargs -n1 dirname \
-            | sort -u)
+		declare -A stage_time
 
-        utils::log INFO "Detected required directories:"
+		echo "[pipeline] initial input size: ${#data[@]}" >&2
 
-        # print nicely, one per line
-        while IFS= read -r dir; do
-            utils::log INFO "  - $dir"
-        done <<< "$dirs"
+		for stage in "$@"; do
+		    local before_count=${#data[@]}
 
-        utils::log INFO "Consider adding them\n"
-    fi
-}
+		    start=$EPOCHREALTIME
 
-utils::debug_build_json_suggestions() {
-    run_pipeline() {
-        local -n _input=$1
-        shift
+		    mapfile -t data < <("$stage" "${data[@]}")
 
-        local -a data=("${_input[@]}")
-        local stage
+		    end=$EPOCHREALTIME
+		    duration=$(awk -v s="$start" -v e="$end" \
+		    'BEGIN { printf "%.6f", (e - s) * 1000 }')
 
-        for stage in "$@"; do
-            mapfile -t data < <("$stage" "${data[@]}")
-        done
+		    stage_time["$stage"]=$duration
 
-        printf "%s\n" "${data[@]}"
-    }
+		    local after_count=${#data[@]}
 
-    resolve_path() {
-        local p="$1"
-        p="${p//\/\//\/}"
+		    echo "[pipeline] stage: $stage" >&2
+		    echo "  - time: ${duration}ms" >&2
+		    echo "  - items: ${before_count} → ${after_count}" >&2
 
-        [[ "$p" == /XXX* ]] && return 1
-        [[ "$p" == "/" ]] && return 1
+		    echo "  - sample output:" >&2
+		    printf '    %s\n' "${data[@]:0:5}" >&2
+		    echo "" >&2
+		done
 
-        echo "$p"
-    }
-
-    home_remap() {
-        local p="$1"
-
-        if [[ "$p" =~ ^/\.[^/]+ ]]; then
-            local candidate="$HOME$p"
-            [[ -e "$candidate" ]] || return 1
-            echo "\$HOME$p"
-            return 0
-        fi
-
-        echo "$p"
-    }
-
-    normalize_path() {
-        local p="$1"
-        p="$(resolve_path "$p")" || return 1
-        p="$(home_remap "$p")" || return 1
-        echo "$p"
-    }
-
-    extract_path() {
-        grep -oE '/[^[:space:]]+' <<< "$1" | head -n1
-    }
-
-    classify_mode() {
-        local line="$1"
-        local syscall="${line%% *}"
-        local mode="ro"
-
-        if [[ "$line" == *"ENOENT"* || "$line" == *"ENOTDIR"* || \
-              "$line" == *"EACCES"* || "$line" == *"EPERM"* ]]; then
-            mode="rw"
-        fi
-
-        if [[ "$syscall" == "execve" || "$syscall" == "dlopen" ]]; then
-            mode="ro"
-        fi
-
-        echo "$mode"
-    }
-
-    is_allowed_path() {
-        local path="$1"
-
-        case "$path" in
-            /|/var|/dev|/bin|/sbin|/lib|/etc|/usr|/opt|/tmp|/run|/home) return 1 ;;
-            /tmp/.mount*|/tmp/.mount/*|/newroot/*|/oldroot/*|/dev/tty) return 1 ;;
-        esac
-
-        return 0
-    }
-
-    parse_groups() {
-        local b line path
-
-        for b in $(printf '%s\n' "${!groups[@]}" | sort); do
-            while IFS= read -r line; do
-                [[ -z "$line" ]] && continue
-                path="$(extract_path "$line")"
-                [[ -z "$path" ]] && continue
-                echo "raw:$line|$path"
-            done <<< "${groups[$b]}"
-        done
-    }
-
-    normalize_stage() {
-        local item path
-
-        for item in "$@"; do
-            path="${item#*|}"
-            path="$(normalize_path "$path")" || continue
-            echo "${item%%|*}:$path"
-        done
-    }
-
-    classify_stage() {
-        local item line path mode
-
-        for item in "$@"; do
-            line="${item#*:}"
-            path="${item##*:}"
-
-            mode="$(classify_mode "$line")"
-            echo "$mode:$path"
-        done
-    }
-
-    resolve_dependencies() {
-        local item real lib key
-        declare -A seen
-
-        for item in "$@"; do
-            echo "$item"
-
-            real="${item#*:}"
-            real="${real/#\~/$HOME}"
-            real="${real//\$HOME/$HOME}"
-
-            [[ -f "$real" ]] || continue
-            file "$real" 2>/dev/null | grep -q "ELF" || continue
-
-            while IFS= read -r line; do
-                lib="$(awk '{for(i=1;i<=NF;i++) if ($i ~ /^\//) {print $i; exit}}' <<< "$line")"
-                [[ -z "$lib" || ! -e "$lib" ]] && continue
-
-                key="ro:$lib"
-                [[ -n "${seen[$key]}" ]] && continue
-                seen["$key"]=1
-
-                echo "$key"
-            done < <(ldd "$real" 2>/dev/null)
-        done
-    }
-
-    filter_paths() {
-        local item path real
-
-        for item in "$@"; do
-            path="${item#*:}"
-
-            # normalize HOME
-            real="${path/#\~/$HOME}"
-            real="${real//\$HOME/$HOME}"
-
-            # -----------------------------------------------------
-            # 1. must exist on filesystem
-            # -----------------------------------------------------
-            [[ -e "$real" ]] || continue
-
-            # -----------------------------------------------------
-            # 2. must not be blocked by policy rules
-            # -----------------------------------------------------
-            is_allowed_path "$path" || continue
-
-            echo "$item"
-        done
-    }
-
-    select_deepest_only() {
-        local -a arr=("$@")
-        local i j a b
-
-        for i in "${!arr[@]}"; do
-            a="${arr[$i]#*:}"
-
-            for j in "${!arr[@]}"; do
-                b="${arr[$j]#*:}"
-
-                [[ "$a" == "$b" ]] && continue
-
-                if [[ "$b" == "$a/"* ]]; then
-                    unset 'arr[$i]'
-                    break
-                fi
-            done
-        done
-
-        printf "%s\n" "${arr[@]}"
-    }
-
-    collapse_items() {
-        local item path dir
-        declare -A groups
-
-        for item in "$@"; do
-            path="${item#*:}"
-            dir="$(dirname "$path")"
-            groups["$dir"]+="$item"$'\n'
-        done
-
-        for dir in "${!groups[@]}"; do
-            while IFS= read -r item; do
-                [[ -n "$item" ]] && echo "$item"
-            done <<< "${groups[$dir]}"
-        done
-    }
-
-    collapse_whitelisted_folders() {
-        local item path w root key prefix
-        local -a WHITELIST=("themes" ".cursors" ".themes" "fonts" ".icons" "fontconfig" "icons" ".fontconfig")
-
-        declare -A group_count
-        declare -A emitted
-
-        # ---------------------------------------------------------
-        # STEP 1: COUNT PREFIX GROUPS
-        # ---------------------------------------------------------
-        for item in "$@"; do
-            path="${item#*:}"
-
-            for w in "${WHITELIST[@]}"; do
-
-                # match directory boundary properly
-                if [[ "$path" == *"/$w/"* || "$path" == *"/$w"* ]]; then
-
-                    # normalize root up to whitelist segment
-                    root="${path%%/$w*}"
-                    key="$root/$w"
-
-                    group_count["$key"]=$((group_count["$key"] + 1))
-                fi
-            done
-        done
-
-        # ---------------------------------------------------------
-        # STEP 2: EMIT COLLAPSED OR RAW
-        # ---------------------------------------------------------
-        for item in "$@"; do
-            path="${item#*:}"
-            local collapsed=0
-
-            for w in "${WHITELIST[@]}"; do
-
-                if [[ "$path" == *"/$w/"* || "$path" == *"/$w"* ]]; then
-
-                    root="${path%%/$w*}"
-                    key="$root/$w"
-
-                    # collapse condition
-                    if [[ "${group_count[$key]}" -gt 1 ]]; then
-                        if [[ -z "${emitted[$key]}" ]]; then
-                            echo "$key"
-                            emitted["$key"]=1
-                        fi
-                        collapsed=1
-                    fi
-
-                    break
-                fi
-            done
-
-            # not part of whitelist collapse → keep original
-            [[ "$collapsed" -eq 0 ]] && echo "$item"
-        done
-    }
-
-    dedupe_paths_exact() {
-        local item
-        declare -A seen
-
-        for item in "$@"; do
-            [[ -n "${seen[$item]}" ]] && continue
-            seen["$item"]=1
-            echo "$item"
-        done
-    }
-
-    filter_existing_profile_paths() {
-        local item path real parent
-        declare -A profile
-
-        while IFS= read -r entry; do
-            path="${entry#*:}"
-            path="${path/#\~/$HOME}"
-            path="${path//\$HOME/$HOME}"
-            profile["$path"]=1
-        done < <(jq -r '.paths[]?' <<< "$PROFILE_JSON")
-
-        for item in "$@"; do
-            path="${item#*:}"
-            real="${path/#\~/$HOME}"
-            real="${real//\$HOME/$HOME}"
-
-            [[ -n "${profile[$real]}" ]] && continue
-
-            parent="$real"
-            while [[ "$parent" != "/" ]]; do
-                parent="$(dirname "$parent")"
-                [[ -n "${profile[$parent]}" ]] && continue 2
-            done
-
-            echo "$item"
-        done
-    }
-
-    output_json_suggestions() {
-        local item path mode key
-        declare -A groups
-        local -a order
-        local -a entries
-
-        while IFS= read -r item; do
-            path="${item#*:}"
-
-            if [[ -e "$path" && -w "$path" ]]; then
-                mode="rw"
-            else
-                mode="ro"
-            fi
-
-            path="${path/#$HOME/\$HOME}"
-
-            if [[ "$path" == \$HOME* ]]; then
-                key="HOME"
-            elif [[ "$path" == /usr/share/* ]]; then
-                key="/usr/share"
-            else
-                key="/$(echo "$path" | cut -d/ -f2)"
-            fi
-
-            if [[ -z "${groups[$key]+x}" ]]; then
-                order+=("$key")
-            fi
-
-            groups["$key"]+=$'\n'"$mode:$path"
-
-        done < <(printf "%s\n" "$@")
-
-        # build ordered list while preserving group separation
-        local -a all_entries
-        local -a group_sizes
-
-        for key in "${order[@]}"; do
-            local count=0
-            while IFS= read -r entry; do
-                [[ -z "$entry" ]] && continue
-                all_entries+=("$entry")
-                ((count++))
-            done <<< "${groups[$key]}"
-            group_sizes+=("$count")
-        done
-
-        echo "["
-
-        local total=${#all_entries[@]}
-
-        for i in "${!all_entries[@]}"; do
-            if [[ $i -eq $((total - 1)) ]]; then
-                printf '  "%s"\n' "${all_entries[i]}"
-            else
-                printf '  "%s",\n' "${all_entries[i]}"
-            fi
-
-            # add blank line after each group (except last group boundary)
-            local running=0
-            for g in "${group_sizes[@]}"; do
-                running=$((running + g))
-                if [[ $i -eq $((running - 1)) && $i -ne $((total - 1)) ]]; then
-                    echo ""
-                fi
-            done
-        done
-
-        echo "]"
-    }
-
-	enforce_single_path_per_subtree() {
-	    local -a input=("$@")
-	    local -a out=()
-
-	    local i j a b
-
-	    # normalize helper
-	    norm() {
-	        local p="$1"
-	        p="${p/#\$HOME/$HOME}"
-	        echo "$p"
-	    }
-
-	    for i in "${!input[@]}"; do
-	        a="${input[$i]#*:}"
-	        a="$(norm "$a")"
-
-	        local keep=1
-
-	        for j in "${!input[@]}"; do
-	            [[ "$i" == "$j" ]] && continue
-
-	            b="${input[$j]#*:}"
-	            b="$(norm "$b")"
-
-	            # CASE 1: a is inside b → drop a
-	            if [[ "$a" == "$b/"* ]]; then
-	                keep=0
-	                break
-	            fi
-
-	            # CASE 2: b is inside a → drop b (optional but stabilizes output)
-	            if [[ "$b" == "$a/"* ]]; then
-	                continue 2
-	            fi
-	        done
-
-	        [[ "$keep" -eq 1 ]] && out+=("${input[$i]}")
-	    done
-
-	    printf "%s\n" "${out[@]}"
+		echo "[pipeline] finished stages: ${#@}" >&2
+		printf "%s\n" "${data[@]}"
 	}
 
-	merge_profile_and_pipeline_paths() {
-	    local item mode path real
+	filter_existing_paths() {
+	  local item mode path clean_path
+	  local -A seen
 
-	    declare -A seen
+	  for item in "$@"; do
+	    [[ -z "$item" ]] && continue
 
-	    # ---------------------------------------------------------
-	    # 1. runtime input first
-	    # ---------------------------------------------------------
-	    for item in "$@"; do
-	        echo "$item"
-	        seen["$item"]=1
+	    # Split optional mode prefix (ro:/path or rw:/path)
+	    mode="${item%%:*}"
+	    path="${item#*:}"
+
+	    if [[ "$path" == "$item" ]]; then
+	      clean_path="$item"
+	    else
+	      clean_path="$path"
+	    fi
+
+	    # -----------------------
+	    # FAST REJECTS FIRST
+	    # -----------------------
+	    [[ -z "$clean_path" ]] && continue
+
+	    case "$clean_path" in
+	      "/"|"/home"|"/usr/bin/bwrap") continue ;;
+	      /proc/*|/dev/*|/sys/*|/sys) continue ;;
+	    esac
+
+	    [[ "$item" == "ro:/" || "$item" == "rw:/" ]] && continue
+
+	    # -----------------------
+	    # DEPTH CHECK (no awk, no subshell)
+	    # -----------------------
+	    # count slashes
+	    local tmp="${clean_path//[^\/]/}"
+	    (( ${#tmp} < 2 )) && continue
+
+	    # -----------------------
+	    # DEDUPE EARLY (avoid syscall if already seen)
+	    # -----------------------
+	    [[ -n "${seen[$clean_path]}" ]] && continue
+	    seen["$clean_path"]=1
+
+	    # -----------------------
+	    # FILESYSTEM CHECK LAST (expensive)
+	    # -----------------------
+	    [[ -e "$clean_path" ]] || continue
+
+	    printf "%s\n" "$clean_path"
+	  done
+	}
+
+	trace_to_raw_paths() {
+	  awk '
+	  {
+	    while (match($0, /\/[a-zA-Z0-9_\/\.\-]+/, m)) {
+	      path = m[0]
+
+	      # reject obvious non-path fragments
+	      if (path ~ /,/ ) next
+	      if (path ~ /=$/ ) next
+
+	      # normalize /newroot or /oldroot
+	      sub(/^\/(newroot|oldroot)/, "/", path)
+
+	      # normalize repeated slashes
+	      gsub(/\/+/, "/", path)
+
+	      if (path ~ /^\//) {
+	        if (!seen[path]++) print path
+	      }
+
+	      $0 = substr($0, RSTART + RLENGTH)
+	    }
+	  }' "$TRACE_FILE"
+	}
+
+	add_executable_context_paths() {
+		local base exe home="$HOME"
+		[[ -z "$EXECUTABLE" ]] && {
+		    printf "%s\n" "$@"
+		    return
+		}
+
+		base="${EXECUTABLE##*/}"
+
+		[[ -z "$base" || "$base" == "/" || "$base" == "." ]] && {
+		    printf "%s\n" "$@"
+		    return
+		}
+
+		exe="$base"
+
+		printf "%s\n" "$@"
+
+		add_if_exists() {
+		    [[ -n "$1" && -e "$1" ]] && printf "%s\n" "$1"
+		}
+
+		add_if_exists "/usr/bin/$exe"
+		add_if_exists "/bin/$exe"
+		add_if_exists "/usr/local/bin/$exe"
+		add_if_exists "/opt/$exe"
+		add_if_exists "/usr/share/$exe"
+		add_if_exists "/usr/share/doc/$exe"
+		add_if_exists "/usr/lib/$exe"
+		add_if_exists "/usr/lib64/$exe"
+
+		add_if_exists "$home/.config/$exe"
+		add_if_exists "$home/.cache/$exe"
+		add_if_exists "$home/.local/share/$exe"
+	}
+
+	isolate_deepest_paths() {
+	  local item path mode exe base parent tmp
+	  declare -A all_paths
+	  declare -A has_children
+
+	  exe="$EXECUTABLE"
+	  base="${exe##*/}"
+
+	  # -----------------------------
+	  # STEP 1: collect valid paths
+	  # -----------------------------
+	  for item in "$@"; do
+	    [[ -z "$item" ]] && continue
+
+	    mode="${item%%:*}"
+	    path="${item#*:}"
+
+	    [[ "$path" == "$item" ]] && path="$item"
+
+	    [[ -z "$path" ]] && continue
+	    [[ -e "$path" ]] || continue
+
+	    all_paths["$path"]=1
+	  done
+
+	  # ---------------------------------------------------------
+	  # STEP 2: mark parents WITHOUT dirname (FAST PATH WALK)
+	  # ---------------------------------------------------------
+	  for path in "${!all_paths[@]}"; do
+	    tmp="$path"
+
+	    # trim upward manually instead of dirname
+	    while [[ "$tmp" == */* && "$tmp" != "/" ]]; do
+	      tmp="${tmp%/*}"
+	      [[ "$tmp" == "" || "$tmp" == "/" ]] && break
+	      has_children["$tmp"]=1
+	    done
+	  done
+
+	  # ---------------------------------------------------------
+	  # STEP 3: emit deepest nodes
+	  # ---------------------------------------------------------
+	  for path in "${!all_paths[@]}"; do
+
+	    if [[ -n "${has_children[$path]}" ]]; then
+	      if [[ -d "$path" && "${path##*/}" == "$base" ]]; then
+	        :
+	      else
+	        continue
+	      fi
+	    fi
+
+	    printf "%s\n" "$path"
+	  done
+	}
+
+	normalize_paths() {
+	  local item mode path IFS='/'
+	  local -a parts stack
+
+	  for item in "$@"; do
+	    [[ -z $item ]] && continue
+
+	    mode=${item%%:*}
+	    path=${item#*:}
+	    [[ $path == "$item" ]] && path=$item
+
+	    # -------------------------------
+	    # 1. split + normalize in one pass
+	    # -------------------------------
+	    parts=($path)
+	    stack=()
+
+	    for part in "${parts[@]}"; do
+	      case "$part" in
+	        '' | '.')
+	          continue
+	          ;;
+	        '..')
+	          ((${#stack[@]})) && unset 'stack[-1]'
+	          ;;
+	        *)
+	          stack+=("$part")
+	          ;;
+	      esac
 	    done
 
-	    # ---------------------------------------------------------
-	    # 2. inject profile paths AFTER runtime
-	    # ---------------------------------------------------------
-	    while IFS= read -r item; do
-	        [[ -z "$item" ]] && continue
+	    # -------------------------------
+	    # 2. rebuild path
+	    # -------------------------------
+	    if ((${#stack[@]} == 0)); then
+	      path="/"
+	    else
+	      printf -v path '/%s' "${stack[*]}"
+	      path=${path// /\/}
+	    fi
 
-	        mode="${item%%:*}"
+	    # -------------------------------
+	    # 3. reattach mode
+	    # -------------------------------
+	    printf '%s\n' "${mode:+$mode:}$path"
+	  done
+	}
+
+	resolve_dependencies() {
+	  local item mode path target lib
+	  declare -A targets seen
+
+	  local -a unique_targets=()
+
+	  # ---------------------------------------------------------
+	  # STEP 1: normalize targets (avoid unnecessary readlink)
+	  # ---------------------------------------------------------
+	  for item in "$@"; do
+	    mode="${item%%:*}"
+	    path="${item#*:}"
+
+	    echo "$item"
+
+	    [[ -e "$path" ]] || continue
+
+	    # only resolve if needed (cheap shortcut first)
+	    if [[ -L "$path" ]]; then
+	      target="$(readlink -f "$path" 2>/dev/null || echo "$path")"
+	    else
+	      target="$path"
+	    fi
+
+	    [[ -z "${targets[$target]}" ]] && {
+	      targets["$target"]=1
+	      unique_targets+=("$target")
+	    }
+	  done
+
+	  # ---------------------------------------------------------
+	  # STEP 2: dependency extraction (minimize parsing cost)
+	  # ---------------------------------------------------------
+	  for target in "${unique_targets[@]}"; do
+
+	    # FAST FAIL: skip pseudo / kernel paths early
+	    case "$target" in
+	      /proc/*|/dev/*|/sys/*|/run/*|/tmp/*) continue ;;
+	    esac
+
+	    # run ldd once per unique target
+	    while read -r _ _ lib _; do
+	      [[ "$lib" != /* ]] && continue
+
+	      # inline dedupe check first
+	      [[ -n "${seen[$lib]}" ]] && continue
+	      seen["$lib"]=1
+
+	      echo "dep:$lib"
+	    done < <(LC_ALL=C ldd "$target" 2>/dev/null)
+
+	  done
+	}
+
+	dedupe_paths() {
+	  local item mode path key
+	  declare -A seen
+
+	  for item in "$@"; do
+	    [[ -z "$item" ]] && continue
+
+	    mode="${item%%:*}"
+	    path="${item#*:}"
+	    [[ "$path" == "$item" ]] && path="$item"
+
+	    # canonical key = ignore mode
+	    key="$path"
+
+	    if [[ -z "${seen[$key]}" ]]; then
+	      seen["$key"]=1
+	      printf '%s\n' "$item"
+	    fi
+	  done
+	}
+
+	collapse_filesystem_roots() {
+	  declare -A seen
+	  local item path cut_path exe base prefix
+
+	  exe="$EXECUTABLE"
+	  base="${exe##*/}"
+
+	  for item in "$@"; do
+	    [[ -z $item ]] && continue
+
+	    path="${item#*:}"
+	    [[ $path == "$item" ]] && path=$item
+	    [[ -z $path || ! -e $path ]] && continue
+
+	    cut_path="$(normalize_paths "$path")"
+
+	    # ALWAYS strip trailing slash for stable keys
+	    cut_path="${cut_path%/}"
+
+	    # executable collapse
+	    if [[ $cut_path == */"$base"/* ]]; then
+	      prefix="${cut_path%%$base*}"
+	      prefix="${prefix%/}"
+	      cut_path="${prefix}/${base}"
+	    fi
+
+	    case "$cut_path" in
+	      /lib/*) cut_path="/lib" ;;
+	      /lib64/*) cut_path="/lib64" ;;
+	      /lib32/*) cut_path="/lib32" ;;
+	      /usr/lib/*) cut_path="/usr/lib" ;;
+	      /usr/lib64/*) cut_path="/usr/lib64" ;;
+	      /usr/lib32/*) cut_path="/usr/lib32" ;;
+
+	      /etc/gnutls/*) cut_path="/etc/gnutls" ;;
+	      /usr/share/locale/*) cut_path="/usr/share/locale" ;;
+	      /usr/share/zoneinfo/*) cut_path="/usr/share/zoneinfo" ;;
+
+	      /etc/ca-certificates/*) cut_path="/etc/ca-certificates" ;;
+	      /usr/share/ca-certificates/*) cut_path="/usr/share/ca-certificates" ;;
+
+	      /etc/fonts/*|/etc/fonts/conf.d/*) cut_path="/etc/fonts" ;;
+	      /usr/share/fonts/*) cut_path="/usr/share/fonts" ;;
+	      /usr/local/share/fonts/*) cut_path="/usr/local/share/fonts" ;;
+	      /usr/share/fontconfig/*) cut_path="/usr/share/fontconfig" ;;
+	      /var/cache/fontconfig/*) cut_path="/var/cache/fontconfig" ;;
+	      "$HOME/.cache/fontconfig"/*) cut_path="$HOME/.cache/fontconfig" ;;
+
+	      "$HOME/.fonts"/*) cut_path="$HOME/.fonts" ;;
+
+	      /usr/share/icons/*) cut_path="/usr/share/icons" ;;
+	      /usr/share/pixmaps/*) cut_path="/usr/share/pixmaps" ;;
+	      /usr/share/gtk-3.0/*) cut_path="/usr/share/gtk-3.0" ;;
+	      "$HOME/.icons"/*) cut_path="$HOME/.icons" ;;
+	      "$HOME/.config/gtk-3.0"/*) cut_path="$HOME/.config/gtk-3.0" ;;
+
+	      /usr/share/vulkan/*) cut_path="/usr/share/vulkan" ;;
+	      "$HOME/.local/share/vulkan"/*) cut_path="$HOME/.local/share/vulkan" ;;
+	      /usr/share/libdrm/*) cut_path="/usr/share/libdrm" ;;
+	      /usr/share/drirc.d/*) cut_path="/usr/share/drirc.d" ;;
+	      /usr/share/glvnd/*) cut_path="/usr/share/glvnd" ;;
+
+	      "$HOME/.cache/mesa_shader_cache"/*) cut_path="$HOME/.cache/mesa_shader_cache" ;;
+	      "$HOME/.cache/radv_builtin_shaders"/*) cut_path="$HOME/.cache/radv_builtin_shaders" ;;
+	      /var/cache/mesa_shader_cache/*) cut_path="/var/cache/mesa_shader_cache" ;;
+
+	      /usr/share/mime/*) cut_path="/usr/share/mime" ;;
+	      "$HOME/.local/share/mime"/*) cut_path="$HOME/.local/share/mime" ;;
+	      /usr/share/glib-2.0/*) cut_path="/usr/share/glib-2.0" ;;
+
+	      "$HOME/.ssh"/*) cut_path="$HOME/.ssh" ;;
+	      "$HOME/.gnupg"/*) cut_path="$HOME/.gnupg" ;;
+	      "$HOME/.pki/nssdb"/*) cut_path="$HOME/.pki/nssdb" ;;
+	    esac
+
+	    [[ -z $cut_path || $cut_path == "/" ]] && continue
+
+	    # final stable key (THIS is what fixes your duplicates)
+	    local key="$cut_path"
+
+	    if [[ -z ${seen[$key]} ]]; then
+	      seen["$key"]=1
+	      printf '%s\n' "$cut_path"
+	    fi
+	  done
+	}
+
+	hide_run_runtime_noise() {
+		  declare -A seen
+		  local item path mode
+
+		  for item in "$@"; do
+		    [[ -z "$item" ]] && continue
+
+		    mode="${item%%:*}"
+		    path="${item#*:}"
+
+		    [[ "$path" == "$item" ]] && path="$item"
+		    [[ -z "$path" ]] && continue
+
+		    # ---------------------------------------------------------
+		    # RUNTIME IPC FILTER ZONE
+		    # ---------------------------------------------------------
+		    case "$path" in
+
+		      # ---------------- RUN USER SCOPE ----------------
+		      /run/user/*|/run/usr/*)
+		        case "$path" in
+		          *pulse*|*pipewire*|*alsa*|*jack*|\
+		          *wayland*|*x11*|*xorg*|\
+		          *dbus*|*bus*|\
+		          *.sock|*.socket)
+		            continue
+		            ;;
+		        esac
+		        ;;
+
+		      # ---------------- GPU ----------------
+		      $HOME/.local/share/vulkan|$HOME/.cache/mesa_shader_cache|/usr/share/drirc.d|\
+		      $HOME/.cache/radv_builtin_shaders|/usr/share/libdrm|$HOME/.config/lsfg-vk/conf.toml|\
+			  /usr/share/vulkan)
+		          continue
+		          ;;
+
+		      # ---------------- X11 SHARED SOCKETS ----------------
+		      /tmp/.X11-unix*|/tmp/.X11)
+		        continue
+		        ;;
+		    esac
+
+		    # ---------------------------------------------------------
+		    # dedupe
+		    # ---------------------------------------------------------
+		    if [[ -z "${seen[$item]}" ]]; then
+		      seen["$item"]=1
+		      printf "%s\n" "$item"
+		    fi
+		  done
+		}
+
+	output_json_suggestions() {
+	    local item path mode key
+	    declare -A groups
+	    local -a order all_entries group_sizes
+
+	    while IFS= read -r item; do
 	        path="${item#*:}"
 
-	        path="${path/#\$HOME/$HOME}"
-	        path="${path/#\~/$HOME}"
+	        if [[ -e "$path" && -w "$path" ]]; then
+	            mode="rw"
+	        else
+	            mode="ro"
+	        fi
 
-	        real="$mode:$path"
+	        path="${path/#$HOME/\$HOME}"
 
-	        [[ -n "${seen[$real]}" ]] && continue
-	        seen["$real"]=1
+	        if [[ "$path" == \$HOME* ]]; then
+	            key="HOME"
+	        elif [[ "$path" == /usr/share/* ]]; then
+	            key="/usr/share"
+	        elif [[ "$path" == /usr/local/* ]]; then
+	            key="/usr/local"
+	        elif [[ "$path" == /usr/bin/* || "$path" == /usr/sbin/* ]]; then
+	            key="/usr/bin"
+	        else
+	            key="/$(cut -d/ -f2 <<< "$path")"
+	        fi
 
-	        echo "$real"
-	    done < <(jq -r '.paths[]?' <<< "$PROFILE_JSON")
+	        [[ -z "${groups[$key]+x}" ]] && order+=("$key")
+	        groups["$key"]+=$'\n'"$mode:$path"
+
+	    done < <(printf "%s\n" "$@")
+
+	    for key in "${order[@]}"; do
+	        local count=0
+	        while IFS= read -r entry; do
+	            [[ -z "$entry" ]] && continue
+	            all_entries+=("$entry")
+	            ((count++))
+	        done <<< "${groups[$key]}"
+	        group_sizes+=("$count")
+	    done
+
+	    echo "["
+
+	    local total=${#all_entries[@]}
+
+	    for i in "${!all_entries[@]}"; do
+	        if [[ $i -eq $((total - 1)) ]]; then
+	            printf '  "%s"\n' "${all_entries[i]}"
+	        else
+	            printf '  "%s",\n' "${all_entries[i]}"
+	        fi
+
+	        local running=0
+	        for g in "${group_sizes[@]}"; do
+	            running=$((running + g))
+	            if [[ $i -eq $((running - 1)) && $i -ne $((total - 1)) ]]; then
+	                echo ""
+	            fi
+	        done
+	    done
+
+	    echo "]"
 	}
 
-    # =========================================================
-    # PIPELINE EXECUTION
-    # =========================================================
-    local -a items=()
+	# =========================================================
+	# PIPELINE EXECUTION
+	# =========================================================
+
+	local -a items=()
 
 	mapfile -t items < <(
-	    run_pipeline items \
-	        parse_groups \
-	        normalize_stage \
-	        classify_stage \
-	        resolve_dependencies \
-	        filter_paths \
-	        collapse_whitelisted_folders \
-			merge_profile_and_pipeline_paths \
-	        dedupe_paths_exact \
-	        enforce_single_path_per_subtree \
+		run_pipeline items \
+			trace_to_raw_paths \
+			add_executable_context_paths \
+			resolve_dependencies \
+			normalize_paths \
+			filter_existing_paths \
+			isolate_deepest_paths \
+			collapse_filesystem_roots \
+			hide_run_runtime_noise \
+			dedupe_paths
 	)
 
 	# =========================================================
-	# EMPTY RESULT GUARD (WITH UTILS LOG)
+	# OUTPUT
 	# =========================================================
 	if [[ "${#items[@]}" -eq 0 ]]; then
-	    utils::log "debug_build_json_suggestions: no recommendations found"
-	    return 0
+		utils::log "debug_build_json_suggestions: no recommendations found"
+		return 0
 	fi
 
-	echo -e ""
+	echo ""
+
+	utils::log WARN "Profile interpretation note:"
+	utils::log WARN "This dataset is derived from strace output and may include many paths that are NOT required for execution."
+	utils::log WARN "It is expected to contain runtime noise, debug artifacts, and indirect access patterns."
+	utils::log WARN "You should aggressively remove security-sensitive and runtime-internal paths (e.g. /proc, /sys, /dev, /run, sockets, caches, credentials)."
+	utils::log WARN "Presence of a path does NOT imply it is required for program correctness or operation."
+
 	utils::log INFO "Profile recommendation:"
-
 	output_json_suggestions "${items[@]}"
-}
-
-utils::debug() {
-    [[ ! -f "$TRACE_FILE" ]] && return 0
-
-    if [[ -n "${DEBUG_INIT:-}" ]]; then
-        return 0
-    fi
-
-    utils::log INFO "Starting debugging..."
-    utils::log INFO "Analyzing trace file: $TRACE_FILE"
-
-    # =========================================================
-    # CAPTURE ALL FAILURES
-    # =========================================================
-    mapfile -t failed_lines < <(
-        grep -E "=[[:space:]]*-1[[:space:]]+[A-Z0-9_]+" "$TRACE_FILE" \
-        | grep -v "EINVAL"
-    )
-
-    if (( ${#failed_lines[@]} == 0 )); then
-        utils::log INFO "No syscall errors detected"
-        TRACE_ANALYZED=1
-        return 0
-    fi
-
-    # =========================================================
-    # STRUCTURED PARSING (KEEP ALL EVENTS)
-    # =========================================================
-    mapfile -t failed_structured < <(
-        printf '%s\n' "${failed_lines[@]}" | awk '
-        function bucket(p) {
-            if (p == "") return "NO_PATH"
-            if (p ~ "^/usr/share") return "/usr/share"
-            if (p ~ "^/usr/local/share") return "/usr/local/share"
-            if (p ~ "^/usr") return "/usr"
-            if (p ~ "^/var") return "/var"
-            if (p ~ "^/etc") return "/etc"
-            if (p ~ "^/lib") return "/lib"
-            if (p ~ "^/bin") return "/bin"
-            split(p, a, "/")
-            return "/" a[2]
-        }
-
-        {
-            syscall = ""
-            err = ""
-            path = ""
-
-            if (match($0, /^([a-zA-Z0-9_]+)\(/, m)) {
-                syscall = m[1]
-            }
-
-            if (match($0, /= *-1 +([A-Z0-9_]+)/, e)) {
-                err = e[1]
-            }
-
-            if (match($0, /"\/[^"]+"/)) {
-                path = substr($0, RSTART+1, RLENGTH-2)
-            }
-
-            # normalize ONLY for grouping
-            npath = path
-            gsub(/\/+/, "/", npath)
-
-            g = bucket(npath)
-
-            print g "\t" syscall "\t" err "\t" path
-        }'
-    )
-
-    # =========================================================
-    # GROUP OUTPUT BY SUBTREE
-    # =========================================================
-    declare -A groups
-
-    for line in "${failed_structured[@]}"; do
-        IFS=$'\t' read -r bucket syscall err path <<< "$line"
-        [[ -z "$syscall" || -z "$err" ]] && continue
-
-        groups["$bucket"]+="$syscall $err -> $path"$'\n'
-    done
-
-    # =========================================================
-    # PRINT RESULTS
-    # =========================================================
-    for b in $(printf '%s\n' "${!groups[@]}" | sort); do
-        utils::log WARN "==================== $b ===================="
-        while IFS= read -r line; do
-            [[ -n "$line" ]] && utils::log WARN "$line"
-        done <<< "${groups[$b]}"
-    done
-
-	utils::debug_build_json_suggestions
-	TRACE_ANALYZED=1
 }

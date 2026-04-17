@@ -127,14 +127,18 @@ sandbox::configure_gpu() {
         utils::log INFO "Enabling GPU"
         sandbox::add_bwrap_arg --dev-bind-try /dev/nvidia* /dev/nvidia*
         sandbox::add_bwrap_arg --dev-bind-try /dev/kfd /dev/kfd
+        sandbox::add_bwrap_arg --dev-bind-try /sys/dev/char /sys/dev/char
+        sandbox::add_bwrap_arg --dev-bind-try /dev/dri /dev/dri
         sandbox::add_bwrap_arg --ro-bind-try /sys/class/drm /sys/class/drm
         sandbox::add_bwrap_arg --ro-bind-try /sys/devices/pci* /sys/devices/pci*
-        sandbox::add_bwrap_arg --dev-bind /sys/dev/char /sys/dev/char
-        sandbox::add_bwrap_arg --dev-bind /dev/dri /dev/dri
         sandbox::add_bwrap_arg --ro-bind-try /usr/share/vulkan /usr/share/vulkan
         sandbox::add_bwrap_arg --ro-bind-try /usr/share/glvnd /usr/share/glvnd
         sandbox::add_bwrap_arg --ro-bind-try /usr/share/libdrm /usr/share/libdrm
-
+        sandbox::add_bwrap_arg --ro-bind-try /usr/share/drirc.d /usr/share/drirc.d
+        sandbox::add_bwrap_arg --bind-try $HOME/.local/share/vulkan $HOME/.local/share/vulkan
+        sandbox::add_bwrap_arg --bind-try $HOME/.cache/mesa_shader_cache $HOME/.cache/mesa_shader_cache
+        sandbox::add_bwrap_arg --bind-try $HOME/.cache/radv_builtin_shaders $HOME/.cache/radv_builtin_shaders
+        sandbox::add_bwrap_arg --bind-try $HOME/.config/lsfg-vk/conf.toml $HOME/.config/lsfg-vk/conf.toml
     fi
 }
 
@@ -200,7 +204,7 @@ sandbox::execute() {
 
         utils::log INFO "strace enabled -> $TRACE_FILE"
 		strace -f -tt -s 128 \
-		  -e trace=execve,exit_group,kill,openat,access,stat \
+		  -e trace=all \
 		  -o "$TRACE_FILE" \
 		  "${BWRAP_ARGS[@]}"
     else
