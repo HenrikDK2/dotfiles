@@ -580,8 +580,11 @@ utils::debug() {
 	    [[ "$path" == "$item" ]] && path="$item"
 	    [[ -z "$path" ]] && continue
 
-	    # Filter out items already handled by the wrapper
+	    # Filter out paths already handled by the wrapper
 	    case "$path" in
+           /tmp/*)
+          	continue
+           ;;
 
 	      # ---------------- RUN USER SCOPE ----------------
 	      /run/user/*|/run/usr/*)
@@ -603,12 +606,16 @@ utils::debug() {
 	          ;;
 
 	      # ---------------- BINARIES ----------------
-	      /usr/bin/xdg-open|/bin/xdg-open)
+	      /usr/bin/xdg-open|/usr/bin/notify-send)
 	        continue
 	        ;;
 
+		  $HOME/.config/pulse/cookie|$HOME/.pulse-cookie)
+			continue
+			;;
+
 	      # ---------------- X11 SHARED SOCKETS ----------------
-	      /tmp/.X11-unix*|/tmp/.X11)
+	      /tmp/.X11-unix*|/tmp/.X11±)
 	        continue
 	        ;;
 	    esac
@@ -728,12 +735,11 @@ utils::debug() {
 
 	echo ""
 
-	utils::log WARN "Profile interpretation note:"
-	utils::log WARN "This dataset is derived from strace output and may include many paths that are NOT required for execution."
-	utils::log WARN "It is expected to contain runtime noise, debug artifacts, and indirect access patterns."
-	utils::log WARN "You should aggressively remove security-sensitive and runtime-internal paths (e.g. /proc, /sys, /dev, /run, sockets, caches, credentials)."
-	utils::log WARN "Presence of a path does NOT imply it is required for program correctness or operation."
-
+	utils::log WARN "This dataset comes from strace output, so it includes a lot of paths that the program probably doesn’t actually need."
+	utils::log WARN "Expect noise from runtime stuff, debug leftovers, and indirect access patterns."
+	utils::log WARN "You should heavily filter out anything sensitive or internal (like /proc, /sys, /dev, /run, sockets, caches, credentials)."
+	utils::log WARN "Also keep in mind it can miss important things the program actually needs to run, like binaries or shared libs (e.g. /usr/bin)."
+	utils::log WARN "Just because a path shows up doesn’t mean it’s required—and just because it doesn’t show up doesn’t mean it isn’t required."
 	utils::log INFO "Profile recommendation:"
 	output_json_suggestions "${items[@]}"
 }
