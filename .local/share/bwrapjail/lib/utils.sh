@@ -238,39 +238,58 @@ utils::debug() {
 	}
 
 	add_executable_context_paths() {
-		local base exe home="$HOME"
-		[[ -z "$EXECUTABLE" ]] && {
-		    printf "%s\n" "$@"
-		    return
-		}
+	    local base exe home="$HOME"
 
-		base="${EXECUTABLE##*/}"
+	    [[ -z "$EXECUTABLE" ]] && {
+	        printf "%s\n" "$@"
+	        return
+	    }
 
-		[[ -z "$base" || "$base" == "/" || "$base" == "." ]] && {
-		    printf "%s\n" "$@"
-		    return
-		}
+	    base="${EXECUTABLE##*/}"
 
-		exe="$base"
+	    [[ -z "$base" || "$base" == "/" || "$base" == "." ]] && {
+	        printf "%s\n" "$@"
+	        return
+	    }
 
-		printf "%s\n" "$@"
+	    exe="$base"
 
-		add_if_exists() {
-		    [[ -n "$1" && -e "$1" ]] && printf "%s\n" "$1"
-		}
+	    printf "%s\n" "$@"
 
-		add_if_exists "/usr/bin/$exe"
-		add_if_exists "/bin/$exe"
-		add_if_exists "/usr/local/bin/$exe"
-		add_if_exists "/opt/$exe"
-		add_if_exists "/usr/share/$exe"
-		add_if_exists "/usr/share/doc/$exe"
-		add_if_exists "/usr/lib/$exe"
-		add_if_exists "/usr/lib64/$exe"
+	    add_if_exists() {
+	        local target="$1"
+	        local dir file match
 
-		add_if_exists "$home/.config/$exe"
-		add_if_exists "$home/.cache/$exe"
-		add_if_exists "$home/.local/share/$exe"
+	        [[ -z "$target" ]] && return
+
+	        # 1. exact match first (fast path)
+	        if [[ -e "$target" ]]; then
+	            printf "%s\n" "$target"
+	            return
+	        fi
+
+	        # 2. case-insensitive fallback (preserves real casing)
+	        dir="$(dirname "$target")"
+	        file="$(basename "$target")"
+
+	        if [[ -d "$dir" ]]; then
+	            match="$(find "$dir" -maxdepth 1 -iname "$file" -print -quit 2>/dev/null)"
+	            [[ -n "$match" ]] && printf "%s\n" "$match"
+	        fi
+	    }
+
+	    add_if_exists "/usr/bin/$exe"
+	    add_if_exists "/bin/$exe"
+	    add_if_exists "/usr/local/bin/$exe"
+	    add_if_exists "/opt/$exe"
+	    add_if_exists "/usr/share/$exe"
+	    add_if_exists "/usr/share/doc/$exe"
+	    add_if_exists "/usr/lib/$exe"
+	    add_if_exists "/usr/lib64/$exe"
+
+	    add_if_exists "$home/.config/$exe"
+	    add_if_exists "$home/.cache/$exe"
+	    add_if_exists "$home/.local/share/$exe"
 	}
 
 	isolate_deepest_paths() {
