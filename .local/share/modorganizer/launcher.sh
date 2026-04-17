@@ -154,24 +154,28 @@ setup_nxmhandler() {
     local appid="$1"
     local exe_path="$2"
 
+    # Set path to nxmhandler.exe based on exe_path
     local nxm_path="${exe_path%ModOrganizer.exe}nxmhandler.exe"
 
     local base="$HOME/.local/share/modorganizer"
     local script="$base/nxmhandler-launch.sh"
     local desktop="$HOME/.local/share/applications/nxm-handler.desktop"
 
+    # Create necessary directories
     mkdir -p "$base"
     mkdir -p "$(dirname "$desktop")"
 
-    # wrapper script
+    # Wrapper script creation
     cat > "$script" <<EOF
 #!/usr/bin/env bash
-protontricks-launch --appid "$appid" "$nxm_path" "\$1"
+
+# Use the dynamic appid and exe_path passed to the function
+protontricks-launch --appid "$appid" "$exe_path" "$1"
 EOF
 
     chmod +x "$script"
 
-    # desktop entry
+    # Desktop entry creation
     cat > "$desktop" <<EOF
 [Desktop Entry]
 Name=NXM Handler
@@ -182,7 +186,7 @@ MimeType=x-scheme-handler/nxm;
 NoDisplay=true
 EOF
 
-    # register handler
+    # Register handler
     xdg-mime default nxm-handler.desktop x-scheme-handler/nxm
 }
 

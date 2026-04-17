@@ -27,6 +27,8 @@
 		"rw:$HOME/.config/mozilla",
 		"rw:$HOME/.cache/mozilla",
 
+		"rw:/sys",
+
 		"ro:/usr/bin",
 		"ro:/usr/lib",
 
