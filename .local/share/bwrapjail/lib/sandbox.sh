@@ -42,6 +42,7 @@ sandbox::init_bwrap_base_args() {
 
     BWRAP_ARGS=(
         bwrap
+        --die-with-parent
         --clearenv
         --new-session
         --hostname mypc
@@ -182,14 +183,14 @@ sandbox::configure_network() {
 }
 
 sandbox::finalize_command() {
-	if [[ -n "$COMMAND_OVERRIDE" ]]; then
-    	EXECUTABLE="$COMMAND_OVERRIDE"
-     	EXTRA_ARGS=()
+    if [[ -n "$COMMAND_OVERRIDE" ]]; then
+        EXECUTABLE="$COMMAND_OVERRIDE"
+        EXTRA_ARGS=()
     fi
 
-    BWRAP_ARGS+=( "--unshare-all" )
+    BWRAP_ARGS+=( --unshare-all )
     sandbox::configure_network
-	BWRAP_ARGS+=( -- "$EXECUTABLE" "${ARGS[@]}${EXTRA_ARGS[@]}" )
+    BWRAP_ARGS+=( -- "$EXECUTABLE" "${ARGS[@]}" "${EXTRA_ARGS[@]}" )
     utils::log INFO "Command: ${BWRAP_ARGS[*]}"
 }
 
@@ -202,32 +203,46 @@ sandbox::execute() {
             exit 1
         fi
 
-        local trace_name="$(basename "$EXECUTABLE")"
+        local trace_name
+        trace_name="$(basename "$EXECUTABLE")"
         TRACE_FILE="$HOME/${trace_name}.trace"
-        echo "" > "$TRACE_FILE"
+        : > "$TRACE_FILE"
 
         utils::log INFO "strace enabled -> $TRACE_FILE"
-		strace -f -tt -s 128 \
-		  -e trace=all \
-		  -o "$TRACE_FILE" \
-		  "${BWRAP_ARGS[@]}"
+
+        strace -f -tt -s 128 \
+            -e trace=all \
+            -o "$TRACE_FILE" \
+            "${BWRAP_ARGS[@]}" &
     else
-       	utils::log INFO "Launching sandbox PID: $BWRAP_PID"
-        "${BWRAP_ARGS[@]}"
+        "${BWRAP_ARGS[@]}" &
     fi
 
     BWRAP_PID=$!
+    utils::log INFO "Launching sandbox PID: $BWRAP_PID"
+
     wait "$BWRAP_PID"
 }
 
 sandbox::cleanup() {
-	if [[ -z "$HAS_CLEANUP_RUN" ]]; then
-		HAS_CLEANUP_RUN=1
-		utils::debug
-	    utils::log INFO "Cleaning up"
-	    [[ -n "${BWRAP_PID:-}" ]] && kill "$BWRAP_PID" 2>/dev/null || true
-	    [[ -n "${DBUS_PROXY_PID:-}" ]] && kill "$DBUS_PROXY_PID" 2>/dev/null || true
-	    [[ -n "${PROXY_SOCKET:-}" ]] && rm -f "$PROXY_SOCKET"
-	    set +x 2>/dev/null || true
-	fi
+    local exit_code=$?
+
+    if [[ -z "$HAS_CLEANUP_RUN" ]]; then
+        HAS_CLEANUP_RUN=1
+
+        if [[ "$DEBUG_ENABLED" -eq 1 && $exit_code -ne 0 ]]; then
+            utils::debug
+        fi
+
+        utils::log INFO "Cleaning up"
+
+        if [[ -n "${BWRAP_PID:-}" ]]; then
+            kill -TERM -"$BWRAP_PID" 2>/dev/null || true
+            sleep 0.3
+            kill -KILL -"$BWRAP_PID" 2>/dev/null || true
+        fi
+
+        [[ -n "${DBUS_PROXY_PID:-}" ]] && kill "$DBUS_PROXY_PID" 2>/dev/null || true
+        [[ -n "${PROXY_SOCKET:-}" ]] && rm -f "$PROXY_SOCKET"
+    fi
 }

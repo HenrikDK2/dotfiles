@@ -42,7 +42,7 @@
 		"ro:/usr/share/ca-certificates",
 		"ro:/usr/share/fontconfig",
 
-		"ro:/usr/bin",
+		"ro:/usr",
 		"ro:/lib",
 
 		"ro:/opt/tidal-hifi",

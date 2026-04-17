@@ -3,29 +3,32 @@
 utils::log() {
     local level="$1"
     shift
+
+    local indent="${LOG_INDENT:-0}"
     local message="$*"
 
-    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-    local script_name="$(basename "$EXECUTABLE")-$$"
+    local timestamp
+    timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    local script_name
+    script_name="$(basename "$EXECUTABLE")-$$"
+
     local color_reset="\033[0m"
     local color
 
     case "$level" in
-        INFO)
-            color="\033[32m"
-            ;;
-        WARN)
-            color="\033[33m"
-            ;;
-        ERROR)
-            color="\033[31m"
-            ;;
-        *)
-            color="\033[0m"
-            ;;
+        INFO)  color="\033[32m" ;;
+        WARN)  color="\033[33m" ;;
+        ERROR) color="\033[31m" ;;
+        *)     color="\033[0m" ;;
     esac
 
-    echo -e "${color}[$timestamp] [$script_name] [$level] $message${color_reset}"
+    local padding=""
+    if [[ "$indent" -gt 0 ]]; then
+        padding="$(printf '%*s' "$indent")"
+    fi
+
+    echo -e "${color}[$timestamp] [$script_name] [$level] ${padding}${message}${color_reset}"
 }
 
 utils::check_dependencies() {

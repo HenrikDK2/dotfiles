@@ -13,7 +13,7 @@
 	"dbus": {
 		"open_uri": true,
 		"notifications": true,
-		"screenshare": true,
+		"screenshare": false,
 		"file_chooser": true,
 		"print": true,
 		"media": true,

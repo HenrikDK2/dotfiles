@@ -9,6 +9,37 @@ declare BWRAP_PID=""
 declare DBUS_PROXY_PID=""
 declare PROXY_SOCKET=""
 declare PROXY_ARGS=()
+declare DBUS_PORTALS=(
+    org.freedesktop.portal.Desktop
+    org.freedesktop.portal.FileChooser
+    org.freedesktop.portal.OpenURI
+    org.freedesktop.portal.Notification
+    org.freedesktop.portal.Clipboard
+    org.freedesktop.portal.Print
+    org.freedesktop.portal.ScreenCast
+    org.freedesktop.portal.RemoteDesktop
+    org.freedesktop.portal.Settings
+    org.freedesktop.portal.AppChooser
+    org.freedesktop.portal.Camera
+    org.freedesktop.portal.Location
+    org.freedesktop.portal.InputCapture
+    org.freedesktop.portal.Secret
+    org.freedesktop.portal.Account
+    org.freedesktop.portal.Inhibit
+    org.freedesktop.portal.DynamicLauncher
+    org.freedesktop.portal.GameMode
+    org.freedesktop.portal.Realtime
+    org.kde.StatusNotifierWatcher
+    org.a11y.Bus
+    org.mpris.MediaPlayer2.*
+    org.gnome.SessionManager
+    org.freedesktop.PowerManagement
+    org.freedesktop.login1
+    org.freedesktop.systemd1
+    org.freedesktop.impl.portal.PermissionStore
+    org.freedesktop.impl.portal.desktop.gtk
+    org.freedesktop.impl.portal.desktop.hyprland
+)
 
 declare PROFILE_FILE=""
 declare PROFILE_JSON=""
