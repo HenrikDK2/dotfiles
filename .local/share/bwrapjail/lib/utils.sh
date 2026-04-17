@@ -139,6 +139,28 @@ utils::debug() {
 		printf "%s\n" "${data[@]}"
 	}
 
+	ensure_multilib_roots() {
+	  local item mode
+	  declare -A seen
+
+	  for item in "$@"; do
+	    mode="${item%%:*}"
+
+	    # emit original once
+	    if [[ -z "${seen[$item]}" ]]; then
+	      seen["$item"]=1
+	      printf "%s\n" "$item"
+	    fi
+	  done
+
+	  [[ -e /lib     ]] && printf "%s\n" "/lib"
+	  [[ -e /lib64   ]] && printf "%s\n" "/lib64"
+
+	  [[ -e /usr/lib   ]] && printf "%s\n" "/usr/lib"
+	  [[ -e /usr/lib64 ]] && printf "%s\n" "/usr/lib64"
+	  [[ -e /usr/lib32 ]] && printf "%s\n" "/usr/lib32"
+	}
+
 	filter_existing_paths() {
 	  local item mode path clean_path
 	  local -A seen
@@ -431,95 +453,117 @@ utils::debug() {
 	}
 
 	collapse_filesystem_roots() {
-	  declare -A seen
-	  local item path cut_path exe base prefix
+		  declare -A seen
+		  local item path cut_path exe base prefix
 
-	  exe="$EXECUTABLE"
-	  base="${exe##*/}"
+		  exe="$EXECUTABLE"
+		  base="${exe##*/}"
 
-	  for item in "$@"; do
-	    [[ -z $item ]] && continue
+		  for item in "$@"; do
+		    [[ -z $item ]] && continue
 
-	    path="${item#*:}"
-	    [[ $path == "$item" ]] && path=$item
-	    [[ -z $path || ! -e $path ]] && continue
+		    path="${item#*:}"
+		    [[ $path == "$item" ]] && path=$item
+		    [[ -z $path || ! -e $path ]] && continue
 
-	    cut_path="$(normalize_paths "$path")"
+		    cut_path="$(normalize_paths "$path")"
 
-	    # ALWAYS strip trailing slash for stable keys
-	    cut_path="${cut_path%/}"
+		    # ALWAYS strip trailing slash for stable keys
+		    cut_path="${cut_path%/}"
 
-	    # executable collapse
-	    if [[ $cut_path == */"$base"/* ]]; then
-	      prefix="${cut_path%%$base*}"
-	      prefix="${prefix%/}"
-	      cut_path="${prefix}/${base}"
-	    fi
+		    # executable collapse
+		    if [[ $cut_path == */"$base"/* ]]; then
+		      prefix="${cut_path%%$base*}"
+		      prefix="${prefix%/}"
+		      cut_path="${prefix}/${base}"
+		    fi
 
-		case "$cut_path" in
-		  # Core system libs
-		  /lib/*|/lib64/*|/lib32/*)
-		    cut_path="${cut_path%%/*}"
-		    ;;
+			case "$cut_path" in
+			  # -------------------------
+			  # System libraries
+			  # -------------------------
+			  /lib/*)        cut_path="/lib" ;;
+			  /lib64/*)      cut_path="/lib64" ;;
+			  /lib32/*)      cut_path="/lib32" ;;
+			  /usr/lib/*)    cut_path="/usr/lib" ;;
+			  /usr/lib64/*)  cut_path="/usr/lib64" ;;
+			  /usr/lib32/*)  cut_path="/usr/lib32" ;;
 
-		  /usr/lib/*|/usr/lib64/*|/usr/lib32/*)
-		    cut_path="${cut_path%/*}"
-		    ;;
+			  # -------------------------
+			  # TLS / certificates
+			  # -------------------------
+			  /etc/gnutls/*)                cut_path="/etc/gnutls" ;;
+			  /etc/ca-certificates/*)      cut_path="/etc/ca-certificates" ;;
+			  /usr/share/ca-certificates/*) cut_path="/usr/share/ca-certificates" ;;
 
-		  # System config + locale
-		  /etc/gnutls/*|/etc/ca-certificates/*|/etc/fonts/*|/etc/fonts/conf.d/*)
-		    cut_path=$(echo "$cut_path" | cut -d/ -f1-3)
-		    ;;
+			  # -------------------------
+			  # Locale / time / system data
+			  # -------------------------
+			  /usr/share/locale/*)   cut_path="/usr/share/locale" ;;
+			  /usr/share/zoneinfo/*) cut_path="/usr/share/zoneinfo" ;;
 
-		  # Locale / timezone / system data
-		  /usr/share/locale/*|/usr/share/zoneinfo/*|/usr/share/mime/*|/usr/share/glib-2.0/*)
-		    cut_path=$(echo "$cut_path" | cut -d/ -f1-4)
-		    ;;
+			  # -------------------------
+			  # Fonts & fontconfig
+			  # -------------------------
+			  /etc/fonts/*|/etc/fonts/conf.d/*) cut_path="/etc/fonts" ;;
+			  /usr/share/fonts/*)               cut_path="/usr/share/fonts" ;;
+			  /usr/local/share/fonts/*)         cut_path="/usr/local/share/fonts" ;;
+			  /usr/share/fontconfig/*)          cut_path="/usr/share/fontconfig" ;;
+			  /var/cache/fontconfig/*)          cut_path="/var/cache/fontconfig" ;;
+			  "$HOME/.cache/fontconfig"/*)      cut_path="$HOME/.cache/fontconfig" ;;
+			  "$HOME/.fonts"/*)                 cut_path="$HOME/.fonts" ;;
 
-		  # Fonts (system + user + cache)
-		  /usr/share/fonts/*|/usr/local/share/fonts/*|/usr/share/fontconfig/*|/var/cache/fontconfig/*|\
-		  "$HOME/.fonts"/*|"$HOME/.cache/fontconfig"/*)
-		    cut_path="${cut_path%%/*/*}"
-		    ;;
+			  # -------------------------
+			  # Themes / UI / GTK / icons
+			  # -------------------------
+			  /usr/share/xkeyboard-config-2/*)         cut_path="/usr/share/xkeyboard-config-2" ;;
+			  /usr/share/themes/Default/gtk-3.0/*)     cut_path="/usr/share/themes/Default/gtk-3.0" ;;
+			  "$HOME/.themes"/*)                       cut_path="$HOME/.themes" ;;
 
-		  # Themes / UI assets
-		  /usr/share/icons/*|/usr/share/pixmaps/*|/usr/share/gtk-3.0/*|"$HOME/.icons"/*|"$HOME/.themes"/*|"$HOME/.config/gtk-3.0"/*)
-		    cut_path="${cut_path%%/*/*}"
-		    ;;
+			  /usr/share/icons/*)                      cut_path="/usr/share/icons" ;;
+			  /usr/share/pixmaps/*)                    cut_path="/usr/share/pixmaps" ;;
+			  /usr/share/gtk-3.0/*)                    cut_path="/usr/share/gtk-3.0" ;;
+			  "$HOME/.icons"/*)                        cut_path="$HOME/.icons" ;;
+			  "$HOME/.config/gtk-3.0"/*)               cut_path="$HOME/.config/gtk-3.0" ;;
+			  "$HOME/.local/share/icons"/*)            cut_path="$HOME/.local/share/icons" ;;
 
-		  # GPU / graphics stack
-		  /usr/share/vulkan/*|"$HOME/.local/share/vulkan"/*|\
-		  /usr/share/libdrm/*|/usr/share/drirc.d/*|/usr/share/glvnd/*|\
-		  "$HOME/.cache/mesa_shader_cache"/*|"$HOME/.cache/radv_builtin_shaders"/*|\
-		  /var/cache/mesa_shader_cache/*)
-		    cut_path="${cut_path%%/*/*}"
-		    ;;
+			  # -------------------------
+			  # Graphics stack (Vulkan / Mesa / DRM)
+			  # -------------------------
+			  /usr/share/vulkan/*)               cut_path="/usr/share/vulkan" ;;
+			  "$HOME/.local/share/vulkan"/*)     cut_path="$HOME/.local/share/vulkan" ;;
+			  /usr/share/libdrm/*)               cut_path="/usr/share/libdrm" ;;
+			  /usr/share/drirc.d/*)              cut_path="/usr/share/drirc.d" ;;
+			  /usr/share/glvnd/*)                cut_path="/usr/share/glvnd" ;;
 
-		  # Steam / games
-		  "$HOME/.local/share/Steam/steamapps/common"/*|/usr/share/steam/compatibilitytools.d/*)
-		    cut_path="${cut_path%%/*/*/*}"
-		    ;;
+			  # Caches
+			  "$HOME/.cache"/*)    cut_path="$HOME/.cache" ;;
+			  /var/cache/mesa_shader_cache/*)        cut_path="/var/cache/mesa_shader_cache" ;;
 
-		  # Input / audio
-		  /usr/share/xkeyboard-config-2/*|/usr/share/alsa/*)
-		    cut_path="${cut_path%%/*/*}"
-		    ;;
+			  # -------------------------
+			  # MIME / GLib
+			  # -------------------------
+			  /usr/share/mime/*)            cut_path="/usr/share/mime" ;;
+			  "$HOME/.local/share/mime"/*)  cut_path="$HOME/.local/share/mime" ;;
+			  /usr/share/glib-2.0/*)        cut_path="/usr/share/glib-2.0" ;;
 
-		  # User security dirs
-		  "$HOME/.ssh"/*|"$HOME/.gnupg"/*|"$HOME/.pki/nssdb"/*)
-		    cut_path="${cut_path%%/*/*}"
-		    ;;
-		esac
+			  # -------------------------
+			  # Security / credentials
+			  # -------------------------
+			  "$HOME/.ssh"/*)        cut_path="$HOME/.ssh" ;;
+			  "$HOME/.gnupg"/*)      cut_path="$HOME/.gnupg" ;;
+			  "$HOME/.pki/nssdb"/*)  cut_path="$HOME/.pki/nssdb" ;;
+			esac
 
-	    [[ -z $cut_path || $cut_path == "/" ]] && continue
+		    [[ -z $cut_path || $cut_path == "/" ]] && continue
 
-	    # final stable key (THIS is what fixes your duplicates)
-	    local key="$cut_path"
+		    # final stable key (THIS is what fixes your duplicates)
+		    local key="$cut_path"
 
-	    if [[ -z ${seen[$key]} ]]; then
-	      seen["$key"]=1
-	      printf '%s\n' "$cut_path"
-	    fi
+		    if [[ -z ${seen[$key]} ]]; then
+		      seen["$key"]=1
+		      printf '%s\n' "$cut_path"
+		    fi
 	  done
 	}
 
@@ -536,9 +580,7 @@ utils::debug() {
 	    [[ "$path" == "$item" ]] && path="$item"
 	    [[ -z "$path" ]] && continue
 
-	    # ---------------------------------------------------------
-	    # RUNTIME IPC FILTER ZONE
-	    # ---------------------------------------------------------
+	    # Filter out items already handled by the wrapper
 	    case "$path" in
 
 	      # ---------------- RUN USER SCOPE ----------------
@@ -559,6 +601,11 @@ utils::debug() {
 		  /usr/share/vulkan)
 	          continue
 	          ;;
+
+	      # ---------------- BINARIES ----------------
+	      /usr/bin/xdg-open|/bin/xdg-open)
+	        continue
+	        ;;
 
 	      # ---------------- X11 SHARED SOCKETS ----------------
 	      /tmp/.X11-unix*|/tmp/.X11)
@@ -595,12 +642,20 @@ utils::debug() {
 
 	        if [[ "$path" == \$HOME* ]]; then
 	            key="HOME"
+
+	        elif [[ "$path" == /lib || "$path" == /lib64 || "$path" == /lib32 || \
+	                "$path" == /usr/lib || "$path" == /usr/lib64 || "$path" == /usr/lib32 ]]; then
+	            key="LIB"
+
 	        elif [[ "$path" == /usr/share/* ]]; then
 	            key="/usr/share"
+
 	        elif [[ "$path" == /usr/local/* ]]; then
 	            key="/usr/local"
+
 	        elif [[ "$path" == /usr/bin/* || "$path" == /usr/sbin/* ]]; then
 	            key="/usr/bin"
+
 	        else
 	            key="/$(cut -d/ -f2 <<< "$path")"
 	        fi
@@ -659,6 +714,7 @@ utils::debug() {
 			isolate_deepest_paths \
 			collapse_filesystem_roots \
 			hide_run_runtime_noise \
+			ensure_multilib_roots \
 			dedupe_paths
 	)
 
