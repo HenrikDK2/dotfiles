@@ -562,9 +562,15 @@ utils::debug() {
 			  # -------------------------
 			  # MIME / GLib
 			  # -------------------------
-			  /usr/share/mime/*)            cut_path="/usr/share/mime" ;;
+			  /usr/share/mime/*)           cut_path="/usr/share/mime" ;;
 			  "$HOME/.local/share/mime"/*)  cut_path="$HOME/.local/share/mime" ;;
-			  /usr/share/glib-2.0/*)        cut_path="/usr/share/glib-2.0" ;;
+			  /usr/share/glib-2.0/*) cut_path="/usr/share/glib-2.0" ;;
+
+			  # -------------------------
+			  # Applications
+			  # -------------------------
+			  $HOME/.local/share/Steam/*) cut_path="$HOME/.local/share/Steam" ;;
+			  $HOME/.steam/*) cut_path="$HOME/.steam" ;;
 
 			  # -------------------------
 			  # Security / credentials
