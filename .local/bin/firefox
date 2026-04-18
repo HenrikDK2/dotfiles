@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source /home/henrik/.local/share/bwrap/utils.sh
+source $HOME/.local/share/bwrap/utils.sh
 
 EXECUTABLE="/usr/bin/firefox"
 TRACE_FILE="/home/henrik/log.trace"
