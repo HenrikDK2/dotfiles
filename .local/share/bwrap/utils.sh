@@ -626,9 +626,9 @@ utils::debug() {
 			"$HOME/.cache/fontconfig"/*) cut_path="$HOME/.cache/fontconfig" ;;
 			"$HOME/.fonts"/*) cut_path="$HOME/.fonts" ;;
 
-			# -------------------------
-			# Themes / UI / GTK / icons
-			# -------------------------
+			# ---------------------------------
+			# Themes / UI / GTK / icons / misc
+			# ---------------------------------
 			/usr/share/xkeyboard-config-2/*) cut_path="/usr/share/xkeyboard-config-2" ;;
 			/usr/share/themes/Default/gtk-3.0/*) cut_path="/usr/share/themes/Default/gtk-3.0" ;;
 			"$HOME/.themes"/*) cut_path="$HOME/.themes" ;;
@@ -639,6 +639,7 @@ utils::debug() {
 			"$HOME/.icons"/*) cut_path="$HOME/.icons" ;;
 			"$HOME/.config/gtk-3.0"/*) cut_path="$HOME/.config/gtk-3.0" ;;
 			"$HOME/.local/share/icons"/*) cut_path="$HOME/.local/share/icons" ;;
+			"$HOME/.local/share/gvfs-metadata"/*) cut_path="$HOME/.local/share/gvfs-metadata" ;;
 
 			# -------------------------
 			# Graphics stack (Vulkan / Mesa / DRM)
@@ -660,9 +661,9 @@ utils::debug() {
 			"$HOME/.local/share/mime"/*) cut_path="$HOME/.local/share/mime" ;;
 			/usr/share/glib-2.0/*) cut_path="/usr/share/glib-2.0" ;;
 
-				# -------------------------
-				# Applications
-				# -------------------------
+			# -------------------------
+			# Applications
+			# -------------------------
 			$HOME/.local/share/Steam/*) cut_path="$HOME/.local/share/Steam" ;;
 			$HOME/.steam/*) cut_path="$HOME/.steam" ;;
 
@@ -672,9 +673,9 @@ utils::debug() {
 			/sys/devices*) cut_path="/sys/devices" ;;
 			/dev/dri/*) cut_path="/sys/dri" ;;
 
-				# -------------------------
-				# Security / credentials
-				# -------------------------
+			# -------------------------
+			# Security / credentials
+			# -------------------------
 			"$HOME/.ssh"/*) cut_path="$HOME/.ssh" ;;
 			"$HOME/.gnupg"/*) cut_path="$HOME/.gnupg" ;;
 			"$HOME/.pki/nssdb"/*) cut_path="$HOME/.pki/nssdb" ;;

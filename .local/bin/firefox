@@ -63,7 +63,7 @@ BWRAP_ARGS=(
 	--bind-try $HOME/.icons $HOME/.icons
 	--bind-try $HOME/.local/share/applications/mimeinfo.cache $HOME/.local/share/applications/mimeinfo.cache
 	--bind-try $HOME/.local/share/flatpak $HOME/.local/share/flatpak
-	--bind-try $HOME/.local/share/gvfs-metadata/root $HOME/.local/share/gvfs-metadata/root
+	--bind-try $HOME/.local/share/gvfs-metadata $HOME/.local/share/gvfs-metadata
 	--bind-try $HOME/.local/share/icons $HOME/.local/share/icons
 	--bind-try $HOME/.local/share/mime $HOME/.local/share/mime
 	--bind-try $HOME/.local/share/vulkan $HOME/.local/share/vulkan
@@ -71,6 +71,8 @@ BWRAP_ARGS=(
 	--bind-try $HOME/.themes $HOME/.themes
 
 	--bind-try /tmp/.X11-unix/X0 /tmp/.X11-unix/X0
+
+	--bind-try /var/spool/mail /var/spool/mail
 	--ro-bind-try /bin/dbus-launch /bin/dbus-launch
 	--ro-bind-try /bin/firefox /bin/firefox
 	--ro-bind-try /bin/sh /bin/sh
@@ -110,7 +112,9 @@ BWRAP_ARGS=(
 	--ro-bind-try /usr/bin/dbus-launch /usr/bin/dbus-launch
 	--ro-bind-try /usr/bin/env /usr/bin/env
 	--ro-bind-try /usr/bin/firefox /usr/bin/firefox
+	--ro-bind-try /usr/bin/fish /usr/bin/fish
 	--ro-bind-try /usr/bin/gtk-query-immodules-3.0 /usr/bin/gtk-query-immodules-3.0
+	--ro-bind-try /usr/bin/nologin /usr/bin/nologin
 	--ro-bind-try /usr/bin/sh /usr/bin/sh
 	--ro-bind-try /usr/bin/xdg-open /usr/bin/xdg-open
 	--ro-bind-try /usr/lib /usr/lib
@@ -149,7 +153,6 @@ BWRAP_ARGS=(
 	--dev-bind-try /run/user/1000/wayland-1 /run/user/1000/wayland-1
 
 	--setenv HOME $HOME
-	
 	--setenv DISPLAY $DISPLAY
 	--setenv XDG_SESSION_TYPE $XDG_SESSION_TYPE
 	--setenv XDG_CURRENT_DESKTOP $XDG_CURRENT_DESKTOP
