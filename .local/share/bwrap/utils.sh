@@ -45,7 +45,7 @@ utils::dbus() {
 	utils::log INFO "Starting DBus proxy..."
 	LOG=; [[ ${DEBUG:-0} == 1 ]] && LOG=--log
 	xdg-dbus-proxy "$DBUS_SESSION_BUS_ADDRESS" "$PROXY_SOCKET" \
-		"${DBUS_PORTALS[@]}" --filter $LOG &
+		"${DBUS_PORTALS[@]}" --filter &
 
 	PROXY_PID=$!
 	utils::log INFO "Waiting for proxy socket..."
@@ -657,6 +657,8 @@ utils::debug() {
 			"$HOME/.config/gtk-3.0"/*) cut_path="$HOME/.config/gtk-3.0" ;;
 			"$HOME/.local/share/icons"/*) cut_path="$HOME/.local/share/icons" ;;
 			"$HOME/.local/share/gvfs-metadata"/*) cut_path="$HOME/.local/share/gvfs-metadata" ;;
+			/usr/share/alsa/*) cut_path="/usr/share/alsa" ;;
+
 
 			# Graphics stack (Vulkan / Mesa / DRM)
 			/usr/share/vulkan/*) cut_path="/usr/share/vulkan" ;;
@@ -677,6 +679,7 @@ utils::debug() {
 			# Applications
 			$HOME/.local/share/Steam/*) cut_path="$HOME/.local/share/Steam" ;;
 			$HOME/.steam/*) cut_path="$HOME/.steam" ;;
+			/usr/share/steam/compatibilitytools.d*) cut_path="/usr/share/steam/compatibilitytools.d" ;;
 
 			# /sys & /dev calls
 			/sys/devices*) cut_path="/sys/devices" ;;
@@ -871,7 +874,7 @@ utils::debug() {
 	utils::log WARN "Also keep in mind it can miss important things the program actually needs to run, like binaries or shared libs (e.g. /usr/bin)."
 	utils::log WARN "Just because a path shows up doesn’t mean it’s required—and just because it doesn’t show up doesn’t mean it isn’t required."
 	utils::log INFO "Profile recommendation:"
-	print_output "${items[@]}" 2>/dev/null | tee >(copy_to_clipboard)
+	print_output "${items[@]}" 2>/dev/null | tee >(copy_to_clipboard) $HOME/bwrap-profile.txt
 	echo
-	utils::log INFO "*Copied to clipboard*"
+	utils::log INFO "*Copied to clipboard* - also saved in $HOME/bwrap-profile.txt"
 }

@@ -170,7 +170,7 @@ setup_nxmhandler() {
 #!/usr/bin/env bash
 
 # Use the dynamic appid and exe_path passed to the function
-protontricks-launch --appid "$appid" "$exe_path" "$1"
+protontricks-launch --appid "$appid" "$exe_path" "\$1"
 EOF
 
     chmod +x "$script"
