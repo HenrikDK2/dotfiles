@@ -863,4 +863,7 @@ utils::debug() {
 	utils::log WARN "Just because a path shows up doesn’t mean it’s required—and just because it doesn’t show up doesn’t mean it isn’t required."
 	utils::log INFO "Profile recommendation (copied to clipboard):"
 	print_output "${items[@]}" 2>/dev/null | tee >(copy_to_clipboard)
+	echo
+	utils::log INFO "*Copied to clipboard*"
+
 }
