@@ -37,21 +37,29 @@ utils::log() {
 }
 
 utils::dbus() {
+	if [[ ${#DBUS_PORTALS[@]} -eq 0 ]]; then
+		utils::log INFO "DBUS_PORTALS is empty, skipping DBus proxy"
+		return 0
+	fi
+
 	utils::log INFO "Starting DBus proxy..."
 	LOG=; [[ ${DEBUG:-0} == 1 ]] && LOG=--log
-
 	xdg-dbus-proxy "$DBUS_SESSION_BUS_ADDRESS" "$PROXY_SOCKET" \
-  		"${DBUS_PORTALS[@]}" --filter $LOG &
+		"${DBUS_PORTALS[@]}" --filter $LOG &
 
 	PROXY_PID=$!
 	utils::log INFO "Waiting for proxy socket..."
 	while [[ ! -S "$PROXY_SOCKET" ]]; do sleep 0.01; done
 	utils::log INFO "Proxy ready"
 
-	# Needed for proxy
+	# Required for dbus proxy
 	BWRAP_ARGS+=(
 		"--dev-bind-try" "$PROXY_SOCKET" "$PROXY_SOCKET"
 		"--setenv" "DBUS_SESSION_BUS_ADDRESS" "unix:path=$PROXY_SOCKET"
+		"--setenv" "XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR"
+		"--setenv" "XDG_SESSION_TYPE" "$XDG_SESSION_TYPE"
+		"--setenv" "XDG_CURRENT_DESKTOP" "$XDG_CURRENT_DESKTOP"
+		"--setenv" "XDG_BACKEND" "$XDG_BACKEND"
 	)
 }
 
@@ -190,18 +198,11 @@ utils::debug() {
 				*wayland*)
 					emit "WAYLAND_DISPLAY" "\$WAYLAND_DISPLAY"
 					emit "DISPLAY" "\$DISPLAY"
-					emit "XDG_RUNTIME_DIR" "\$XDG_RUNTIME_DIR"
-					emit "XDG_SESSION_TYPE" "\$XDG_SESSION_TYPE"
-					emit "XDG_CURRENT_DESKTOP" "\$XDG_CURRENT_DESKTOP"
-					emit "XDG_SESSION_DESKTOP" "\$XDG_SESSION_DESKTOP"
 					;;
 
 				/tmp/.X11-unix*|/tmp/.X11-unix/*|/tmp/.X11-unix/X*|*x11*)
 					emit "DISPLAY" "\$DISPLAY"
 					emit "XAUTHORITY" "\$XAUTHORITY"
-					emit "XDG_SESSION_TYPE" "\$XDG_SESSION_TYPE"
-					emit "XDG_CURRENT_DESKTOP" "\$XDG_CURRENT_DESKTOP"
-					emit "XDG_SESSION_DESKTOP" "\$XDG_SESSION_DESKTOP"
 					;;
 
 				/home/*)
@@ -307,7 +308,7 @@ utils::debug() {
 				/dev/stdin | /dev/stdout | /dev/stderr | \
 				/dev/tty | \
 				/dev/udmabuf | /dev/urandom | /dev/zero | \
-				/run/dbus/system_bus_socket) # Managed by proxy dbus
+				/run/dbus/system_bus_socket | /run/user/1000/bus-proxy*) # Managed by proxy dbus
 				continue
 				;;
 			esac
