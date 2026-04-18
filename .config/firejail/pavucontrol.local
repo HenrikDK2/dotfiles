@@ -1,0 +1,4 @@
+env GTK_THEME=Nordic-darker
+env ICON_THEME=Nordic-Folders
+env XCURSOR_THEME=Sunity-cursors
+env GTK_APPLICATION_PREFER_DARK_THEME=1
