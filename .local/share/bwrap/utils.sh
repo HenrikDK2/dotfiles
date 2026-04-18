@@ -162,17 +162,50 @@ utils::debug() {
 
 	add_env() {
 		local -a out=("$@")
+		local item
+		declare -A seen
 
-		# detect GUI environment
-		if [[ -n "$DISPLAY" || -n "$WAYLAND_DISPLAY" ]]; then
-			out+=("--setenv" "DISPLAY" "\$DISPLAY")
-			out+=("--setenv" "WAYLAND_DISPLAY" "\$WAYLAND_DISPLAY")
-		fi
+		emit() {
+		    local var="$1"
+		    local value="$2"
 
-		# always HOME (literal)
-		if [[ -n "$HOME" ]]; then
-			out+=("--setenv" "HOME" "\$HOME")
-		fi
+		    # Check if variable exists (is set)
+		    if [[ -z "${!var+x}" ]]; then
+		        return
+		    fi
+
+		    [[ -z "${seen[$var]+x}" ]] && {
+		        seen["$var"]=1
+		        out+=("--setenv" "$var" "$value")
+		    }
+		}
+
+		for item in "$@"; do
+			case "$item" in
+
+				*wayland*)
+					emit "WAYLAND_DISPLAY" "\$WAYLAND_DISPLAY"
+					emit "DISPLAY" "\$DISPLAY"
+					emit "XDG_RUNTIME_DIR" "\$XDG_RUNTIME_DIR"
+					emit "XDG_SESSION_TYPE" "\$XDG_SESSION_TYPE"
+					emit "XDG_CURRENT_DESKTOP" "\$XDG_CURRENT_DESKTOP"
+					emit "XDG_SESSION_DESKTOP" "\$XDG_SESSION_DESKTOP"
+					;;
+
+				/tmp/.X11-unix*|/tmp/.X11-unix/*|/tmp/.X11-unix/X*|*x11*)
+					emit "DISPLAY" "\$DISPLAY"
+					emit "XAUTHORITY" "\$XAUTHORITY"
+					emit "XDG_SESSION_TYPE" "\$XDG_SESSION_TYPE"
+					emit "XDG_CURRENT_DESKTOP" "\$XDG_CURRENT_DESKTOP"
+					emit "XDG_SESSION_DESKTOP" "\$XDG_SESSION_DESKTOP"
+					;;
+
+				/home/*)
+					emit "HOME" "\$HOME"
+					;;
+
+			esac
+		done
 
 		printf "%s\n" "${out[@]}"
 	}

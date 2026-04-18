@@ -148,9 +148,13 @@ BWRAP_ARGS=(
 	--dev-bind-try /run/user/1000/pulse/native /run/user/1000/pulse/native
 	--dev-bind-try /run/user/1000/wayland-1 /run/user/1000/wayland-1
 
-	--setenv DISPLAY $DISPLAY
-	--setenv WAYLAND_DISPLAY $WAYLAND_DISPLAY
 	--setenv HOME $HOME
+	
+	--setenv DISPLAY $DISPLAY
+	--setenv XDG_SESSION_TYPE $XDG_SESSION_TYPE
+	--setenv XDG_CURRENT_DESKTOP $XDG_CURRENT_DESKTOP
+	--setenv WAYLAND_DISPLAY $WAYLAND_DISPLAY
+	--setenv XDG_RUNTIME_DIR $XDG_RUNTIME_DIR
 )
 
 utils::run "$@"
