@@ -2,6 +2,9 @@
 
 trap utils::cleanup EXIT INT TERM
 
+PROXY_SOCKET="${XDG_RUNTIME_DIR}/bus-proxy-$(uuidgen).sock"
+DEBUG=0
+
 utils::log() {
 	local level="$1"
 	shift
@@ -34,24 +37,25 @@ utils::log() {
 }
 
 utils::dbus() {
-	XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
-	DBUS_SOCKET="${XDG_RUNTIME_DIR}/bus"
-	PROXY_SOCKET="${XDG_RUNTIME_DIR}/bus-proxy-$(uuidgen).sock"
-
 	utils::log INFO "Starting DBus proxy..."
-	xdg-dbus-proxy "$DBUS_SOCKET" "$PROXY_SOCKET" \
-		"${DBUS_PORTALS[@]}" --filter &
+	LOG=; [[ ${DEBUG:-0} == 1 ]] && LOG=--log
+
+	xdg-dbus-proxy "$DBUS_SESSION_BUS_ADDRESS" "$PROXY_SOCKET" \
+  		"${DBUS_PORTALS[@]}" --filter $LOG &
 
 	PROXY_PID=$!
-
 	utils::log INFO "Waiting for proxy socket..."
 	while [[ ! -S "$PROXY_SOCKET" ]]; do sleep 0.01; done
 	utils::log INFO "Proxy ready"
+
+	# Needed for proxy
+	BWRAP_ARGS+=(
+		"--dev-bind-try" "$PROXY_SOCKET" "$PROXY_SOCKET"
+		"--setenv" "DBUS_SESSION_BUS_ADDRESS" "unix:path=$PROXY_SOCKET"
+	)
 }
 
 utils::run() {
-	DEBUG=0
-
 	if [[ "${1:-}" == "--debug" ]]; then
 		DEBUG=1
 		shift
@@ -210,6 +214,25 @@ utils::debug() {
 		printf "%s\n" "${out[@]}"
 	}
 
+	pipewire_enrichment() {
+		local item
+
+		set -f
+
+		for item in "$@"; do
+			printf '%s\n' "$item"
+			[[ "$item" == *pipewire* ]] && pipewire_detected=1
+		done
+
+		set +f
+
+		[[ "${pipewire_detected:-0}" -eq 1 && -n "$XDG_RUNTIME_DIR" ]] && {
+			printf '%s\n' \
+				"$XDG_RUNTIME_DIR/pipewire-0" \
+				"/usr/share/pipewire"
+		}
+	}
+
 	gpu_device_enrichment() {
 		local item
 		local -a out=()
@@ -283,7 +306,8 @@ utils::debug() {
 				/dev/pts* | /dev/ptmx | /dev/random | \
 				/dev/stdin | /dev/stdout | /dev/stderr | \
 				/dev/tty | \
-				/dev/udmabuf | /dev/urandom | /dev/zero)
+				/dev/udmabuf | /dev/urandom | /dev/zero | \
+				/run/dbus/system_bus_socket) # Managed by proxy dbus
 				continue
 				;;
 			esac
@@ -592,9 +616,7 @@ utils::debug() {
 			fi
 
 			case "$cut_path" in
-			# -------------------------
 			# System libraries
-			# -------------------------
 			/lib/*) cut_path="/lib" ;;
 			/lib64/*) cut_path="/lib64" ;;
 			/lib32/*) cut_path="/lib32" ;;
@@ -602,22 +624,16 @@ utils::debug() {
 			/usr/lib64/*) cut_path="/usr/lib64" ;;
 			/usr/lib32/*) cut_path="/usr/lib32" ;;
 
-			# -------------------------
 			# TLS / certificates
-			# -------------------------
 			/etc/gnutls/*) cut_path="/etc/gnutls" ;;
 			/etc/ca-certificates/*) cut_path="/etc/ca-certificates" ;;
 			/usr/share/ca-certificates/*) cut_path="/usr/share/ca-certificates" ;;
 
-			# -------------------------
 			# Locale / time / system data
-			# -------------------------
 			/usr/share/locale/*) cut_path="/usr/share/locale" ;;
 			/usr/share/zoneinfo/*) cut_path="/usr/share/zoneinfo" ;;
 
-			# -------------------------
 			# Fonts & fontconfig
-			# -------------------------
 			/etc/fonts/* | /etc/fonts/conf.d/*) cut_path="/etc/fonts" ;;
 			/usr/share/fonts/*) cut_path="/usr/share/fonts" ;;
 			/usr/local/share/fonts/*) cut_path="/usr/local/share/fonts" ;;
@@ -626,9 +642,7 @@ utils::debug() {
 			"$HOME/.cache/fontconfig"/*) cut_path="$HOME/.cache/fontconfig" ;;
 			"$HOME/.fonts"/*) cut_path="$HOME/.fonts" ;;
 
-			# ---------------------------------
 			# Themes / UI / GTK / icons / misc
-			# ---------------------------------
 			/usr/share/xkeyboard-config-2/*) cut_path="/usr/share/xkeyboard-config-2" ;;
 			/usr/share/themes/Default/gtk-3.0/*) cut_path="/usr/share/themes/Default/gtk-3.0" ;;
 			"$HOME/.themes"/*) cut_path="$HOME/.themes" ;;
@@ -641,41 +655,31 @@ utils::debug() {
 			"$HOME/.local/share/icons"/*) cut_path="$HOME/.local/share/icons" ;;
 			"$HOME/.local/share/gvfs-metadata"/*) cut_path="$HOME/.local/share/gvfs-metadata" ;;
 
-			# -------------------------
 			# Graphics stack (Vulkan / Mesa / DRM)
-			# -------------------------
 			/usr/share/vulkan/*) cut_path="/usr/share/vulkan" ;;
 			"$HOME/.local/share/vulkan"/*) cut_path="$HOME/.local/share/vulkan" ;;
 			/usr/share/libdrm/*) cut_path="/usr/share/libdrm" ;;
 			/usr/share/drirc.d/*) cut_path="/usr/share/drirc.d" ;;
 			/usr/share/glvnd/*) cut_path="/usr/share/glvnd" ;;
 
-				# Caches
+			# Caches
 			"$HOME/.cache"/*) cut_path="$HOME/.cache" ;;
 			/var/cache/mesa_shader_cache/*) cut_path="/var/cache/mesa_shader_cache" ;;
 
-			# -------------------------
 			# MIME / GLib
-			# -------------------------
 			/usr/share/mime/*) cut_path="/usr/share/mime" ;;
 			"$HOME/.local/share/mime"/*) cut_path="$HOME/.local/share/mime" ;;
 			/usr/share/glib-2.0/*) cut_path="/usr/share/glib-2.0" ;;
 
-			# -------------------------
 			# Applications
-			# -------------------------
 			$HOME/.local/share/Steam/*) cut_path="$HOME/.local/share/Steam" ;;
 			$HOME/.steam/*) cut_path="$HOME/.steam" ;;
 
-			# -------------------------
 			# /sys & /dev calls
-			# -------------------------
 			/sys/devices*) cut_path="/sys/devices" ;;
 			/dev/dri/*) cut_path="/sys/dri" ;;
 
-			# -------------------------
 			# Security / credentials
-			# -------------------------
 			"$HOME/.ssh"/*) cut_path="$HOME/.ssh" ;;
 			"$HOME/.gnupg"/*) cut_path="$HOME/.gnupg" ;;
 			"$HOME/.pki/nssdb"/*) cut_path="$HOME/.pki/nssdb" ;;
@@ -840,6 +844,7 @@ utils::debug() {
 			normalize_paths \
 			isolate_deepest_paths \
 			gpu_device_enrichment \
+			pipewire_enrichment \
 			filter_existing_paths \
 			collapse_filesystem_roots \
 			ensure_multilib_roots \
@@ -866,5 +871,4 @@ utils::debug() {
 	print_output "${items[@]}" 2>/dev/null | tee >(copy_to_clipboard)
 	echo
 	utils::log INFO "*Copied to clipboard*"
-
 }

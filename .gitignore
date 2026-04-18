@@ -128,7 +128,9 @@
 !.local/share/modorganizer
 !.local/share/modorganizer/**
 
+# Related to each other (Sandboxing) 
 !.local/bin/firefox
+!.local/share/applications/firefox.desktop
 !.local/share/bwrap/
 !.local/share/bwrap/**
 
