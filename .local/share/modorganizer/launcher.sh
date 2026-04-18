@@ -277,6 +277,14 @@ preserve_and_clean_mo2_dir() {
         esac
     done
 
+    local appdata_local_dir="$COMPATDATA/$appid/pfx/drive_c/users/steamuser/AppData/Local"
+    [[ ! -d "$appdata_local_dir" ]] && return 0
+    for folder in LOOT ModOrganizer KiLoader; do
+        if [[ -d "$appdata_local_dir/$folder" ]]; then
+            rm -rf "$appdata_local_dir/$folder"
+        fi
+    done
+
     shopt -u dotglob nullglob
 }
 
