@@ -149,6 +149,7 @@ BWRAP_ARGS=(
 	--dev-bind-try /run/user/1000/wayland-1 /run/user/1000/wayland-1
 
 	--setenv DISPLAY $DISPLAY
+	--setenv WAYLAND_DISPLAY $WAYLAND_DISPLAY
 	--setenv HOME $HOME
 )
 

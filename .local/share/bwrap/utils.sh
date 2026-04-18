@@ -166,6 +166,7 @@ utils::debug() {
 		# detect GUI environment
 		if [[ -n "$DISPLAY" || -n "$WAYLAND_DISPLAY" ]]; then
 			out+=("--setenv" "DISPLAY" "\$DISPLAY")
+			out+=("--setenv" "WAYLAND_DISPLAY" "\$WAYLAND_DISPLAY")
 		fi
 
 		# always HOME (literal)
