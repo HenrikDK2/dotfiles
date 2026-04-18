@@ -45,7 +45,7 @@ utils::dbus() {
 	utils::log INFO "Starting DBus proxy..."
 	LOG=; [[ ${DEBUG:-0} == 1 ]] && LOG=--log
 	xdg-dbus-proxy "$DBUS_SESSION_BUS_ADDRESS" "$PROXY_SOCKET" \
-		"${DBUS_PORTALS[@]}" --filter &
+		"${DBUS_PORTALS[@]}" $LOG --filter &
 
 	PROXY_PID=$!
 	utils::log INFO "Waiting for proxy socket..."
@@ -56,7 +56,7 @@ utils::dbus() {
 	BWRAP_ARGS+=(
 		"--dev-bind-try" "$PROXY_SOCKET" "$PROXY_SOCKET"
 		"--dev-bind-try" "$XDG_RUNTIME_DIR/bus" "$XDG_RUNTIME_DIR/bus"
-		
+
 		"--setenv" "DBUS_SESSION_BUS_ADDRESS" "unix:path=$PROXY_SOCKET"
 		"--setenv" "XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR"
 		"--setenv" "XDG_SESSION_TYPE" "$XDG_SESSION_TYPE"
