@@ -12,14 +12,17 @@ DBUS_PORTALS=(
 	--talk=org.freedesktop.portal.Desktop
 	--talk=org.freedesktop.Notifications
 	--own=com.github.Matoking.protontricks.*
+	--own=org.mozilla.*
 )
 
 BWRAP_ARGS=(
+	--clearenv
     --unshare-user-try
     --unshare-cgroup-try 
     --unshare-ipc
     --unshare-uts
-    #--unshare-pid - Causes issues with my nxm-handler
+    --unshare-pid # - Causes issues with my nxm-handler
+	--hostname mypc
 
 	# FS
 	--proc /proc
@@ -31,23 +34,7 @@ BWRAP_ARGS=(
 	--dev-bind /tmp /tmp 
 
 	# Binds
-	--bind-try $HOME/.cache $HOME/.cache
-	--bind-try $HOME/.cache/fontconfig $HOME/.cache/fontconfig
-	--bind-try $HOME/.config/dconf/user $HOME/.config/dconf/user
-	--bind-try $HOME/.config/gtk-3.0 $HOME/.config/gtk-3.0
-	--bind-try $HOME/.config/mimeapps.list $HOME/.config/mimeapps.list
-	--bind-try $HOME/.config/mozilla/firefox $HOME/.config/mozilla/firefox
-	--bind-try $HOME/.config/pulse/cookie $HOME/.config/pulse/cookie
-	--bind-try $HOME/Downloads $HOME/Downloads
-	--bind-try $HOME/.icons $HOME/.icons
-	--bind-try $HOME/.local/share/applications/mimeinfo.cache $HOME/.local/share/applications/mimeinfo.cache
-	--bind-try $HOME/.local/share/flatpak $HOME/.local/share/flatpak
-	--bind-try $HOME/.local/share/gvfs-metadata $HOME/.local/share/gvfs-metadata
-	--bind-try $HOME/.local/share/icons $HOME/.local/share/icons
-	--bind-try $HOME/.local/share/mime $HOME/.local/share/mime
-	--bind-try $HOME/.local/share/vulkan $HOME/.local/share/vulkan
-	--bind-try $HOME/.pulse-cookie $HOME/.pulse-cookie
-	--bind-try $HOME/.themes $HOME/.themes
+	--dev-bind $HOME $HOME
 
 	--bind-try /tmp/.X11-unix/X0 /tmp/.X11-unix/X0
 
