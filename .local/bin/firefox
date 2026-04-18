@@ -3,7 +3,7 @@
 source $HOME/.local/share/bwrap/utils.sh
 
 EXECUTABLE="/usr/bin/firefox"
-TRACE_FILE="/home/henrik/log.trace"
+TRACE_FILE="$HOME/log.trace"
 
 DBUS_PORTALS=(
 	--talk=org.freedesktop.portal.Desktop
