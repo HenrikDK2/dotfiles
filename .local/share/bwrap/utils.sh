@@ -275,9 +275,9 @@ utils::debug() {
 			[[ -z "$clean_path" ]] && continue
 
 			case "$clean_path" in
-			"/" | "/home" | "/usr/bin/bwrap") continue ;;
-
-			/proc* | /dev/core* | /dev/fd* | \
+				/home | /usr/bin/bwrap | \
+				/ | /root* | /newroot* | /oldroot* | \
+			    /proc* | /dev/core* | /dev/fd* | \
 				/dev/console | /dev/full | /dev/null | \
 				/dev/nvme* | \
 				/dev/pts* | /dev/ptmx | /dev/random | \
