@@ -861,7 +861,7 @@ utils::debug() {
 	utils::log WARN "You should heavily filter out anything sensitive or internal (like /proc, /sys, /dev, /run, sockets, caches, credentials)."
 	utils::log WARN "Also keep in mind it can miss important things the program actually needs to run, like binaries or shared libs (e.g. /usr/bin)."
 	utils::log WARN "Just because a path shows up doesn’t mean it’s required—and just because it doesn’t show up doesn’t mean it isn’t required."
-	utils::log INFO "Profile recommendation (copied to clipboard):"
+	utils::log INFO "Profile recommendation:"
 	print_output "${items[@]}" 2>/dev/null | tee >(copy_to_clipboard)
 	echo
 	utils::log INFO "*Copied to clipboard*"
