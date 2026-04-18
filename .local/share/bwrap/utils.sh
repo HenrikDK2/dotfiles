@@ -55,6 +55,8 @@ utils::dbus() {
 	# Required for dbus proxy
 	BWRAP_ARGS+=(
 		"--dev-bind-try" "$PROXY_SOCKET" "$PROXY_SOCKET"
+		"--dev-bind-try" "$XDG_RUNTIME_DIR/bus" "$XDG_RUNTIME_DIR/bus"
+		
 		"--setenv" "DBUS_SESSION_BUS_ADDRESS" "unix:path=$PROXY_SOCKET"
 		"--setenv" "XDG_RUNTIME_DIR" "$XDG_RUNTIME_DIR"
 		"--setenv" "XDG_SESSION_TYPE" "$XDG_SESSION_TYPE"
