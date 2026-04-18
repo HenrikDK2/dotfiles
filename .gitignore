@@ -128,9 +128,9 @@
 !.local/share/modorganizer
 !.local/share/modorganizer/**
 
-!.local/bin/bwrapjail
-!.local/share/bwrapjail/
-!.local/share/bwrapjail/**
+!.local/bin/firefox
+!.local/share/bwrap/
+!.local/share/bwrap/**
 
 !.local/share/nemo
 !.local/share/nemo/actions

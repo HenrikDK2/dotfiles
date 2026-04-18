@@ -174,6 +174,9 @@ source $SCRIPT_DIR/scripts/gpu_drivers.sh
 section "Microsoft fonts"
 source $SCRIPT_DIR/scripts/microsoft_fonts.sh
 
+section "Sandboxing"
+source $SCRIPT_DIR/scripts/Sandboxing.sh
+
 section "Rebuilding initramfs"
 mkinitcpio -P
 

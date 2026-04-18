@@ -56,7 +56,7 @@ PACKAGES=(
 	"bluez"
 	"bluez-utils"
 	"blueman"
-	
+
 	# System
     "alacritty"
     "jq"
@@ -108,9 +108,11 @@ PACKAGES=(
 	# Sandboxing
     "apparmor"
     "xdg-dbus-proxy"
-    
+    "bubblewrap"
+    "firejail"
+
 	# TLP is only enabled when using a laptop
-    "tlp" 
+    "tlp"
     "tlp-rdw"
 
     # Misc
@@ -147,13 +149,13 @@ SYSTEM_SERVICES_TO_ENABLE=(
     "cups.service"
 
 	"smartd.service"
-    
+
     "ufw.service"
     "NetworkManager.service"
 
 	"apparmor.service"
 	"fix-permissions.service"
-	
+
     "gameboost.service"
     "system-tuning.service"
 	"upower.service"
