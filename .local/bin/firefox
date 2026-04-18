@@ -7,38 +7,39 @@ TRACE_FILE="/home/henrik/log.trace"
 
 DBUS_PORTALS=(
 	--talk=org.freedesktop.portal.Desktop
-	--talk=org.freedesktop.portal.FileChooser
+    --talk=org.freedesktop.portal.FileChooser
 	--talk=org.freedesktop.portal.OpenURI
 	--talk=org.freedesktop.portal.Notification
 	--talk=org.freedesktop.portal.Clipboard
 	--talk=org.freedesktop.portal.Print
 	--talk=org.freedesktop.portal.ScreenCast
-	--talk=org.freedesktop.portal.RemoteDesktop
-	--talk=org.freedesktop.portal.Settings
-	--talk=org.freedesktop.portal.AppChooser
-	--talk=org.freedesktop.portal.Camera
-	--talk=org.freedesktop.portal.Location
-	--talk=org.freedesktop.portal.InputCapture
-	--talk=org.freedesktop.portal.Secret
-	--talk=org.freedesktop.portal.Account
-	--talk=org.freedesktop.portal.Inhibit
-	--talk=org.freedesktop.portal.DynamicLauncher
-	--talk=org.freedesktop.portal.GameMode
-	--talk=org.freedesktop.portal.Realtime
-	--talk=org.kde.StatusNotifierWatcher
-	--talk=org.a11y.Bus
-	--talk=org.mpris.MediaPlayer2.*
-	--talk=org.gnome.SessionManager
-	--talk=org.freedesktop.PowerManagement
-	--talk=org.freedesktop.login1
-	--talk=org.freedesktop.systemd1
-	--talk=org.freedesktop.impl.portal.PermissionStore
-	--talk=org.freedesktop.impl.portal.desktop.gtk
-	--talk=org.freedesktop.impl.portal.desktop.hyprland
+	#--talk=org.freedesktop.portal.RemoteDesktop
+	#--talk=org.freedesktop.portal.Settings
+	#--talk=org.freedesktop.portal.AppChooser
+	#--talk=org.freedesktop.portal.Camera
+	#--talk=org.freedesktop.portal.Location
+	#--talk=org.freedesktop.portal.InputCapture
+	#--talk=org.freedesktop.portal.Secret
+	#--talk=org.freedesktop.portal.Account
+	#--talk=org.freedesktop.portal.Inhibit
+	#--talk=org.freedesktop.portal.DynamicLauncher
+	#--talk=org.freedesktop.portal.GameMode
+	#--talk=org.freedesktop.portal.Realtime
+	#--talk=org.kde.StatusNotifierWatcher
+	#--talk=org.a11y.Bus
+	#--talk=org.mpris.MediaPlayer2.*
+	#--talk=org.gnome.SessionManager
+	#--talk=org.freedesktop.PowerManagement
+	#--talk=org.freedesktop.login1
+	#--talk=org.freedesktop.systemd1
+	#--talk=org.freedesktop.impl.portal.PermissionStore
+	#--talk=org.freedesktop.impl.portal.desktop.gtk
+	#--talk=org.freedesktop.impl.portal.desktop.hyprland
 )
 
 BWRAP_ARGS=(
 	--new-session
+	--clearenv
 	--unshare-all
 	--share-net
 	--hostname mypc
@@ -50,27 +51,27 @@ BWRAP_ARGS=(
 	--tmpfs /run
 
 	# Binds
-	--bind-try $HOME/.cache /home/henrik/.cache
-	--bind-try $HOME/.cache/fontconfig /home/henrik/.cache/fontconfig
-	--bind-try $HOME/.config/dconf/user /home/henrik/.config/dconf/user
-	--bind-try $HOME/.config/gtk-3.0 /home/henrik/.config/gtk-3.0
-	--bind-try $HOME/.config/lsfg-vk/conf.toml /home/henrik/.config/lsfg-vk/conf.toml
-	--bind-try $HOME/.config/mimeapps.list /home/henrik/.config/mimeapps.list
-	--bind-try $HOME/.config/mozilla/firefox /home/henrik/.config/mozilla/firefox
-	--bind-try $HOME/.config/pulse/cookie /home/henrik/.config/pulse/cookie
-	--bind-try $HOME/Downloads /home/henrik/Downloads
-	--bind-try $HOME/.icons /home/henrik/.icons
-	--bind-try $HOME/.local/share/applications/mimeinfo.cache /home/henrik/.local/share/applications/mimeinfo.cache
-	--bind-try $HOME/.local/share/flatpak /home/henrik/.local/share/flatpak
-	--bind-try $HOME/.local/share/gvfs-metadata/root /home/henrik/.local/share/gvfs-metadata/root
-	--bind-try $HOME/.local/share/gvfs-metadata/root-abdf6bb4.log /home/henrik/.local/share/gvfs-metadata/root-abdf6bb4.log
-	--bind-try $HOME/.local/share/icons /home/henrik/.local/share/icons
-	--bind-try $HOME/.local/share/mime /home/henrik/.local/share/mime
-	--bind-try $HOME/.local/share/vulkan /home/henrik/.local/share/vulkan
-	--bind-try $HOME/.pulse-cookie /home/henrik/.pulse-cookie
-	--bind-try $HOME/.themes /home/henrik/.themes
+	--bind-try $HOME/.cache $HOME/.cache
+	--bind-try $HOME/.cache/fontconfig $HOME/.cache/fontconfig
+	--bind-try $HOME/.config/dconf/user $HOME/.config/dconf/user
+	--bind-try $HOME/.config/gtk-3.0 $HOME/.config/gtk-3.0
+	--bind-try $HOME/.config/lsfg-vk/conf.toml $HOME/.config/lsfg-vk/conf.toml
+	--bind-try $HOME/.config/mimeapps.list $HOME/.config/mimeapps.list
+	--bind-try $HOME/.config/mozilla/firefox $HOME/.config/mozilla/firefox
+	--bind-try $HOME/.config/pulse/cookie $HOME/.config/pulse/cookie
+	--bind-try $HOME/Downloads $HOME/Downloads
+	--bind-try $HOME/.icons $HOME/.icons
+	--bind-try $HOME/.local/share/applications/mimeinfo.cache $HOME/.local/share/applications/mimeinfo.cache
+	--bind-try $HOME/.local/share/flatpak $HOME/.local/share/flatpak
+	--bind-try $HOME/.local/share/gvfs-metadata/root $HOME/.local/share/gvfs-metadata/root
+	--bind-try $HOME/.local/share/icons $HOME/.local/share/icons
+	--bind-try $HOME/.local/share/mime $HOME/.local/share/mime
+	--bind-try $HOME/.local/share/vulkan $HOME/.local/share/vulkan
+	--bind-try $HOME/.pulse-cookie $HOME/.pulse-cookie
+	--bind-try $HOME/.themes $HOME/.themes
 
-	--bind-try /tmp/.X11-unix /tmp/.X11-unix
+	--bind-try /tmp/.X11-unix/X0 /tmp/.X11-unix/X0
+	--ro-bind-try /bin/dbus-launch /bin/dbus-launch
 	--ro-bind-try /bin/firefox /bin/firefox
 	--ro-bind-try /bin/sh /bin/sh
 
@@ -89,6 +90,7 @@ BWRAP_ARGS=(
 	--ro-bind-try /etc/mime.types /etc/mime.types
 	--ro-bind-try /etc/nsswitch.conf /etc/nsswitch.conf
 	--ro-bind-try /etc/os-release /etc/os-release
+	--ro-bind-try /etc/passwd /etc/passwd
 	--ro-bind-try /etc/pulse/client.conf /etc/pulse/client.conf
 	--ro-bind-try /etc/resolv.conf /etc/resolv.conf
 	--ro-bind-try /etc/xdg /etc/xdg
@@ -105,6 +107,7 @@ BWRAP_ARGS=(
 	--ro-bind-try /sys/dri /sys/dri
 
 	--ro-bind-try /usr/bin/bash /usr/bin/bash
+	--ro-bind-try /usr/bin/dbus-launch /usr/bin/dbus-launch
 	--ro-bind-try /usr/bin/env /usr/bin/env
 	--ro-bind-try /usr/bin/firefox /usr/bin/firefox
 	--ro-bind-try /usr/bin/gtk-query-immodules-3.0 /usr/bin/gtk-query-immodules-3.0
@@ -144,6 +147,9 @@ BWRAP_ARGS=(
 	--dev-bind-try /run/user/1000/dconf/user /run/user/1000/dconf/user
 	--dev-bind-try /run/user/1000/pulse/native /run/user/1000/pulse/native
 	--dev-bind-try /run/user/1000/wayland-1 /run/user/1000/wayland-1
+
+	--setenv DISPLAY $DISPLAY
+	--setenv HOME $HOME
 )
 
 utils::run "$@"

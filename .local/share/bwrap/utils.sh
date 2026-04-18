@@ -1,5 +1,7 @@
 #!/bin/bash
 
+trap utils::cleanup EXIT INT TERM
+
 utils::log() {
 	local level="$1"
 	shift
@@ -29,6 +31,22 @@ utils::log() {
 	fi
 
 	echo -e "${color}[$timestamp] [$script_name] [$level] ${padding}${message}${color_reset}"
+}
+
+utils::dbus() {
+	XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
+	DBUS_SOCKET="${XDG_RUNTIME_DIR}/bus"
+	PROXY_SOCKET="${XDG_RUNTIME_DIR}/bus-proxy-$(uuidgen).sock"
+
+	utils::log INFO "Starting DBus proxy..."
+	xdg-dbus-proxy "$DBUS_SOCKET" "$PROXY_SOCKET" \
+		"${DBUS_PORTALS[@]}" --filter &
+
+	PROXY_PID=$!
+
+	utils::log INFO "Waiting for proxy socket..."
+	while [[ ! -S "$PROXY_SOCKET" ]]; do sleep 0.01; done
+	utils::log INFO "Proxy ready"
 }
 
 utils::run() {
@@ -75,25 +93,6 @@ utils::cleanup() {
 	fi
 
 	rm -f "$PROXY_SOCKET"
-}
-trap utils::cleanup EXIT INT TERM
-
-utils::dbus() {
-	XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
-	DBUS_SOCKET="${XDG_RUNTIME_DIR}/bus"
-	PROXY_SOCKET="${XDG_RUNTIME_DIR}/bus-proxy-$(uuidgen).sock"
-	PROXY_PID=""
-
-	utils::log INFO "Starting DBus proxy..."
-	xdg-dbus-proxy "$DBUS_SOCKET" "$PROXY_SOCKET" \
-		--filter \
-		"${DBUS_PORTALS[@]}" &
-
-	PROXY_PID=$!
-
-	utils::log INFO "Waiting for proxy socket..."
-	while [[ ! -S "$PROXY_SOCKET" ]]; do sleep 0.01; done
-	utils::log INFO "Proxy ready"
 }
 
 utils::debug() {
@@ -159,6 +158,22 @@ utils::debug() {
 		[[ -e /usr/lib ]] && printf "%s\n" "/usr/lib"
 		[[ -e /usr/lib64 ]] && printf "%s\n" "/usr/lib64"
 		[[ -e /usr/lib32 ]] && printf "%s\n" "/usr/lib32"
+	}
+
+	add_env() {
+		local -a out=("$@")
+
+		# detect GUI environment
+		if [[ -n "$DISPLAY" || -n "$WAYLAND_DISPLAY" ]]; then
+			out+=("--setenv" "DISPLAY" "\$DISPLAY")
+		fi
+
+		# always HOME (literal)
+		if [[ -n "$HOME" ]]; then
+			out+=("--setenv" "HOME" "\$HOME")
+		fi
+
+		printf "%s\n" "${out[@]}"
 	}
 
 	gpu_device_enrichment() {
@@ -660,9 +675,34 @@ utils::debug() {
 	print_output() {
 		local -a input=("$@")
 
+		local -a paths=()
+		local -a env_list=()
+
+		local i item
+
+		# =====================================================
+		# 1. Split input into paths vs env (--setenv triplets)
+		# =====================================================
+		for ((i = 0; i < ${#input[@]}; i++)); do
+			item="${input[i]}"
+			[[ -z "$item" ]] && continue
+
+			if [[ "$item" == "--setenv" ]]; then
+				# expect: --setenv VAR VALUE
+				env_list+=("--setenv:${input[i+1]}:${input[i+2]}")
+				((i += 2))
+				continue
+			fi
+
+			paths+=("$item")
+		done
+
+		# =====================================================
+		# 2. Sort + dedupe paths (unchanged logic)
+		# =====================================================
 		local -a sorted
 		mapfile -t sorted < <(
-			printf "%s\n" "${input[@]}" |
+			printf "%s\n" "${paths[@]}" |
 				sed 's|^[^:]*:||' |
 				sort -u
 		)
@@ -672,26 +712,18 @@ utils::debug() {
 		local -a ro_list=()
 		local -a dev_list=()
 
-		# -----------------------
-		# CLASSIFY PATHS
-		# -----------------------
+		local path
+
 		for path in "${sorted[@]}"; do
 			[[ -z "$path" ]] && continue
-
 			[[ -n "${seen[$path]+x}" ]] && continue
 			seen["$path"]=1
 
-			# -----------------------
-			# DEV GROUP (/dev + /run)
-			# -----------------------
 			if [[ "$path" == /dev/* || "$path" == /run* ]]; then
 				dev_list+=("$path")
 				continue
 			fi
 
-			# -----------------------
-			# NORMAL RW / RO SPLIT
-			# -----------------------
 			if [[ -e "$path" && -w "$path" ]]; then
 				rw_list+=("$path")
 			else
@@ -699,9 +731,9 @@ utils::debug() {
 			fi
 		done
 
-		# -----------------------
-		# HELPERS
-		# -----------------------
+		# =====================================================
+		# 3. Helpers
+		# =====================================================
 		get_root() {
 			local p="$1"
 			echo "$p" | awk -F/ 'NF>=2 {print "/" $2}'
@@ -711,18 +743,27 @@ utils::debug() {
 			local cmd="$1"
 			local p="$2"
 
+			# ---- ENV FORMAT ----
+			if [[ "$cmd" == "--setenv" ]]; then
+				local var val
+				IFS=':' read -r _ var val <<< "$p"
+				val="${val//\\$/\$}"
+				printf -- "--setenv %s %s\n" "$var" "$val"
+				return
+			fi
+
+			# ---- PATH FORMAT ----
 			local out="$p"
 			[[ "$p" == "$HOME"* ]] && out="\$HOME${p#$HOME}"
-
 			printf -- "%s %s %s\n" "$cmd" "$out" "$out"
 		}
 
 		print_block() {
 			local -n arr="$1"
 			local cmd="$2"
-
 			local prev_root=""
 			local root
+			local p
 
 			for p in "${arr[@]}"; do
 				[[ -z "$p" ]] && continue
@@ -738,13 +779,18 @@ utils::debug() {
 			done
 		}
 
-		# -----------------------
-		# OUTPUT
-		# -----------------------
+		# =====================================================
+		# 4. OUTPUT BLOCKS (including envs)
+		# =====================================================
 		print_block rw_list "--bind-try"
 		print_block ro_list "--ro-bind-try"
 		print_block dev_list "--dev-bind-try"
+
+		echo ""
+
+		print_block env_list "--setenv"
 	}
+
 	# =========================================================
 	# PIPELINE EXECUTION
 	# =========================================================
@@ -762,7 +808,8 @@ utils::debug() {
 			filter_existing_paths \
 			collapse_filesystem_roots \
 			ensure_multilib_roots \
-			dedupe_paths
+			dedupe_paths \
+			add_env
 	)
 
 	# =========================================================
