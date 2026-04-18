@@ -9,8 +9,8 @@ TRACE_FILE="$HOME/log.trace"
 # busctl --user list | grep -v '^:'
 
 DBUS_PORTALS=(
-	#--talk=org.freedesktop.portal.Desktop
-	#--talk=org.freedesktop.Notifications
+	--talk=org.freedesktop.portal.Desktop
+	--talk=org.freedesktop.Notifications
 )
 
 BWRAP_ARGS=(
