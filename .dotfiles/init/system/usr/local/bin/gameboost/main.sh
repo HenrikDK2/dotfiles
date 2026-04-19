@@ -21,8 +21,9 @@ readonly EXCLUDED_PATTERNS=(
     "C:/windows/.*"
 
     "Vortex/Vortex.exe"
-    "(ModOrganizer.exe)"
+    "ModOrganizer.exe"
 	"MO2/explorer++"
+    "MO2/loot/lootcli.exe"
     
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
     "/*[Ll]auncher*.exe"

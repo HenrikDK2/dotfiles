@@ -11,7 +11,10 @@ TRACE_FILE="$HOME/log.trace"
 DBUS_PORTALS=(
 	--talk=org.freedesktop.portal.Desktop
 	--talk=org.freedesktop.Notifications
+	--talk=org.freedesktop.portal.Documents
+	--talk=org.freedesktop.FileManager1
 	--own=com.github.Matoking.protontricks.*
+	--own=mpris.MediaPlayer2.firefox.*
 	--own=org.mozilla.*
 )
 

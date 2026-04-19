@@ -42,7 +42,7 @@ x-scheme-handler/tidal=tidal-hifi.desktop
 application/pdf=firefox.desktop
 application/x-openvpn-profile=nm-import-ovpn.desktop
 application/vnd.microsoft.portable-executable=protontricks-launch.desktop
-x-scheme-handler/nxm=nxm-handler.desktop
+x-scheme-handler/nxm=vortex-steamtinkerlaunch-dl.desktop
 x-scheme-handler/nxm-protocol=vortex-steamtinkerlaunch-dl.desktop
 x-scheme-handler/jackify=com.jackify.app.desktop
 
