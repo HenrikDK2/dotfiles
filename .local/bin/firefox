@@ -21,13 +21,11 @@ BWRAP_ARGS=(
     --unshare-cgroup-try 
     --unshare-ipc
     --unshare-uts
-    --unshare-pid # - Causes issues with my nxm-handler
+    --unshare-pid
 	--hostname mypc
 
-	# FS
 	--proc /proc
 	--dev /dev
-
 	--tmpfs /run
 	
 	# Normally use tmpfs, but needed to open the same instance of modorganizer with nxm-handler
@@ -102,7 +100,6 @@ BWRAP_ARGS=(
 	--ro-bind-try /usr/share/xkeyboard-config-2 /usr/share/xkeyboard-config-2
 	--ro-bind-try /usr/share/zoneinfo /usr/share/zoneinfo
 
-
 	--ro-bind-try /var/cache/fontconfig /var/cache/fontconfig
 	--ro-bind-try /var/lib /var/lib
 
@@ -122,8 +119,8 @@ BWRAP_ARGS=(
 
 	# Needed for nxm-handler
 	--bind-try /bin /bin
-	--bind-try $HOME/.local/share/applications $HOME/.local/share/applications
-	--bind-try $HOME/.local/share/modorganizer $HOME/.local/share/modorganizer
+	--bind-try $HOME/.local/share/applications/nxm-handler.desktop $HOME/.local/share/applications/nxm-handler.desktop
+	--bind-try $HOME/.local/share/modorganizer/nxmhandler-launch.sh $HOME/.local/share/modorganizer/nxmhandler-launch.sh
 	--bind-try $HOME/Games $HOME/Games
 	--bind-try $HOME/.local/share/Steam/steamapps $HOME/.local/share/Steam/steamapps
 	--bind-try $HOME/.local/share/Steam/config/config.vdf $HOME/.local/share/Steam/config/config.vdf
