@@ -171,6 +171,9 @@ setup_nxmhandler() {
 
 # Use the dynamic appid and exe_path passed to the function
 protontricks-launch --appid "$appid" "$exe_path" "\$1"
+PID=\$!
+
+sleep 20; kill -TERM -"\$PID" 2>/dev/null
 EOF
 
     chmod +x "$script"
@@ -316,6 +319,7 @@ run_installer() {
     local dest; dest=$(find_mo2_exe "$appid")
     if [[ -n "$dest" ]]; then
         cp -r "$HOME/.local/share/modorganizer/files/." "$(dirname "$dest")"
+    	setup_nxmhandler "$appid" "$dest"
     else
         y_warn "Installer finished but ModOrganizer.exe was not found anywhere in the prefix.\n\nDid the installer complete successfully?"
     fi
