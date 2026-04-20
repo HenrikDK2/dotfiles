@@ -20,8 +20,13 @@ readonly EXCLUDED_PATTERNS=(
     "(link2ea://launchgame|/Electronic Arts/EA Desktop)" # EA Games Launcher
     "C:/windows/.*"
 
+    # Vortex
+	"Black Tree Gaming Ltd/Vortex"
     "Vortex/Vortex.exe"
+
+    # Modorganizer
     "ModOrganizer.exe"
+    "MO2/mods"
 	"MO2/explorer++"
     "MO2/loot/lootcli.exe"
     
