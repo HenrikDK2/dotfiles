@@ -169,8 +169,7 @@ setup_nxmhandler() {
     cat > "$script" <<EOF
 #!/usr/bin/env bash
 
-# Use the dynamic appid and exe_path passed to the function
-protontricks-launch --appid "$appid" "$exe_path" "\$1"
+setsid protontricks-launch --appid "$appid" "$exe_path" "\$1" &
 PID=\$!
 
 sleep 20; kill -TERM -"\$PID" 2>/dev/null
