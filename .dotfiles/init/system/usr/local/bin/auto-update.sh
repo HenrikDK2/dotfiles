@@ -2,6 +2,9 @@
 set -euo pipefail -o noclobber
 IFS=$'\n\t'
 
+UPDATE_INTERVAL_FILE="/var/tmp/update_script_last_run"
+UPDATE_INTERVAL=$((24 * 60 * 60))  # 24 hours
+
 # Network check function with max attempts
 function wait_for_network() {
     local max_attempts=10
@@ -25,6 +28,23 @@ function wait_for_network() {
     return 1
 }
 
+function exit_if_updated_recently() {
+    local now=$(date +%s)
+
+    if [[ -f "$UPDATE_INTERVAL_FILE" ]]; then
+        local last_run=$(stat -c %Y "$UPDATE_INTERVAL_FILE")
+        local age=$((now - last_run))
+
+        if (( age < UPDATE_INTERVAL )); then
+            echo "Last successful update was $age seconds ago (< 24h). Skipping..."
+            exit 0
+        fi
+    fi
+}
+
+# Enforce 24h update interval
+exit_if_updated_recently
+
 # Wait for network before proceeding
 wait_for_network || exit 1
 
@@ -39,3 +59,6 @@ fi
 
 # Update local_pkgs
 /usr/local/bin/local_pkgs/main.sh
+
+# Create time stamp, if successful
+touch "$UPDATE_INTERVAL_FILE"
