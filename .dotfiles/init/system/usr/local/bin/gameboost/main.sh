@@ -10,7 +10,7 @@ readonly GAME_PATTERNS=(
     "/Games/.+\.(AppImage|x86_64|i386)$"
     "/steamapps/common/.+\.(AppImage|x86_64|i386)"
     "Hytale/.*/(HytaleClient|HytaleServer\.jar)"
-    "C:/.*.exe"
+    "[A-Za-z]:/.+\\.exe"
 )
 
 readonly EXCLUDED_PATTERNS=(
