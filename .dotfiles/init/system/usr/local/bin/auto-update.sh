@@ -29,17 +29,26 @@ function wait_for_network() {
 }
 
 function exit_if_updated_recently() {
-    local now=$(date +%s)
+    [[ -f "$UPDATE_INTERVAL_FILE" ]] || return
 
-    if [[ -f "$UPDATE_INTERVAL_FILE" ]]; then
-        local last_run=$(stat -c %Y "$UPDATE_INTERVAL_FILE")
-        local age=$((now - last_run))
+    local now last_run age value unit
+    now=$(date +%s)
+    last_run=$(stat -c %Y "$UPDATE_INTERVAL_FILE")
+    age=$((now - last_run))
 
-        if (( age < UPDATE_INTERVAL )); then
-            echo "Last successful update was $age seconds ago (< 24h). Skipping..."
-            exit 0
-        fi
+    (( age >= UPDATE_INTERVAL )) && return
+
+    if (( age < 3600 )); then
+        value=$((age / 60))
+        unit="minutes"
+        (( value == 0 )) && { value="<1"; unit="minute"; }
+    else
+        value=$((age / 3600))
+        unit="hours"
     fi
+
+    echo "Last successful update was ${value} ${unit} ago (< 24h). Skipping..."
+    exit 0
 }
 
 # Enforce 24h update interval
