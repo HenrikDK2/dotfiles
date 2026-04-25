@@ -15,6 +15,7 @@ readonly GAME_PATTERNS=(
 
 readonly EXCLUDED_PATTERNS=(
     "wineserver"
+    "pv-adverb"
     "pressure-vessel/bin/pressure-vessel-wrap"
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
     "(link2ea://launchgame|/Electronic Arts/EA Desktop)" # EA Games Launcher
