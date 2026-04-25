@@ -7,7 +7,21 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-	"disable_ai": true,
+	"outline_panel": {
+  "dock": "left"
+ },
+ "collaboration_panel": {
+  "dock": "left"
+ },
+ "agent": {
+  "dock": "right",
+  "favorite_models": [],
+  "model_parameters": []
+ },
+ "git_panel": {
+  "dock": "left"
+ },
+ "disable_ai": true,
 	"ui_font_weight": 500.0,
 	"ui_font_family": ".ZedSans",
 	"icon_theme": "Material Icon Theme",
@@ -19,7 +33,8 @@
 	"buffer_font_size": 20.0,
 	"buffer_line_height": { "custom": 1.4 },
 	"toolbar": { "breadcrumbs": false, "quick_actions": false },
-	"project_panel": { "entry_spacing": "comfortable" },
+	"project_panel": { "dock": "left",
+                    "entry_spacing": "comfortable" },
 	"tabs": { "file_icons": true },
 	"terminal": { "default_height": 350 },
 	"current_line_highlight": "none",

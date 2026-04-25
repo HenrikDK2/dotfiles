@@ -158,6 +158,7 @@
 !.local/share/applications/discord.desktop
 !.local/share/applications/org.gnome.FileRoller.desktop
 !.local/share/applications/avahi-discover.desktop
+!.local/share/applications/yad-settings.desktop
 !.local/share/applications/bssh.desktop
 !.local/share/applications/bvnc.desktop
 !.local/share/applications/electron*.desktop

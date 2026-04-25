@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name[ka]=YAD-ის მორგება
+Name[uk]=Налаштування YAD
+Name=YAD settings
+Comment[ka]=მარტივი GUI-ი YAD-ის პარამეტრების ჩასასწორებლად
+Comment[uk]=Простий інтерфейс для редагування налаштувань YAD
+Comment=Simple GUI for editing YAD settings
+Categories=GTK;Settings;
+Exec=yad-settings
+Icon=yad
+Hidden=true
+Terminal=false
+Type=Application
+StartupNotify=true

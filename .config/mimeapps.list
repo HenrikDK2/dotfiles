@@ -73,3 +73,4 @@ application/rss+xml=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-CKFVO2.d
 application/x-extension-rss=org.mozilla.Thunderbird.desktop;userapp-Thunderbird-CKFVO2.desktop;userapp-Thunderbird-IAOFT2.desktop;
 application/pdf=firefox.desktop;
 application/vnd.microsoft.portable-executable=protontricks-launch.desktop;
+application/x-shellscript=userapp-alacritty-7ZN3N3.desktop;

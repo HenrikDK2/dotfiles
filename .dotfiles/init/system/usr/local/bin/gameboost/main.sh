@@ -160,9 +160,9 @@ log_message "GameBoost script started."
 while true; do
     if [[ -z "$CURRENT_PID" ]]; then
         detect_game_process
+        sleep 20   # idle mode
     else
         verify_game_process
+        sleep 10   # game running
     fi
-
-    sleep 10
 done
