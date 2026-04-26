@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AppImage Handler
+Comment=Handles AppImage files for nemo
+Exec=appimage-handler.sh %f
+Icon=application-x-executable
+Terminal=false
+MimeType=application/x-iso9660-appimage;application/vnd.appimage;
+NoDisplay=true

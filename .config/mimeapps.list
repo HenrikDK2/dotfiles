@@ -45,6 +45,8 @@ application/vnd.microsoft.portable-executable=protontricks-launch.desktop
 x-scheme-handler/nxm=nxm-handler.desktop
 x-scheme-handler/nxm-protocol=vortex-steamtinkerlaunch-dl.desktop
 x-scheme-handler/jackify=com.jackify.app.desktop
+application/vnd.appimage=appimage-handler.desktop
+application/x-iso9660-appimage=appimage-handler.desktop
 
 [Added Associations]
 x-scheme-handler/mailto=userapp-Thunderbird-6VANJ3.desktop;userapp-Thunderbird-YGBLH3.desktop;org.mozilla.Thunderbird.desktop;userapp-Thunderbird-M51KO2.desktop;userapp-Thunderbird-IVSPT2.desktop;

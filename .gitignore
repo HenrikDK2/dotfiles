@@ -121,6 +121,8 @@
 !.local/share/mime
 !.local/share/mime/application
 !.local/share/mime/application/*
+!.local/share/mime/packages
+!.local/share/mime/packages/*
 
 !.local/share/dbus-1
 !.local/share/dbus-1/**
@@ -166,4 +168,6 @@
 !.local/share/applications/xgps.desktop
 !.local/share/applications/xgpsspeed.desktop
 
-cd
+# For nemo
+!.local/bin/appimage-handler.sh
+!.local/share/applications/appimage-handler.desktop
