@@ -16,6 +16,7 @@ readonly GAME_PATTERNS=(
 readonly EXCLUDED_PATTERNS=(
     "wineserver"
     "pv-adverb"
+    "xalia/xalia.exe"
     "bin/d3ddriverquery64.exe"
     "pressure-vessel/bin/pressure-vessel-wrap"
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
