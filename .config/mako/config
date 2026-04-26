@@ -39,6 +39,9 @@ invisible=1
 [app-name="NetworkManager Applet" summary="Connection Established"]
 invisible=1
 
+[app-name="Firefox" body~=".*is playing.*"]
+default-timeout=40000
+
 [category=audit]
 on-button-left=exec alacritty -e bash -c "makoctl dismiss -g audit; ~/.dotfiles/scripts/audit.sh; exec bash"
 
