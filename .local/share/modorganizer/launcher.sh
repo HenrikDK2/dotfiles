@@ -34,6 +34,7 @@ y_info()  { yad --info     --title="$TITLE" --width=450 --text="$1" --button="OK
 y_warn()  { yad --info     --title="$TITLE" --width=450 --text="$1" --image=dialog-warning --button="OK:0"; }
 y_err()   { yad --error    --title="$TITLE" --width=450 --text="$1" --button="OK:0"; }
 y_yesno() { yad --question --title="$TITLE" --width=400 --text="$1" --button="Yes:0" --button="No:1"; }
+y_yescancel() { yad --question --title="$TITLE" --width=400 --text="$1" --button="Yes:0" --button="Cancel:1"; }
 
 format_path() {
     local path="$1"
@@ -140,7 +141,6 @@ show_main_screen() {
                 ;;
             2)  # Open Folder — act directly on the selected row
                 [[ -n "$selected" ]] && open_folder_for_exe "$selected"
-                # Fall through to loop — main dialog reopens
                 ;;
             3)  # Install MO2
                 show_install_screen
@@ -150,47 +150,6 @@ show_main_screen() {
     done
 }
 
-setup_nxmhandler() {
-    local appid="$1"
-    local exe_path="$2"
-
-    # Set path to nxmhandler.exe based on exe_path
-    local nxm_path="${exe_path%ModOrganizer.exe}nxmhandler.exe"
-
-    local base="$HOME/.local/share/modorganizer"
-    local script="$base/nxmhandler-launch.sh"
-    local desktop="$HOME/.local/share/applications/nxm-handler.desktop"
-
-    # Create necessary directories
-    mkdir -p "$base"
-    mkdir -p "$(dirname "$desktop")"
-
-    # Wrapper script creation
-    cat > "$script" <<EOF
-#!/usr/bin/env bash
-
-setsid protontricks-launch --appid "$appid" "$exe_path" "\$1" &
-PID=\$!
-
-sleep 20; kill -TERM -"\$PID" 2>/dev/null
-EOF
-
-    chmod +x "$script"
-
-    # Desktop entry creation
-    cat > "$desktop" <<EOF
-[Desktop Entry]
-Name=NXM Handler
-Exec=$script %u
-Type=Application
-Terminal=false
-MimeType=x-scheme-handler/nxm;
-NoDisplay=true
-EOF
-
-    # Register handler
-    xdg-mime default nxm-handler.desktop x-scheme-handler/nxm
-}
 
 launch_instance() {
     local exe_path="$1"
@@ -202,11 +161,6 @@ launch_instance() {
     fi
 
     local nxm_path="${exe_path%ModOrganizer.exe}nxmhandler.exe"
-
-    if [[ -f "$nxm_path" ]]; then
-        setup_nxmhandler "$appid" "$exe_path"
-    fi
-
     protontricks-launch --appid "$appid" "$exe_path" &
 }
 
@@ -245,13 +199,13 @@ show_install_screen() {
         selected="${selected%|}"
 
         case $exit_code in
-            1|252)  # Back / window closed
+            1|252)
                 show_main_screen
                 return
                 ;;
-            0)  # Install
+            0)
                 [[ -z "$selected" ]] && continue
-                run_installer "$selected" && return   # Success/error → back to main screen
+                run_installer "$selected" && return
                 ;;
         esac
     done
@@ -259,18 +213,22 @@ show_install_screen() {
 
 preserve_and_clean_mo2_dir() {
     local dir="$1"
-
     [[ ! -d "$dir" ]] && return 0
-
     shopt -s dotglob nullglob
-
     for item in "$dir"/*; do
         local base
         base=$(basename "$item")
-
         case "$base" in
             profiles|mods|downloads)
                 # Keep these
+                continue
+                ;;
+            ModOrganizer.ini)
+                # NEVER remove main config
+                continue
+                ;;
+            fomod.db|fomod_data.json|fomod_data.json.backup)
+                # Keep fomod database files
                 continue
                 ;;
             *)
@@ -278,7 +236,6 @@ preserve_and_clean_mo2_dir() {
                 ;;
         esac
     done
-
     local appdata_local_dir="$COMPATDATA/$appid/pfx/drive_c/users/steamuser/AppData/Local"
     [[ ! -d "$appdata_local_dir" ]] && return 0
     for folder in LOOT ModOrganizer KiLoader; do
@@ -286,7 +243,6 @@ preserve_and_clean_mo2_dir() {
             rm -rf "$appdata_local_dir/$folder"
         fi
     done
-
     shopt -u dotglob nullglob
 }
 
@@ -303,9 +259,9 @@ run_installer() {
         return 0
     fi
 
-    local existing; existing=$(find_mo2_exe "$appid")
+	local existing; existing=$(find_mo2_exe "$appid")
     if [[ -n "$existing" ]]; then
-        if y_yesno "MO2 is already installed for <b>$name</b>.\n\nReinstall and preserve profiles/mods/downloads?"; then
+        if y_yescancel "MO2 is already installed for <b>$name</b>.\n\nReinstall and keep your profiles, mods, downloads, and settings?"; then
             preserve_and_clean_mo2_dir "$(dirname "$existing")"
         else
             return 1
@@ -317,8 +273,21 @@ run_installer() {
 
     local dest; dest=$(find_mo2_exe "$appid")
     if [[ -n "$dest" ]]; then
-        cp -r "$HOME/.local/share/modorganizer/files/." "$(dirname "$dest")"
-    	setup_nxmhandler "$appid" "$dest"
+        install_dir="$(dirname "$dest")"
+
+        # COPY ALL FILES BUT NEVER OVERWRITE EXISTING ModOrganizer.ini
+        find "$HOME/.local/share/modorganizer/files" -type f | while read -r file; do
+            rel="${file#$HOME/.local/share/modorganizer/files/}"
+            target="$install_dir/$rel"
+
+            mkdir -p "$(dirname "$target")"
+
+            if [[ "$rel" == "ModOrganizer.ini" && -f "$target" ]]; then
+                continue
+            fi
+
+            cp "$file" "$target"
+        done
     else
         y_warn "Installer finished but ModOrganizer.exe was not found anywhere in the prefix.\n\nDid the installer complete successfully?"
     fi

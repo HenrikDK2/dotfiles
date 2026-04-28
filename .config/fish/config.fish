@@ -137,6 +137,7 @@ set -gx MOZ_ENABLE_WAYLAND 1
 set -gx MOZ_WEBRENDER 1
 
 set -gx PROTON_FORCE_LARGE_ADDRESS_AWARE 1
+set -gx PROTON_USE_WOW64 1
 set -gx LD_PRELOAD ""
 
 set -gx AMD_VULKAN_ICD "RADV"
@@ -150,6 +151,8 @@ set -gx OBS_VKCAPTURE 1
 set -gx DOTNET_SYSTEM_GLOBALIZATION_INVARIANT false
 set -gx FREETYPE_PROPERTIES "hinting=true:hintstyle=hintslight:antialias=rgb:subpixel_rendering=rgb"
 set -gx GTK_A11Y "none"
+
+
 
 set fish_color_autosuggestion "#747e93"
 set -U fish_greeting

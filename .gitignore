@@ -140,12 +140,15 @@
 !.local/share/nemo/actions
 !.local/share/nemo/actions/*
 
-# Created on launch of instance
-.local/share/modorganizer/nxmhandler-launch.sh 
+# Simple wrapper for gamescope
+!.local/bin/gamewindow
+
+# mo2 nxm links
+!.local/share/modorganizer/nxmhandler-launch.sh 
+!.local/share/applications/modorganizer-launcher.desktop
 
 !.local/share/applications
 !.local/share/applications/cups.desktop
-!.local/share/applications/modorganizer-launcher.desktop
 !.local/share/applications/nemo.desktop
 !.local/share/applications/hyprpicker.desktop
 !.local/share/applications/nm-import-ovpn.desktop
