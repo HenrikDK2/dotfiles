@@ -5,7 +5,6 @@ DEBUG="${DEBUG:-0}"
 log() { [[ "$DEBUG" == "1" ]] && echo "[DEBUG] $*"; }
 fail() { echo "[ERROR] $*" >&2; zenity --error --text="$*"; exit 1; }
 
-### --- INPUT --- ###
 [[ $# -ge 1 ]] || fail "Provide NXM link"
 
 nxm_link="$1"
@@ -15,7 +14,6 @@ nexus_game_id="${nexus_game_id%%/*}"
 log "NXM: $nxm_link"
 log "Game ID: $nexus_game_id"
 
-### --- PATHS --- ###
 STEAMAPPS="${STEAMAPPS_PATH:-$HOME/Games/steamapps}"
 COMPATDATA="$STEAMAPPS/compatdata"
 
@@ -24,7 +22,6 @@ mkdir -p "$(dirname "$CACHE_FILE")"
 
 log "Cache file: $CACHE_FILE"
 
-### --- CACHE LOAD --- ###
 get_cached_instance() {
     jq -r --arg id "$1" '.[$id].exe // empty' "$CACHE_FILE" 2>/dev/null || true
 }
@@ -40,14 +37,13 @@ update_cache() {
     log "Updating cache: $appid -> $exe"
 
     tmp="$(mktemp)"
-    jq --arg id "$appid" --arg exe "$exe" '
-        .[$id] = {appid:$id, exe:$exe}
-    ' "$CACHE_FILE" 2>/dev/null > "$tmp" || echo "{}" > "$tmp"
+    jq --arg id "$appid" --arg exe "$exe" \
+        '.[$id] = {appid:$id, exe:$exe}' \
+        "$CACHE_FILE" 2>/dev/null > "$tmp" || echo "{}" > "$tmp"
 
     mv "$tmp" "$CACHE_FILE"
 }
 
-### --- RESOLVE FROM CACHE --- ###
 cached_exe="$(get_cached_instance "$nexus_game_id")"
 cached_appid="$(get_cached_appid "$nexus_game_id")"
 
@@ -105,7 +101,6 @@ else
         game_name="$(appid_to_name "$game_steam_id")"
     fi
 
-    # cache result
     update_cache "$game_steam_id" "$instance_exe"
 fi
 
@@ -116,37 +111,26 @@ log "  exe: $instance_exe"
 log "  appid: $game_steam_id"
 log "  dir: $instance_dir"
 
-### --- RUNNING CHECK --- ###
-instance_win_path="Z:$(echo "$instance_dir" | sed 's/\//\\\\/g')"
-
-if pgrep -f "$instance_win_path\\\\ModOrganizer.exe" >/dev/null; then
-    mo2_running=true
-else
-    mo2_running=false
-fi
-
-### --- ACTIONS --- ###
 run_nxmhandler() {
     protontricks-launch \
         --appid "$game_steam_id" \
         "$instance_dir/nxmhandler.exe" \
-        "$nxm_link"
+        "$nxm_link" &
+
+    log "nxmhandler launched"
+    auto_kill_nxmhandler &
 }
 
-run_mo2() {
-    protontricks-launch \
-        --appid "$game_steam_id" \
-        "$instance_exe" \
-        "$nxm_link"
+auto_kill_nxmhandler() {
+    sleep 20
+
+    log "Attempting nxmhandler cleanup"
+
+    if pkill -f nxmhandler.exe; then
+        log "Killed nxmhandler"
+    else
+        log "No nxmhandler process found"
+    fi
 }
 
-### --- MAIN --- ###
-if $mo2_running; then
-    echo "INFO: sending to running MO2"
-    run_nxmhandler || fail "nxmhandler failed"
-else
-    echo "INFO: launching MO2"
-    run_mo2 || fail "MO2 launch failed"
-fi
-
-exit 0
+run_nxmhandler
