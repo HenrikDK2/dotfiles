@@ -140,9 +140,6 @@
 !.local/share/nemo/actions
 !.local/share/nemo/actions/*
 
-# Simple wrapper for gamescope
-!.local/bin/gamewindow
-
 # mo2 nxm links
 !.local/share/modorganizer/nxmhandler-launch.sh 
 !.local/share/applications/modorganizer-launcher.desktop
