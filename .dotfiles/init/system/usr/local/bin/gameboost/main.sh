@@ -19,7 +19,6 @@ readonly EXCLUDED_PATTERNS=(
     "/dotnet"
     "/7z.exe"
     "xalia/xalia.exe"
-    "AppData/Local/Temp/"
     "bin/d3ddriverquery64.exe"
     "pressure-vessel/bin/pressure-vessel-wrap"
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
