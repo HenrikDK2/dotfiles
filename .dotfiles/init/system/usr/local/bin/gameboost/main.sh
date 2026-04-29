@@ -2,7 +2,9 @@
 
 readonly GAMEBOOST_FLAG="/tmp/gameboost-running.flag"
 readonly LOG_FILE="/tmp/gameboost.log"
+readonly COOLDOWN_SECONDS=120  # 2 minutes
 CURRENT_PID=""
+LAST_SWITCH_TIME=0
 
 readonly GAME_PATTERNS=(
     ".*/proton waitforexitandrun"
@@ -82,21 +84,42 @@ notify_user() {
     log_message "Notification sent: $1"
 }
 
+check_cooldown() {
+    local current_time=$(date +%s)
+    local time_since_last=$((current_time - LAST_SWITCH_TIME))
+    
+    if [[ $time_since_last -lt $COOLDOWN_SECONDS ]]; then
+        local remaining=$((COOLDOWN_SECONDS - time_since_last))
+        return 1
+    fi
+    return 0
+}
+
 enable_game_mode() {
     if [[ ! -f "$GAMEBOOST_FLAG" ]]; then
+        if ! check_cooldown; then
+            return
+        fi
+        
         notify_user "Switching to performance mode"
         touch "$GAMEBOOST_FLAG"
         /usr/local/bin/gameboost/start.sh "$@" &
+        LAST_SWITCH_TIME=$(date +%s)
     fi
 }
 
 disable_game_mode() {
     if [[ -f "$GAMEBOOST_FLAG" ]]; then
+        if ! check_cooldown; then
+            return
+        fi
+        
         notify_user "Switching to power-saving mode"
         pkill -f '/usr/local/bin/gameboost/start.sh'
         rm -f "$GAMEBOOST_FLAG"
         /usr/local/bin/gameboost/exit.sh &
         CURRENT_PID=""
+        LAST_SWITCH_TIME=$(date +%s)
     fi
 }
 
