@@ -167,7 +167,6 @@ launch_instance() {
 show_install_screen() {
     local -a rows
     local appid name status
-
     while IFS= read -r -d '' dir; do
         appid=$(basename "$dir")
         [[ "$appid" =~ ^[0-9]+$ ]] || continue
@@ -176,13 +175,11 @@ show_install_screen() {
         status=$([[ -f "$COMPATDATA/$appid/$MO2_EXE_RELATIVE" ]] && echo "✔ Installed" || echo "—")
         rows+=("$appid" "$name" "$status")
     done < <(find "$COMPATDATA" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null | sort -z)
-
     if [[ ${#rows[@]} -eq 0 ]]; then
         y_warn "No Steam prefixes found under:\n$COMPATDATA\n\nRun a game via Proton at least once first."
         return
     fi
-
-    # Loop so that declining a reinstall returns here instead of the main screen.
+    # Loop so that declining a reinstall returns here instead of exiting.
     while true; do
         local selected
         selected=$(yad --list \
@@ -191,16 +188,13 @@ show_install_screen() {
             --column="AppID" --column="Game" --column="MO2 Status" \
             --print-column=1 \
             --width=650 --height=550 \
+            --button="Exit:1" \
             --button="Install:0" \
-            --button="Back:1" \
             "${rows[@]}" 2>/dev/null)
-
         local exit_code=$?
         selected="${selected%|}"
-
         case $exit_code in
             1|252)
-                show_main_screen
                 return
                 ;;
             0)
