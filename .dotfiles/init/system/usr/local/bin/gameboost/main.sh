@@ -89,7 +89,6 @@ check_cooldown() {
     local time_since_last=$((current_time - LAST_SWITCH_TIME))
     
     if [[ $time_since_last -lt $COOLDOWN_SECONDS ]]; then
-        local remaining=$((COOLDOWN_SECONDS - time_since_last))
         return 1
     fi
     return 0
@@ -97,7 +96,9 @@ check_cooldown() {
 
 enable_game_mode() {
     if [[ ! -f "$GAMEBOOST_FLAG" ]]; then
+        # Check cooldown before switching modes
         if ! check_cooldown; then
+            log_message "Skipping switch to performance mode (cooldown active)"
             return
         fi
         
@@ -110,7 +111,9 @@ enable_game_mode() {
 
 disable_game_mode() {
     if [[ -f "$GAMEBOOST_FLAG" ]]; then
+        # Check cooldown before switching modes
         if ! check_cooldown; then
+            log_message "Skipping switch to power-saving mode (cooldown active)"
             return
         fi
         
