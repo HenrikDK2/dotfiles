@@ -158,7 +158,22 @@ detect_game_process() {
 verify_game_process() {
     if ! kill -0 "$CURRENT_PID" 2>/dev/null; then
         log_message "Game process ended: PID=$CURRENT_PID"
-        disable_game_mode
+        
+        # Check if any other game processes are still running
+        local other_games=$(ps ax -o pid=,command= | sed 's|\\|/|g' \
+            | grep -E "$GAME_PATTERN" \
+            | grep -vE "$EXCLUDED_PATTERN")
+        
+        if [[ -n "$other_games" ]]; then
+            # Other games still running - switch tracking to the first one
+            local new_pid=$(echo "$other_games" | head -1 | awk '{print $1}')
+            local new_cmd=$(echo "$other_games" | head -1 | cut -d' ' -f2-)
+            CURRENT_PID="$new_pid"
+            log_message "Switched tracking to another game: PID=$CURRENT_PID, CMD='$new_cmd'"
+        else
+            # No other games running - safe to disable
+            disable_game_mode
+        fi
     fi
 }
 
