@@ -9,6 +9,7 @@ import re
 import queue
 import json
 import configparser
+import urllib.request
 from audioplayer import AudioPlayer
 
 from pathlib import Path
@@ -105,7 +106,8 @@ SKYRIM_DATA_FOLDERS = [
     "Strings",
     "SKSE",
     "Video",
-    "CalienteTools"
+    "CalienteTools",
+    "Root"
 ]
 SKYRIM_DATA_FILE_TYPES = [
     ".esm",  # master plugins
@@ -370,22 +372,22 @@ class ArchiveTable(QtWidgets.QTableWidget):
     def on_column_resized(self, logicalIndex, oldSize, newSize):
         self.plugin.save_settings(f"col_{logicalIndex}_width", newSize)
 
+    
     def wheelEvent(self, event):
         if event.modifiers() & Qt.KeyboardModifier.ControlModifier:
             delta = event.angleDelta().y()
-
             step = 2 if delta > 0 else -2
 
-            for row in range(self.rowCount()):
-                h = self.rowHeight(row)
-                new_h = max(18, min(100, h + step))
-                self.setRowHeight(row, new_h)
-                self.plugin.save_settings("row_height", new_h)
-                
-            event.accept()
-            return
+            header = self.verticalHeader()
+            current = header.defaultSectionSize()
+            new_h = max(18, min(100, current + step))
 
-        super().wheelEvent(event)
+            header.setDefaultSectionSize(new_h)
+            self.plugin.save_settings("row_height", new_h)
+
+            event.accept()
+        else:
+            super().wheelEvent(event)
 
     # === Drag & Drop handling ===
     def dragEnterEvent(self, event: QtGui.QDragEnterEvent):
@@ -2074,12 +2076,34 @@ class UMIPlugin(IPluginTool):
         self.show_downloaded.setStyleSheet("QCheckBox { white-space: normal; }")
         self.show_installed.setStyleSheet("QCheckBox { white-space: normal; }")
         self.show_uninstalled.setStyleSheet("QCheckBox { white-space: normal; }")
-        self.show_downloaded.setChecked(True)
-        self.show_downloaded.clicked.connect(self.populate_archives_list)
-        self.show_installed.setChecked(False)
-        self.show_installed.clicked.connect(self.populate_archives_list)
-        self.show_uninstalled.setChecked(False)
-        self.show_uninstalled.clicked.connect(self.populate_archives_list)
+        def show_downloaded_save():
+            if self.show_downloaded.isChecked(): self.save_settings("show_downloaded","yes")
+            else: self.save_settings("show_downloaded","no")
+            self.populate_archives_list()
+        def show_installed_save():
+            if self.show_installed.isChecked(): self.save_settings("show_installed","yes")
+            else: self.save_settings("show_installed","no")
+            self.populate_archives_list()
+        def show_uninstalled_save():
+            if self.show_uninstalled.isChecked(): self.save_settings("show_uninstalled","yes")
+            else: self.save_settings("show_uninstalled","no")
+            self.populate_archives_list()
+        self.show_downloaded.clicked.connect(show_downloaded_save)
+        self.show_installed.clicked.connect(show_installed_save)
+        self.show_uninstalled.clicked.connect(show_uninstalled_save)
+
+        show_downloaded_load = self.load_settings("show_downloaded")
+        if show_downloaded_load and show_downloaded_load == "no": self.show_downloaded.setChecked(False)
+        else: self.show_downloaded.setChecked(True)
+
+        show_installed_load = self.load_settings("show_installed")
+        if show_installed_load and show_installed_load == "yes": self.show_installed.setChecked(True)
+        else: self.show_installed.setChecked(False)
+
+        show_uninstalled_load = self.load_settings("show_uninstalled")
+        if show_uninstalled_load and show_uninstalled_load == "yes": self.show_uninstalled.setChecked(True)
+        else: self.show_uninstalled.setChecked(False)
+
         checkboxes_layout = QtWidgets.QVBoxLayout()
         checkboxes_layout.addWidget(self.show_downloaded)
         checkboxes_layout.addWidget(self.show_installed)
@@ -2202,6 +2226,18 @@ class UMIPlugin(IPluginTool):
         self.window.raise_()
         self.window.activateWindow()
 
+    def get_file_info(self,mod_id,file_id):
+        api_key= "" # user paste their api key here, could be useful in the future
+        url = f"https://api.nexusmods.com/v3/games/skyrimspecialedition/mod-files/{file_id}"
+        
+        req = urllib.request.Request(url)
+        req.add_header("apikey", api_key)
+        # req.add_header("Application-Name", "MO2Plugin")
+
+        with urllib.request.urlopen(req) as response:
+            data = response.read().decode("utf-8")
+            return json.loads(data)
+
     def on_interface_initialized(self, main_window):
         global _music_engine
         if self.background_music:
@@ -2301,8 +2337,6 @@ class UMIPlugin(IPluginTool):
             # self.dock.visibilitychanged.connect(self.toggle_action.setchecked)
             # main_window.addtoolbar("tools").addaction(self.toggle_action)
 
-        
-    
     def on_mod_removed(self, mod_name):
         deleted_archives = self.find_deleted_archives()
         if deleted_archives:
@@ -2348,33 +2382,33 @@ class UMIPlugin(IPluginTool):
 
     def on_archive_download_finished(self, download_id: int):
         try:
-            if self.window.isVisible():
-                archive_path = self._organizer.downloadManager().downloadPath(download_id)
-                if os.path.exists(archive_path):
-                    QTimer.singleShot(0, lambda: self.populate_archives_list())
-                    # self.populate_archives_list()
-                    if self.auto_install_cb.isChecked():
-                        # Prio is the last by default
-                        prio = len(self._organizer.modList().allMods())
-                        if self.default_separator and self.default_separator_cb.isChecked():
-                            mod_list = self._organizer.modList()
-                            separators = {}
-                            separator_list = []
-                            for mod_name in mod_list.allMods():
-                                mod = mod_list.getMod(mod_name)
-                                if mod and mod.isSeparator():
-                                    separator_list.append(mod_name)
-                                    separators[mod_name] = mod_list.priority(mod_name)
-                            separator_list.sort(key=lambda p: separators.get(p, 0))
-                            if separators[self.default_separator]:
-                                next_separator_index = separator_list.index(self.default_separator)+1
-                                if next_separator_index < len(separator_list):
-                                    next_separator = separator_list[next_separator_index]
-                                    if next_separator: 
-                                        prio = separators.get(next_separator)
-                        self.auto_install_archives({archive_path:[prio,True]})
-                self.window.raise_()
-                self.window.activateWindow()
+            # if self.window.isVisible():
+            archive_path = self._organizer.downloadManager().downloadPath(download_id)
+            if os.path.exists(archive_path):
+                QTimer.singleShot(0, lambda: self.populate_archives_list())
+                # self.populate_archives_list()
+                if self.auto_install_cb.isChecked():
+                    # Prio is the last by default
+                    prio = len(self._organizer.modList().allMods())
+                    if self.default_separator and self.default_separator_cb.isChecked():
+                        mod_list = self._organizer.modList()
+                        separators = {}
+                        separator_list = []
+                        for mod_name in mod_list.allMods():
+                            mod = mod_list.getMod(mod_name)
+                            if mod and mod.isSeparator():
+                                separator_list.append(mod_name)
+                                separators[mod_name] = mod_list.priority(mod_name)
+                        separator_list.sort(key=lambda p: separators.get(p, 0))
+                        if separators[self.default_separator]:
+                            next_separator_index = separator_list.index(self.default_separator)+1
+                            if next_separator_index < len(separator_list):
+                                next_separator = separator_list[next_separator_index]
+                                if next_separator: 
+                                    prio = separators.get(next_separator)
+                    self.auto_install_archives({archive_path:[prio,True]})
+                # self.window.raise_()
+                # self.window.activateWindow()
         except Exception as e:
             QMessageBox.critical(
                 None,
@@ -2523,7 +2557,7 @@ class UMIPlugin(IPluginTool):
             y = screen.top()
             self.dlg.move(x, y)
             # Start the first
-            # direct meanas that pre install didn't run(FOMODs are not set to install last)
+            # direct means that pre install didn't run(FOMODs are not set to install last)
             # thus it needs to be checked if it's FOMOD or not in next step, otherwise skip
             if call == "direct":
                 self.pre_process_next(call)
@@ -2582,8 +2616,8 @@ class UMIPlugin(IPluginTool):
                 # If extension is the same name or is included 
                 # in the basename/mod page name, it's likely a main file
                 if (mod_extension
-                    and mod_extension != mod_basename
-                    and not mod_extension in mod_basename): 
+                    and mod_extension.lower() != mod_basename.lower()
+                    and not mod_extension.lower() in mod_basename.lower()): 
                     mod_name += " - " + mod_extension
             elif mod_extension:
                 mod_name = mod_extension
@@ -2675,22 +2709,43 @@ class UMIPlugin(IPluginTool):
                             f"process_next FOMOD cancel failed: {e}",
                         )
             else:
-                mod = self._organizer.createMod(full_mod_name)
-                if mod:
-                    # mod_list = self._organizer.modList()
-                    # mod_list.setPriority(mod.name(), self.archives.get(archive_path)[0])
-                    # self.extract_archive(archive_path,mod.absolutePath(),call=call)
-                    self.worker.enqueue("extract", self.worker.extract_archive, archive_path, mod.absolutePath(), call=call)
+                ###OONGA
+                # Will trigger installation window if the mod with the same name exist
+                # Need to fix it if users select 'Replace' or 'Merge' for mods
+                if self.exist_action=="ask":
+                    mod = self._organizer.createMod(full_mod_name)
+                    if mod:
+                        # mod_list = self._organizer.modList()
+                        # mod_list.setPriority(mod.name(), self.archives.get(archive_path)[0])
+                        # self.extract_archive(archive_path,mod.absolutePath(),call=call)
+                        # Add mod name since it's not in mod_names even though
+                        # it's installing same mod, so reorder can work
+                        # Else user renamed so it's fine
+                        new_mod_name = os.path.basename(mod.absolutePath())
+                        self.mod_names = [new_mod_name]
+                            
+                        self.worker.enqueue("extract", self.worker.extract_archive, archive_path, 
+                            mod.absolutePath(), call=call, exist_action=self.exist_action)
+                        # else:
+                        #     self.worker.enqueue("extract", self.worker.extract_archive, archive_path, 
+                        #         mod.absolutePath(), call=call, exist_action=self.exist_action)
+                            
+                    else:
+                        # QMessageBox.critical(
+                        #     None,
+                        #     "Error0",
+                        #     f"Mod creation failed.",
+                        # )
+                        self.dlg.close()
                 else:
-                    # This shouldn't ever be called since there
-                    # won't ever be prompt in the first place
-                    # but just in case
-                    QMessageBox.critical(
-                        None,
-                        "Error0",
-                        f"Mod creation failed.",
-                    )
-                    self.dlg.close()
+                    ###OONGA
+                    mod_path = os.path.join(self.mods_path, full_mod_name)
+                    # Add mod name since it's not in mod_names even though
+                    # it's installing existing mod, so reorder can work
+                    if os.path.exists(mod_path) and not self.mod_names:
+                        self.mod_names = [full_mod_name]
+                    self.worker.enqueue("extract", self.worker.extract_archive, archive_path, 
+                        mod_path, call=call, exist_action=self.exist_action)   
 
         else:
             dlg = CheckboxPopup(self.mod_names, archive_path, plugin=self)
@@ -3180,9 +3235,17 @@ class UMIPlugin(IPluginTool):
                             if meta_ini:
                                 # Same archive used, should be same mod
                                 installation_file = meta_ini.get("installationfile")
-                                if installation_file and installation_file == archive_basename:
-                                    found_mod_names[mod_name] = "installation_file"
-                                    found = True
+                                if installation_file:
+                                    # Check if another mod was installed using the same archive, if so
+                                    # use that mod's name as default name when installing
+                                    # Also compare archive's name splitted, before -123-, to check if it's
+                                    # actually the same mod file, just different version, should be reliable
+                                    extracted_name = self.extract_mod_name(installation_file)
+                                    extracted_name1 = self.extract_mod_name(archive_basename)
+                                    if (installation_file == archive_basename or (extracted_name and extracted_name1 and
+                                    extracted_name.lower() == extracted_name1.lower())):
+                                        found_mod_names[mod_name] = "installation_file"
+                                        found = True
 
                                 # Same mod page, maybe same mods with similar archives (different versions?)
                                 nexus_id = meta_ini.get("modid")
@@ -3589,7 +3652,24 @@ class TaskWorker(QObject):
             return "\\\\?\\UNC\\" + p[2:]
         return "\\\\?\\" + p
 
-    def extract_archive(self, archive_path, extract_path, call="direct"):
+    def extract_archive(self, archive_path, extract_path, call="direct", exist_action="ask"):
+        ###OONGA
+        # Delete the content of the mod if user selected Replace previously
+        if os.path.exists(extract_path) and exist_action =="replace":
+            # shutil.rmtree(extract_path)
+            for filename in os.listdir(extract_path):
+                if filename=="meta.ini":
+                    continue
+                
+                file_path = os.path.join(extract_path, filename)
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)  # remove file or symlink
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)  # remove subdirectory
+                except Exception as e:
+                    print(f"Faild to delete {file_path}")
+        
         temp_dir = os.path.join(extract_path, "_temp")
         if os.path.exists(temp_dir): shutil.rmtree(temp_dir)
         os.makedirs(temp_dir, exist_ok=True)
@@ -3605,6 +3685,10 @@ class TaskWorker(QObject):
         if process.returncode != 0:
             raise RuntimeError(f"7z extraction failed: {process.stderr.read()}")
 
+        ###OONGA
+        # If user selected Replaced previously, here the new content gets added
+        # If user selected Merge previously, the content of the previous version
+        # of the mod is contained, and here the new content gets merged
         self.flatten_items(self.longpath(temp_dir))
         self.move_temp(self.longpath(temp_dir),self.longpath(extract_path))
 
@@ -3731,7 +3815,7 @@ class TaskWorker(QObject):
         for root, dirs, files in os.walk(src_dir, topdown=True):
             if os.path.basename(root).lower() == "data":
                 is_data = True
-                if root == src_dir: return
+                if root == src_dir: return    
             # Check if any subfolder is a known Skyrim folder
             elif any(d.lower() in folder_names for d in dirs):
                 is_data = True

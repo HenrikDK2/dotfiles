@@ -132,6 +132,7 @@ set -gx SYSTEMD_EDITOR "micro"
 
 set -gx MICRO_CONFIG_HOME $HOME/.config/micro
 set -gx MICRO_TRUECOLOR 1
+set -gx _JAVA_AWT_WM_NONREPARENTING 1
 
 set -gx MOZ_ENABLE_WAYLAND 1
 set -gx MOZ_WEBRENDER 1
@@ -152,8 +153,6 @@ set -gx OBS_VKCAPTURE 1
 set -gx DOTNET_SYSTEM_GLOBALIZATION_INVARIANT false
 set -gx FREETYPE_PROPERTIES "hinting=true:hintstyle=hintslight:antialias=rgb:subpixel_rendering=rgb"
 set -gx GTK_A11Y "none"
-
-
 
 set fish_color_autosuggestion "#747e93"
 set -U fish_greeting
