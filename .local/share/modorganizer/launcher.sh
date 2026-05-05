@@ -141,6 +141,7 @@ show_main_screen() {
                 ;;
             2)  # Open Folder — act directly on the selected row
                 [[ -n "$selected" ]] && open_folder_for_exe "$selected"
+                exit 0
                 ;;
             3)  # Install MO2
                 show_install_screen
