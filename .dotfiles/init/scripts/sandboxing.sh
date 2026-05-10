@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Setup Apparmor
-groupadd -r audit
+groupadd -r audit 2>/dev/null || true
 gpasswd -a $USER audit
 
 if ! grep -q '^log_group = audit' /etc/audit/auditd.conf; then
@@ -19,4 +19,4 @@ rm /usr/local/bin/steam
 rm /usr/local/bin/firefox
 
 # Delete empty folders created by firecfg
-find ~/ -type d -print0 | sort -rz | xargs -0 rmdir 2>/dev/null
+find ~/ -maxdepth 3 -type d -empty -delete 2>/dev/null || true

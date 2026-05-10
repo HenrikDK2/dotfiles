@@ -2,7 +2,6 @@
 
 PROFILE="noum2xsj.default"
 PROFILE2="5twvy6h9.default-release"
-START_LAYOUT=false
 
 merge_prefs() {
     local src="$1" dst="$2"
@@ -20,12 +19,6 @@ merge_prefs() {
     done < "$src"
     echo "  ✔ Merged prefs: $dst"
 }
-
-# If running in user env, prevent layout from starting firefox
-if pgrep -x layout.sh; then
-	START_LAYOUT=true
-	killall layout.sh 2>/dev/null
-fi
 
 # Kill both thunderbird and firefox
 procs="firefox firefox-bin thunderbird thunderbird-bin"
@@ -85,7 +78,3 @@ for THUNDERBIRD_PATH in "${THUNDERBIRD_PATHS[@]}"; do
         done < <(find "$THUNDERBIRD_PATH" -mindepth 2 -maxdepth 2 -name "prefs.js" -print0)
     fi
 done
-
-if [ "$START_LAYOUT" = true ]; then
-	setsid ~/.config/hypr/layout.sh &>/dev/null &
-fi
