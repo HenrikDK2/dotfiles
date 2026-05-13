@@ -26,6 +26,7 @@ readonly EXCLUDED_PATTERNS=(
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
     "(link2ea://launchgame|/Electronic Arts/EA Desktop)" # EA Games Launcher
     "C:/windows/.*"
+    "/steamapps/compatdata/"
 
     # Vortex
 	"Black Tree Gaming Ltd/Vortex"
