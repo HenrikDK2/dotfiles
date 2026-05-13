@@ -137,7 +137,7 @@ function set_process_priority() {
 
     for pid in "${pids[@]}"; do
 		renice -n -11 -p "$pid" >/dev/null 2>&1 || true
-		ionice -c1 -n0 -p "$pid" >/dev/null 2>&1 || true
+		ionice -c2 -n0 -p "$pid" >/dev/null 2>&1 || true
     done
 }
 
