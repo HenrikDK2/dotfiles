@@ -4,6 +4,7 @@ set -euo pipefail
 BUILD_USER="buildpkg"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_DIR="$SCRIPT_DIR/pkgs"
+FAILED_PACKAGES=()  # Track failed packages
 
 log() {
     local level="$1"
@@ -142,6 +143,7 @@ build_and_install_package() {
         log ERROR "[$PKGNAME] Build failed"
         rm -rf "$build_dir"
         echo "==============================="
+        FAILED_PACKAGES+=("$PKGNAME")  # Track failure
         return 1
     fi
 
@@ -151,11 +153,19 @@ build_and_install_package() {
         log ERROR "[$PKGNAME] No package files found after build"
         rm -rf "$build_dir"
         echo "==============================="
+        FAILED_PACKAGES+=("$PKGNAME")  # Track failure
         return 1
     fi
 
     log INFO "[$PKGNAME] Installing..."
-    pacman -U --ask 4 "${pkg_files[@]}"
+    if ! pacman -U --ask 4 "${pkg_files[@]}"; then
+        log ERROR "[$PKGNAME] Installation failed"
+        rm -rf "$build_dir"
+        echo "==============================="
+        FAILED_PACKAGES+=("$PKGNAME")  # Track failure
+        return 1
+    fi
+    
     rm -rf "$build_dir"
     log INFO "[$PKGNAME] Installed successfully"
     echo "==============================="
@@ -167,9 +177,19 @@ main() {
     find_pkgbuilds
 
     for pkg_dir in "${PKGBUILD_DIRS[@]}"; do
-        build_and_install_package "$pkg_dir"
+        build_and_install_package "$pkg_dir" || true  # Continue even if one fails
         sleep 1
     done
+
+    # Exit with error if any packages failed
+    if [[ ${#FAILED_PACKAGES[@]} -gt 0 ]]; then
+        echo
+        log ERROR "The following packages failed to build/install:"
+        for pkg in "${FAILED_PACKAGES[@]}"; do
+            log ERROR "  - $pkg"
+        done
+        exit 1
+    fi
 }
 
 main "$@"
