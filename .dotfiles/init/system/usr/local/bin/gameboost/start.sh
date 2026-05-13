@@ -132,7 +132,18 @@ function tlp_performance() {
 	fi
 }
 
+function set_process_priority() {
+    local pids=("$@")
+
+    for pid in "${pids[@]}"; do
+		renice -n -11 -p "$pid" >/dev/null 2>&1 || true
+		ionice -c1 -n0 -p "$pid" >/dev/null 2>&1 || true
+    done
+}
+
 function main() {
+    set_process_priority "$@"
+    
 	if is_laptop; then
 		tlp_performance
 	else
