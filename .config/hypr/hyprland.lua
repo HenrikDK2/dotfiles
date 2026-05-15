@@ -239,10 +239,8 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 
 -- Discord push-to-mute
 local discord_shortcut = { mods = "", key = "INSERT", window = "class:discord" }
-for _, prefix in ipairs({"", "SHIFT + "}) do
-    hl.bind(prefix .. "mouse:276", hl.dsp.send_shortcut(discord_shortcut), { non_consuming = true, release = false })
-    hl.bind(prefix .. "mouse:276", hl.dsp.send_shortcut(discord_shortcut), { non_consuming = true, release = true })
-end
+hl.bind("mouse:276", hl.dsp.send_shortcut(discord_shortcut), { ignore_mods = true, non_consuming = true, release = false })
+hl.bind("mouse:276", hl.dsp.send_shortcut(discord_shortcut), { ignore_mods = true, non_consuming = true, release = true })
 
 --------------------------------------------------------------------------------
 -- WINDOW & LAYER RULES
