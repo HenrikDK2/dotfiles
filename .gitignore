@@ -64,7 +64,7 @@
 !.config/mpv/mpv.conf
 
 !.config/hypr/
-!.config/hypr/hyprland.conf
+!.config/hypr/hyprland.lua
 !.config/hypr/hyprlock.conf
 !.config/hypr/hypridle.conf
 !.config/hypr/layout.sh
