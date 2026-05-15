@@ -247,10 +247,10 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 
 -- Push to mute on Discord
 local shortcut = { mods = "", key = "INSERT", window = "class:discord" }
-hl.bind("mouse:276", hl.dsp.send_shortcut(shortcut), { release = false } )
-hl.bind("mouse:276", hl.dsp.send_shortcut(shortcut), { release = true } )
-hl.bind("SHIFT + mouse:276", hl.dsp.send_shortcut(shortcut), { release = false } )
-hl.bind("SHIFT + mouse:276", hl.dsp.send_shortcut(shortcut), { release = true } )
+hl.bind("mouse:276", hl.dsp.send_shortcut(shortcut), { non_consuming = true, release = false } )
+hl.bind("mouse:276", hl.dsp.send_shortcut(shortcut), { non_consuming = true, release = true } )
+hl.bind("SHIFT + mouse:276", hl.dsp.send_shortcut(shortcut), { non_consuming = true, release = false } )
+hl.bind("SHIFT + mouse:276", hl.dsp.send_shortcut(shortcut), { non_consuming = true, release = true } )
 
 ---------------------------------------
 ---- WINDOWS & LAYERS & WORKSPACES ----
