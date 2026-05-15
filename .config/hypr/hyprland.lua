@@ -244,7 +244,10 @@ for _, prefix in ipairs({"", "SHIFT + "}) do
     hl.bind(prefix .. "mouse:276", hl.dsp.send_shortcut(discord_shortcut), { non_consuming = true, release = true })
 end
 
--- Window Rules
+--------------------------------------------------------------------------------
+-- WINDOW & LAYER RULES
+--------------------------------------------------------------------------------
+
 local rules = {
     {"float-zenity", {class="zenity"}, {float=true}}, {"float-yad", {class="yad"}, {float=true}},
     {"waybar-no-anim", {class="waybar"}, {no_anim=true}},
