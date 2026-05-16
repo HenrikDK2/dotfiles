@@ -105,10 +105,6 @@ filter_systemctl() {
         | grep -Ev "$pattern"
 }
 
-if [ -f "$HOME/.cache/audit/soft_reboot" ] && [ $(( $(date +%s) - $(stat -c %Y "$HOME/.cache/audit/soft_reboot") )) -lt 60 ]; then
-   	exit 0
-fi
-
 while getopts ":qb" opt; do
     case $opt in
         b)  # Will run in background, if any issues are detected, then it will run in the foreground

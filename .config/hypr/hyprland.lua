@@ -193,7 +193,7 @@ hl.bind("Print", hl.dsp.exec_cmd("slurp | grim -g - - | swappy -f -"))
 
 -- Window management
 hl.bind(mainMod .. " + D", hl.dsp.window.close())
-hl.bind(mainMod .. " + ESCAPE", hl.dsp.exit())
+hl.bind(mainMod .. " + ESCAPE", hl.dsp.exec_cmd("pkexec ~/.dotfiles/scripts/soft_reboot.sh"))
 hl.bind(mainMod .. " + SHIFT + Space", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.window.center())
