@@ -217,7 +217,6 @@ hl.bind(mainMod .. " + SHIFT + 0", hl.dsp.window.move({ workspace = "special", f
 
 -- Microphone control
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("$HOME/.dotfiles/scripts/mute_mic.sh"))
-hl.bind("ALT + mouse:276", hl.dsp.exec_cmd("$HOME/.dotfiles/scripts/mute_mic.sh"))
 
 -- Mouse bindings
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
