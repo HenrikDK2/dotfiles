@@ -27,6 +27,7 @@ readonly EXCLUDED_PATTERNS=(
     "(link2ea://launchgame|/Electronic Arts/EA Desktop)" # EA Games Launcher
     "C:/windows/.*"
     "/steamapps/compatdata/"
+    "/winetricks"
 
     # Vortex
 	"Black Tree Gaming Ltd/Vortex"
