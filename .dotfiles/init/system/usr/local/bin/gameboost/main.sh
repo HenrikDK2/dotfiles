@@ -2,9 +2,7 @@
 
 readonly GAMEBOOST_FLAG="/tmp/gameboost-running.flag"
 readonly LOG_FILE="/tmp/gameboost.log"
-readonly COOLDOWN_SECONDS=120  # 2 minutes
 CURRENT_PID=""
-LAST_SWITCH_TIME=0
 
 readonly GAME_PATTERNS=(
     ".*/proton waitforexitandrun"
@@ -38,7 +36,7 @@ readonly EXCLUDED_PATTERNS=(
     "MO2/mods"
 	"MO2/explorer++"
     "MO2/loot/lootcli.exe"
-    
+
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
     "/*[Ll]auncher*.exe"
     "/*[Ll]aunch[Pp]ad*.exe"
@@ -53,7 +51,7 @@ readonly EXCLUDED_PATTERNS=(
 build_pattern() {
     local IFS='|'
     local combined=()
-    
+
     for p in "$@"; do
         combined+=("$p")
     done
@@ -75,56 +73,32 @@ notify_user() {
         echo "$id"
         break
     done)
-    
+
     [[ -z "$session" ]] && return
-    
+
     local user=$(loginctl show-session "$session" -p Name --value)
     local uid=$(id -u "$user")
     local dbus="unix:path=/run/user/$uid/bus"
-    
+
     sudo -u "$user" DBUS_SESSION_BUS_ADDRESS="$dbus" DISPLAY=:0 notify-send --app-name=GameBoost "GameBoost" "$1"
     log_message "Notification sent: $1"
 }
 
-check_cooldown() {
-    local current_time=$(date +%s)
-    local time_since_last=$((current_time - LAST_SWITCH_TIME))
-    
-    if [[ $time_since_last -lt $COOLDOWN_SECONDS ]]; then
-        return 1
-    fi
-    return 0
-}
-
 enable_game_mode() {
     if [[ ! -f "$GAMEBOOST_FLAG" ]]; then
-        # Check cooldown before switching modes
-        if ! check_cooldown; then
-            log_message "Skipping switch to performance mode (cooldown active)"
-            return
-        fi
-        
         notify_user "Switching to performance mode"
         touch "$GAMEBOOST_FLAG"
         /usr/local/bin/gameboost/start.sh "$@" &
-        LAST_SWITCH_TIME=$(date +%s)
     fi
 }
 
 disable_game_mode() {
     if [[ -f "$GAMEBOOST_FLAG" ]]; then
-        # Check cooldown before switching modes
-        if ! check_cooldown; then
-            log_message "Skipping switch to power-saving mode (cooldown active)"
-            return
-        fi
-        
         notify_user "Switching to power-saving mode"
         pkill -f '/usr/local/bin/gameboost/start.sh'
         rm -f "$GAMEBOOST_FLAG"
         /usr/local/bin/gameboost/exit.sh &
         CURRENT_PID=""
-        LAST_SWITCH_TIME=$(date +%s)
     fi
 }
 
@@ -136,21 +110,21 @@ detect_game_process() {
 
     # Early exit if no matches
     [[ -z "$game_procs" ]] && return
-    
+
     local pid cmdline
     while read -r pid cmdline; do
         # Skip if empty
         [[ -z "$pid" ]] && continue
-        
+
         matching_pids+=("$pid")
-        
+
         # Set first match as current PID if not already set
         if [[ -z "$CURRENT_PID" ]]; then
             CURRENT_PID="$pid"
             log_message "Detected game process: PID=$CURRENT_PID, CMD='$cmdline'"
         fi
     done <<< "$game_procs"
-    
+
     # Enable game mode with all matching PIDs
     if [[ ${#matching_pids[@]} -gt 0 ]]; then
         enable_game_mode "${matching_pids[@]}"
@@ -160,12 +134,12 @@ detect_game_process() {
 verify_game_process() {
     if ! kill -0 "$CURRENT_PID" 2>/dev/null; then
         log_message "Game process ended: PID=$CURRENT_PID"
-        
+
         # Check if any other game processes are still running
         local other_games=$(ps ax -o pid=,command= | sed 's|\\|/|g' \
             | grep -E "$GAME_PATTERN" \
             | grep -vE "$EXCLUDED_PATTERN")
-        
+
         if [[ -n "$other_games" ]]; then
             # Other games still running - switch tracking to the first one
             local new_pid=$(echo "$other_games" | head -1 | awk '{print $1}')
