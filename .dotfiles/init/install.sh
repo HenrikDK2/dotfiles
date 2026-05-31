@@ -4,6 +4,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source $SCRIPT_DIR/env.sh
 
+function _on_exit() {
+    local exit_code=$?
+    
+    if [[ $exit_code -eq 1 && $_RETRY_COUNT -lt 3 ]]; then
+        export _RETRY_COUNT=$((_RETRY_COUNT + 1))
+        echo "Script exited with code 1. Retrying ($_RETRY_COUNT/3)..."
+        sleep 2
+        trap - EXIT
+        exec "$0" "$@"
+    fi
+}
+
+trap _on_exit EXIT
+
 function section() {
     echo
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -27,6 +41,10 @@ function clear_screen() {
 
     tput cup "$offset" 0
 }
+
+if [[ -z "$_RETRY_COUNT" ]]; then
+    export _RETRY_COUNT=0
+fi
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script needs to be run as root (su)"
