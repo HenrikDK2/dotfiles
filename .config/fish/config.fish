@@ -176,6 +176,6 @@ if status is-interactive
     end
 end
 
-# Steam launch options comment
-# file.exe - Path to a custom .exe file, relative to the game's .exe directory.
-# cmd=(gamescope -w 2560 -h 1440 -- %command%); cmd[-1]=file.exe; "${cmd[@]}"
+### Below is a clean way to redirect to another .exe in steam launch options 
+# cmd=(%command%); cmd[-1]="/path/to/your/custom.exe"; "${cmd[@]}"
+
