@@ -36,19 +36,9 @@ local fileManager = "nemo"
 local menu = "$HOME/.config/rofi/drun_launcher.sh"
 
 hl.on("hyprland.start", function()
-    hl.exec_cmd(terminal)
     hl.exec_cmd("bash -c '$HOME/.config/hypr/layout.sh'")
     hl.exec_cmd("bash -c '$HOME/.dotfiles/login.sh'")
-
-    hl.exec_cmd(
-        "gsettings set org.cinnamon.desktop.default-applications.terminal exec '" ..
-        terminal ..
-        "'"
-    )
-
-    hl.exec_cmd(
-        "gsettings set org.cinnamon.desktop.default-applications.terminal exec-arg '-e'"
-    )
+    hl.exec_cmd("gsettings set org.cinnamon.desktop.default-applications.terminal exec alacritty")
 end)
 
 -- Environment variables
