@@ -117,15 +117,11 @@ set -gx _JAVA_AWT_WM_NONREPARENTING 1
 set -gx MOZ_ENABLE_WAYLAND 1
 set -gx MOZ_WEBRENDER 1
 
-set -gx PROTON_FORCE_LARGE_ADDRESS_AWARE 1
-set -gx PROTON_USE_WOW64 1
-set -gx LD_PRELOAD ""
-
-set -gx AMD_VULKAN_ICD "RADV"
-set -gx ENABLE_LAYER_MESA_ANTI_LAG 1
-
 set -gx XDG_DOWNLOAD_DIR "$HOME/Downloads"
 set -gx XDG_DATA_DIRS "/usr/local/share:/usr/share:$HOME/.local/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share" rofi -theme ./styles/theme.rasi -show drun
+
+# vulkan-low-latency-layer
+set -gx LOW_LATENCY_LAYER 1
 
 set -gx _JAVA_AWT_WM_NONREPARENTING 1
 set -gx ANDROID_HOME $HOME/Android/Sdk

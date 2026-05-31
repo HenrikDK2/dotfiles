@@ -27,6 +27,9 @@ readonly EXCLUDED_PATTERNS=(
     "/steamapps/compatdata/"
     "/winetricks"
 
+	# FFXI
+    "/Windower.exe"
+
     # Vortex
 	"Black Tree Gaming Ltd/Vortex"
     "Vortex/Vortex.exe"
