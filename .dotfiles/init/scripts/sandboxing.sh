@@ -20,3 +20,9 @@ rm /usr/local/bin/firefox
 
 # Delete empty folders created by firecfg
 find ~/ -maxdepth 3 -type d -empty -delete 2>/dev/null || true
+
+# Add user to firejail.users if not already present
+FIREJAIL_USERS="/etc/firejail/firejail.users"
+if ! grep -qx "$USER" "$FIREJAIL_USERS"; then
+    echo "$USER" >> "$FIREJAIL_USERS"
+fi
