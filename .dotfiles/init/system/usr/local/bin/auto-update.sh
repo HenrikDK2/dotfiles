@@ -5,7 +5,6 @@ IFS=$'\n\t'
 UPDATE_INTERVAL_FILE="/var/tmp/update_script_last_run"
 UPDATE_INTERVAL=$((24 * 60 * 60))  # 24 hours
 
-# Network check function with max attempts
 function wait_for_network() {
     local max_attempts=10
     local attempt=0
@@ -29,36 +28,38 @@ function wait_for_network() {
 }
 
 function exit_if_updated_recently() {
-    [[ -f "$UPDATE_INTERVAL_FILE" ]] || return
+    if [[ -f "$UPDATE_INTERVAL_FILE" ]]; then
+        local now last_run age value unit
+        now=$(date +%s)
+        last_run=$(stat -c %Y "$UPDATE_INTERVAL_FILE")
+        age=$((now - last_run))
 
-    local now last_run age value unit
-    now=$(date +%s)
-    last_run=$(stat -c %Y "$UPDATE_INTERVAL_FILE")
-    age=$((now - last_run))
+        if (( age < UPDATE_INTERVAL )); then
+            if (( age < 3600 )); then
+                value=$((age / 60))
+                unit="minutes"
+                (( value == 0 )) && { value="<1"; unit="minute"; }
+            else
+                value=$((age / 3600))
+                unit="hours"
+            fi
 
-    (( age >= UPDATE_INTERVAL )) && return
-
-    if (( age < 3600 )); then
-        value=$((age / 60))
-        unit="minutes"
-        (( value == 0 )) && { value="<1"; unit="minute"; }
-    else
-        value=$((age / 3600))
-        unit="hours"
+            echo "Last successful update was ${value} ${unit} ago (< 24h). Skipping..."
+            exit 0
+        fi
     fi
 
-    echo "Last successful update was ${value} ${unit} ago (< 24h). Skipping..."
-    exit 0
+    return 0
 }
 
 # Enforce 24h update interval
 exit_if_updated_recently
 
 # Wait for network before proceeding
-wait_for_network || exit 1
+wait_for_network
 
 # System packages updates
-pacman -Syu --ask 4 
+pacman -Syu --ask 4
 
 # Flatpak updates
 if command -v flatpak &>/dev/null; then
@@ -69,5 +70,5 @@ fi
 # Update local_pkgs
 /usr/local/bin/local_pkgs/main.sh
 
-# Create time stamp, if successful
+# Create timestamp only if everything succeeded
 touch "$UPDATE_INTERVAL_FILE"
