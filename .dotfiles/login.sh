@@ -56,10 +56,5 @@ done
 hyprctl eval 'hl.exec_cmd("[workspace 2 silent] discord")' &
 hyprctl eval 'hl.exec_cmd("[workspace 2 silent] steam")' &
 
-# Don't run audit script if using soft-reboot, causes issues with services like auditd, can't be fixed.
-if [ -f "$HOME/.cache/audit/soft_reboot" ] && [ $(( $(date +%s) - $(stat -c %Y "$HOME/.cache/audit/soft_reboot") )) -lt 120 ]; then
-   	exit 0
-fi
-
 # Audit script to check for system issues (Only runs in foreground if detected)
 $HOME/.dotfiles/scripts/audit.sh -b

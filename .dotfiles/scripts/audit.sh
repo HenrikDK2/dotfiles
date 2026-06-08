@@ -14,9 +14,9 @@ BACKGROUND=false
 notify() {
     local title="System Check: Attention Required"
     local message="$1"
-    
+
     if command -v notify-send >/dev/null; then
-        notify-send "$title" "$message"    
+        notify-send "$title" "$message"
     fi
 }
 
@@ -57,7 +57,7 @@ format_section() {
     else
         echo "-- No entries --"
     fi
-    
+
     echo
 }
 
@@ -65,31 +65,40 @@ filter_journalctl() {
 	# These patterns are what I consider non issues, might be race conditions --
 	# GameBoost disabling service, or harmless warnings reported as errors
 	local patterns=(
-	    "gkr-pam: unable to locate daemon control file"
-	    "Inconsistent IP pool management \(start not found\)"
-	    "amdgpu: Overdrive is enabled"
-	    "usb 1-3.3: device descriptor read/64, error -32"
-	    "Failed to find module 'nvidia-uvm'"
-	    "Failed to write OSC sequence to TTY, ignoring: Resource temporarily unavailable"
-	    "Activation request for 'org.freedesktop.nm_dispatcher' failed."
-	    "disabled by hub \(EMI\?\), re-enabling"
-	    "type:fuse.portal - invalid whitelist mount"
-	    "Failed to start Timed resync"
-	    "arch kernel: audit: error in audit_log_subj_ctx"
-	    "Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
-	    "nm-openvpn\\[.*\\]: event_wait : Interrupted system call \\(fd=-1,code=4\\)"
-	    "Activation request for 'org.bluez' failed."
-	    "audit: failed to open auditd socket: Protocol not supported"
-	    "systemd-journald-audit.socket: Socket service systemd-journald.service already active, refusing."
-	    "Failed to start Portal service \\(GTK/GNOME implementation\\)."
-	    "Failed to listen on Journal Audit Socket."
-	    "Failed to print table: Broken pipe"
-	    "Activation request for 'org.freedesktop.impl.portal.desktop.gtk' failed."
-	    "AEAD Decrypt error: bad packet ID \\(may be a replay\\)"
-	    "gkr-pam: couldn't unlock the login keyring."
-	    "terminated abnormally without generating a coredump" # Coredump is disabled, so this is generated when programs are killed
+		"gkr-pam: unable to locate daemon control file"
+		"Inconsistent IP pool management \(start not found\)"
+		"amdgpu: Overdrive is enabled"
+		"usb 1-3.3: device descriptor read/64, error -32"
+		"Failed to find module 'nvidia-uvm'"
+		"Failed to write OSC sequence to TTY, ignoring: Resource temporarily unavailable"
+		"Activation request for 'org.freedesktop.nm_dispatcher' failed."
+		"disabled by hub \(EMI\?\), re-enabling"
+		"type:fuse.portal - invalid whitelist mount"
+		"Failed to start Timed resync"
+		"arch kernel: audit: error in audit_log_subj_ctx"
+		"Failed to write \"max_performance\" to sysfs attribute \"link_power_management_policy\""
+		"nm-openvpn\\[.*\\]: event_wait : Interrupted system call \\(fd=-1,code=4\\)"
+		"Activation request for 'org.bluez' failed."
+		"audit: failed to open auditd socket: Protocol not supported"
+		"systemd-journald-audit.socket: Socket service systemd-journald.service already active, refusing."
+		"Failed to start Portal service \\(GTK/GNOME implementation\\)."
+		"Failed to listen on Journal Audit Socket."
+		"Failed to print table: Broken pipe"
+		"Activation request for 'org.freedesktop.impl.portal.desktop.gtk' failed."
+		"AEAD Decrypt error: bad packet ID \\(may be a replay\\)"
+		"gkr-pam: couldn't unlock the login keyring."
+		"terminated abnormally without generating a coredump" # Coredump is disabled, so this is generated when programs are killed
 		"write UDPv4 .* Network is unreachable"
 		"Failed to check if symlink source path '/run/host/io.systemd.*' exists: Link has been severed"
+
+		# Issues caused by auditd system service not liking soft-reboot
+		"Failed to start Disk Manager"
+		"Failed to listen on Journal Sockets."
+		"Too many messages being logged to kmsg"
+		"Failed to start Security Audit Logging Service"
+		"Failed to start Load Audit Rules"
+		"auditd\\[.*\\]: Unable to set initial audit startup state"
+		"auditd\\[.*\\]: Cannot daemonize"
 	)
     local pattern=$(IFS='|'; echo "${patterns[*]}")
     journalctl -b -p 3 --no-pager | grep -Ev "$pattern" | tail -n 20
@@ -98,6 +107,10 @@ filter_journalctl() {
 filter_systemctl() {
     local patterns=(
         "^session-[0-9]+\\.scope$"
+
+        # Issues caused by auditd system service not liking soft-reboot
+        "^audit-rules\\.service$"
+        "^auditd\\.service$"
     )
     local pattern=$(IFS='|'; echo "${patterns[*]}")
     systemctl --failed --no-legend --plain 2>/dev/null \
@@ -140,7 +153,7 @@ clamav_logs=("/var/log/clamav/clamd.log" "/var/log/clamav/clamonacc.log")
 
 for log in "${clamav_logs[@]}"; do
     infected_lines=$(grep -i -E "infected|FOUND" "$log" 2>/dev/null)
-    
+
     if [ -n "$infected_lines" ]; then
         if [ -n "$clamav_results" ]; then
             clamav_results+=$'\n\n'
