@@ -92,6 +92,8 @@ filter_journalctl() {
 		"Failed to check if symlink source path '/run/host/io.systemd.*' exists: Link has been severed"
 
 		# Issues caused by auditd system service not liking soft-reboot
+		"Job for auditd\\.service failed"
+		"journalctl -xeu auditd\\.service"
 		"Failed to start Disk Manager"
 		"Failed to listen on Journal Sockets."
 		"Too many messages being logged to kmsg"
@@ -106,6 +108,7 @@ filter_journalctl() {
 
 filter_systemctl() {
     local patterns=(
+        "^polkit-agent-helper@"
         "^session-[0-9]+\\.scope$"
 
         # Issues caused by auditd system service not liking soft-reboot
