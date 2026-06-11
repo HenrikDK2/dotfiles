@@ -90,7 +90,8 @@ filter_journalctl() {
 		"terminated abnormally without generating a coredump" # Coredump is disabled, so this is generated when programs are killed
 		"write UDPv4 .* Network is unreachable"
 		"Failed to check if symlink source path '/run/host/io.systemd.*' exists: Link has been severed"
-
+		"ATTR{power/wakeup}=\"enabled\""
+		
 		# Issues caused by auditd system service not liking soft-reboot
 		"Job for auditd\\.service failed"
 		"journalctl -xeu auditd\\.service"
