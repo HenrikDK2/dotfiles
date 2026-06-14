@@ -77,6 +77,7 @@ BWRAP_ARGS=(
 	--ro-bind-try /usr/lib32 /usr/lib32
 	--ro-bind-try /usr/lib64 /usr/lib64
 	--ro-bind-try /usr/sbin /usr/sbin
+	--ro-bind-try /usr/share/glycin-loaders /usr/share/glycin-loaders
 	--ro-bind-try /usr/share/applications/mimeinfo.cache /usr/share/applications/mimeinfo.cache
 	--ro-bind-try /usr/share/ca-certificates /usr/share/ca-certificates
 	--ro-bind-try /usr/share/drirc.d /usr/share/drirc.d
@@ -95,11 +96,7 @@ BWRAP_ARGS=(
 	--ro-bind-try /usr/share/steam/compatibilitytools.d /usr/share/steam/compatibilitytools.d
 	--ro-bind-try /usr/share/themes/Default/gtk-3.0 /usr/share/themes/Default/gtk-3.0
 	--ro-bind-try /usr/share/vulkan /usr/share/vulkan
-	--ro-bind-try /usr/share/X11/locale/compose.dir /usr/share/X11/locale/compose.dir
-	--ro-bind-try /usr/share/X11/locale/en_US.UTF-8/Compose /usr/share/X11/locale/en_US.UTF-8/Compose
-	--ro-bind-try /usr/share/X11/locale/en_US.UTF-8/XLC_LOCALE /usr/share/X11/locale/en_US.UTF-8/XLC_LOCALE
-	--ro-bind-try /usr/share/X11/locale/locale.alias /usr/share/X11/locale/locale.alias
-	--ro-bind-try /usr/share/X11/locale/locale.dir /usr/share/X11/locale/locale.dir
+	--ro-bind-try /usr/share/X11/locale /usr/share/X11/locale
 	--ro-bind-try /usr/share/xkeyboard-config-2 /usr/share/xkeyboard-config-2
 	--ro-bind-try /usr/share/zoneinfo /usr/share/zoneinfo
 

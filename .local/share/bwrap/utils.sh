@@ -236,6 +236,51 @@ utils::debug() {
 		}
 	}
 
+	gtk_glycin_enrichment() {
+		local item
+		local gtk_detected=0
+		local glycin_needed=0
+	
+		set -f
+	
+		for item in "$@"; do
+			printf '%s\n' "$item"
+	
+			# Detect GTK usage patterns
+			case "$item" in
+				*/gtk*|*/libgtk*|*/gdk*|*/glib*|*/gio*|*/pango*|*/cairo*)
+					gtk_detected=1
+					;;
+			esac
+	
+			# Direct glycin access already implies need
+			case "$item" in
+				*/glycin* )
+					glycin_needed=1
+					;;
+			esac
+		done
+	
+		set +f
+	
+		# Only inject if GTK is in use and glycin wasn't already detected
+		if [[ "$gtk_detected" -eq 1 && "$glycin_needed" -eq 0 ]]; then
+	
+			utils::log INFO "GTK detected → adding glycin loader resources"
+	
+			# Core glycin loader path (your fix)
+			[[ -d /usr/share/glycin-loaders ]] && \
+				printf '%s\n' "/usr/share/glycin-loaders"
+	
+			# Also include common GTK4 image backend locations (safe fallback)
+			[[ -d /usr/lib/gdk-pixbuf-2.0 ]] && \
+				printf '%s\n' "/usr/lib/gdk-pixbuf-2.0"
+	
+			[[ -d /usr/lib/gio/modules ]] && \
+				printf '%s\n' "/usr/lib/gio/modules"
+		fi
+	}
+
 	gpu_device_enrichment() {
 		local item
 		local -a out=()
@@ -634,6 +679,7 @@ utils::debug() {
 
 			# Locale / time / system data
 			/usr/share/locale/*) cut_path="/usr/share/locale" ;;
+			/usr/share/X11/locale/*) cut_path="/usr/share/X11/locale" ;;
 			/usr/share/zoneinfo/*) cut_path="/usr/share/zoneinfo" ;;
 
 			# Fonts & fontconfig
@@ -851,6 +897,7 @@ utils::debug() {
 			isolate_deepest_paths \
 			gpu_device_enrichment \
 			pipewire_enrichment \
+			gtk_glycin_enrichment \
 			filter_existing_paths \
 			collapse_filesystem_roots \
 			ensure_multilib_roots \
