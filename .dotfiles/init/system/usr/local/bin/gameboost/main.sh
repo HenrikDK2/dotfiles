@@ -29,6 +29,7 @@ readonly EXCLUDED_PATTERNS=(
 
 	# FFXI
     "/Windower.exe"
+    "/PlayOnlineViewer/pol.exe"
 
     # Vortex
 	"Black Tree Gaming Ltd/Vortex"
