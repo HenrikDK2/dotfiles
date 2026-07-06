@@ -29,7 +29,6 @@ readonly EXCLUDED_PATTERNS=(
 
 	# FFXI
     "/Windower.exe"
-    "/PlayOnlineViewer/pol.exe"
 
     # Vortex
 	"Black Tree Gaming Ltd/Vortex"
@@ -51,20 +50,24 @@ readonly EXCLUDED_PATTERNS=(
     ".*[Rr]edist.*\.exe"
 )
 
-# Build optimized regex patterns from arrays (done once at startup)
+readonly GPU_THRESHOLD=20   # Minimum threshold to run the (relatively expensive) ps+grep pattern
+
+# Populated once at startup by detect_gpu_vendor: "nvidia", "amd", "intel", or "" (none found)
+GPU_VENDOR=""
+AMD_GPU_BUSY_PATH=""
+
+# Build a single "a|b|c" regex from an array (used for GAME_PATTERN / EXCLUDED_PATTERN below)
 build_pattern() {
     local IFS='|'
-    local combined=()
-
-    for p in "$@"; do
-        combined+=("$p")
-    done
-
-    echo "${combined[*]}"
+    echo "$*"
 }
 
 readonly GAME_PATTERN=$(build_pattern "${GAME_PATTERNS[@]}")
 readonly EXCLUDED_PATTERN=$(build_pattern "${EXCLUDED_PATTERNS[@]}")
+
+# =============================================================================
+# LOGGING & NOTIFICATIONS
+# =============================================================================
 
 log_message() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') | $1" >> "$LOG_FILE"
@@ -88,6 +91,76 @@ notify_user() {
     log_message "Notification sent: $1"
 }
 
+# =============================================================================
+# GPU ACTIVITY DETECTION
+# =============================================================================
+
+detect_gpu_vendor() {
+    if command -v nvidia-smi &>/dev/null; then
+        GPU_VENDOR="nvidia"
+        log_message "GPU monitoring: using nvidia-smi"
+        return
+    fi
+
+    # Prefer a discrete/amdgpu card if there are multiple DRM cards (e.g. laptop iGPU+dGPU)
+    local card driver
+    for card in /sys/class/drm/card*/device; do
+        [[ -r "$card/gpu_busy_percent" ]] || continue
+        driver=$(basename "$(readlink -f "$card/driver" 2>/dev/null)" 2>/dev/null)
+        if [[ -n "$GPU_CARD" && "$card" == *"$GPU_CARD"* ]]; then
+            AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
+            break
+        elif [[ -z "$AMD_GPU_BUSY_PATH" ]]; then
+            AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
+        fi
+        # If we find an amdgpu-driven card, prefer it over any earlier match
+        [[ "$driver" == "amdgpu" ]] && AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
+    done
+
+    if [[ -n "$AMD_GPU_BUSY_PATH" ]]; then
+        GPU_VENDOR="amd"
+        log_message "GPU monitoring: using $AMD_GPU_BUSY_PATH"
+        return
+    fi
+
+    if command -v intel_gpu_top &>/dev/null; then
+        GPU_VENDOR="intel"
+        log_message "GPU monitoring: using intel_gpu_top"
+        return
+    fi
+
+    log_message "GPU monitoring: no supported GPU tool found, GPU gating disabled"
+}
+
+# Returns an integer usage percentage on stdout, or nothing if unavailable.
+get_gpu_usage() {
+    local usage=""
+
+    case "$GPU_VENDOR" in
+        nvidia) usage=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1) ;;
+        amd)    usage=$(cat "$AMD_GPU_BUSY_PATH" 2>/dev/null) ;;
+        intel)  usage=$(timeout 1 intel_gpu_top -s 500 -o - 2>/dev/null \
+                        | grep -m1 -oP '"Render/3D/0":\s*{\s*"busy":\s*\K[0-9.]+') ;;
+    esac
+
+    # Normalize: strip decimals, blank on anything non-numeric
+    usage="${usage%%.*}"
+    [[ "$usage" =~ ^[0-9]+$ ]] && echo "$usage"
+}
+
+gpu_indicates_game_activity() {
+    [[ -z "$GPU_VENDOR" ]] && return 0
+
+    local usage=$(get_gpu_usage)
+    [[ -z "$usage" ]] && return 0
+
+    (( usage >= GPU_THRESHOLD ))
+}
+
+# =============================================================================
+# GAME MODE CONTROL
+# =============================================================================
+
 enable_game_mode() {
     if [[ ! -f "$GAMEBOOST_FLAG" ]]; then
         notify_user "Switching to performance mode"
@@ -105,6 +178,10 @@ disable_game_mode() {
         CURRENT_PID=""
     fi
 }
+
+# =============================================================================
+# GAME PROCESS DETECTION
+# =============================================================================
 
 detect_game_process() {
     local matching_pids=()
@@ -157,6 +234,10 @@ verify_game_process() {
     fi
 }
 
+# =============================================================================
+# STARTUP
+# =============================================================================
+
 # Cleanup on start
 [[ -f "$GAMEBOOST_FLAG" ]] && rm -f "$GAMEBOOST_FLAG"
 > "$LOG_FILE"
@@ -180,15 +261,21 @@ for svc in "${services[@]}"; do
     fi
 done
 
-# Main loop
+detect_gpu_vendor
 log_message "GameBoost script started."
+
+# =============================================================================
+# MAIN LOOP
+# =============================================================================
 
 while true; do
     if [[ -z "$CURRENT_PID" ]]; then
-        detect_game_process
-        sleep 20   # idle mode
+        if gpu_indicates_game_activity; then
+            detect_game_process
+        fi
     else
         verify_game_process
-        sleep 10   # game running
     fi
+
+    sleep 10
 done
