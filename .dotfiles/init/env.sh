@@ -163,6 +163,7 @@ SYSTEM_SERVICES_TO_ENABLE=(
     "pacman-remove-db-lock.service"
     "fstrim.timer"
     "clean-cache.timer"
+    "clean_trash.timer"
 )
 
 SYSTEM_SERVICES_TO_MASK=(

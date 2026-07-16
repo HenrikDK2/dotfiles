@@ -1,0 +1,23 @@
+[Unit]
+Description=Delete Trash items older than 30 days for all users in /home
+Documentation=man:systemd.service(5)
+ConditionPathIsDirectory=/home
+
+[Service]
+Type=oneshot
+Environment=TRASH_MAX_AGE_DAYS=30
+ExecStart=/usr/local/bin/clean_trash.sh
+
+# Hardening. Must run as root to reach all users' home dirs, but we
+# lock down everything else we can.
+User=root
+ProtectSystem=strict
+ReadWritePaths=/home
+ProtectHome=false
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
