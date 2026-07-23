@@ -6,7 +6,7 @@ source $SCRIPT_DIR/env.sh
 
 function _on_exit() {
     local exit_code=$?
-    
+
     if [[ $exit_code -eq 1 && $_RETRY_COUNT -lt 3 ]]; then
         export _RETRY_COUNT=$((_RETRY_COUNT + 1))
         echo "Script exited with code 1. Retrying ($_RETRY_COUNT/3)..."
@@ -204,6 +204,8 @@ echo "Done."
 
 section "Fixing permissions"
 find $HOME -path "$HOME/.dotfiles" -prune -o -exec chown "$USER:$USER" {} + 2>/dev/null || true
+chown root:root /etc/sudoers.d/config
+chmod 440 /etc/sudoers.d/config
 echo "Done."
 
 section "Rebooting"
