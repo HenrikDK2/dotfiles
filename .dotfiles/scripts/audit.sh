@@ -91,6 +91,7 @@ filter_journalctl() {
 		"write UDPv4 .* Network is unreachable"
 		"Failed to check if symlink source path '/run/host/io.systemd.*' exists: Link has been severed"
 		"ATTR{power/wakeup}=\"enabled\""
+		"pam_faillock\(hyprlock:auth\): Error opening the tally file for [^:]+: No such file or directory"
 		"TDX not supported by the host platform"
 		
 		# Issues caused by auditd system service not liking soft-reboot
