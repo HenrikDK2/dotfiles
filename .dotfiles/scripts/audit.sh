@@ -92,6 +92,8 @@ filter_journalctl() {
 		"Failed to check if symlink source path '/run/host/io.systemd.*' exists: Link has been severed"
 		"ATTR{power/wakeup}=\"enabled\""
 		"pam_faillock\(hyprlock:auth\): Error opening the tally file for [^:]+: No such file or directory"
+		"nm-openvpn\\[.*\\]: TLS Error: TLS key negotiation failed to occur within 60 seconds \\(check your network connectivity\\)"
+		"nm-openvpn\\[.*\\]: TLS Error: TLS handshake failed"
 		"TDX not supported by the host platform"
 		
 		# Issues caused by auditd system service not liking soft-reboot
