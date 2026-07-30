@@ -7,7 +7,7 @@ CONFIG_PATHS=(
 
 # Check if qBittorrent is installed normally
 is_qbittorrent_installed() {
-    command -v qbittorrent &>/dev/null
+	command -v qbittorrent
 }
 
 # Check if qBittorrent Flatpak is installed
