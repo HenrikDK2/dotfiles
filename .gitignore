@@ -49,6 +49,9 @@
 
 !.config/fish/
 !.config/fish/config.fish
+!.config/fish/functions/
+!.config/fish/functions/git.fish
+
 
 !.config/systemd/
 !.config/systemd/user/
