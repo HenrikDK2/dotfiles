@@ -53,7 +53,7 @@ until hyprctl clients | grep "Thunderbird"; do
 done
 
 # Start other apps
-hyprctl eval 'hl.exec_cmd("[workspace 2 silent] discord")' &
+hyprctl eval 'hl.exec_cmd("[workspace 2 silent] discord --ozone-platform=x11")' &
 hyprctl eval 'hl.exec_cmd("[workspace 2 silent] steam")' &
 
 # Audit script to check for system issues (Only runs in foreground if detected)
