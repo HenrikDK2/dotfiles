@@ -4,20 +4,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source $SCRIPT_DIR/env.sh
 
-function _on_exit() {
-    local exit_code=$?
-
-    if [[ $exit_code -eq 1 && $_RETRY_COUNT -lt 3 ]]; then
-        export _RETRY_COUNT=$((_RETRY_COUNT + 1))
-        echo "Script exited with code 1. Retrying ($_RETRY_COUNT/3)..."
-        sleep 2
-        trap - EXIT
-        exec "$0" "$@"
-    fi
-}
-
-trap _on_exit EXIT
-
 function section() {
     echo
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -106,6 +92,9 @@ if ! [ -d "$HOME/.dotfiles" ]; then
 	# Copy environment config and restore ownership
 	cp -f "$SCRIPT_DIR/env.sh" "$HOME/.dotfiles/init/env.sh"
 	chown -R "$USER:$USER" "$HOME"
+
+	# Restart script at user directory
+	exec bash -l "$HOME/.dotfiles/init/install.sh"
 fi
 
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
