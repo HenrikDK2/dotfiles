@@ -3,28 +3,29 @@ function git --description "Git wrapper that ensures user identity is configured
     set -l git_email (command git config --global user.email 2>/dev/null)
 
     if test -z "$git_name"; or test -z "$git_email"
-        set_color yellow
-        echo "Git identity is not fully configured."
-        set_color normal
+        set -l result (yad \
+            --title="Git Configuration" \
+            --text="Git identity is not fully configured." \
+            --width=500 \
+            --height=100 \
+            --form \
+            --field="Username" "$git_name" \
+            --field="Email" "$git_email")
 
-        if test -z "$git_name"
-            read -P "  Username: " git_name
-            if test -n "$git_name"
-                command git config --global user.name "$git_name"
-            end
+        # User cancelled
+        test $status -ne 0; and return 1
+
+        set -l values (string split "|" "$result")
+        set git_name $values[1]
+        set git_email $values[2]
+
+        if test -n "$git_name"
+            command git config --global user.name "$git_name"
         end
 
-        if test -z "$git_email"
-            read -P "  Email: " git_email
-            if test -n "$git_email"
-                command git config --global user.email "$git_email"
-            end
+        if test -n "$git_email"
+            command git config --global user.email "$git_email"
         end
-
-        set_color green
-        echo "Git identity set: $git_name <$git_email>"
-        set_color normal
-        echo
     end
 
     command git $argv
