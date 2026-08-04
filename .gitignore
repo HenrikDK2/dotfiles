@@ -133,6 +133,13 @@
 !.local/share/modorganizer
 !.local/share/modorganizer/**
 
+!.local/share/qBittorrent
+!.local/share/qBittorrent/nova3
+!.local/share/qBittorrent/nova3/engines
+!.local/share/qBittorrent/nova3/engines/*.py
+.local/share/qBittorrent/nova3/engines/__init__.py
+
+
 # Related to each other (Sandboxing) 
 !.local/bin/firefox
 !.local/share/applications/firefox.desktop
