@@ -95,7 +95,6 @@ PACKAGES=(
     "hyprlock"
     "swaybg"
     "unrar"
-    "libunrar"
     "unzip"
     "waybar"
     "xdg-desktop-portal-hyprland"
@@ -143,6 +142,10 @@ PACKAGES=(
 	"ttf-jetbrains-mono"
 	"ttf-droid"
 	"ttf-dejavu"
+
+	# Required libs for certains applications
+	"libunrar"
+	"lib32-readline"
 )
 
 SYSTEM_SERVICES_TO_ENABLE=(
