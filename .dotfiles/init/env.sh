@@ -95,6 +95,7 @@ PACKAGES=(
     "hyprlock"
     "swaybg"
     "unrar"
+    "libunrar"
     "unzip"
     "waybar"
     "xdg-desktop-portal-hyprland"
