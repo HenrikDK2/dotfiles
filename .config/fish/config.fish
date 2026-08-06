@@ -176,6 +176,12 @@ if status is-interactive
     end
 end
 
+# Use home cache as tmp only inside Alacritty when working in $HOME
+if test "$TERM" = "alacritty"; and string match -q "$HOME*" "$PWD"
+    set -gx TMPDIR "$HOME/.cache/tmp"
+    mkdir -p "$TMPDIR"
+end
+
 ### Below is a clean way to redirect to another .exe in steam launch options 
 # cmd=(%command%); cmd[-1]="/path/to/your/custom.exe"; "${cmd[@]}"
 
