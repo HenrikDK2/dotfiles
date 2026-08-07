@@ -104,12 +104,21 @@ if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
     pacman -Suuy
 fi
 
+section "Setting hostname"
+echo "$HOSTNAME" > /etc/hostname
+cat > /etc/hosts <<EOF
+127.0.0.1   localhost
+::1         localhost
+127.0.1.1   ${HOSTNAME}.localdomain ${HOSTNAME}
+EOF
+echo "Done"
+
 section "Setting timezone"
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 hwclock --systohc
 echo "New timezone: $TIMEZONE"
 
-section "Setting localization and hostname"
+section "Setting localization"
 for locale in "${LOCALES[@]}"; do
     sed -i "s/^#$locale/$locale/" /etc/locale.gen
 done
@@ -124,7 +133,11 @@ timedatectl set-ntp true
 echo "Done"
 
 section "Copying system configs"
-cp -rf $SCRIPT_DIR/system/* /
+mkdir -p /tmp/system_files
+cp -rf $SCRIPT_DIR/system/* /tmp/system_files
+chown -R /tmp/system_files/*
+cp -rf /tmp/system_files/* /
+echo "Done"
 
 section "Installing system packages"
 pacman -Syu ${PACKAGES[@]} --ask 4 --needed
@@ -183,9 +196,6 @@ source $SCRIPT_DIR/scripts/microsoft_fonts.sh
 
 section "Sandboxing"
 source $SCRIPT_DIR/scripts/sandboxing.sh
-
-section "Rebuilding initramfs"
-mkinitcpio -P
 
 section "Removing pacnew/pacsave files"
 find /etc \( -name "*.pacnew" -o -name "*.pacsave" \) -print0 | xargs -0 rm -f

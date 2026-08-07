@@ -1,102 +1,81 @@
 #!/bin/bash
 
 KERNELS=(
-    "linux:/vmlinuz-linux:/initramfs-linux.img"
-    "linux-zen:/vmlinuz-linux-zen:/initramfs-linux-zen.img"
-    "linux-lts:/vmlinuz-linux-lts:/initramfs-linux-lts.img"
+"linux:/vmlinuz-linux:/initramfs-linux.img"
+"linux-zen:/vmlinuz-linux-zen:/initramfs-linux-zen.img"
+"linux-lts:/vmlinuz-linux-lts:/initramfs-linux-lts.img"
 )
 
 KERNEL_PARAMS=(
-    "loglevel=3"
-    "apparmor=1"
-    "security=apparmor"
-    "debugfs=off"
-    "vsyscall=none"
-    "processor.ignore_ppc=1"
-    "split_lock_detect=off"
-    "libahci.ignore_sss=1"
-    "rootflags=noatime"
-    "usbcore.autosuspend=-1"
-    "rfkill.default_state=1"
-    "rfkill.master_switch_mode=2"
-    "amdgpu.msi=1"
-    "nvidia.NVreg_EnableMSI=1"
-    "nowatchdog"
-    "nmi_watchdog=0"
-    "module_blacklist=iTCO_wdt"
-    "amdgpu.audio=0"
-    "amdgpu.ppfeaturemask=0xffffffff"
+"loglevel=3"
+"apparmor=1"
+"security=apparmor"
+"debugfs=off"
+"vsyscall=none"
+"processor.ignore_ppc=1"
+"split_lock_detect=off"
+"libahci.ignore_sss=1"
+"rootflags=noatime"
+"usbcore.autosuspend=-1"
+"rfkill.default_state=1"
+"rfkill.master_switch_mode=2"
+"amdgpu.msi=1"
+"nvidia.NVreg_EnableMSI=1"
+"nowatchdog"
+"nmi_watchdog=0"
+"module_blacklist=iTCO_wdt"
+"amdgpu.audio=0"
+"amdgpu.ppfeaturemask=0xffffffff"
 )
 
-function detect_microcode() {
-    if grep -q "AuthenticAMD" /proc/cpuinfo; then
-        echo "amd:amd-ucode.img"
-    elif grep -q "GenuineIntel" /proc/cpuinfo; then
-        echo "intel:intel-ucode.img"
-    else
-        echo ""
-    fi
-}
+MICROCODE_IMG=""
 
-function get_root_uuid() {
-    local rootdev
-    rootdev=$(findmnt / -o SOURCE -n)
-    ROOT_UUID=$(blkid -o value -s UUID "$rootdev")
-}
-
-function get_swap_uuid() {
-    local swapdev
-    swapdev=$(swapon --show=NAME --noheadings || true)
-    [ -n "$swapdev" ] && SWAP_UUID=$(blkid -o value -s UUID "$swapdev") || SWAP_UUID=""
-}
-
-function enable_hibernation() {
-    sed -i 's/HOOKS=(\(.*\) autodetect/HOOKS=(\1 resume autodetect/' /etc/mkinitcpio.conf
-}
-
-TMPDIR=$(mktemp -d)
-MICROCODE_INFO=$(detect_microcode)
-MICROCODE_NAME="${MICROCODE_INFO%%:*}"
-MICROCODE_IMG="${MICROCODE_INFO#*:}"
-
-# Install microcode *before* writing entry files
-if [ -n "$MICROCODE_NAME" ]; then
-    pacman -S "${MICROCODE_NAME}-ucode" --needed --noconfirm >/dev/null 2>&1
+if grep -q AuthenticAMD /proc/cpuinfo; then
+    pacman -S amd-ucode --needed --noconfirm
+    MICROCODE_IMG="amd-ucode.img"
+elif grep -q GenuineIntel /proc/cpuinfo; then
+    pacman -S intel-ucode --needed --noconfirm
+    MICROCODE_IMG="intel-ucode.img"
 fi
 
-get_root_uuid
-get_swap_uuid
+ROOT_UUID=$(blkid -o value -s UUID "$(findmnt / -o SOURCE -n)")
+SWAP_UUID=$(blkid -o value -s UUID "$(swapon --show=NAME --noheadings)" 2>/dev/null || true)
+
+if [ -n "$SWAP_UUID" ]; then
+    sed -i 's/\(HOOKS=.*\)block/\1resume block/' /etc/mkinitcpio.conf
+fi
 
 PARAM_STR="${KERNEL_PARAMS[*]}"
-if [ ! -d "/boot/loader" ]; then
-    bootctl install
-fi
 
-echo "timeout 0" | tee /boot/loader/loader.conf >/dev/null
-echo "default linux-zen.conf" | tee -a /boot/loader/loader.conf >/dev/null
+bootctl install
 
-for entry in "${KERNELS[@]}"; do
-    IFS=":" read -r name kernel img <<< "$entry"
-    OUT="$TMPDIR/${name}.conf"
+cat >/boot/loader/loader.conf <<EOF
+timeout 0
+default linux-zen.conf
+EOF
+
+mkdir -p /boot/loader/entries
+
+for e in "${KERNELS[@]}"; do
+    IFS=: read -r name kernel img <<< "$e"
+
     {
         echo "title Arch Linux ($name)"
         echo "linux $kernel"
         [ -n "$MICROCODE_IMG" ] && echo "initrd /$MICROCODE_IMG"
         echo "initrd $img"
-        if [ -n "${SWAP_UUID:-}" ]; then
-            enable_hibernation
+
+        if [ -n "$SWAP_UUID" ]; then
             echo "options root=UUID=$ROOT_UUID resume=UUID=$SWAP_UUID rw $PARAM_STR"
         else
             echo "options root=UUID=$ROOT_UUID rw $PARAM_STR"
         fi
-    } > "$OUT"
+    } >/boot/loader/entries/$name.conf
 done
 
-cp "$TMPDIR"/*.conf /boot/loader/entries/
-rm -rf "$TMPDIR"
-
-# Fix boot partition permissions & random seed file permissions
 chmod 700 /boot
 [ -f /boot/loader/random-seed ] && chmod 600 /boot/loader/random-seed
 
-echo "✔ Boot entries generated successfully."
+mkinitcpio -P
+
+echo "✔ Done."
