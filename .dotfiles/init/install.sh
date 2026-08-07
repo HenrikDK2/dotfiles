@@ -115,6 +115,7 @@ echo "Done"
 
 section "Setting timezone"
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+chown root:root /usr/share/zoneinfo/$TIMEZONE
 hwclock --systohc
 echo "New timezone: $TIMEZONE"
 
