@@ -159,9 +159,6 @@ SYSTEM_SERVICES_TO_ENABLE=(
     "avahi-daemon.service"
     "cups.service"
 
-    "libvirtd.service"
-    "virtlogd.service"
-
 	"smartd.service"
 
     "ufw.service"
