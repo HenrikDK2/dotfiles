@@ -37,6 +37,7 @@ function start_services() {
         libvirtd-admin
         libvirtd-ro
         libvirtd
+        virtlogd
 
         cups
         avahi-daemon
