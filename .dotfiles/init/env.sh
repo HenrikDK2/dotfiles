@@ -57,6 +57,13 @@ PACKAGES=(
 	"bluez-utils"
 	"blueman"
 
+	# Virtual Machines
+	"libvirt"
+	"virt-manager"
+	"qemu-desktop"
+	"dnsmasq"
+	"dmidecode"
+
 	# System
     "alacritty"
     "jq"
@@ -151,6 +158,9 @@ PACKAGES=(
 SYSTEM_SERVICES_TO_ENABLE=(
     "avahi-daemon.service"
     "cups.service"
+
+    "libvirtd.service"
+    "virtlogd.service"
 
 	"smartd.service"
 

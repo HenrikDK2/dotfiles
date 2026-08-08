@@ -52,7 +52,7 @@ fi
 if ! id "$USERNAME" &>/dev/null; then
 	section "Create user"
     echo "Creating user '$USERNAME'..."
-    useradd -m -G wheel $USERNAME
+    useradd -m -G wheel,libvirt $USERNAME
 
     clear_screen
     printf "Please set a ${GREEN}$USERNAME${RESET} password:\n\n"
@@ -159,6 +159,9 @@ ln -sf /usr/lib/systemd/user/wireplumber.service "$USER_SYSTEMD_DIR/default.targ
 ln -sf /usr/lib/systemd/user/psd.service "$USER_SYSTEMD_DIR/default.target.wants/"
 ln -sf /dev/null "$USER_SYSTEMD_DIR/at-spi-dbus-bus.service"
 echo "Done"
+
+section "Configuring virsh to autostart"
+virsh net-autostart default
 
 section "Bootloader"
 source $SCRIPT_DIR/scripts/bootloader.sh
