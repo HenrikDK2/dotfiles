@@ -8,6 +8,30 @@ function is_laptop() {
     fi
 }
 
+function has_active_docker_containers() {
+    # true (0) if docker is present/running AND has running containers
+    if ! command -v docker >/dev/null 2>&1; then
+        return 1
+    fi
+    if ! systemctl is-active --quiet docker.service 2>/dev/null; then
+        return 1
+    fi
+    local running=$(docker ps -q 2>/dev/null)
+    [ -n "$running" ]
+}
+
+function has_active_libvirt_domains() {
+    # true (0) if libvirtd is present/running AND has running VMs
+    if ! command -v virsh >/dev/null 2>&1; then
+        return 1
+    fi
+    if ! systemctl is-active --quiet libvirtd.service 2>/dev/null; then
+        return 1
+    fi
+    local running=$(virsh list --state-running --name 2>/dev/null | sed '/^$/d')
+    [ -n "$running" ]
+}
+
 function stop_services() {
     local system_services=(
         auditd
@@ -16,19 +40,12 @@ function stop_services() {
         clamav-daemon
         clamav-freshclam
 
-        docker
-        containerd
-        libvirtd-admin
-        libvirtd-ro
-        libvirtd
-        virtlogd
-
         cups
         avahi-daemon
 
         tlp
         upower
-        
+
         systemd-timesyncd
         systemd-journald
 
@@ -41,15 +58,29 @@ function stop_services() {
         hypridle
     )
 
+    # Only stop docker/containerd if there are no running containers
+    if has_active_docker_containers; then
+        echo "Active Docker containers detected — leaving docker/containerd running." >&2
+    else
+        system_services+=(docker containerd)
+    fi
+
+    # Only stop libvirt stack if there are no running domains (VMs)
+    if has_active_libvirt_domains; then
+        echo "Active libvirt domains detected — leaving libvirtd/virtlogd running." >&2
+    else
+        system_services+=(libvirtd-admin libvirtd-ro libvirtd virtlogd)
+    fi
+
     # Get active user session IDs
     local user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
 
     # Mask services that need to be permanently disabled
     systemctl mask upower.service auditd.service 2>/dev/null
-    
+
     # Loop to check and stop services until no active units are found
     while true; do
-        
+
         # 1. Stop .socket, .target, .mount, .service units for system services
         for svc in "${system_services[@]}"; do
             for unit_type in socket target mount service; do
@@ -70,7 +101,7 @@ function stop_services() {
                 fi
             done
         done
-        
+
         sleep 1
     done
 }
@@ -81,7 +112,7 @@ function set_cpu_performance() {
 
 function set_amd_gpu_performance() {
     local GPU=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
-    
+
     # AMD GPU max performance
     if [ -d "$GPU" ]; then
         [ -f "$GPU/power_dpm_force_performance_level" ] && echo "manual" > "$GPU/power_dpm_force_performance_level"
@@ -92,7 +123,7 @@ function set_amd_gpu_performance() {
 
 function kill_background_processes() {
     local processes=(cmst hypridle mullvad-gui blueman-applet blueman-manager blueman-tray chrome_crashpad)
-    
+
     for p in "${processes[@]}"; do
         pkill -9 "$p" 2>/dev/null
     done
@@ -117,7 +148,7 @@ function disable_pcie_power_management() {
     for pci in /sys/bus/pci/devices/*/power/control; do
         echo on > "$pci" 2>/dev/null
     done
-    
+
     # Set PCIe ASPM to performance
     echo "performance" > /sys/module/pcie_aspm/parameters/policy 2>/dev/null
 }
@@ -144,7 +175,7 @@ function set_process_priority() {
 
 function main() {
     set_process_priority "$@"
-    
+
 	if is_laptop; then
 		tlp_performance
 	else
@@ -152,7 +183,7 @@ function main() {
 	    disable_nvme_power_management
 	    disable_pcie_power_management
 	fi
-    
+
     stop_services
     set_cpu_performance
     set_amd_gpu_performance
