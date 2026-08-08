@@ -1,7 +1,6 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 source $SCRIPT_DIR/env.sh
 
 function section() {
@@ -89,12 +88,8 @@ if ! [ -d "$HOME/.dotfiles" ]; then
 	    git remote add origin "$GITHUB_REPO_SSH"
 	)
 
-	# Copy environment config and restore ownership
-	cp -f "$SCRIPT_DIR/env.sh" "$HOME/.dotfiles/init/env.sh"
+	# Fix ownership
 	chown -R "$USER:$USER" "$HOME"
-
-	# Restart script at user directory
-	exec bash -l "$HOME/.dotfiles/init/install.sh"
 fi
 
 if ! grep -q "DisableDownloadTimeout" "/etc/pacman.conf"; then
@@ -115,7 +110,7 @@ echo "Done"
 
 section "Setting timezone"
 ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
-chown root:root /usr/share/zoneinfo/$TIMEZONE
+chown -R root:root /usr/share/zoneinfo
 hwclock --systohc
 echo "New timezone: $TIMEZONE"
 
@@ -203,8 +198,6 @@ find /etc \( -name "*.pacnew" -o -name "*.pacsave" \) -print0 | xargs -0 rm -f
 echo "Done."
 
 section "Fixing permissions"
-find $HOME -path "$HOME/.dotfiles" -prune -o -exec chown "$USER:$USER" {} + 2>/dev/null || true
-chown root:root /etc/sudoers.d/config
 chmod 440 /etc/sudoers.d/config
 echo "Done."
 
