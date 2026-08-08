@@ -1,0 +1,6 @@
+#!/bin/bash
+
+systemctl is-active --quiet libvirtd.service || systemctl start libvirtd.service; 
+systemctl is-active --quiet virtlogd.service || systemctl start virtlogd.service;
+
+exec /usr/bin/virt-manager

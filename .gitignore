@@ -121,6 +121,8 @@
 !.local/share
 !.local/bin
 
+!.local/bin/virt-manager
+
 !.local/share/mime
 !.local/share/mime/application
 !.local/share/mime/application/*
@@ -156,7 +158,6 @@
 
 !.local/share/applications
 !.local/share/applications/cups.desktop
-!.local/share/applications/virt-manager.desktop
 !.local/share/applications/nemo.desktop
 !.local/share/applications/hyprpicker.desktop
 !.local/share/applications/nm-import-ovpn.desktop
