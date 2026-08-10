@@ -59,16 +59,12 @@ function stop_services() {
     )
 
     # Only stop docker/containerd if there are no running containers
-    if has_active_docker_containers; then
-        echo "Active Docker containers detected — leaving docker/containerd running." >&2
-    else
+    if ! has_active_docker_containers; then
         system_services+=(docker containerd)
     fi
 
     # Only stop libvirt stack if there are no running domains (VMs)
-    if has_active_libvirt_domains; then
-        echo "Active libvirt domains detected — leaving libvirtd/virtlogd running." >&2
-    else
+    if ! has_active_libvirt_domains; then
         system_services+=(libvirtd-admin libvirtd-ro libvirtd virtlogd)
     fi
 

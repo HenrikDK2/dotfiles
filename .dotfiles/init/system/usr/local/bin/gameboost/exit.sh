@@ -34,11 +34,6 @@ function start_services() {
         clamav-daemon
         clamav-freshclam
         
-        libvirtd-admin
-        libvirtd-ro
-        libvirtd
-        virtlogd
-
         cups
         avahi-daemon
 
