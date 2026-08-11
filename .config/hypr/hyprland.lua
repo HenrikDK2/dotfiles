@@ -177,9 +177,13 @@ local mainMod = "SUPER"
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(menu))
-hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("hyprpicker -a -q"))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(
+    "pgrep -x hyprpicker >/dev/null || hyprpicker -a -q"
+))
 hl.bind("CTRL + ALT + Delete", hl.dsp.exec_cmd("alacritty -e btop"))
-hl.bind("Print", hl.dsp.exec_cmd("slurp | grim -g - - | swappy -f -"))
+hl.bind("Print", hl.dsp.exec_cmd(
+    "pgrep -x slurp >/dev/null || slurp | grim -g - - | swappy -f -"
+))
 
 -- Window management
 hl.bind(mainMod .. " + D", hl.dsp.window.close())
