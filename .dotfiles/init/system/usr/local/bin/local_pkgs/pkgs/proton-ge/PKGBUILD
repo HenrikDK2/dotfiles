@@ -1,5 +1,5 @@
 pkgname=proton-ge-custom-bin
-pkgver=GE_Proton10_32
+pkgver=GE_Proton11_5
 pkgrel=1
 pkgdesc='A fancy custom distribution of Valves Proton with various patches'
 arch=('x86_64')
@@ -9,23 +9,28 @@ depends=('steam')
 provides=('proton')
 conflicts=('proton-ge-custom')
 options=(!strip)
+
 _pkgver=${pkgver//_/-}
+_extracted_dir="${_pkgver}-${arch}"
 _installdir=usr/share/steam/compatibilitytools.d
-source=("${_pkgver}.tar.gz::${url}/releases/download/${_pkgver}/${_pkgver}.tar.gz")
+
+source=("${_pkgver}.tar.gz::${url}/releases/download/${_pkgver}/${_pkgver}-${arch}.tar.gz")
 sha256sums=('SKIP')
 
 package() {
     # Install the Proton-GE directory with standardized name
     install -d "${pkgdir}/${_installdir}"
-    cp -r "${srcdir}/${_pkgver}" "${pkgdir}/${_installdir}/GE-Proton-Latest"
-    
-	# Rewrite BOTH internal name and display name to GE-Proton-Latest
-	sed -i \
-	    -e '0,/"GE-Proton[^"]*"/s//"GE-Proton-Latest"/' \
-	    -e 's/"display_name".*/"display_name" "GE-Proton-Latest"/' \
-	    "${pkgdir}/${_installdir}/GE-Proton-Latest/compatibilitytool.vdf"
 
-    
+    cp -r "${srcdir}/${_extracted_dir}" \
+        "${pkgdir}/${_installdir}/GE-Proton-Latest"
+
+    # Rewrite internal name and display name to GE-Proton-Latest
+    sed -i \
+        -e '0,/"GE-Proton[^"]*"/s//"GE-Proton-Latest"/' \
+        -e 's/"display_name".*/"display_name" "GE-Proton-Latest"/' \
+        "${pkgdir}/${_installdir}/GE-Proton-Latest/compatibilitytool.vdf"
+
     # Set proper permissions
-    chmod -R u+rwX,go+rX,go-w "${pkgdir}/${_installdir}/GE-Proton-Latest"
+    chmod -R u+rwX,go+rX,go-w \
+        "${pkgdir}/${_installdir}/GE-Proton-Latest"
 }
