@@ -1,10 +1,16 @@
 #!/bin/bash
 
 if pgrep -x "sway" >/dev/null || pgrep -x "hyprland" >/dev/null || pgrep -x "start-hyprland"; then
-
 	# Set lowest CPU & I/O priority
 	nice -n 19 -p $$ >/dev/null 2>&1
 	ionice -c 3 -n 7 -p $$ >/dev/null 2>&1
+
+	# Custom fork-free sleep function
+	exec {TIMER_FD}<> <(:)
+	wait_for() {
+	    local seconds=$1
+	    read -r -t "$seconds" -u "$TIMER_FD" _
+	}
 
 	set_wallpapers(){
 		wallpapers=("$HOME/Wallpapers"/*)
@@ -25,20 +31,14 @@ if pgrep -x "sway" >/dev/null || pgrep -x "hyprland" >/dev/null || pgrep -x "sta
 		fi
 	}
 
-	# Layout script from "$HOME/.config/hypr/layout.sh", kills this process when fullscreen mode is enabled
-	# To stop the wallpaper from switching on fullscreen exit, delay the process.
-	if pgrep -x swaybg; then
-		sleep 5m
-	fi
-
 	# Main loop
 	while true; do
 	    for wallpaper in "${wallpapers[@]}"; do
 	        pids=$(pgrep -d' ' swaybg)
 	        swaybg -i $wallpaper -m center &
-	        sleep 2s
+	        wait_for 2
 	    	kill $pids
-	        sleep 20m
+	        wait_for 1200 # 20 mins
 	    done
 		
 	   	set_wallpapers
