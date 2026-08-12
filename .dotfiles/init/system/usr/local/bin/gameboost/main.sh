@@ -50,7 +50,7 @@ readonly EXCLUDED_PATTERNS=(
     ".*[Rr]edist.*\.exe"
 )
 
-readonly GPU_THRESHOLD=20   # Minimum threshold to run the (relatively expensive) ps+grep pattern
+readonly GPU_THRESHOLD=25   # Minimum threshold to run the (relatively expensive) ps+grep pattern
 
 # Populated once at startup by detect_gpu_vendor: "nvidia", "amd", "intel", or "" (none found)
 GPU_VENDOR=""
@@ -70,7 +70,9 @@ readonly EXCLUDED_PATTERN=$(build_pattern "${EXCLUDED_PATTERNS[@]}")
 # =============================================================================
 
 log_message() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') | $1" >> "$LOG_FILE"
+    # Builtin strftime, no `date` fork
+    printf -v ts '%(%Y-%m-%d %H:%M:%S)T' -1
+    echo "$ts | $1" >> "$LOG_FILE"
 }
 
 notify_user() {
@@ -138,8 +140,8 @@ get_gpu_usage() {
 
     case "$GPU_VENDOR" in
         nvidia) usage=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1) ;;
-        amd)    usage=$(cat "$AMD_GPU_BUSY_PATH" 2>/dev/null) ;;
-        intel)  usage=$(timeout 1 intel_gpu_top -s 500 -o - 2>/dev/null \
+        amd)    read -r usage < "$AMD_GPU_BUSY_PATH" 2>/dev/null ;;  # no `cat` fork
+        intel)  usage=$(timeout 1 intel_gpu_top -s 200 -o - 2>/dev/null \
                         | grep -m1 -oP '"Render/3D/0":\s*{\s*"busy":\s*\K[0-9.]+') ;;
     esac
 
@@ -261,12 +263,17 @@ for svc in "${services[@]}"; do
     fi
 done
 
+# fd for fork-free sleep
+exec {SLEEP_FD}<> <(:)
+
 detect_gpu_vendor
 log_message "GameBoost script started."
 
 # =============================================================================
 # MAIN LOOP
 # =============================================================================
+
+readonly INTERVAL=10
 
 while true; do
     if [[ -z "$CURRENT_PID" ]]; then
@@ -277,5 +284,6 @@ while true; do
         verify_game_process
     fi
 
-    sleep 10
+    # Fork-free sleep
+    read -t "$INTERVAL" -u "$SLEEP_FD" _ 2>/dev/null
 done
