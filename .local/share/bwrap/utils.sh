@@ -66,40 +66,45 @@ utils::dbus() {
 }
 
 utils::run() {
-	if [[ "${1:-}" == "--debug" ]]; then
-		DEBUG=1
-		shift
-	fi
+    if [[ "${1:-}" == "--debug" ]]; then
+        DEBUG=1
+        shift
+    fi
 
-	utils::dbus
-	utils::log INFO "Launching $EXECUTABLE..."
+    utils::dbus
+    utils::log INFO "Launching $EXECUTABLE..."
 
-	# Filter out unwanted bwrap flag
-	CLEAN_BWRAP_ARGS=()
-	for arg in "${BWRAP_ARGS[@]}"; do
-		# For some reason causes issues with Firefox
-		# Not a problem since the cleanup function takes care of it
-		if [[ "$arg" != "--die-with-parent" ]]; then
-			CLEAN_BWRAP_ARGS+=("$arg")
-		fi
-	done
+    # Filter out unwanted bwrap flag
+    CLEAN_BWRAP_ARGS=()
+    for arg in "${BWRAP_ARGS[@]}"; do
+        # For some reason causes issues with Firefox
+        # Not a problem since the cleanup function takes care of it
+        if [[ "$arg" != "--die-with-parent" ]]; then
+            CLEAN_BWRAP_ARGS+=("$arg")
+        fi
+    done
 
-	if [[ "$DEBUG" -eq 1 ]]; then
-		strace -f -tt -s 128 -e trace=all -o "$TRACE_FILE" \
-			bwrap "${CLEAN_BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
-	else
-		bwrap "${CLEAN_BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
-	fi
+    if [[ "$DEBUG" -eq 1 ]]; then
+        if ! command -v strace >/dev/null 2>&1; then
+            utils::log ERROR "strace is required for --debug but is not installed."
+            return 1
+        fi
 
-	EXIT_CODE=$?
-	exit $EXIT_CODE
+        strace -f -tt -s 128 -e trace=all -o "$TRACE_FILE" \
+            bwrap "${CLEAN_BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
+
+        EXIT_CODE=$?
+        exit "$EXIT_CODE"
+    else
+        exec bwrap "${CLEAN_BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
+    fi
 }
 
 utils::cleanup() {
 	utils::log INFO "Cleaning up..."
 
-	if [ "$DEBUG" -eq 1 ]; then
-		utils::debug
+	if [ "$DEBUG" -eq 1 ] && command -v strace >/dev/null 2>&1; then
+	    utils::debug
 	fi
 
 	if [[ -n "${PROXY_PID:-}" ]] && kill -0 "$PROXY_PID" 2>/dev/null; then
