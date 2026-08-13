@@ -1,1 +1,2 @@
+mkdir ${HOME}/.config/tidal-hifi
 whitelist ${HOME}/.config/tidal-hifi
