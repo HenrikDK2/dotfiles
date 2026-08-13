@@ -5,35 +5,33 @@ trap utils::cleanup EXIT INT TERM
 PROXY_SOCKET="${XDG_RUNTIME_DIR}/bus-proxy-$(uuidgen).sock"
 DEBUG=0
 
+LOG_RESET=$'\e[0m'
+LOG_INFO=$'\e[32m'
+LOG_WARN=$'\e[33m'
+LOG_ERROR=$'\e[31m'
+
 utils::log() {
-	local level="$1"
-	shift
-
-	local indent="${LOG_INDENT:-0}"
-	local message="$*"
-
-	local timestamp
-	timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-
-	local script_name
-	script_name="$(basename "$EXECUTABLE")-$$"
-
-	local color_reset="\033[0m"
+	local level=$1 message=$2
 	local color
 
-	case "$level" in
-	INFO) color="\033[32m" ;;
-	WARN) color="\033[33m" ;;
-	ERROR) color="\033[31m" ;;
-	*) color="\033[0m" ;;
+	case $level in
+		INFO)  color=$'\e[32m' ;;
+		WARN)  color=$'\e[33m' ;;
+		ERROR) color=$'\e[31m' ;;
+		*)     color=$'\e[0m' ;;
 	esac
 
-	local padding=""
-	if [[ "$indent" -gt 0 ]]; then
-		padding="$(printf '%*s' "$indent")"
+	local timestamp
+	printf -v timestamp '%(%Y-%m-%d %H:%M:%S)T' -1
+
+	local padding=
+	if (( LOG_INDENT > 0 )); then
+		printf -v padding '%*s' "$LOG_INDENT" ''
 	fi
 
-	echo -e "${color}[$timestamp] [$script_name] [$level] ${padding}${message}${color_reset}"
+	printf '%s[%s] [%s-%s] [%s] %s%s%s\n' \
+		"$color" "$timestamp" "${EXECUTABLE##*/}" "$$" \
+		"$level" "$padding" "$message" $'\e[0m'
 }
 
 utils::dbus() {
@@ -49,7 +47,7 @@ utils::dbus() {
 
 	PROXY_PID=$!
 	utils::log INFO "Waiting for proxy socket..."
-	while [[ ! -S "$PROXY_SOCKET" ]]; do sleep 0.01; done
+	while [[ ! -S "$PROXY_SOCKET" ]]; do read -rt 0.01 </dev/null; done
 	utils::log INFO "Proxy ready"
 
 	# Required for dbus proxy
@@ -96,7 +94,7 @@ utils::run() {
         EXIT_CODE=$?
         exit "$EXIT_CODE"
     else
-        exec bwrap "${CLEAN_BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
+    	exec bwrap "${CLEAN_BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
     fi
 }
 
