@@ -175,6 +175,9 @@ source $SCRIPT_DIR/scripts/mozilla.sh
 section "Heroic"
 source $SCRIPT_DIR/scripts/heroic.sh
 
+section "Tidal-hifi"
+source $SCRIPT_DIR/scripts/tidal-hifi.sh
+
 section "qBittorrent"
 source $SCRIPT_DIR/scripts/qbittorrent.sh
 
