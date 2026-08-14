@@ -50,7 +50,7 @@ readonly EXCLUDED_PATTERNS=(
     ".*[Rr]edist.*\.exe"
 )
 
-readonly GPU_THRESHOLD=25   # Minimum threshold to run the (relatively expensive) ps+grep pattern
+readonly GPU_THRESHOLD=25 # Minimum threshold to run the (relatively expensive) ps+grep pattern
 
 # Populated once at startup by detect_gpu_vendor: "nvidia", "amd", "intel", or "" (none found)
 GPU_VENDOR=""
@@ -134,29 +134,32 @@ detect_gpu_vendor() {
     log_message "GPU monitoring: no supported GPU tool found, GPU gating disabled"
 }
 
-# Returns an integer usage percentage on stdout, or nothing if unavailable.
+# Sets global GPU_USAGE
 get_gpu_usage() {
-    local usage=""
+    GPU_USAGE="$GPU_THRESHOLD" # Should be replaced, unless implementation is faulty/missing
 
     case "$GPU_VENDOR" in
-        nvidia) usage=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1) ;;
-        amd)    read -r usage < "$AMD_GPU_BUSY_PATH" 2>/dev/null ;;  # no `cat` fork
-        intel)  usage=$(timeout 1 intel_gpu_top -s 200 -o - 2>/dev/null \
-                        | grep -m1 -oP '"Render/3D/0":\s*{\s*"busy":\s*\K[0-9.]+') ;;
+        nvidia)
+            # Need to create implementation
+            ;;
+        amd)
+            read -r GPU_USAGE < "$AMD_GPU_BUSY_PATH" 2>/dev/null
+            ;;
+		intel)
+			# Need to create implementation
+		    ;;
     esac
 
-    # Normalize: strip decimals, blank on anything non-numeric
-    usage="${usage%%.*}"
-    [[ "$usage" =~ ^[0-9]+$ ]] && echo "$usage"
+    GPU_USAGE="${GPU_USAGE%%.*}"
 }
 
 gpu_indicates_game_activity() {
     [[ -z "$GPU_VENDOR" ]] && return 0
 
-    local usage=$(get_gpu_usage)
-    [[ -z "$usage" ]] && return 0
+    get_gpu_usage
+    [[ "$GPU_USAGE" =~ ^[0-9]+$ ]] || return 0
 
-    (( usage >= GPU_THRESHOLD ))
+    (( GPU_USAGE >= GPU_THRESHOLD ))
 }
 
 # =============================================================================
