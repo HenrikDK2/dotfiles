@@ -57,13 +57,15 @@ GPU_VENDOR=""
 AMD_GPU_BUSY_PATH=""
 
 # Build a single "a|b|c" regex from an array (used for GAME_PATTERN / EXCLUDED_PATTERN below)
-build_pattern() {
+build_slash_tolerant_pattern() {
+	local SLASH_CLASS='[/\]'
     local IFS='|'
-    echo "$*"
+    local combined="$*"
+    printf '%s' "${combined//\//$SLASH_CLASS}"
 }
 
-readonly GAME_PATTERN=$(build_pattern "${GAME_PATTERNS[@]}")
-readonly EXCLUDED_PATTERN=$(build_pattern "${EXCLUDED_PATTERNS[@]}")
+readonly GAME_PATTERN=$(build_slash_tolerant_pattern "${GAME_PATTERNS[@]}")
+readonly EXCLUDED_PATTERN=$(build_slash_tolerant_pattern "${EXCLUDED_PATTERNS[@]}")
 
 # =============================================================================
 # LOGGING & NOTIFICATIONS
@@ -190,28 +192,25 @@ disable_game_mode() {
 
 detect_game_process() {
     local matching_pids=()
-	local game_procs=$(ps ax -o pid=,command= | sed 's|\\|/|g' \
-    | grep -E "$GAME_PATTERN" \
-    | grep -vE "$EXCLUDED_PATTERN")
+    local game_procs=$(ps ax -o pid=,command= | grep -E "$GAME_PATTERN")
 
-    # Early exit if no matches
     [[ -z "$game_procs" ]] && return
 
     local pid cmdline
     while read -r pid cmdline; do
-        # Skip if empty
         [[ -z "$pid" ]] && continue
 
+        [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] && continue
+
+        local log_cmdline="${cmdline//\\//}"
         matching_pids+=("$pid")
 
-        # Set first match as current PID if not already set
         if [[ -z "$CURRENT_PID" ]]; then
             CURRENT_PID="$pid"
-            log_message "Detected game process: PID=$CURRENT_PID, CMD='$cmdline'"
+            log_message "Detected game process: PID=$CURRENT_PID, CMD='$log_cmdline'"
         fi
     done <<< "$game_procs"
 
-    # Enable game mode with all matching PIDs
     if [[ ${#matching_pids[@]} -gt 0 ]]; then
         enable_game_mode "${matching_pids[@]}"
     fi
@@ -220,20 +219,24 @@ detect_game_process() {
 verify_game_process() {
     if ! kill -0 "$CURRENT_PID" 2>/dev/null; then
         log_message "Game process ended: PID=$CURRENT_PID"
-
-        # Check if any other game processes are still running
-        local other_games=$(ps ax -o pid=,command= | sed 's|\\|/|g' \
-            | grep -E "$GAME_PATTERN" \
-            | grep -vE "$EXCLUDED_PATTERN")
+        
+        local other_games=$(ps ax -o pid=,command= | grep -E "$GAME_PATTERN")
+        local pid cmdline found=0
 
         if [[ -n "$other_games" ]]; then
-            # Other games still running - switch tracking to the first one
-            local new_pid=$(echo "$other_games" | head -1 | awk '{print $1}')
-            local new_cmd=$(echo "$other_games" | head -1 | cut -d' ' -f2-)
-            CURRENT_PID="$new_pid"
-            log_message "Switched tracking to another game: PID=$CURRENT_PID, CMD='$new_cmd'"
+            while read -r pid cmdline; do
+                [[ -z "$pid" ]] && continue
+                [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] && continue
+                found=1
+                break
+            done <<< "$other_games"
+        fi
+
+        if [[ "$found" -eq 1 ]]; then
+            CURRENT_PID="$pid"
+            local log_cmdline="${cmdline//\\//}"
+            log_message "Switched tracking to another game: PID=$CURRENT_PID, CMD='$log_cmdline'"
         else
-            # No other games running - safe to disable
             disable_game_mode
         fi
     fi
