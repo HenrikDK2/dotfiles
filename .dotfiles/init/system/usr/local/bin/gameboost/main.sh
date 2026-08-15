@@ -102,7 +102,6 @@ notify_user() {
 detect_gpu_vendor() {
     if command -v nvidia-smi &>/dev/null; then
         GPU_VENDOR="nvidia"
-        log_message "GPU monitoring: using nvidia-smi"
         return
     fi
 
@@ -123,17 +122,13 @@ detect_gpu_vendor() {
 
     if [[ -n "$AMD_GPU_BUSY_PATH" ]]; then
         GPU_VENDOR="amd"
-        log_message "GPU monitoring: using $AMD_GPU_BUSY_PATH"
         return
     fi
 
     if command -v intel_gpu_top &>/dev/null; then
         GPU_VENDOR="intel"
-        log_message "GPU monitoring: using intel_gpu_top"
         return
     fi
-
-    log_message "GPU monitoring: no supported GPU tool found, GPU gating disabled"
 }
 
 # Sets global GPU_USAGE
@@ -274,6 +269,12 @@ exec {SLEEP_FD}<> <(:)
 
 detect_gpu_vendor
 log_message "GameBoost script started."
+
+if [[ -n "$GPU_VENDOR" ]]; then
+    log_message "GPU vendor: $GPU_VENDOR"
+else
+    log_message "No GPU vendor found"
+fi
 
 # =============================================================================
 # MAIN LOOP
