@@ -26,6 +26,7 @@ whitelist ${HOME}/.config/lsfg-vk
 whitelist ${HOME}/.local/state/Heroic
 whitelist ${HOME}/.local/share/umu
 whitelist ${HOME}/.local/share/vulkan
+whitelist ${HOME}/.local/share/fish
 
 apparmor
 nonewprivs

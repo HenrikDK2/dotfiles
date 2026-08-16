@@ -2,27 +2,25 @@
 
 # Setup Apparmor
 groupadd -r audit 2>/dev/null || true
-gpasswd -a $USER audit
+gpasswd -a "$USER" audit
 
-if ! grep -q '^log_group = audit' /etc/audit/auditd.conf; then
+grep -q '^log_group = audit' /etc/audit/auditd.conf ||
     echo 'log_group = audit' >> /etc/audit/auditd.conf
-fi
 
-# Enforce rules
-firecfg
+# Temporarily allow firecfg without a password
+SUDOERS="/etc/sudoers.d/firecfg-$USER"
+echo "$USER ALL=(root) NOPASSWD: /usr/bin/firecfg" > "$SUDOERS"
+chmod 440 "$SUDOERS"
 
-# Disabled for Steam, since it causes issues with some games.
-# I also had issues connecting to Epic Games in some online titles.
-rm /usr/local/bin/steam
-
-# Way too slow for normal usage, using own bwrap sandbox
-rm /usr/local/bin/firefox
+# Setup Firejail
+firecfg --clean
+firecfg --add-users "$USER"
+runuser -u "$USER" -- sudo firecfg
+rm -f "$SUDOERS"
 
 # Delete empty folders created by firecfg
-find ~/ -maxdepth 3 -type d -empty -delete 2>/dev/null || true
+find "/home/$USER" -maxdepth 3 -type d -empty -delete 2>/dev/null || true
 
-# Add user to firejail.users if not already present
-FIREJAIL_USERS="/etc/firejail/firejail.users"
-if ! grep -qx "$USER" "$FIREJAIL_USERS"; then
-    echo "$USER" >> "$FIREJAIL_USERS"
-fi
+# Disable problematic Firejail profiles
+rm -f /usr/local/bin/steam
+rm -f /usr/local/bin/firefox
