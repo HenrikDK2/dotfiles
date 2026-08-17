@@ -1,0 +1,28 @@
+#!/bin/bash
+
+readonly FFXI_DIR="$HOME/Games/steamapps/common/FFXIPAL"
+readonly BACKUP="$HOME/FFXI_BACKUP"
+
+if [ -d "$FFXI_DIR" ]; then
+	# Create backup folder
+	mkdir "$BACKUP"
+
+	# Backup Windower
+	if [ -d "$FFXI_DIR/Windower" ]; then
+		cp -f "$FFXI_DIR/settings.xml" "$BACKUP"
+		cp -rf "$FFXI_DIR/Windower" "$BACKUP"
+	fi
+
+	# Backup USER macros/settings
+	mkdir -p "$BACKUP/SquareEnix/FINAL FANTASY XI"
+	cp -rf "$FFXI_DIR/SquareEnix/FINAL FANTASY XI/USER" "$BACKUP/SquareEnix/FINAL FANTASY XI"
+	cp -rf "$FFXI_DIR/SquareEnix/FINAL FANTASY XI/"Tools* "$BACKUP/SquareEnix/FINAL FANTASY XI"
+
+	# Create archive
+	echo "Enter password for backup: "
+	read PASSWORD
+	7z a -p$PASSWORD "FFXI_BACKUP.7z" "$BACKUP"
+	rm -rf "$BACKUP"
+else
+	echo "FFXI isn't installed"
+fi

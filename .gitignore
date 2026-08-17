@@ -122,6 +122,7 @@
 !.local/bin
 
 !.local/bin/virt-manager
+!.local/bin/ffxi_backup
 
 !.local/share/mime
 !.local/share/mime/application
