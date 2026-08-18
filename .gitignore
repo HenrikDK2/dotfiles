@@ -12,6 +12,9 @@
 !.themes
 !.themes/**
 
+!.ssh
+!.ssh/config
+
 !Wallpapers
 !Wallpapers/**
 

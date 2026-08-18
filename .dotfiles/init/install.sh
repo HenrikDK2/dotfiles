@@ -143,21 +143,32 @@ section "Enabling required system services"
 systemctl enable "${SYSTEM_SERVICES_TO_ENABLE[@]}"
 echo "Done"
 
-section "Masking unwanted services"
+section "Masking unwanted system services"
 systemctl mask "${SYSTEM_SERVICES_TO_MASK[@]}"
+echo "Done"
+
+section "Configuring user systemd services"
+for unit in "${USER_SERVICES_TO_ENABLE[@]}"; do
+    case "$unit" in
+        *.socket)  target=sockets.target ;;
+        *.service) target=default.target ;;
+        *) echo "Warning: unsupported user unit type: $unit" >&2; continue ;;
+    esac
+
+    src="/usr/lib/systemd/user/$unit"
+    dst="$USER_SYSTEMD_DIR/$target.wants/$unit"
+
+    [[ -e "$src" ]] || continue
+    mkdir -p "${dst%/*}"
+
+    [[ -e "$dst" || -L "$dst" ]] || ln -sv "$src" "$dst"
+done
 echo "Done"
 
 section "Setting default shell to fish"
 echo "Changing shells for both $USERNAME and root"
 usermod -s /usr/bin/fish $USERNAME
 usermod -s /usr/bin/fish root
-echo "Done"
-
-section "Configuring user systemd services"
-mkdir -p "$USER_SYSTEMD_DIR/default.target.wants"
-ln -sf /usr/lib/systemd/user/wireplumber.service "$USER_SYSTEMD_DIR/default.target.wants/"
-ln -sf /usr/lib/systemd/user/psd.service "$USER_SYSTEMD_DIR/default.target.wants/"
-ln -sf /dev/null "$USER_SYSTEMD_DIR/at-spi-dbus-bus.service"
 echo "Done"
 
 section "Configuring virsh to autostart"

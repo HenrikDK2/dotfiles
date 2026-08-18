@@ -186,3 +186,11 @@ SYSTEM_SERVICES_TO_MASK=(
     "rtkit-daemon.service"
     "ldconfig.service"
 )
+
+USER_SERVICES_TO_ENABLE=(
+    "wireplumber.service"
+)
+
+USER_SERVICES_TO_MASK=(
+    "at-spi-dbus-bus.service"
+)
