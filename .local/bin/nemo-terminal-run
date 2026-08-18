@@ -2,4 +2,17 @@
 
 file="${1//\\ / }"
 
-alacritty --hold -e bash -c 'cd "$(dirname "$1")" && exec "./$(basename "$1")"' bash "$file"
+if command -v alacritty >/dev/null 2>&1; then
+    alacritty -e bash -c 'cd "$(dirname "$1")" && exec "./$(basename "$1")"' bash "$file"
+elif command -v x-terminal-emulator >/dev/null 2>&1; then
+    x-terminal-emulator -e bash -c 'cd "$(dirname "$1")" && exec "./$(basename "$1")"' bash "$file"
+elif command -v gnome-terminal >/dev/null 2>&1; then
+    gnome-terminal -- bash -c 'cd "$(dirname "$1")" && exec "./$(basename "$1")"' bash "$file"
+elif command -v konsole >/dev/null 2>&1; then
+    konsole -e bash -c 'cd "$(dirname "$1")" && exec "./$(basename "$1")"' bash "$file"
+elif [ -n "$TERMINAL" ] && command -v "$TERMINAL" >/dev/null 2>&1; then
+    "$TERMINAL" -e bash -c 'cd "$(dirname "$1")" && exec "./$(basename "$1")"' bash "$file"
+else
+    echo "No supported terminal emulator found." >&2
+    exit 1
+fi
