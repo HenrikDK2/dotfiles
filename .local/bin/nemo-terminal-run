@@ -1,0 +1,5 @@
+#!/bin/bash
+
+file="${1//\\ / }"
+
+alacritty --hold -e bash -c 'cd "$(dirname "$1")" && exec "./$(basename "$1")"' bash "$file"

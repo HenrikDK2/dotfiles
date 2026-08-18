@@ -1,0 +1,6 @@
+[Nemo Action]
+Name=Run in terminal
+Comment=Run this shell script in terminal
+Exec=nemo-terminal-run "%F"
+Selection=s
+Extensions=sh;

@@ -1,28 +1,242 @@
 #!/bin/bash
 
 readonly FFXI_DIR="$HOME/Games/steamapps/common/FFXIPAL"
-readonly BACKUP="$HOME/FFXI_BACKUP"
+readonly BACKUP_DIR="$HOME/FFXI_BACKUP"
+readonly PREFIX_DIR="$HOME/Games/steamapps/compatdata/230350/pfx"
+readonly REGISTRY_FILE="$PREFIX_DIR/system.reg"
+readonly BACKUP_ARCHIVE="$HOME/FFXI_BACKUP.7z"
 
-if [ -d "$FFXI_DIR" ]; then
-	# Create backup folder
-	mkdir "$BACKUP"
+readonly POL_DIR="SquareEnix/FINAL FANTASY XI"
+readonly REGISTRY_PREFIX="PlayOnlineEU\\\\SquareEnix"
 
-	# Backup Windower
-	if [ -d "$FFXI_DIR/Windower" ]; then
-		cp -f "$FFXI_DIR/settings.xml" "$BACKUP"
-		cp -rf "$FFXI_DIR/Windower" "$BACKUP"
+if [ ! -d "$FFXI_DIR" ]; then
+	echo "FFXI isn't installed"
+	exit 1
+fi
+
+# Clean previous temporary backup
+rm -rf "$BACKUP_DIR" "$BACKUP_ARCHIVE"
+mkdir -p "$BACKUP_DIR"
+
+echo "Creating FFXI backup..."
+
+# ----------------------------------------------------------------------
+# Backup Windower
+# ----------------------------------------------------------------------
+
+if [ -d "$FFXI_DIR/Windower" ]; then
+	cp -f "$FFXI_DIR/settings.xml" "$BACKUP_DIR/" 2>/dev/null
+	cp -rf "$FFXI_DIR/Windower" "$BACKUP_DIR/"
+fi
+
+# ----------------------------------------------------------------------
+# Backup USER macros/settings
+# ----------------------------------------------------------------------
+
+mkdir -p "$BACKUP_DIR/$POL_DIR"
+
+if [ -d "$FFXI_DIR/$POL_DIR/USER" ]; then
+	cp -rf \
+		"$FFXI_DIR/$POL_DIR/USER" \
+		"$BACKUP_DIR/$POL_DIR/"
+fi
+
+for tools in "$FFXI_DIR/$POL_DIR"/Tools*; do
+	if [ -e "$tools" ]; then
+		cp -rf "$tools" "$BACKUP_DIR/$POL_DIR/"
+	fi
+done
+
+# ----------------------------------------------------------------------
+# Backup registry
+# ----------------------------------------------------------------------
+
+if [ -f "$REGISTRY_FILE" ]; then
+
+	awk '
+	BEGIN {
+		print "Windows Registry Editor Version 5.00"
+		print ""
+	}
+
+	$0 ~ /^\[/ {
+		if ($0 ~ /PlayOnlineEU\\\\SquareEnix/) {
+			print $0
+			keep=1
+		} else {
+			keep=0
+		}
+		next
+	}
+
+	keep {
+		print
+	}
+	' "$REGISTRY_FILE" \
+	> "$BACKUP_DIR/ffxi-regedit-backup.reg"
+
+	echo "Registry backup created."
+
+else
+	echo "WARNING: system.reg not found:"
+	echo "$REGISTRY_FILE"
+fi
+
+# ----------------------------------------------------------------------
+# Generate installer
+# ----------------------------------------------------------------------
+
+cat > "$BACKUP_DIR/install.sh" <<'INSTALLER'
+#!/bin/bash
+
+set -e
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+readonly FFXI_DIR="$HOME/Games/steamapps/common/FFXIPAL"
+readonly PREFIX_DIR="$HOME/Games/steamapps/compatdata/230350/pfx"
+readonly REGISTRY_FILE="$PREFIX_DIR/system.reg"
+
+readonly POL_DIR="SquareEnix/FINAL FANTASY XI"
+readonly REGISTRY_BACKUP="$SCRIPT_DIR/ffxi-regedit-backup.reg"
+
+echo "Installing FFXI backup..."
+
+# ----------------------------------------------------------------------
+# Restore Windower
+# ----------------------------------------------------------------------
+
+if [ -d "$SCRIPT_DIR/Windower" ]; then
+	echo "Restoring Windower..."
+
+	cp -f "$SCRIPT_DIR/settings.xml" "$FFXI_DIR/" 2>/dev/null || true
+	cp -rf "$SCRIPT_DIR/Windower" "$FFXI_DIR/"
+fi
+
+# ----------------------------------------------------------------------
+# Restore USER macros/settings
+# ----------------------------------------------------------------------
+
+if [ -d "$SCRIPT_DIR/$POL_DIR/USER" ]; then
+	echo "Restoring USER..."
+
+	mkdir -p "$FFXI_DIR/$POL_DIR"
+
+	cp -rf \
+		"$SCRIPT_DIR/$POL_DIR/USER" \
+		"$FFXI_DIR/$POL_DIR/"
+fi
+
+# ----------------------------------------------------------------------
+# Restore Tools*
+# ----------------------------------------------------------------------
+
+if [ -d "$SCRIPT_DIR/$POL_DIR" ]; then
+
+	mkdir -p "$FFXI_DIR/$POL_DIR"
+
+	for tools in "$SCRIPT_DIR/$POL_DIR"/Tools*; do
+		if [ -e "$tools" ]; then
+			cp -rf "$tools" "$FFXI_DIR/$POL_DIR/"
+		fi
+	done
+
+fi
+
+# ----------------------------------------------------------------------
+# Restore registry
+#
+# Only add registry sections that don't already exist.
+# ----------------------------------------------------------------------
+
+if [ -f "$REGISTRY_BACKUP" ]; then
+
+	if [ ! -f "$REGISTRY_FILE" ]; then
+		echo "system.reg doesn't exist."
+		echo "Creating it from the backup..."
+
+		mkdir -p "$(dirname "$REGISTRY_FILE")"
+
+		cp "$REGISTRY_BACKUP" "$REGISTRY_FILE"
+
+	else
+
+		echo "Merging FFXI registry settings..."
+
+		TEMP_REGISTRY="$(mktemp)"
+
+		awk -v backup="$REGISTRY_BACKUP" '
+		BEGIN {
+			while ((getline line < backup) > 0) {
+				backup_lines[++n] = line
+
+				if (line ~ /^\[/) {
+					key = line
+					sub(/^\[/, "", key)
+					sub(/\]$/, "", key)
+					backup_keys[key] = 1
+				}
+			}
+			close(backup)
+
+			in_backup = 0
+		}
+
+		# Existing registry section
+		$0 ~ /^\[/ {
+			key = $0
+			sub(/^\[/, "", key)
+			sub(/\]$/, "", key)
+
+			if (backup_keys[key]) {
+				skip = 1
+			} else {
+				skip = 0
+			}
+		}
+
+		# Don't copy sections which are already present.
+		skip {
+			next
+		}
+
+		{
+			print
+		}
+
+		END {
+			print ""
+			print "; FFXI registry settings restored by FFXI backup installer"
+			print ""
+
+			for (i = 1; i <= n; i++) {
+				print backup_lines[i]
+			}
+		}
+		' "$REGISTRY_FILE" > "$TEMP_REGISTRY"
+
+		mv "$TEMP_REGISTRY" "$REGISTRY_FILE"
+
 	fi
 
-	# Backup USER macros/settings
-	mkdir -p "$BACKUP/SquareEnix/FINAL FANTASY XI"
-	cp -rf "$FFXI_DIR/SquareEnix/FINAL FANTASY XI/USER" "$BACKUP/SquareEnix/FINAL FANTASY XI"
-	cp -rf "$FFXI_DIR/SquareEnix/FINAL FANTASY XI/"Tools* "$BACKUP/SquareEnix/FINAL FANTASY XI"
-
-	# Create archive
-	echo "Enter password for backup: "
-	read PASSWORD
-	7z a -p$PASSWORD "FFXI_BACKUP.7z" "$BACKUP"
-	rm -rf "$BACKUP"
-else
-	echo "FFXI isn't installed"
+	echo "Registry settings restored."
 fi
+
+echo -e "\n FFXI backup installation complete."
+INSTALLER
+
+chmod +x "$BACKUP_DIR/install.sh"
+
+# ----------------------------------------------------------------------
+# Create archive
+# ----------------------------------------------------------------------
+
+echo -e "\nEnter password for backup: \n"
+read PASSWORD
+clear
+
+7z a -p$PASSWORD "FFXI_BACKUP.7z" "$BACKUP_DIR"
+rm -rf "$BACKUP_DIR"
+
+echo -e "\n Backup created:"
+echo "$BACKUP_ARCHIVE"
