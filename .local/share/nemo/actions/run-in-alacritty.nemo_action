@@ -4,3 +4,5 @@ Comment=Run this shell script in terminal
 Exec=nemo-terminal-run "%F"
 Selection=s
 Extensions=sh;
+Icon-Name=utilities-terminal
+
