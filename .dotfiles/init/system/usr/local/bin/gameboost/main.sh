@@ -49,7 +49,7 @@ readonly EXCLUDED_PATTERNS=(
     ".*[Rr]edist.*\.exe"
 )
 
-# calibrate_gpu_threshold() replaces it at startup with max(idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
+# calibrate_gpu_threshold() replaces it at startup with max(gpu_idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
 GPU_THRESHOLD=25
 readonly GPU_IDLE_FLOOR=5 GPU_IDLE_MARGIN=10
 
@@ -112,8 +112,7 @@ detect_gpu_vendor() {
     command -v intel_gpu_top &>/dev/null && GPU_VENDOR="INTEL"
 }
 
-# Sets global GPU_USAGE
-get_gpu_usage() {
+update_gpu_usage() {
     GPU_USAGE="$GPU_THRESHOLD" # Should be replaced, unless implementation is faulty/missing
 
     case "$GPU_VENDOR" in
@@ -125,13 +124,12 @@ get_gpu_usage() {
     GPU_USAGE="${GPU_USAGE%%.*}"
 }
 
-# GPU_THRESHOLD = max(idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
 calibrate_gpu_threshold() {
     if [[ -z "$GPU_VENDOR" ]]; then
         return
     fi
 
-    get_gpu_usage
+    update_gpu_usage
     if [[ "$GPU_USAGE" =~ ^[0-9]+$ ]]; then
         GPU_THRESHOLD=$(( (GPU_USAGE < GPU_IDLE_FLOOR ? GPU_IDLE_FLOOR : GPU_USAGE) + GPU_IDLE_MARGIN ))
     fi
@@ -139,7 +137,7 @@ calibrate_gpu_threshold() {
 
 gpu_indicates_game_activity() {
     [[ -z "$GPU_VENDOR" ]] && return 0
-    get_gpu_usage
+    update_gpu_usage
     [[ "$GPU_USAGE" =~ ^[0-9]+$ ]] || return 0
     (( GPU_USAGE >= GPU_THRESHOLD ))
 }
@@ -171,7 +169,6 @@ disable_game_mode() {
 # =============================================================================
 
 # Prints "pid<TAB>cmdline" for every running process that matches GAME_PATTERN
-# and isn't excluded by EXCLUDED_PATTERN. Shared by detect/verify below.
 scan_games() {
     ps ax -o pid=,command= | grep -E "$GAME_PATTERN" | while read -r pid cmdline; do
         [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] || printf '%s\t%s\n' "$pid" "$cmdline"
@@ -226,8 +223,7 @@ exec {SLEEP_FD}<> <(:)
 detect_gpu_vendor
 echo "GPU vendor: ${GPU_VENDOR:-none found}"
 
-# Derive the threshold from gpu idle: max(idle, 5%) + 10%.
-calibrate_gpu_threshold
+calibrate_gpu_threshold # max(gpu_idle, 5%) + 10%
 echo "GPU threshold: ${GPU_THRESHOLD}%"
 
 # =============================================================================
