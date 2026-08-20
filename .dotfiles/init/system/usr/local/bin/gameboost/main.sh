@@ -10,9 +10,11 @@ readonly GAME_PATTERNS=(
     "/steamapps/common/.+\.(AppImage|x86_64|i386)"
     "Hytale/.*/(HytaleClient|HytaleServer\.jar)"
     "[A-Za-z]:/.+\\.exe"
+    "ProjectZomboid64"
 )
 
 readonly EXCLUDED_PATTERNS=(
+    "\.sh$"
     "wineserver"
     "pv-adverb"
     "/dotnet"
