@@ -90,7 +90,7 @@ notify_user() {
 
 detect_gpu_vendor() {
     if command -v nvidia-smi &>/dev/null; then
-        GPU_VENDOR="nvidia"
+        GPU_VENDOR="NVIDIA"
         return
     fi
 
@@ -107,9 +107,9 @@ detect_gpu_vendor() {
         fi
         [[ "$driver" == "amdgpu" ]] && AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
     done
-    [[ -n "$AMD_GPU_BUSY_PATH" ]] && { GPU_VENDOR="amd"; return; }
+    [[ -n "$AMD_GPU_BUSY_PATH" ]] && { GPU_VENDOR="AMD"; return; }
 
-    command -v intel_gpu_top &>/dev/null && GPU_VENDOR="intel"
+    command -v intel_gpu_top &>/dev/null && GPU_VENDOR="INTEL"
 }
 
 # Sets global GPU_USAGE
@@ -117,9 +117,9 @@ get_gpu_usage() {
     GPU_USAGE="$GPU_THRESHOLD" # Should be replaced, unless implementation is faulty/missing
 
     case "$GPU_VENDOR" in
-        nvidia) ;; # Need to create implementation
-        amd)    read -r GPU_USAGE < "$AMD_GPU_BUSY_PATH" 2>/dev/null ;;
-        intel)  ;; # Need to create implementation
+        NVIDIA) ;; # Need to create implementation
+        AMD)    read -r GPU_USAGE < "$AMD_GPU_BUSY_PATH" 2>/dev/null ;;
+        INTEL)  ;; # Need to create implementation
     esac
 
     GPU_USAGE="${GPU_USAGE%%.*}"
@@ -128,16 +128,12 @@ get_gpu_usage() {
 # GPU_THRESHOLD = max(idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
 calibrate_gpu_threshold() {
     if [[ -z "$GPU_VENDOR" ]]; then
-        echo "No GPU vendor detected; keeping default GPU threshold of ${GPU_THRESHOLD}%"
         return
     fi
 
     get_gpu_usage
     if [[ "$GPU_USAGE" =~ ^[0-9]+$ ]]; then
         GPU_THRESHOLD=$(( (GPU_USAGE < GPU_IDLE_FLOOR ? GPU_IDLE_FLOOR : GPU_USAGE) + GPU_IDLE_MARGIN ))
-        echo "Measured idle GPU usage: ${GPU_USAGE}% -> threshold set to ${GPU_THRESHOLD}%"
-    else
-        echo "Could not read idle GPU usage; keeping default GPU threshold of ${GPU_THRESHOLD}%"
     fi
 }
 
@@ -228,11 +224,11 @@ done
 exec {SLEEP_FD}<> <(:)
 
 detect_gpu_vendor
-echo "GameBoost script started."
 echo "GPU vendor: ${GPU_VENDOR:-none found}"
 
 # Derive the threshold from gpu idle: max(idle, 5%) + 10%.
 calibrate_gpu_threshold
+echo "GPU threshold: ${GPU_THRESHOLD}%"
 
 # =============================================================================
 # MAIN LOOP
