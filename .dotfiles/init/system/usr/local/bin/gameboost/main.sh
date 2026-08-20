@@ -1,7 +1,6 @@
 #!/bin/bash
 
 readonly GAMEBOOST_FLAG="/tmp/gameboost-running.flag"
-readonly LOG_FILE="/tmp/gameboost.log"
 CURRENT_PID=""
 
 readonly GAME_PATTERNS=(
@@ -68,13 +67,8 @@ readonly GAME_PATTERN=$(build_slash_tolerant_pattern "${GAME_PATTERNS[@]}")
 readonly EXCLUDED_PATTERN=$(build_slash_tolerant_pattern "${EXCLUDED_PATTERNS[@]}")
 
 # =============================================================================
-# LOGGING & NOTIFICATIONS
+# NOTIFICATIONS
 # =============================================================================
-
-log_message() {
-    printf -v ts '%(%Y-%m-%d %H:%M:%S)T' -1  # builtin strftime, no `date` fork
-    echo "$ts | $1" >> "$LOG_FILE"
-}
 
 notify_user() {
     local session=$(loginctl list-sessions --no-legend | awk '{print $1}' | while read -r id; do
@@ -87,7 +81,7 @@ notify_user() {
     uid=$(id -u "$user")
     sudo -u "$user" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" DISPLAY=:0 \
         notify-send --app-name=GameBoost "GameBoost" "$1"
-    log_message "Notification sent: $1"
+    echo "Notification sent: $1"
 }
 
 # =============================================================================
@@ -134,16 +128,16 @@ get_gpu_usage() {
 # GPU_THRESHOLD = max(idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
 calibrate_gpu_threshold() {
     if [[ -z "$GPU_VENDOR" ]]; then
-        log_message "No GPU vendor detected; keeping default GPU threshold of ${GPU_THRESHOLD}%"
+        echo "No GPU vendor detected; keeping default GPU threshold of ${GPU_THRESHOLD}%"
         return
     fi
 
     get_gpu_usage
     if [[ "$GPU_USAGE" =~ ^[0-9]+$ ]]; then
         GPU_THRESHOLD=$(( (GPU_USAGE < GPU_IDLE_FLOOR ? GPU_IDLE_FLOOR : GPU_USAGE) + GPU_IDLE_MARGIN ))
-        log_message "Measured idle GPU usage: ${GPU_USAGE}% -> threshold set to ${GPU_THRESHOLD}%"
+        echo "Measured idle GPU usage: ${GPU_USAGE}% -> threshold set to ${GPU_THRESHOLD}%"
     else
-        log_message "Could not read idle GPU usage; keeping default GPU threshold of ${GPU_THRESHOLD}%"
+        echo "Could not read idle GPU usage; keeping default GPU threshold of ${GPU_THRESHOLD}%"
     fi
 }
 
@@ -197,7 +191,7 @@ detect_game_process() {
         pids+=("$pid")
         if [[ -z "$CURRENT_PID" ]]; then
             CURRENT_PID="$pid"
-            log_message "Detected game process: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
+            echo "Detected game process: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
         fi
     done <<< "$matches"
 
@@ -206,14 +200,14 @@ detect_game_process() {
 
 verify_game_process() {
     kill -0 "$CURRENT_PID" 2>/dev/null && return
-    log_message "Game process ended: PID=$CURRENT_PID"
+    echo "Game process ended: PID=$CURRENT_PID"
 
     local pid cmdline
     IFS=$'\t' read -r pid cmdline <<< "$(scan_games)"
 
     if [[ -n "$pid" ]]; then
         CURRENT_PID="$pid"
-        log_message "Switched tracking to another game: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
+        echo "Switched tracking to another game: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
     else
         disable_game_mode
     fi
@@ -224,7 +218,6 @@ verify_game_process() {
 # =============================================================================
 
 rm -f "$GAMEBOOST_FLAG"
-> "$LOG_FILE"
 
 for svc in upower.service avahi-daemon.service auditd.service; do
     systemctl is-enabled "$svc" 2>&1 | grep -q masked && systemctl unmask "$svc"
@@ -235,8 +228,8 @@ done
 exec {SLEEP_FD}<> <(:)
 
 detect_gpu_vendor
-log_message "GameBoost script started."
-log_message "GPU vendor: ${GPU_VENDOR:-none found}"
+echo "GameBoost script started."
+echo "GPU vendor: ${GPU_VENDOR:-none found}"
 
 # Derive the threshold from gpu idle: max(idle, 5%) + 10%.
 calibrate_gpu_threshold
