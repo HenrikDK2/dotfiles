@@ -50,7 +50,9 @@ readonly EXCLUDED_PATTERNS=(
     ".*[Rr]edist.*\.exe"
 )
 
-readonly GPU_THRESHOLD=25 # Minimum threshold to run the (relatively expensive) ps+grep pattern
+# calibrate_gpu_threshold() replaces it at startup with max(idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
+GPU_THRESHOLD=25
+readonly GPU_IDLE_FLOOR=5 GPU_IDLE_MARGIN=10
 
 # Populated once at startup by detect_gpu_vendor: "nvidia", "amd", "intel", or "" (none found)
 GPU_VENDOR=""
@@ -58,10 +60,8 @@ AMD_GPU_BUSY_PATH=""
 
 # Build a single "a|b|c" regex from an array (used for GAME_PATTERN / EXCLUDED_PATTERN below)
 build_slash_tolerant_pattern() {
-	local SLASH_CLASS='[/\]'
-    local IFS='|'
-    local combined="$*"
-    printf '%s' "${combined//\//$SLASH_CLASS}"
+	local SLASH_CLASS='[/\]' IFS='|'
+    printf '%s' "${*//\//$SLASH_CLASS}"
 }
 
 readonly GAME_PATTERN=$(build_slash_tolerant_pattern "${GAME_PATTERNS[@]}")
@@ -72,26 +72,21 @@ readonly EXCLUDED_PATTERN=$(build_slash_tolerant_pattern "${EXCLUDED_PATTERNS[@]
 # =============================================================================
 
 log_message() {
-    # Builtin strftime, no `date` fork
-    printf -v ts '%(%Y-%m-%d %H:%M:%S)T' -1
+    printf -v ts '%(%Y-%m-%d %H:%M:%S)T' -1  # builtin strftime, no `date` fork
     echo "$ts | $1" >> "$LOG_FILE"
 }
 
 notify_user() {
-    local session=$(loginctl list-sessions --no-legend | while read id user seat; do
-        [[ $(loginctl show-session "$id" -p Active --value) == "yes" ]] || continue
-        [[ $(loginctl show-session "$id" -p Type --value) =~ ^(x11|wayland)$ ]] || continue
-        echo "$id"
-        break
+    local session=$(loginctl list-sessions --no-legend | awk '{print $1}' | while read -r id; do
+        [[ $(loginctl show-session "$id" -p Active --value) == yes ]] && \
+        [[ $(loginctl show-session "$id" -p Type --value) =~ ^(x11|wayland)$ ]] && { echo "$id"; break; }
     done)
-
     [[ -z "$session" ]] && return
 
-    local user=$(loginctl show-session "$session" -p Name --value)
-    local uid=$(id -u "$user")
-    local dbus="unix:path=/run/user/$uid/bus"
-
-    sudo -u "$user" DBUS_SESSION_BUS_ADDRESS="$dbus" DISPLAY=:0 notify-send --app-name=GameBoost "GameBoost" "$1"
+    local user=$(loginctl show-session "$session" -p Name --value) uid
+    uid=$(id -u "$user")
+    sudo -u "$user" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" DISPLAY=:0 \
+        notify-send --app-name=GameBoost "GameBoost" "$1"
     log_message "Notification sent: $1"
 }
 
@@ -116,19 +111,11 @@ detect_gpu_vendor() {
         elif [[ -z "$AMD_GPU_BUSY_PATH" ]]; then
             AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
         fi
-        # If we find an amdgpu-driven card, prefer it over any earlier match
         [[ "$driver" == "amdgpu" ]] && AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
     done
+    [[ -n "$AMD_GPU_BUSY_PATH" ]] && { GPU_VENDOR="amd"; return; }
 
-    if [[ -n "$AMD_GPU_BUSY_PATH" ]]; then
-        GPU_VENDOR="amd"
-        return
-    fi
-
-    if command -v intel_gpu_top &>/dev/null; then
-        GPU_VENDOR="intel"
-        return
-    fi
+    command -v intel_gpu_top &>/dev/null && GPU_VENDOR="intel"
 }
 
 # Sets global GPU_USAGE
@@ -136,26 +123,34 @@ get_gpu_usage() {
     GPU_USAGE="$GPU_THRESHOLD" # Should be replaced, unless implementation is faulty/missing
 
     case "$GPU_VENDOR" in
-        nvidia)
-            # Need to create implementation
-            ;;
-        amd)
-            read -r GPU_USAGE < "$AMD_GPU_BUSY_PATH" 2>/dev/null
-            ;;
-		intel)
-			# Need to create implementation
-		    ;;
+        nvidia) ;; # Need to create implementation
+        amd)    read -r GPU_USAGE < "$AMD_GPU_BUSY_PATH" 2>/dev/null ;;
+        intel)  ;; # Need to create implementation
     esac
 
     GPU_USAGE="${GPU_USAGE%%.*}"
 }
 
-gpu_indicates_game_activity() {
-    [[ -z "$GPU_VENDOR" ]] && return 0
+# GPU_THRESHOLD = max(idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
+calibrate_gpu_threshold() {
+    if [[ -z "$GPU_VENDOR" ]]; then
+        log_message "No GPU vendor detected; keeping default GPU threshold of ${GPU_THRESHOLD}%"
+        return
+    fi
 
     get_gpu_usage
-    [[ "$GPU_USAGE" =~ ^[0-9]+$ ]] || return 0
+    if [[ "$GPU_USAGE" =~ ^[0-9]+$ ]]; then
+        GPU_THRESHOLD=$(( (GPU_USAGE < GPU_IDLE_FLOOR ? GPU_IDLE_FLOOR : GPU_USAGE) + GPU_IDLE_MARGIN ))
+        log_message "Measured idle GPU usage: ${GPU_USAGE}% -> threshold set to ${GPU_THRESHOLD}%"
+    else
+        log_message "Could not read idle GPU usage; keeping default GPU threshold of ${GPU_THRESHOLD}%"
+    fi
+}
 
+gpu_indicates_game_activity() {
+    [[ -z "$GPU_VENDOR" ]] && return 0
+    get_gpu_usage
+    [[ "$GPU_USAGE" =~ ^[0-9]+$ ]] || return 0
     (( GPU_USAGE >= GPU_THRESHOLD ))
 }
 
@@ -185,55 +180,42 @@ disable_game_mode() {
 # GAME PROCESS DETECTION
 # =============================================================================
 
+# Prints "pid<TAB>cmdline" for every running process that matches GAME_PATTERN
+# and isn't excluded by EXCLUDED_PATTERN. Shared by detect/verify below.
+scan_games() {
+    ps ax -o pid=,command= | grep -E "$GAME_PATTERN" | while read -r pid cmdline; do
+        [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] || printf '%s\t%s\n' "$pid" "$cmdline"
+    done
+}
+
 detect_game_process() {
-    local matching_pids=()
-    local game_procs=$(ps ax -o pid=,command= | grep -E "$GAME_PATTERN")
+    local matches; matches=$(scan_games)
+    [[ -z "$matches" ]] && return
 
-    [[ -z "$game_procs" ]] && return
-
-    local pid cmdline
-    while read -r pid cmdline; do
-        [[ -z "$pid" ]] && continue
-
-        [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] && continue
-
-        local log_cmdline="${cmdline//\\//}"
-        matching_pids+=("$pid")
-
+    local pid cmdline pids=()
+    while IFS=$'\t' read -r pid cmdline; do
+        pids+=("$pid")
         if [[ -z "$CURRENT_PID" ]]; then
             CURRENT_PID="$pid"
-            log_message "Detected game process: PID=$CURRENT_PID, CMD='$log_cmdline'"
+            log_message "Detected game process: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
         fi
-    done <<< "$game_procs"
+    done <<< "$matches"
 
-    if [[ ${#matching_pids[@]} -gt 0 ]]; then
-        enable_game_mode "${matching_pids[@]}"
-    fi
+    enable_game_mode "${pids[@]}"
 }
 
 verify_game_process() {
-    if ! kill -0 "$CURRENT_PID" 2>/dev/null; then
-        log_message "Game process ended: PID=$CURRENT_PID"
-        
-        local other_games=$(ps ax -o pid=,command= | grep -E "$GAME_PATTERN")
-        local pid cmdline found=0
+    kill -0 "$CURRENT_PID" 2>/dev/null && return
+    log_message "Game process ended: PID=$CURRENT_PID"
 
-        if [[ -n "$other_games" ]]; then
-            while read -r pid cmdline; do
-                [[ -z "$pid" ]] && continue
-                [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] && continue
-                found=1
-                break
-            done <<< "$other_games"
-        fi
+    local pid cmdline
+    IFS=$'\t' read -r pid cmdline <<< "$(scan_games)"
 
-        if [[ "$found" -eq 1 ]]; then
-            CURRENT_PID="$pid"
-            local log_cmdline="${cmdline//\\//}"
-            log_message "Switched tracking to another game: PID=$CURRENT_PID, CMD='$log_cmdline'"
-        else
-            disable_game_mode
-        fi
+    if [[ -n "$pid" ]]; then
+        CURRENT_PID="$pid"
+        log_message "Switched tracking to another game: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
+    else
+        disable_game_mode
     fi
 }
 
@@ -241,27 +223,12 @@ verify_game_process() {
 # STARTUP
 # =============================================================================
 
-# Cleanup on start
-[[ -f "$GAMEBOOST_FLAG" ]] && rm -f "$GAMEBOOST_FLAG"
+rm -f "$GAMEBOOST_FLAG"
 > "$LOG_FILE"
 
-# Unmask potentially masked services
-services=(
-  upower.service
-  avahi-daemon.service
-  auditd.service
-)
-
-for svc in "${services[@]}"; do
-    # Check if service is masked
-    if systemctl is-enabled "$svc" 2>&1 | grep -q masked; then
-        systemctl unmask "$svc"
-    fi
-
-    # Start only if inactive
-    if ! systemctl is-active --quiet "$svc"; then
-        systemctl start "$svc"
-    fi
+for svc in upower.service avahi-daemon.service auditd.service; do
+    systemctl is-enabled "$svc" 2>&1 | grep -q masked && systemctl unmask "$svc"
+    systemctl is-active --quiet "$svc" || systemctl start "$svc"
 done
 
 # fd for fork-free sleep
@@ -269,12 +236,10 @@ exec {SLEEP_FD}<> <(:)
 
 detect_gpu_vendor
 log_message "GameBoost script started."
+log_message "GPU vendor: ${GPU_VENDOR:-none found}"
 
-if [[ -n "$GPU_VENDOR" ]]; then
-    log_message "GPU vendor: $GPU_VENDOR"
-else
-    log_message "No GPU vendor found"
-fi
+# Derive the threshold from gpu idle: max(idle, 5%) + 10%.
+calibrate_gpu_threshold
 
 # =============================================================================
 # MAIN LOOP
@@ -284,13 +249,10 @@ readonly INTERVAL=10
 
 while true; do
     if [[ -z "$CURRENT_PID" ]]; then
-        if gpu_indicates_game_activity; then
-            detect_game_process
-        fi
+        gpu_indicates_game_activity && detect_game_process
     else
         verify_game_process
     fi
 
-    # Fork-free sleep
-    read -t "$INTERVAL" -u "$SLEEP_FD" _ 2>/dev/null
+    read -t "$INTERVAL" -u "$SLEEP_FD" _ 2>/dev/null # fork-free sleep
 done
