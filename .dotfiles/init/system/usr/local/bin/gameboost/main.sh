@@ -28,6 +28,9 @@ readonly EXCLUDED_PATTERNS=(
     "/steamapps/compatdata/"
     "/winetricks"
 
+	# Project Zomboid Server
+    "ProjectZomboid64 -servername"
+
 	# FFXI
     "/Windower.exe"
 
