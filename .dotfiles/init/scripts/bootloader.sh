@@ -24,6 +24,7 @@ KERNEL_PARAMS=(
 "nowatchdog"
 "nmi_watchdog=0"
 "module_blacklist=iTCO_wdt"
+"transparent_hugepage_tmpfs=advise"
 "amdgpu.audio=0"
 "amdgpu.ppfeaturemask=0xffffffff"
 )
