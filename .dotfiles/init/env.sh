@@ -63,7 +63,8 @@ PACKAGES=(
 	"qemu-desktop"
 	"dnsmasq"
 	"dmidecode"
-
+	"edk2-ovmf"
+	
 	# System
     "alacritty"
     "jq"
