@@ -27,10 +27,6 @@ function clear_screen() {
     tput cup "$offset" 0
 }
 
-if [[ -z "$_RETRY_COUNT" ]]; then
-    export _RETRY_COUNT=0
-fi
-
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script needs to be run as root (su)"
     su -c "$0 $@"
