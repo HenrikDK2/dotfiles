@@ -21,7 +21,7 @@ DBUS_PORTALS=(
 BWRAP_ARGS=(
 	--clearenv
     --unshare-user-try
-    --unshare-cgroup-try 
+    --unshare-cgroup-try
     --unshare-ipc
     --unshare-uts
     --unshare-pid
@@ -30,61 +30,108 @@ BWRAP_ARGS=(
 	--proc /proc
 	--dev /dev
 	--tmpfs /run
-	
+
 	# Normally use tmpfs, but needed to open the same instance of modorganizer with nxm-handler
-	--dev-bind /tmp /tmp 
+	--dev-bind /tmp /tmp
 
 	# Binds
-	--dev-bind $HOME $HOME
-
-	--bind-try /tmp/.X11-unix/X0 /tmp/.X11-unix/X0
-
-	--bind-try /var/spool/mail /var/spool/mail
 	--ro-bind-try /bin/dbus-launch /bin/dbus-launch
 	--ro-bind-try /bin/firefox /bin/firefox
 	--ro-bind-try /bin/sh /bin/sh
-
+	
+	--dev-bind-try /dev/char /dev/char
+	--dev-bind-try /dev/dri /dev/dri
+	--dev-bind-try /dev/kfd /dev/kfd
+	--dev-bind-try /dev/shm /dev/shm
+	
 	--ro-bind-try /etc/ca-certificates /etc/ca-certificates
 	--ro-bind-try /etc/fonts /etc/fonts
 	--ro-bind-try /etc/gai.conf /etc/gai.conf
+	--ro-bind-try /etc/group /etc/group
+	--ro-bind-try /etc/host.conf /etc/host.conf
+	--ro-bind-try /etc/hosts /etc/hosts
 	--ro-bind-try /etc/ld.so.cache /etc/ld.so.cache
 	--ro-bind-try /etc/ld.so.conf /etc/ld.so.conf
 	--ro-bind-try /etc/ld.so.conf.d/lib32-glibc.conf /etc/ld.so.conf.d/lib32-glibc.conf
+	--ro-bind-try /etc/ld.so.preload /etc/ld.so.preload
 	--ro-bind-try /etc/libva.conf /etc/libva.conf
 	--ro-bind-try /etc/localtime /etc/localtime
 	--ro-bind-try /etc/mailcap /etc/mailcap
 	--ro-bind-try /etc/mime.types /etc/mime.types
 	--ro-bind-try /etc/nsswitch.conf /etc/nsswitch.conf
+	--ro-bind-try /etc/os-release /etc/os-release
 	--ro-bind-try /etc/passwd /etc/passwd
 	--ro-bind-try /etc/pipewire/client.conf.d /etc/pipewire/client.conf.d
 	--ro-bind-try /etc/pulse/client.conf /etc/pulse/client.conf
 	--ro-bind-try /etc/resolv.conf /etc/resolv.conf
+	--bind-try /etc/ssl/openssl.cnf /etc/ssl/openssl.cnf
 	--ro-bind-try /etc/xdg /etc/xdg
-
+	
+	--bind-try $HOME/.cache $HOME/.cache
+	--bind-try $HOME/.cache/fontconfig $HOME/.cache/fontconfig
+	--bind-try $HOME/.config/dconf/user $HOME/.config/dconf/user
+	--bind-try $HOME/.config/gtk-3.0 $HOME/.config/gtk-3.0
+	--bind-try $HOME/.config/mimeapps.list $HOME/.config/mimeapps.list
+	--bind-try $HOME/.config/mozilla/firefox $HOME/.config/mozilla/firefox
+	--bind-try $HOME/Downloads $HOME/Downloads
+	--bind-try $HOME/.icons $HOME/.icons
+	--bind-try $HOME/.local/bin/firefox $HOME/.local/bin/firefox
+	--bind-try $HOME/.local/share/applications/firefox.desktop $HOME/.local/share/applications/firefox.desktop
+	--ro-bind-try $HOME/.local/share/applications/mimeinfo.cache $HOME/.local/share/applications/mimeinfo.cache
+	--bind-try $HOME/.local/share/icons $HOME/.local/share/icons
+	--bind-try $HOME/.local/share/PrismLauncher $HOME/.local/share/PrismLauncher
+	--bind-try $HOME/.local/share/Steam $HOME/.local/share/Steam
+	--bind-try $HOME/.themes $HOME/.themes
+	
 	--ro-bind-try /lib /lib
-
 	--ro-bind-try /lib64 /lib64
-
+	
+	--dev-bind-try /run/systemd/userdb/io.systemd.DynamicUser /run/systemd/userdb/io.systemd.DynamicUser
+	--dev-bind-try /run/udev/control /run/udev/control
+	--dev-bind-try /run/user/1000/bus /run/user/1000/bus
+	--dev-bind-try /run/user/1000/dconf/user /run/user/1000/dconf/user
+	--dev-bind-try /run/user/1000/pipewire-0 /run/user/1000/pipewire-0
+	--dev-bind-try /run/user/1000/pulse/native /run/user/1000/pulse/native
+	--dev-bind-try /run/user/1000/wayland-1 /run/user/1000/wayland-1
+	
 	--ro-bind-try /sys/bus/pci/devices /sys/bus/pci/devices
 	--ro-bind-try /sys/bus/pci_express /sys/bus/pci_express
 	--ro-bind-try /sys/class/drm /sys/class/drm
 	--ro-bind-try /sys/dev/char /sys/dev/char
 	--ro-bind-try /sys/devices /sys/devices
 	--ro-bind-try /sys/dri /sys/dri
-
-	--ro-bind-try /usr/bin /usr/bin
+	--ro-bind-try /sys/fs/cgroup/cgroup.controllers /sys/fs/cgroup/cgroup.controllers
+	
+	--bind-try /tmp/.X11-unix/X0 /tmp/.X11-unix/X0
+	
+	--ro-bind-try /usr/bin/bash /usr/bin/bash
+	--ro-bind-try /usr/bin/dbus-launch /usr/bin/dbus-launch
+	--ro-bind-try /usr/bin/firefox /usr/bin/firefox
+	--ro-bind-try /usr/bin/fish /usr/bin/fish
+	--ro-bind-try /usr/bin/gtk-query-immodules-3.0 /usr/bin/gtk-query-immodules-3.0
+	--ro-bind-try /usr/bin/nologin /usr/bin/nologin
+	--ro-bind-try /usr/bin/prismlauncher /usr/bin/prismlauncher
+	--ro-bind-try /usr/bin/sh /usr/bin/sh
+	--ro-bind-try /usr/bin/true /usr/bin/true
+	--ro-bind-try /usr/bin/xdg-open /usr/bin/xdg-open
+	
 	--ro-bind-try /usr/lib /usr/lib
 	--ro-bind-try /usr/lib32 /usr/lib32
 	--ro-bind-try /usr/lib64 /usr/lib64
+	
+	--ro-bind-try /usr/local/share/fonts /usr/local/share/fonts
+	
 	--ro-bind-try /usr/sbin /usr/sbin
-	--ro-bind-try /usr/share/glycin-loaders /usr/share/glycin-loaders
+	
 	--ro-bind-try /usr/share/applications/mimeinfo.cache /usr/share/applications/mimeinfo.cache
+	--ro-bind-try /usr/share/applications/org.prismlauncher.PrismLauncher.desktop /usr/share/applications/org.prismlauncher.PrismLauncher.desktop
 	--ro-bind-try /usr/share/ca-certificates /usr/share/ca-certificates
 	--ro-bind-try /usr/share/drirc.d /usr/share/drirc.d
 	--ro-bind-try /usr/share/fontconfig /usr/share/fontconfig
 	--ro-bind-try /usr/share/fonts /usr/share/fonts
 	--ro-bind-try /usr/share/glib-2.0 /usr/share/glib-2.0
 	--ro-bind-try /usr/share/glvnd /usr/share/glvnd
+	--ro-bind-try /usr/share/glycin-loaders /usr/share/glycin-loaders
 	--ro-bind-try /usr/share/gtk-3.0 /usr/share/gtk-3.0
 	--ro-bind-try /usr/share/icons /usr/share/icons
 	--ro-bind-try /usr/share/libdrm /usr/share/libdrm
@@ -99,24 +146,15 @@ BWRAP_ARGS=(
 	--ro-bind-try /usr/share/X11/locale /usr/share/X11/locale
 	--ro-bind-try /usr/share/xkeyboard-config-2 /usr/share/xkeyboard-config-2
 	--ro-bind-try /usr/share/zoneinfo /usr/share/zoneinfo
-
+	
 	--ro-bind-try /var/cache/fontconfig /var/cache/fontconfig
 	--ro-bind-try /var/lib /var/lib
-
-	--dev-bind-try /dev/char /dev/char
-	--dev-bind-try /dev/dri /dev/dri
-	--dev-bind-try /dev/kfd /dev/kfd
-	--dev-bind-try /dev/shm /dev/shm
-
-	--dev-bind-try /run/user/1000/dconf/user /run/user/1000/dconf/user
-	--dev-bind-try /run/user/1000/pipewire-0 /run/user/1000/pipewire-0
-	--dev-bind-try /run/user/1000/pulse/native /run/user/1000/pulse/native
-	--dev-bind-try /run/user/1000/wayland-1 /run/user/1000/wayland-1
-
+	--bind-try /var/spool/mail /var/spool/mail
+	
 	--setenv HOME $HOME
 	--setenv DISPLAY $DISPLAY
 	--setenv WAYLAND_DISPLAY $WAYLAND_DISPLAY
-
+	
 	# Needed for nxm-handler
 	--bind-try /bin /bin
 	--bind-try $HOME/.local/share/applications/nxm-handler.desktop $HOME/.local/share/applications/nxm-handler.desktop
