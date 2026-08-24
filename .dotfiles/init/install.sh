@@ -1,31 +1,8 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source $SCRIPT_DIR/env.sh
-
-function section() {
-    echo
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  $1"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-}
-
-# $1 - offset from top (default: 0)
-function clear_screen() {
-    local lines=$(tput lines)
-    local offset=${1:-0}
-    local clear_lines=$((lines - offset))
-
-    if (( clear_lines < 0 )); then
-        clear_lines=0
-    fi
-
-    for ((i=0; i<clear_lines; i++)); do
-        echo ""
-    done
-
-    tput cup "$offset" 0
-}
+source $SCRIPT_DIR/lib/env.sh
+source $SCRIPT_DIR/lib/common.sh
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script needs to be run as root (su)"
@@ -126,7 +103,7 @@ echo "Done"
 
 section "Copying system configs"
 mkdir -p /tmp/system_files
-cp -rf $SCRIPT_DIR/system/* /tmp/system_files
+cp -rf $SCRIPT_DIR/files/system/* /tmp/system_files
 chown -R /tmp/system_files/*
 cp -rf /tmp/system_files/* /
 echo "Done"
@@ -171,40 +148,40 @@ section "Configuring virsh to autostart"
 virsh net-autostart default
 
 section "Bootloader"
-source $SCRIPT_DIR/scripts/bootloader.sh
+source $SCRIPT_DIR/lib/scripts/bootloader.sh
 
 section "Auto login"
-source $SCRIPT_DIR/scripts/auto_login.sh
+source $SCRIPT_DIR/lib/scripts/auto_login.sh
 
 section "Mozilla"
-source $SCRIPT_DIR/scripts/mozilla.sh
+source $SCRIPT_DIR/lib/scripts/mozilla.sh
 
 section "Heroic"
-source $SCRIPT_DIR/scripts/heroic.sh
+source $SCRIPT_DIR/lib/scripts/heroic.sh
 
 section "Tidal-hifi"
-source $SCRIPT_DIR/scripts/tidal-hifi.sh
+source $SCRIPT_DIR/lib/scripts/tidal-hifi.sh
 
 section "qBittorrent"
-source $SCRIPT_DIR/scripts/qbittorrent.sh
+source $SCRIPT_DIR/lib/scripts/qbittorrent.sh
 
 section "Drive optimizations"
-source $SCRIPT_DIR/scripts/drive_optimizations.sh
+source $SCRIPT_DIR/lib/scripts/drive_optimizations.sh
 
 section "Auto update"
-source $SCRIPT_DIR/scripts/auto_update.sh
+source $SCRIPT_DIR/lib/scripts/auto_update.sh
 
 section "Firewall"
-source $SCRIPT_DIR/scripts/firewall.sh
+source $SCRIPT_DIR/lib/scripts/firewall.sh
 
 section "GPU drivers"
-source $SCRIPT_DIR/scripts/gpu_drivers.sh
+source $SCRIPT_DIR/lib/scripts/gpu_drivers.sh
 
 section "Microsoft fonts"
-source $SCRIPT_DIR/scripts/microsoft_fonts.sh
+source $SCRIPT_DIR/lib/scripts/microsoft_fonts.sh
 
 section "Sandboxing"
-source $SCRIPT_DIR/scripts/sandboxing.sh
+source $SCRIPT_DIR/lib/scripts/sandboxing.sh
 
 section "Removing pacnew/pacsave files"
 find /etc \( -name "*.pacnew" -o -name "*.pacsave" \) -print0 | xargs -0 rm -f

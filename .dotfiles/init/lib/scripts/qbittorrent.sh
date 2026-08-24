@@ -26,11 +26,11 @@ for CONFIG_PATH in "${CONFIG_PATHS[@]}"; do
             echo "qBittorrent Flatpak not installed, skipping config copy."
             continue
         fi
-        
+
         # Create config directory and copy the config if not found
         mkdir -p "$CONFIG_PATH"
-        cp -r "$SCRIPT_DIR/user/qBittorrent/." "$CONFIG_PATH"
-        echo "  ✔ Copied qBittorrent config: $SCRIPT_DIR/user/qBittorrent → $CONFIG_PATH"
+        cp -r "$SCRIPT_DIR/files/user/qBittorrent/." "$CONFIG_PATH"
+        echo "  ✔ Copied qBittorrent config: $SCRIPT_DIR/files/user/qBittorrent → $CONFIG_PATH"
     else
         echo "  — qBittorrent config already exists, skipping: $CONFIG_PATH"
     fi

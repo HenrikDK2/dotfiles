@@ -31,7 +31,7 @@ for p in $procs; do
 done
 
 # Firefox
-DOTFILES_FIREFOX="$SCRIPT_DIR/user/mozilla/firefox"
+DOTFILES_FIREFOX="$SCRIPT_DIR/files/user/mozilla/firefox"
 FIREFOX_PATHS=(
     "$HOME/.var/app/org.mozilla.firefox/config/mozilla/firefox"
     "$HOME/.config/mozilla/firefox"

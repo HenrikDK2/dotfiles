@@ -42,7 +42,7 @@ This repository contains my complete system configuration, including dotfiles an
 
 3. Configure your preferences:
    ```bash
-   nano /tmp/dotfiles/.dotfiles/init/env.sh
+   nano /tmp/dotfiles/.dotfiles/init/lib/env.sh
    ```
 
 4. Run the installation script as root:
