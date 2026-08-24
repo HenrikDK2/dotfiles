@@ -103,8 +103,8 @@ echo "Done"
 
 section "Copying system configs"
 mkdir -p /tmp/system_files
-cp -rf $SCRIPT_DIR/files/system/* /tmp/system_files
-chown -R /tmp/system_files/*
+cp -rf "$SCRIPT_DIR/files/system/"* /tmp/system_files/
+chown -R root:root /tmp/system_files
 cp -rf /tmp/system_files/* /
 echo "Done"
 
