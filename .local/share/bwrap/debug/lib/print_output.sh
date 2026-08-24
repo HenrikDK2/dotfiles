@@ -152,11 +152,6 @@ print_output() {
 			/dev/*|/run*)
 				cmd=--dev-bind-try
 				;;
-
-			/etc/ssl/openssl.cnf)
-				cmd=--bind-try
-				;;
-
 			*)
 				if [[ -e "$path" && -w "$path" ]]; then
 					cmd=--bind-try
