@@ -7,6 +7,7 @@ trap 'exit 143' TERM
 PROXY_SOCKET="$XDG_RUNTIME_DIR/bus-proxy-$(uuidgen).sock"
 DEBUG=0
 EXIT_CODE=0
+PROXY_PID=
 
 utils::log() {
 	local level=$1 message=$2 color timestamp padding=
@@ -39,10 +40,17 @@ utils::dbus() {
 
 	xdg-dbus-proxy "$DBUS_SESSION_BUS_ADDRESS" "$PROXY_SOCKET" \
 		"${DBUS_PORTALS[@]}" $log --filter &
+
 	PROXY_PID=$!
 
 	utils::log INFO "Waiting for proxy socket..."
 	while [[ ! -S $PROXY_SOCKET ]]; do
+		if ! kill -0 "$PROXY_PID" 2>/dev/null; then
+			utils::log ERROR "DBus proxy exited before creating its socket"
+			wait "$PROXY_PID" 2>/dev/null || true
+			return 1
+		fi
+
 		read -rt 0.01 </dev/null
 	done
 	utils::log INFO "Proxy ready"
@@ -73,11 +81,26 @@ utils::kill_existing_process() {
 		fi
 
 		utils::log INFO "Waiting for process $pid to exit..."
+
 		while kill -0 "$pid" 2>/dev/null; do
 			read -rt 0.01 </dev/null
 		done
+
 		utils::log INFO "Process $pid exited"
 	done < <(pgrep -x "$executable_name" || true)
+}
+
+utils::cleanup() {
+	local cleanup_status=$?
+
+	if [[ -n ${PROXY_PID:-} ]]; then
+		utils::log INFO "Removing DBus proxy (PID $PROXY_PID)..."
+		kill -KILL "$PROXY_PID" 2>/dev/null || true
+		rm -f -- "$PROXY_SOCKET"
+	fi
+
+	utils::log INFO "Cleanup complete"
+	return "$cleanup_status"
 }
 
 utils::run() {
@@ -86,45 +109,39 @@ utils::run() {
 		shift
 	fi
 
-	utils::dbus
+	utils::dbus || return 1
 	utils::log INFO "Launching $EXECUTABLE..."
 
-	local -a bwrap_args=()
-	for arg in "${BWRAP_ARGS[@]}"; do
-		[[ $arg != --die-with-parent ]] && bwrap_args+=("$arg")
-	done
-
 	if [[ $DEBUG -eq 0 ]]; then
-		exec bwrap "${bwrap_args[@]}" "$EXECUTABLE" "$@"
+		# Do NOT use exec here.
+		#
+		# The Bash process must remain alive so that its EXIT trap
+		# can run after bwrap exits.
+		bwrap "${BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
+
+		EXIT_CODE=$?
+		exit "$EXIT_CODE"
 	fi
 
 	if ! command -v strace >/dev/null 2>&1; then
-		utils::log ERROR "strace is required for --debug but is not installed."
+		utils::log ERROR \
+			"strace is required for --debug but is not installed."
 		return 1
 	fi
 
 	utils::kill_existing_process
 
 	strace -f -tt -s 128 -e trace=all -o "$TRACE_FILE" \
-		bwrap "${bwrap_args[@]}" "$EXECUTABLE" "$@"
+		bwrap "${BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
 
 	EXIT_CODE=$?
 	utils::debug
 	exit "$EXIT_CODE"
 }
 
-utils::cleanup() {
-	utils::log INFO "Cleaning up..."
-
-	[[ ${PROXY_PID:-} ]] &&
-		kill "$PROXY_PID" 2>/dev/null || true
-
-	rm -f "$PROXY_SOCKET"
-}
-
 utils::debug() {
 	utils::log INFO "Starting debugging..."
-
+	
 	local debug_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/debug" && pwd)"
 	source "$debug_dir/lib/normalize_path.sh"
 	source "$debug_dir/lib/print_output.sh"
@@ -135,8 +152,12 @@ utils::debug() {
 		local stage name before start duration
 
 		mapfile -t stages < <(
-			find "$debug_dir/pipeline" -maxdepth 1 \
-				-type f -name '*.sh' -print | sort -V
+			find "$debug_dir/pipeline" \
+				-maxdepth 1 \
+				-type f \
+				-name '*.sh' \
+				-print |
+				sort -V
 		)
 
 		for stage in "${stages[@]}"; do
@@ -145,17 +166,26 @@ utils::debug() {
 			start=$EPOCHREALTIME
 
 			mapfile -t items < <(
-				printf '%s\n' "${items[@]}" | source "$stage"
+				printf '%s\n' "${items[@]}" |
+					source "$stage"
 			)
 
-			duration=$(awk -v start="$start" -v end="$EPOCHREALTIME" \
-				'BEGIN { printf "%.6f", (end-start)*1000 }')
+			duration=$(
+				awk -v start="$start" -v end="$EPOCHREALTIME" \
+					'BEGIN { printf "%.6f", (end-start)*1000 }'
+			)
 
-			printf '[pipeline] stage: %s\n  - time: %sms\n  - items: %d → %d\n' \
-				"${name%.sh}" "$duration" "$before" "${#items[@]}" >&2
+			printf \
+				'[pipeline] stage: %s\n  - time: %sms\n  - items: %d → %d\n' \
+				"${name%.sh}" \
+				"$duration" \
+				"$before" \
+				"${#items[@]}" >&2
 		done
 
-		printf '[pipeline] finished stages: %d\n' "${#stages[@]}" >&2
+		printf '[pipeline] finished stages: %d\n' \
+			"${#stages[@]}" >&2
+
 		printf '%s\n' "${items[@]}"
 	}
 
@@ -163,11 +193,12 @@ utils::debug() {
 	mapfile -t items < <(run_pipeline)
 
 	if [[ ${#items[@]} -eq 0 ]]; then
-		utils::log INFO "debug_build_json_suggestions: no recommendations found"
+		utils::log INFO \
+			"debug_build_json_suggestions: no recommendations found"
 		return
 	fi
 
-	utils::log WARN "This dataset comes from strace output, so it includes a lot of paths that the program probably doesn’t actually need."
+	utils::log WARN"This dataset comes from strace output, so it includes a lot of paths that the program probably doesn’t actually need."
 	utils::log INFO "Profile recommendation:"
 	print_output "${items[@]}" 2>/dev/null | tee >(copy_to_clipboard) "$HOME/bwrap-profile.txt"
 	utils::log INFO "*Copied to clipboard* - also saved in $HOME/bwrap-profile.txt"
