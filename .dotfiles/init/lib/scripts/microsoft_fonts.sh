@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
 REPO_URL="https://github.com/pjobson/Microsoft-Fonts.git"
 SPARSE_PATH="2021 - Windows 11/ttf"
 FONT_DIR="/usr/local/share/fonts/microsoft"

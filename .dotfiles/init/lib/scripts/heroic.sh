@@ -1,17 +1,21 @@
 #!/bin/bash
+
 # Possible Heroic installations and their corresponding config paths
 declare -A HEROIC_INSTALLS=(
   ["native"]="$HOME/.config/heroic/config.json"
   ["flatpak"]="$HOME/.var/app/com.heroicgameslauncher.hgl/config/heroic/config.json"
 )
+
 # Check if native Heroic is installed
 is_native_installed() {
     command -v heroic &>/dev/null
 }
+
 # Check if Heroic Flatpak is installed
 is_flatpak_installed() {
     flatpak list 2>/dev/null | grep -q "com.heroicgameslauncher.hgl"
 }
+
 for INSTALL_TYPE in "${!HEROIC_INSTALLS[@]}"; do
     CONFIG="${HEROIC_INSTALLS[$INSTALL_TYPE]}"
     NEWLY_CREATED=false
