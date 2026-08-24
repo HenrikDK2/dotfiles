@@ -22,16 +22,12 @@ filter_existing_paths() {
 		[[ -z "$clean_path" ]] && continue
 
 		case "$clean_path" in
-			/home | /usr/bin/bwrap | \
-			/ | /root* | /newroot* | /oldroot* | \
-			/proc* | /dev/core* | /dev/fd* | \
-			/dev/console | /dev/full | /dev/null | \
-			/dev/nvme* | \
-			/dev/pts* | /dev/ptmx | /dev/random | \
-			/dev/stdin | /dev/stdout | /dev/stderr | \
-			/dev/tty | \
-			/dev/udmabuf | /dev/urandom | /dev/zero | \
-			/run/dbus/system_bus_socket | \
+			/|/home|/root*|/newroot*|/oldroot*|\
+			/proc*|/dev/core*|/dev/fd*|/dev/pts*|\
+			/dev/console|/dev/full|/dev/null|/dev/nvme*|\
+			/dev/ptmx|/dev/random|/dev/stdin|/dev/stdout|\
+			/dev/stderr|/dev/tty|/dev/udmabuf|/dev/urandom|\
+			/dev/zero|/run/dbus/system_bus_socket|\
 			/run/user/1000/bus-proxy*)
 				continue
 				;;
