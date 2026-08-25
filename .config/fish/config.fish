@@ -124,12 +124,15 @@ set -gx XDG_DATA_DIRS "/usr/local/share:/usr/share:$HOME/.local/share:/var/lib/f
 # vulkan-low-latency-layer
 set -gx LOW_LATENCY_LAYER 1
 
+# Hide GTK_A11Y warnings
+set -gx GTK_A11Y "none"
+set -gx NO_AT_BRIDGE 1
+
 set -gx _JAVA_AWT_WM_NONREPARENTING 1
 set -gx ANDROID_HOME $HOME/Android/Sdk
 set -gx OBS_VKCAPTURE 1
 set -gx DOTNET_SYSTEM_GLOBALIZATION_INVARIANT false
 set -gx FREETYPE_PROPERTIES "hinting=true:hintstyle=hintslight:antialias=rgb:subpixel_rendering=rgb"
-set -gx GTK_A11Y "none"
 
 set fish_color_autosuggestion "#747e93"
 set -U fish_greeting
