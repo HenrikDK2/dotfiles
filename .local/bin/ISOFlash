@@ -1,0 +1,186 @@
+#!/bin/bash
+set -uo pipefail
+
+DEVICE=""
+ISO=""
+
+cleanup() {
+    sudo -K 2>/dev/null
+}
+
+trap cleanup EXIT
+
+show_drive_list_gui() {
+    local rows=() selected name vendor model size
+
+    while IFS=$'\t' read -r name vendor model size; do
+        rows+=("$vendor $model" "$size" "$name")
+    done < <(
+        lsblk -dpnJo NAME,VENDOR,MODEL,SIZE,RM |
+        jq -r '
+            .blockdevices[]
+            | select(.rm == true)
+            | [
+                .name,
+                ((.vendor // "") | gsub("[[:space:]]+"; " ") | sub("[[:space:]]+$"; "")),
+                ((.model // "")  | gsub("[[:space:]]+"; " ") | sub("^[[:space:]]+"; "")),
+                .size
+              ]
+            | @tsv
+        '
+    )
+
+    ((${#rows[@]})) || {
+        notify-send "No removable devices found."
+        exit 1
+    }
+
+    selected=$(yad --list \
+        --width=600 --height=300 \
+        --text="Select a removable device:" \
+        --column="Model" --column="Size" --column="Device" \
+        --print-column=3 --separator="" \
+        "${rows[@]}")
+
+    [[ -n "$selected" ]] && DEVICE="$selected"
+    [[ -n "$DEVICE" ]] || { exit 1; }
+}
+
+select_iso() {
+    ISO=$(yad --file \
+        --title="Select ISO" \
+        --text="Select ISO image:" \
+        --file-filter="ISO images (*.iso) | *.iso" \
+        --width=800 --height=600)
+    ISO=${ISO//$'\n'/}
+
+    [[ -n "$ISO" ]] || { exit 1; }
+    
+}
+
+unmount_device() {
+    local part
+    while IFS= read -r part; do
+        [[ -n "$part" ]] && findmnt -rn -S "$part" >/dev/null 2>&1 &&
+            { udisksctl unmount -b "$part" 2>/dev/null || umount "$part" 2>/dev/null; }
+    done < <(lsblk -lnpo NAME "$DEVICE" | sed '1d')
+}
+
+write_iso() {
+    unmount_device
+
+    local tmpdir auth_fifo output_fifo pkexec_pid="" yad_pid write_status message
+
+    tmpdir=$(mktemp -d /tmp/write-iso.XXXXXX) || {
+        notify-send "Error" "Unable to create temporary directory."
+        return 1
+    }
+
+    auth_fifo="$tmpdir/auth"
+    output_fifo="$tmpdir/output"
+
+    mkfifo "$auth_fifo" "$output_fifo" || {
+        rm -rf -- "$tmpdir"
+        notify-send "Error" "Unable to create progress FIFOs."
+        return 1
+    }
+
+    pkexec bash -c '
+        auth_fifo=$1
+        output_fifo=$2
+        iso=$3
+        device=$4
+
+        iso_size=$(stat -c "%s" "$iso") || exit 1
+        iso_name=${iso##*/}
+        device_name=${device##*/}
+        model=""
+        vendor=""
+
+        if [[ -e "/sys/class/block/$device_name" ]]; then
+            model=$(<"/sys/class/block/$device_name/device/model") 2>/dev/null || model=""
+            vendor=$(<"/sys/class/block/$device_name/device/vendor") 2>/dev/null || vendor=""
+        fi
+
+        printf "AUTHENTICATED\n" > "$auth_fifo"
+
+        {
+            printf "========================================\n"
+            printf "              WRITE ISO\n"
+            printf "========================================\n\n"
+            printf "ISO:       %s\n" "$iso_name"
+            printf "Size:      %s bytes\n" "$iso_size"
+            printf "Target:    %s\n" "$device"
+            [[ -n "$vendor" ]] && printf "Vendor:    %s\n" "$vendor"
+            [[ -n "$model" ]] && printf "Model:     %s\n" "$model"
+            printf "\nStarting dd...\n\n"
+
+            dd if="$iso" of="$device" bs=4M status=progress conv=fsync 2>&1
+            dd_status=$?
+
+            if ((dd_status == 0)); then
+                sync
+                partprobe "$device" 2>/dev/null
+                udevadm settle 2>/dev/null
+            fi
+
+            printf "\n\n========================================\n"
+            if ((dd_status == 0)); then
+                printf "          WRITE COMPLETED\n"
+                printf "========================================\n\nISO written successfully.\n"
+            else
+                printf "             WRITE FAILED\n"
+                printf "========================================\n\ndd exited with status: %s\n" "$dd_status"
+            fi
+
+            exit "$dd_status"
+        } > "$output_fifo" 2>&1
+    ' bash "$auth_fifo" "$output_fifo" "$ISO" "$DEVICE" &
+
+    pkexec_pid=$!
+
+    if ! IFS= read -r message < "$auth_fifo" || [[ "$message" != AUTHENTICATED ]]; then
+        wait "$pkexec_pid" 2>/dev/null || true
+        rm -rf -- "$tmpdir"
+        notify-send "Error" "pkexec failed or permission was denied."
+        return 1
+    fi
+
+    yad --text-info \
+        --title="Writing ISO to $DEVICE" \
+        --width=750 --height=500 \
+        --fontname="monospace 11" \
+        --no-buttons \
+        < "$output_fifo" &
+    yad_pid=$!
+
+    wait "$pkexec_pid"
+    write_status=$?
+
+    if kill -0 "$yad_pid" 2>/dev/null; then
+        kill "$yad_pid" 2>/dev/null || true
+        wait "$yad_pid" 2>/dev/null || true
+    fi
+
+    rm -rf -- "$tmpdir"
+
+    if ((write_status)); then
+        notify-send "Error" "Failed to write ISO to $DEVICE."
+        return 1
+    fi
+
+    # Discover the new partition layout and let UDisks mount it as the user.
+    while IFS= read -r part; do
+        udisksctl mount -b "$part" 2>/dev/null
+    done < <(lsblk -lnpo NAME,FSTYPE,TYPE "$DEVICE" | awk '$3 == "part" && $2 != "" {print $1}')
+
+    notify-send "ISO written" "Successfully wrote $ISO to $DEVICE."
+}
+
+main() {
+    show_drive_list_gui
+    select_iso
+    write_iso
+}
+
+main

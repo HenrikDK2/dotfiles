@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ISOFlash
+Comment=Flash ISO images to removable drives
+Exec=ISOFlash
+Icon=drive-removable-media-usb
+Terminal=false
+Categories=System;Utility;
+Keywords=ISO;USB;Flash;Disk;Drive;Image;
+StartupNotify=true
+StartupWMClass=ISOFlash

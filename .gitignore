@@ -127,6 +127,9 @@
 !.local/bin/virt-manager
 !.local/bin/ffxi_backup
 
+!.local/bin/ISOFlash
+!.local/share/applications/ISOFlash.desktop
+
 !.local/share/mime
 !.local/share/mime/application
 !.local/share/mime/application/*
