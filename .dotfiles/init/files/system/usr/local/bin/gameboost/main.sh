@@ -76,17 +76,19 @@ readonly EXCLUDED_PATTERN=$(build_slash_tolerant_pattern "${EXCLUDED_PATTERNS[@]
 # =============================================================================
 
 notify_user() {
-    local session=$(loginctl list-sessions --no-legend | awk '{print $1}' | while read -r id; do
-        [[ $(loginctl show-session "$id" -p Active --value) == yes ]] && \
-        [[ $(loginctl show-session "$id" -p Type --value) =~ ^(x11|wayland)$ ]] && { echo "$id"; break; }
-    done)
-    [[ -z "$session" ]] && return
-
-    local user=$(loginctl show-session "$session" -p Name --value) uid
-    uid=$(id -u "$user")
-    sudo -u "$user" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" DISPLAY=:0 \
-        notify-send --app-name=GameBoost "GameBoost" "$1"
-    echo "Notification sent: $1"
+    local session user uid
+    while read -r session _; do
+        [[ $(loginctl show-session "$session" -p Active --value) == yes ]] &&
+        [[ $(loginctl show-session "$session" -p Type --value) =~ ^(x11|wayland)$ ]] || continue
+        user=$(loginctl show-session "$session" -p Name --value)
+        uid=$(id -u "$user")
+        runuser -u "$user" -- env \
+            DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" \
+            DISPLAY=:0 \
+            notify-send --app-name=GameBoost GameBoost "$1"
+        echo "Notification sent: $1"
+        return
+    done < <(loginctl list-sessions --no-legend 2>/dev/null)
 }
 
 # =============================================================================

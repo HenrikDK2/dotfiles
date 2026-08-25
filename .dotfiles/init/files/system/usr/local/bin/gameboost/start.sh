@@ -1,38 +1,22 @@
 #!/bin/bash
 
-function is_laptop() {
-    if [ -d "/sys/class/power_supply/BAT0" ] || [ -d "/sys/class/power_supply/BAT1" ]; then
-        return 0  # true: laptop
-    else
-        return 1  # false: desktop
-    fi
+is_laptop() {
+    [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]
 }
 
-function has_active_docker_containers() {
-    # true (0) if docker is present/running AND has running containers
-    if ! command -v docker >/dev/null 2>&1; then
-        return 1
-    fi
-    if ! systemctl is-active --quiet docker.service 2>/dev/null; then
-        return 1
-    fi
-    local running=$(docker ps -q 2>/dev/null)
-    [ -n "$running" ]
+has_active_docker_containers() {
+    command -v docker >/dev/null 2>&1 &&
+        systemctl is-active --quiet docker.service 2>/dev/null &&
+        [ -n "$(docker ps -q 2>/dev/null)" ]
 }
 
-function has_active_libvirt_domains() {
-    # true (0) if libvirtd is present/running AND has running VMs
-    if ! command -v virsh >/dev/null 2>&1; then
-        return 1
-    fi
-    if ! systemctl is-active --quiet libvirtd.service 2>/dev/null; then
-        return 1
-    fi
-    local running=$(virsh list --state-running --name 2>/dev/null | sed '/^$/d')
-    [ -n "$running" ]
+has_active_libvirt_domains() {
+    command -v virsh >/dev/null 2>&1 &&
+        systemctl is-active --quiet libvirtd.service 2>/dev/null &&
+        [ -n "$(virsh list --state-running --name 2>/dev/null)" ]
 }
 
-function stop_services() {
+stop_services() {
     local system_services=(
         auditd
         smartd
@@ -48,8 +32,18 @@ function stop_services() {
 
         systemd-timesyncd
         systemd-journald
+        systemd-journald.socket
+        systemd-journald-dev-log.socket
+        systemd-journald-audit.socket
+        systemd-journald-varlink.socket
 
         udisks2
+    )
+
+    local masked_services=(
+        upower.service
+        avahi-daemon.service
+        auditd.service
     )
 
     local user_services=(
@@ -58,127 +52,91 @@ function stop_services() {
         hypridle
     )
 
-    # Only stop docker/containerd if there are no running containers
-    if ! has_active_docker_containers; then
-        system_services+=(docker containerd)
-    fi
+    has_active_docker_containers || system_services+=(docker containerd)
+    has_active_libvirt_domains || system_services+=(libvirtd-admin libvirtd-ro libvirtd virtlogd)
 
-    # Only stop libvirt stack if there are no running domains (VMs)
-    if ! has_active_libvirt_domains; then
-        system_services+=(libvirtd-admin libvirtd-ro libvirtd virtlogd)
-    fi
+    systemctl mask "${masked_services[@]}" 2>/dev/null
+    systemctl stop "${system_services[@]}" 2>/dev/null
 
-    # Get active user session IDs
-    local user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
+    local uid
+    while read -r uid; do
+        [ -n "$uid" ] && systemctl --user --machine="${uid}@.host" stop "${user_services[@]}" 2>/dev/null
+    done < <(loginctl list-sessions --no-legend 2>/dev/null | awk '!seen[$2]++ {print $2}')
+}
 
-    # Mask services that need to be permanently disabled
-    systemctl mask upower.service auditd.service 2>/dev/null
-
-    # Loop to check and stop services until no active units are found
-    while true; do
-
-        # 1. Stop .socket, .target, .mount, .service units for system services
-        for svc in "${system_services[@]}"; do
-            for unit_type in socket target mount service; do
-                for unit in $(systemctl list-units --type=$unit_type --all --quiet | grep -oP "\b$svc\.\S+" || true); do
-                    if systemctl is-active --quiet "$unit"; then
-                        systemctl stop "$unit" 2>/dev/null || true
-                    fi
-                done
-            done
-        done
-
-        # Stop user services for all active sessions
-        for uid in "${user_ids[@]}"; do
-            for svc in "${user_services[@]}"; do
-                if systemctl --user --machine=${uid}@.host is-active --quiet "$svc".service; then
-                    any_active=true
-                    systemctl --user --machine=${uid}@.host stop "$svc".service
-                fi
-            done
-        done
-
-        sleep 1
+set_cpu_performance() {
+    local gov
+    for gov in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+        echo performance > "$gov" 2>/dev/null
     done
 }
 
-function set_cpu_performance() {
-    echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null
+set_amd_gpu_performance() {
+    local gpu=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:" $1; exit}')
+
+    [ -d "$gpu" ] || return
+    [ -f "$gpu/power_dpm_force_performance_level" ] && echo manual > "$gpu/power_dpm_force_performance_level"
+    [ -f "$gpu/power/control" ] && echo on > "$gpu/power/control"
+    [ -f "$gpu/pp_power_profile_mode" ] && echo 1 > "$gpu/pp_power_profile_mode"
 }
 
-function set_amd_gpu_performance() {
-    local GPU=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
-
-    # AMD GPU max performance
-    if [ -d "$GPU" ]; then
-        [ -f "$GPU/power_dpm_force_performance_level" ] && echo "manual" > "$GPU/power_dpm_force_performance_level"
-        [ -f "$GPU/power/control" ] && echo "on" > "$GPU/power/control"
-        [ -f "$GPU/pp_power_profile_mode" ] && echo "1" > "$GPU/pp_power_profile_mode"
-    fi
+kill_background_processes() {
+    pkill -9 -f '^(cmst|hypridle|mullvad-gui|blueman-applet|blueman-manager|blueman-tray|chrome_crashpad)( |$)' 2>/dev/null
 }
 
-function kill_background_processes() {
-    local processes=(cmst hypridle mullvad-gui blueman-applet blueman-manager blueman-tray chrome_crashpad)
-
-    for p in "${processes[@]}"; do
-        pkill -9 "$p" 2>/dev/null
-    done
-}
-
-function disable_sata_power_management() {
+disable_sata_power_management() {
+    local host
     for host in /sys/class/scsi_host/host*/link_power_management_policy; do
         echo max_performance > "$host" 2>/dev/null
     done
 }
 
-function disable_nvme_power_management() {
+disable_nvme_power_management() {
+    local nvme_dev
     for nvme_dev in /sys/block/nvme*/device; do
-        if [ -d "$nvme_dev/power" ]; then
-            echo -1 > "$nvme_dev/power/autosuspend_delay_ms" 2>/dev/null
-            echo on > "$nvme_dev/power/control" 2>/dev/null
-        fi
+        [ -d "$nvme_dev/power" ] || continue
+        echo -1 > "$nvme_dev/power/autosuspend_delay_ms" 2>/dev/null
+        echo on > "$nvme_dev/power/control" 2>/dev/null
     done
 }
 
-function disable_pcie_power_management() {
+disable_pcie_power_management() {
+    local pci
     for pci in /sys/bus/pci/devices/*/power/control; do
         echo on > "$pci" 2>/dev/null
     done
-
-    # Set PCIe ASPM to performance
-    echo "performance" > /sys/module/pcie_aspm/parameters/policy 2>/dev/null
+    echo performance > /sys/module/pcie_aspm/parameters/policy 2>/dev/null
 }
 
-function clear_ram_cache() {
-    pkill -9 chrome_crashpad
+clear_ram_cache() {
+    pkill -9 -x chrome_crashpad 2>/dev/null
     echo 3 > /proc/sys/vm/drop_caches
 }
 
-function tlp_performance() {
-	if systemctl is-active --quiet tlp.service && command -v tlp >/dev/null 2>&1; then
-	    tlp ac 2>/dev/null
-	fi
+tlp_performance() {
+    command -v tlp >/dev/null 2>&1 &&
+        systemctl is-active --quiet tlp.service &&
+        tlp ac 2>/dev/null
 }
 
-function set_process_priority() {
-    local pids=("$@")
-
-    for pid in "${pids[@]}"; do
-		renice -n -11 -p "$pid" >/dev/null 2>&1 || true
-		ionice -c2 -n0 -p "$pid" >/dev/null 2>&1 || true
+set_process_priority() {
+    local pid
+    for pid; do
+        renice -n -11 -p "$pid" >/dev/null 2>&1
+        ionice -c2 -n0 -p "$pid" >/dev/null 2>&1
     done
 }
 
-function main() {
+main() {
     set_process_priority "$@"
 
-	if is_laptop; then
-		tlp_performance
-	else
-	    disable_sata_power_management
-	    disable_nvme_power_management
-	    disable_pcie_power_management
-	fi
+    if is_laptop; then
+        tlp_performance
+    else
+        disable_sata_power_management
+        disable_nvme_power_management
+        disable_pcie_power_management
+    fi
 
     stop_services
     set_cpu_performance

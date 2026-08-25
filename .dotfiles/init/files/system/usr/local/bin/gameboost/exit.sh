@@ -1,143 +1,123 @@
 #!/bin/bash
 
-function is_laptop() {
-    if [ -d "/sys/class/power_supply/BAT0" ] || [ -d "/sys/class/power_supply/BAT1" ]; then
-        return 0  # true: laptop
-    else
-        return 1  # false: desktop
-    fi
+is_laptop() {
+    [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]
 }
 
-function set_cpu_balanced() {
-    local governor="powersave"
-    if grep -q "ondemand" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors; then
-        governor="ondemand"
-    fi
-    echo "$governor" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null
+set_cpu_balanced() {
+    local governor=powersave
+    grep -qw ondemand /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors && governor=ondemand
+    for gov in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+        echo "$governor" > "$gov" 2>/dev/null
+    done
 }
 
-function set_amd_gpu_auto() {
-    local GPU=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:"$1}')
-    
-    if [ -d "$GPU" ]; then
-        [ -f "$GPU/power_dpm_force_performance_level" ] && echo "auto" > "$GPU/power_dpm_force_performance_level"
-        [ -f "$GPU/power/control" ] && echo "auto" > "$GPU/power/control"
-        [ -f "$GPU/pp_power_profile_mode" ] && echo "0" > "$GPU/pp_power_profile_mode"
-    fi
+set_amd_gpu_auto() {
+    local gpu=$(lspci | awk '/VGA|3D/{print "/sys/bus/pci/devices/0000:" $1; exit}')
+
+    [ -d "$gpu" ] || return
+    [ -f "$gpu/power_dpm_force_performance_level" ] && echo auto > "$gpu/power_dpm_force_performance_level"
+    [ -f "$gpu/power/control" ] && echo auto > "$gpu/power/control"
+    [ -f "$gpu/pp_power_profile_mode" ] && echo 0 > "$gpu/pp_power_profile_mode"
 }
 
-function start_services() {
+start_services() {
     local system_services=(
         auditd
         smartd
-        
+
         clamav-daemon
         clamav-freshclam
-        
+
         cups
         avahi-daemon
 
         tlp
         upower
 
-        systemd-journald
         systemd-timesyncd
+        systemd-journald
+        systemd-journald.socket
+        systemd-journald-dev-log.socket
+        systemd-journald-audit.socket
+        systemd-journald-varlink.socket
 
         udisks2
         docker
         containerd
     )
-    
-    # User-related services to start
+
+    local masked_services=(
+        upower.service
+        avahi-daemon.service
+        auditd.service
+    )
+
     local user_services=(
         gvfs-daemon
         gvfs-metadata
         hypridle
     )
-    
-    # Get active user session IDs
-    local user_ids=($(loginctl list-sessions --no-legend | awk '{print $2}' | sort -u))
 
-    # Unmask services that need to be enabled
-    systemctl unmask upower.service auditd.service 2>/dev/null
-    
-    # Loop to check and start services until all are active
-    for ((i=0; i<2; i++)); do
+    local user_ids uid
+    mapfile -t user_ids < <(loginctl list-sessions --no-legend 2>/dev/null | awk '!seen[$2]++ {print $2}')
 
-        # 1. Start .socket, .target, .mount, and .service units for system services
-		for svc in "${system_services[@]}"; do
-		    for unit_type in socket target mount service; do
-		        for unit in $(systemctl list-units --type=$unit_type --all --quiet | grep -oP "\b$svc\.\S+" || true); do
-		            if ! systemctl is-active --quiet "$unit" 2>/dev/null; then
-		                systemctl start "$unit" 2>/dev/null || true
-		            fi
-		        done
-		    done
-		done
+    systemctl unmask "${masked_services[@]}" 2>/dev/null
+    systemctl start "${system_services[@]}" 2>/dev/null
 
-		# Start user services
-        for uid in "${user_ids[@]}"; do
-            for svc in "${user_services[@]}"; do
-                if ! systemctl --user --machine=${uid}@.host is-active --quiet "$svc".service 2>/dev/null; then
-                    any_inactive=true
-                    systemctl --user --machine=${uid}@.host start "$svc".service 2>/dev/null || true
-                fi
-            done
-        done
-        
-        sleep 1
+    for uid in "${user_ids[@]}"; do
+        systemctl --user --machine="${uid}@.host" start "${user_services[@]}" 2>/dev/null
     done
 }
 
-function kill_lingering_processes() {
-    if ! pgrep -x "gamescope-wl" >/dev/null && pgrep -x "gamescopereaper" >/dev/null; then
+kill_lingering_processes() {
+    ! pgrep -x gamescope-wl >/dev/null && pgrep -x gamescopereaper >/dev/null &&
         killall -9 gamescopereaper 2>/dev/null
-    fi
-    
-    [ "$(pgrep -fl '\.exe$' | wc -l)" -eq 1 ] && pgrep -x winedevice.exe >/dev/null && killall -9 winedevice.exe 2>/dev/null
+
+    [ "$(pgrep -fc '\.exe$')" -eq 1 ] && pgrep -x winedevice.exe >/dev/null &&
+        killall -9 winedevice.exe 2>/dev/null
 }
 
-function restore_sata_power_management() {
+restore_sata_power_management() {
+    local host
     for host in /sys/class/scsi_host/host*/link_power_management_policy; do
         echo med_power_with_dipm > "$host" 2>/dev/null
     done
 }
 
-function restore_nvme_power_management() {
+restore_nvme_power_management() {
+    local nvme_dev
     for nvme_dev in /sys/block/nvme*/device; do
-        if [ -d "$nvme_dev/power" ]; then
-            echo 1000 > "$nvme_dev/power/autosuspend_delay_ms" 2>/dev/null
-            echo auto > "$nvme_dev/power/control" 2>/dev/null
-        fi
+        [ -d "$nvme_dev/power" ] || continue
+        echo 1000 > "$nvme_dev/power/autosuspend_delay_ms" 2>/dev/null
+        echo auto > "$nvme_dev/power/control" 2>/dev/null
     done
 }
 
-function restore_pcie_power_management() {
+restore_pcie_power_management() {
+    local pci
     for pci in /sys/bus/pci/devices/*/power/control; do
         echo auto > "$pci" 2>/dev/null
     done
-    
-    # Restore PCIe ASPM to default
-    echo "default" > /sys/module/pcie_aspm/parameters/policy 2>/dev/null
+    echo default > /sys/module/pcie_aspm/parameters/policy 2>/dev/null
 }
 
-function clear_ram_cache() {
+clear_ram_cache() {
     killall -q -9 chrome_crashpad 2>/dev/null
     echo 3 > /proc/sys/vm/drop_caches
 }
 
-function tlp_auto() {
-    if systemctl is-active --quiet tlp.service && command -v tlp >/dev/null 2>&1; then
+tlp_auto() {
+    command -v tlp >/dev/null 2>&1 && systemctl is-active --quiet tlp.service &&
         tlp auto 2>/dev/null
-    fi
 }
 
-function main() {
+main() {
     set_cpu_balanced
     set_amd_gpu_auto
     start_services
     kill_lingering_processes
-    
+
     if is_laptop; then
         tlp_auto
     else
@@ -145,7 +125,7 @@ function main() {
         restore_nvme_power_management
         restore_pcie_power_management
     fi
-    
+
     clear_ram_cache
 }
 
