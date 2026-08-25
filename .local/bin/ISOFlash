@@ -39,7 +39,7 @@ show_drive_list_gui() {
         --width=600 --height=300 \
         --text="Select a removable device:" \
         --column="Model" --column="Size" --column="Device" \
-        --print-column=3 --separator="" \
+        --print-column=3 --expand-column=1 --separator="" \
         "${rows[@]}")
 
     [[ -n "$selected" ]] && DEVICE="$selected"
