@@ -23,13 +23,18 @@ if ! passwd -S root 2>/dev/null | grep -q "P"; then
 fi
 
 if ! id "$USERNAME" &>/dev/null; then
-	section "Create user"
+    section "Create user"
     echo "Creating user '$USERNAME'..."
-    useradd -m -G wheel,libvirt $USERNAME
+
+    for group in wheel libvirt; do
+        getent group "$group" &>/dev/null || groupadd "$group"
+    done
+
+    useradd -m -G wheel,libvirt "$USERNAME"
 
     clear_screen
-    printf "Please set a ${GREEN}$USERNAME${RESET} password:\n\n"
-    passwd $USERNAME
+    printf "Please set a ${GREEN}%s${RESET} password:\n\n" "$USERNAME"
+    passwd "$USERNAME"
 fi
 
 if ! [ -d "$HOME/.dotfiles" ]; then
