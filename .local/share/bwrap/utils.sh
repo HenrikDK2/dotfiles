@@ -4,7 +4,7 @@ trap utils::cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-PROXY_SOCKET="$XDG_RUNTIME_DIR/bus-proxy-$(uuidgen).sock"
+PROXY_SOCKET="$XDG_RUNTIME_DIR/bus-proxy-$$_$RANDOM.sock"
 DEBUG=0
 EXIT_CODE=0
 PROXY_PID=
@@ -21,36 +21,28 @@ utils::log() {
 
 	printf -v timestamp '%(%Y-%m-%d %H:%M:%S)T' -1
 	(( LOG_INDENT > 0 )) && printf -v padding '%*s' "$LOG_INDENT" ''
-
-	printf '%s[%s] [%s-%s] [%s] %s%s\e[0m\n' \
-		"$color" "$timestamp" "${EXECUTABLE##*/}" "$$" \
-		"$level" "$padding" "$message"
+	printf '%s[%s] [%s-%s] [%s] %s%s\e[0m\n' "$color" "$timestamp" "${EXECUTABLE##*/}" "$$" "$level" "$padding" "$message"
 }
 
 utils::dbus() {
-	if [[ ${#DBUS_PORTALS[@]} -eq 0 ]]; then
-		utils::log INFO "DBUS_PORTALS is empty, skipping DBus proxy"
-		return
-	fi
+	(( ${#DBUS_PORTALS[@]} )) || return 0
 
 	utils::log INFO "Starting DBus proxy..."
 
 	local log=
-	[[ $DEBUG -eq 1 ]] && log=--log
+	(( DEBUG )) && log=--log
 
 	xdg-dbus-proxy "$DBUS_SESSION_BUS_ADDRESS" "$PROXY_SOCKET" \
 		"${DBUS_PORTALS[@]}" $log --filter &
-
 	PROXY_PID=$!
 
 	utils::log INFO "Waiting for proxy socket..."
 	while [[ ! -S $PROXY_SOCKET ]]; do
 		if ! kill -0 "$PROXY_PID" 2>/dev/null; then
 			utils::log ERROR "DBus proxy exited before creating its socket"
-			wait "$PROXY_PID" 2>/dev/null || true
+			wait "$PROXY_PID" 2>/dev/null || :
 			return 1
 		fi
-
 		read -rt 0.01 </dev/null
 	done
 	utils::log INFO "Proxy ready"
@@ -72,8 +64,7 @@ utils::kill_existing_process() {
 	while read -r pid; do
 		[[ $pid == $$ ]] && continue
 
-		utils::log WARN \
-			"Stopping existing $executable_name process (PID $pid)..."
+		utils::log WARN "Stopping existing $executable_name process (PID $pid)..."
 
 		if ! kill "$pid" 2>/dev/null; then
 			utils::log WARN "Failed to send SIGTERM to PID $pid"
@@ -81,21 +72,20 @@ utils::kill_existing_process() {
 		fi
 
 		utils::log INFO "Waiting for process $pid to exit..."
-
 		while kill -0 "$pid" 2>/dev/null; do
 			read -rt 0.01 </dev/null
 		done
 
 		utils::log INFO "Process $pid exited"
-	done < <(pgrep -x "$executable_name" || true)
+	done < <(pgrep -x "$executable_name" || :)
 }
 
 utils::cleanup() {
 	local cleanup_status=$?
 
-	if [[ -n ${PROXY_PID:-} ]]; then
+	if [[ -n $PROXY_PID ]]; then
 		utils::log INFO "Removing DBus proxy (PID $PROXY_PID)..."
-		kill -KILL "$PROXY_PID" 2>/dev/null || true
+		kill -KILL "$PROXY_PID" 2>/dev/null || :
 		rm -f -- "$PROXY_SOCKET"
 	fi
 
@@ -112,22 +102,16 @@ utils::run() {
 	utils::dbus || return 1
 	utils::log INFO "Launching $EXECUTABLE..."
 
-	if [[ $DEBUG -eq 0 ]]; then
-		# Do NOT use exec here.
-		#
-		# The Bash process must remain alive so that its EXIT trap
-		# can run after bwrap exits.
+	if (( ! DEBUG )); then
 		bwrap "${BWRAP_ARGS[@]}" "$EXECUTABLE" "$@"
-
 		EXIT_CODE=$?
 		exit "$EXIT_CODE"
 	fi
 
-	if ! command -v strace >/dev/null 2>&1; then
-		utils::log ERROR \
-			"strace is required for --debug but is not installed."
+	command -v strace >/dev/null 2>&1 || {
+		utils::log ERROR "strace is required for --debug but is not installed."
 		return 1
-	fi
+	}
 
 	utils::kill_existing_process
 
