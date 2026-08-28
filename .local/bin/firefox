@@ -3,7 +3,6 @@
 source $HOME/.local/share/bwrap/utils.sh
 
 EXECUTABLE="/usr/bin/firefox"
-TRACE_FILE="$HOME/log.trace"
 
 # Run below in terminal to see which dbus portals you need
 # busctl --user list | grep -v '^:'
