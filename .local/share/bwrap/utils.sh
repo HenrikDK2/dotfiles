@@ -183,7 +183,7 @@ utils::debug() {
 		return
 	fi
 
-	utils::log WARN"This dataset comes from strace output, so it includes a lot of paths that the program probably doesn’t actually need."
+	utils::log WARN "This dataset comes from strace output, so it includes a lot of paths that the program probably doesn’t actually need."
 	utils::log INFO "Profile recommendation:"
 	print_output "${items[@]}" 2>/dev/null | tee >(copy_to_clipboard) "/tmp/bwrap-profile.txt"
 	utils::log INFO "*Copied to clipboard* - also saved in /tmp/bwrap-profile.txt"
