@@ -170,16 +170,16 @@ enable_game_mode() {
     if [[ ! -f "$GAMEBOOST_FLAG" ]]; then
         notify_user "Switching to performance mode"
         touch "$GAMEBOOST_FLAG"
-        /usr/local/bin/gameboost/start.sh "$@" &
+        $SCRIPT_DIR/start.sh "$@" &
     fi
 }
 
 disable_game_mode() {
     if [[ -f "$GAMEBOOST_FLAG" ]]; then
         notify_user "Switching to power-saving mode"
-        pkill -f '/usr/local/bin/gameboost/start.sh'
+        pkill -f '$SCRIPT_DIR/start.sh'
         rm -f "$GAMEBOOST_FLAG"
-        /usr/local/bin/gameboost/exit.sh &
+        $SCRIPT_DIR/exit.sh &
         CURRENT_PID=""
     fi
 }
