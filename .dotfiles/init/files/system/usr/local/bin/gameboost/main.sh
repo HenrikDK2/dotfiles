@@ -1,5 +1,9 @@
 #!/bin/bash
 
+readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+readonly OPTIMIZED_PS_SRC="$SCRIPT_DIR/optimized_ps.c"
+readonly OPTIMIZED_PS="$SCRIPT_DIR/optimized_ps"
+
 readonly GAMEBOOST_FLAG="/tmp/gameboost-running.flag"
 CURRENT_PID=""
 
@@ -23,25 +27,25 @@ readonly EXCLUDED_PATTERNS=(
     "bin/d3ddriverquery64.exe"
     "pressure-vessel/bin/pressure-vessel-wrap"
     "pressure-vessel/libexec/steam-runtime-tools-0/srt-bwrap"
-    "(link2ea://launchgame|/Electronic Arts/EA Desktop)" # EA Games Launcher
+    "(link2ea://launchgame|/Electronic Arts/EA Desktop)"
     "C:/windows/.*"
     "/steamapps/compatdata/"
     "/winetricks"
 
-	# Project Zomboid Server
+    # Project Zomboid Server
     "ProjectZomboid64 -servername"
 
-	# FFXI
+    # FFXI
     "/Windower.exe"
 
     # Vortex
-	"Black Tree Gaming Ltd/Vortex"
+    "Black Tree Gaming Ltd/Vortex"
     "Vortex/Vortex.exe"
 
     # Modorganizer
     "ModOrganizer.exe"
     "MO2/mods"
-	"MO2/explorer++"
+    "MO2/explorer++"
     "MO2/loot/lootcli.exe"
 
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
@@ -49,7 +53,6 @@ readonly EXCLUDED_PATTERNS=(
     "/*[Ll]aunch[Pp]ad*.exe"
     "[Ss]etup\.exe"
     "[Ii]nstall.*\.exe"
-    "[Uu]ninstall.*\.exe"
     ".*[Uu]pdate.*\.exe"
     ".*[Rr]edist.*\.exe"
 )
@@ -64,7 +67,7 @@ AMD_GPU_BUSY_PATH=""
 
 # Build a single "a|b|c" regex from an array (used for GAME_PATTERN / EXCLUDED_PATTERN below)
 build_slash_tolerant_pattern() {
-	local SLASH_CLASS='[/\]' IFS='|'
+    local SLASH_CLASS='[/\]' IFS='|'
     printf '%s' "${*//\//$SLASH_CLASS}"
 }
 
@@ -77,15 +80,19 @@ readonly EXCLUDED_PATTERN=$(build_slash_tolerant_pattern "${EXCLUDED_PATTERNS[@]
 
 notify_user() {
     local session user uid
+
     while read -r session _; do
         [[ $(loginctl show-session "$session" -p Active --value) == yes ]] &&
         [[ $(loginctl show-session "$session" -p Type --value) =~ ^(x11|wayland)$ ]] || continue
+
         user=$(loginctl show-session "$session" -p Name --value)
         uid=$(id -u "$user")
+
         runuser -u "$user" -- env \
             DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" \
             DISPLAY=:0 \
             notify-send --app-name=GameBoost GameBoost "$1"
+
         echo "Notification sent: $1"
         return
     done < <(loginctl list-sessions --no-legend 2>/dev/null)
@@ -101,42 +108,48 @@ detect_gpu_vendor() {
         return
     fi
 
-    # Prefer a discrete/amdgpu card if there are multiple DRM cards (e.g. laptop iGPU+dGPU)
+    # Prefer a discrete/amdgpu card if there are multiple DRM cards
     local card driver
+
     for card in /sys/class/drm/card*/device; do
         [[ -r "$card/gpu_busy_percent" ]] || continue
+
         driver=$(basename "$(readlink -f "$card/driver" 2>/dev/null)" 2>/dev/null)
+
         if [[ -n "$GPU_CARD" && "$card" == *"$GPU_CARD"* ]]; then
             AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
             break
         elif [[ -z "$AMD_GPU_BUSY_PATH" ]]; then
             AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
         fi
+
         [[ "$driver" == "amdgpu" ]] && AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
     done
-    [[ -n "$AMD_GPU_BUSY_PATH" ]] && { GPU_VENDOR="AMD"; return; }
+
+    [[ -n "$AMD_GPU_BUSY_PATH" ]] && {
+        GPU_VENDOR="AMD"
+        return
+    }
 
     command -v intel_gpu_top &>/dev/null && GPU_VENDOR="INTEL"
 }
 
 update_gpu_usage() {
-    GPU_USAGE="$GPU_THRESHOLD" # Should be replaced, unless implementation is faulty/missing
+    GPU_USAGE="$GPU_THRESHOLD"
 
     case "$GPU_VENDOR" in
-        NVIDIA) ;; # Need to create implementation
+        NVIDIA) ;;
         AMD)    read -r GPU_USAGE < "$AMD_GPU_BUSY_PATH" 2>/dev/null ;;
-        INTEL)  ;; # Need to create implementation
+        INTEL)  ;;
     esac
 
     GPU_USAGE="${GPU_USAGE%%.*}"
 }
 
 calibrate_gpu_threshold() {
-    if [[ -z "$GPU_VENDOR" ]]; then
-        return
-    fi
-
+	[[ -z "$GPU_VENDOR" ]] && return
     update_gpu_usage
+
     if [[ "$GPU_USAGE" =~ ^[0-9]+$ ]]; then
         GPU_THRESHOLD=$(( (GPU_USAGE < GPU_IDLE_FLOOR ? GPU_IDLE_FLOOR : GPU_USAGE) + GPU_IDLE_MARGIN ))
     fi
@@ -175,20 +188,33 @@ disable_game_mode() {
 # GAME PROCESS DETECTION
 # =============================================================================
 
+# Compile optimized_ps only when optimized_ps.c has changed.
+build_optimized_ps() {
+    local sha="$OPTIMIZED_PS.sha256"
+    local hash=$(sha256sum "$OPTIMIZED_PS_SRC" | cut -d' ' -f1)
+
+    if [[ ! -x "$OPTIMIZED_PS" || ! -f "$sha" || "$hash" != "$(cat "$sha")" ]]; then
+        gcc -O3 -march=native "$OPTIMIZED_PS_SRC" -o "$OPTIMIZED_PS" || exit 1
+        echo "$hash" > "$sha"
+    fi
+}
+
+
 # Prints "pid<TAB>cmdline" for every running process that matches GAME_PATTERN
 scan_games() {
-    ps ax -o pid=,command= | grep -E "$GAME_PATTERN" | while read -r pid cmdline; do
+    "$OPTIMIZED_PS" | grep -E "$GAME_PATTERN" | while read -r pid cmdline; do
         [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] || printf '%s\t%s\n' "$pid" "$cmdline"
     done
 }
 
 detect_game_process() {
-    local matches; matches=$(scan_games)
+    local matches=$(scan_games)
     [[ -z "$matches" ]] && return
 
     local pid cmdline pids=()
     while IFS=$'\t' read -r pid cmdline; do
         pids+=("$pid")
+
         if [[ -z "$CURRENT_PID" ]]; then
             CURRENT_PID="$pid"
             echo "Detected game process: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
@@ -227,10 +253,13 @@ done
 # fd for fork-free sleep
 exec {SLEEP_FD}<> <(:)
 
+# Optimized ps replacement to reduce CPU time during process scanning.
+build_optimized_ps
+
 detect_gpu_vendor
 echo "GPU vendor: ${GPU_VENDOR:-none found}"
 
-calibrate_gpu_threshold # max(gpu_idle, 5%) + 10%
+calibrate_gpu_threshold
 echo "GPU threshold: ${GPU_THRESHOLD}%"
 
 # =============================================================================
@@ -246,5 +275,5 @@ while true; do
         verify_game_process
     fi
 
-    read -t "$INTERVAL" -u "$SLEEP_FD" _ 2>/dev/null # fork-free sleep
+    read -t "$INTERVAL" -u "$SLEEP_FD" _ 2>/dev/null
 done
