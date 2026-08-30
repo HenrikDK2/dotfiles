@@ -1,9 +1,6 @@
 #!/bin/bash
 
 readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-readonly OPTIMIZED_PS_SRC="$SCRIPT_DIR/optimized_ps.c"
-readonly OPTIMIZED_PS="$SCRIPT_DIR/optimized_ps"
-
 readonly GAMEBOOST_FLAG="/tmp/gameboost-running.flag"
 CURRENT_PID=""
 
@@ -39,14 +36,10 @@ readonly EXCLUDED_PATTERNS=(
     "/Windower.exe"
 
     # Vortex
-    "Black Tree Gaming Ltd/Vortex"
-    "Vortex/Vortex.exe"
+    "Black Tree Gaming Ltd/Vortex" "Vortex/Vortex.exe"
 
     # Modorganizer
-    "ModOrganizer.exe"
-    "MO2/mods"
-    "MO2/explorer++"
-    "MO2/loot/lootcli.exe"
+    "ModOrganizer.exe" "MO2/mods" "MO2/explorer++" "MO2/loot/lootcli.exe"
 
     "(yay|pacman|pgrep|find|xargs|grep|awk|rsync|tar|cat)[[:space:]]"
     "/*[Ll]auncher*.exe"
@@ -57,15 +50,18 @@ readonly EXCLUDED_PATTERNS=(
     ".*[Rr]edist.*\.exe"
 )
 
-# calibrate_gpu_threshold() replaces it at startup with max(gpu_idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
+readonly OPTIMIZED_PS_SRC="$SCRIPT_DIR/optimized_ps.c"
+readonly OPTIMIZED_PS="$SCRIPT_DIR/optimized_ps"
+
+# Calibrated at startup: max(gpu_idle, GPU_IDLE_FLOOR) + GPU_IDLE_MARGIN.
 GPU_THRESHOLD=25
 readonly GPU_IDLE_FLOOR=5 GPU_IDLE_MARGIN=10
 
-# Populated once at startup by detect_gpu_vendor: "nvidia", "amd", "intel", or "" (none found)
+# Populated by detect_gpu_vendor: "NVIDIA", "AMD", "INTEL", or "".
 GPU_VENDOR=""
 AMD_GPU_BUSY_PATH=""
 
-# Build a single "a|b|c" regex from an array (used for GAME_PATTERN / EXCLUDED_PATTERN below)
+# Build a single "a|b|c" regex from an array.
 build_slash_tolerant_pattern() {
     local SLASH_CLASS='[/\]' IFS='|'
     printf '%s' "${*//\//$SLASH_CLASS}"
@@ -89,8 +85,7 @@ notify_user() {
         uid=$(id -u "$user")
 
         runuser -u "$user" -- env \
-            DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" \
-            DISPLAY=:0 \
+            DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" DISPLAY=:0 \
             notify-send --app-name=GameBoost GameBoost "$1"
 
         echo "Notification sent: $1"
@@ -108,12 +103,10 @@ detect_gpu_vendor() {
         return
     fi
 
-    # Prefer a discrete/amdgpu card if there are multiple DRM cards
+    # Prefer a discrete/amdgpu card if there are multiple DRM cards.
     local card driver
-
     for card in /sys/class/drm/card*/device; do
         [[ -r "$card/gpu_busy_percent" ]] || continue
-
         driver=$(basename "$(readlink -f "$card/driver" 2>/dev/null)" 2>/dev/null)
 
         if [[ -n "$GPU_CARD" && "$card" == *"$GPU_CARD"* ]]; then
@@ -126,12 +119,11 @@ detect_gpu_vendor() {
         [[ "$driver" == "amdgpu" ]] && AMD_GPU_BUSY_PATH="$card/gpu_busy_percent"
     done
 
-    [[ -n "$AMD_GPU_BUSY_PATH" ]] && {
+    if [[ -n "$AMD_GPU_BUSY_PATH" ]]; then
         GPU_VENDOR="AMD"
-        return
-    }
-
-    command -v intel_gpu_top &>/dev/null && GPU_VENDOR="INTEL"
+    elif command -v intel_gpu_top &>/dev/null; then
+        GPU_VENDOR="INTEL"
+    fi
 }
 
 update_gpu_usage() {
@@ -147,7 +139,7 @@ update_gpu_usage() {
 }
 
 calibrate_gpu_threshold() {
-	[[ -z "$GPU_VENDOR" ]] && return
+    [[ -n "$GPU_VENDOR" ]] || return
     update_gpu_usage
 
     if [[ "$GPU_USAGE" =~ ^[0-9]+$ ]]; then
@@ -156,7 +148,7 @@ calibrate_gpu_threshold() {
 }
 
 gpu_indicates_game_activity() {
-    [[ -z "$GPU_VENDOR" ]] && return 0
+    [[ -n "$GPU_VENDOR" ]] || return 0
     update_gpu_usage
     [[ "$GPU_USAGE" =~ ^[0-9]+$ ]] || return 0
     (( GPU_USAGE >= GPU_THRESHOLD ))
@@ -199,17 +191,18 @@ build_optimized_ps() {
     fi
 }
 
-
-# Prints "pid<TAB>cmdline" for every running process that matches GAME_PATTERN
+# Prints "pid<TAB>cmdline" for every running process matching GAME_PATTERN.
 scan_games() {
-    "$OPTIMIZED_PS" | grep -E "$GAME_PATTERN" | while read -r pid cmdline; do
-        [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] || printf '%s\t%s\n' "$pid" "$cmdline"
-    done
+    "$OPTIMIZED_PS" | grep -E "$GAME_PATTERN" |
+        while read -r pid cmdline; do
+            [[ "$cmdline" =~ $EXCLUDED_PATTERN ]] ||
+                printf '%s\t%s\n' "$pid" "$cmdline"
+        done
 }
 
 detect_game_process() {
     local matches=$(scan_games)
-    [[ -z "$matches" ]] && return
+    [[ -n "$matches" ]] || return
 
     local pid cmdline pids=()
     while IFS=$'\t' read -r pid cmdline; do
@@ -217,7 +210,7 @@ detect_game_process() {
 
         if [[ -z "$CURRENT_PID" ]]; then
             CURRENT_PID="$pid"
-            echo "Detected game process: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
+            echo "Detected game process: PID=$pid, CMD='${cmdline//\\//}'"
         fi
     done <<< "$matches"
 
@@ -233,7 +226,7 @@ verify_game_process() {
 
     if [[ -n "$pid" ]]; then
         CURRENT_PID="$pid"
-        echo "Switched tracking to another game: PID=$CURRENT_PID, CMD='${cmdline//\\//}'"
+        echo "Switched tracking to another game: PID=$pid, CMD='${cmdline//\\//}'"
     else
         disable_game_mode
     fi
@@ -266,7 +259,7 @@ echo "GPU threshold: ${GPU_THRESHOLD}%"
 exec {SLEEP_FD}<> <(:)
 
 while :; do
-    if [[ $CURRENT_PID ]]; then
+    if [[ "$CURRENT_PID" ]]; then
         verify_game_process
     elif gpu_indicates_game_activity; then
         detect_game_process
