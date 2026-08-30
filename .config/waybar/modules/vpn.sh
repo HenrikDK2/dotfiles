@@ -15,7 +15,7 @@ VPN_IFACE_IP=""
 DEFAULT_IFACE_IP=""
 
 function init_cache() {
-    mkdir -p "$CACHE_DIR"
+    [ -d "$CACHE_DIR" ] || mkdir -p "$CACHE_DIR"
 }
 
 function read_cache() {
