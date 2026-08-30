@@ -250,9 +250,6 @@ for svc in upower.service avahi-daemon.service auditd.service; do
     systemctl is-active --quiet "$svc" || systemctl start "$svc"
 done
 
-# fd for fork-free sleep
-exec {SLEEP_FD}<> <(:)
-
 # Optimized ps replacement to reduce CPU time during process scanning.
 build_optimized_ps
 
@@ -266,14 +263,14 @@ echo "GPU threshold: ${GPU_THRESHOLD}%"
 # MAIN LOOP
 # =============================================================================
 
-readonly INTERVAL=10
+exec {SLEEP_FD}<> <(:)
 
-while true; do
-    if [[ -z "$CURRENT_PID" ]]; then
-        gpu_indicates_game_activity && detect_game_process
-    else
+while :; do
+    if [[ $CURRENT_PID ]]; then
         verify_game_process
+    elif gpu_indicates_game_activity; then
+        detect_game_process
     fi
 
-    read -t "$INTERVAL" -u "$SLEEP_FD" _ 2>/dev/null
+    read -rt 10 -u "$SLEEP_FD" _ || :
 done
