@@ -177,7 +177,7 @@ enable_game_mode() {
 disable_game_mode() {
     if [[ -f "$GAMEBOOST_FLAG" ]]; then
         notify_user "Switching to power-saving mode"
-        pkill -f '$SCRIPT_DIR/start.sh'
+        pkill -f "$SCRIPT_DIR/start.sh"
         rm -f "$GAMEBOOST_FLAG"
         $SCRIPT_DIR/exit.sh &
         CURRENT_PID=""
