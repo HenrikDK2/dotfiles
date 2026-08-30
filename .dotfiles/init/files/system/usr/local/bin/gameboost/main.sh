@@ -186,6 +186,7 @@ build_optimized_ps() {
     local hash=$(sha256sum "$OPTIMIZED_PS_SRC" | cut -d' ' -f1)
 
     if [[ ! -x "$OPTIMIZED_PS" || ! -f "$sha" || "$hash" != "$(cat "$sha")" ]]; then
+    	echo "Compiling $OPTIMIZED_PS_SRC"
         gcc -O3 -march=native "$OPTIMIZED_PS_SRC" -o "$OPTIMIZED_PS" || exit 1
         echo "$hash" > "$sha"
     fi
