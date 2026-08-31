@@ -18,7 +18,6 @@ has_active_libvirt_domains() {
 
 stop_services() {
     local system_services=(
-        auditd
         smartd
 
         clamav-daemon

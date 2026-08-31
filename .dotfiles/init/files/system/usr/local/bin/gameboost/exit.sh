@@ -23,7 +23,6 @@ set_amd_gpu_auto() {
 
 start_services() {
     local system_services=(
-        auditd
         smartd
 
         clamav-daemon
