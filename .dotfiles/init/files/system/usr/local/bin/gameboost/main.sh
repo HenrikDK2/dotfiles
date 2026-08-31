@@ -75,17 +75,24 @@ readonly EXCLUDED_PATTERN=$(build_slash_tolerant_pattern "${EXCLUDED_PATTERNS[@]
 # =============================================================================
 
 notify_user() {
-    local session user uid
+    local session user uid gid active type line
 
     while read -r session _; do
-        [[ $(loginctl show-session "$session" -p Active --value) == yes ]] &&
-        [[ $(loginctl show-session "$session" -p Type --value) =~ ^(x11|wayland)$ ]] || continue
+        active= type= user=
+        while IFS='=' read -r key value; do
+            case $key in
+                Active) active=$value ;;
+                Type) type=$value ;;
+                Name) user=$value ;;
+            esac
+        done < <(loginctl show-session "$session" -p Active -p Type -p Name 2>/dev/null)
 
-        user=$(loginctl show-session "$session" -p Name --value)
-        uid=$(id -u "$user")
+        [[ $active == yes && $type =~ ^(x11|wayland)$ ]] || continue
+        uid=$(id -u "$user") || continue
+        gid=$(id -g "$user") || continue
 
-        runuser -u "$user" -- env \
-            DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" DISPLAY=:0 \
+        setpriv --reuid="$uid" --regid="$gid" --init-groups \
+            env DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" DISPLAY=:0 \
             notify-send --app-name=GameBoost GameBoost "$1"
 
         echo "Notification sent: $1"
