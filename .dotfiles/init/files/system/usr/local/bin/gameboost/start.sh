@@ -42,7 +42,6 @@ stop_services() {
     local masked_services=(
         upower.service
         avahi-daemon.service
-        auditd.service
     )
 
     local user_services=(
