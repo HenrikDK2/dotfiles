@@ -246,7 +246,7 @@ verify_game_process() {
 
 rm -f "$GAMEBOOST_FLAG"
 
-for svc in upower.service avahi-daemon.service auditd.service; do
+for svc in upower.service avahi-daemon.service; do
     systemctl is-enabled "$svc" 2>&1 | grep -q masked && systemctl unmask "$svc"
     systemctl is-active --quiet "$svc" || systemctl start "$svc"
 done
