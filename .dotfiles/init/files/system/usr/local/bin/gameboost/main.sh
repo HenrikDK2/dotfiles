@@ -273,5 +273,5 @@ while :; do
         detect_game_process
     fi
 
-    read -rt 10 -u "$SLEEP_FD" _ || :
+    read -rt 20 -u "$SLEEP_FD" _ || :
 done
