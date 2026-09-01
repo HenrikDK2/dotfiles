@@ -4,9 +4,26 @@ is_laptop() {
     [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]
 }
 
-set_cpu_balanced() {
-    local governor=powersave
-    grep -qw ondemand /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors && governor=ondemand
+set_cpu_governor() {
+    local available governor
+    available=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors)
+
+    if grep -qw ondemand <<< "$available" && grep -qw powersave <<< "$available"; then
+        governor=ondemand
+        if is_laptop; then
+            governor=powersave
+            for ac in /sys/class/power_supply/*/online; do
+                [ "$(cat "$ac" 2>/dev/null)" = 1 ] && governor=ondemand && break
+            done
+        fi
+    elif grep -qw ondemand <<< "$available"; then
+        governor=ondemand
+    elif grep -qw powersave <<< "$available"; then
+        governor=powersave
+    else
+        return 1
+    fi
+
     for gov in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
         echo "$governor" > "$gov" 2>/dev/null
     done
@@ -111,7 +128,7 @@ tlp_auto() {
 }
 
 main() {
-    set_cpu_balanced
+    set_cpu_governor
     set_amd_gpu_auto
     start_services
     kill_lingering_processes
