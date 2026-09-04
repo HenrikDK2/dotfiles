@@ -64,15 +64,17 @@ PACKAGES=(
 	"dnsmasq"
 	"dmidecode"
 	"edk2-ovmf"
-	
+
 	# System
     "alacritty"
     "jq"
+    "bazaar"
 	"bash-completion"
     "brightnessctl"
     "btop"
     "cabextract"
     "fastfetch"
+    "flatpak"
     "fuse"
     "fish"
     "grim"
@@ -159,6 +161,7 @@ PACKAGES=(
 SYSTEM_SERVICES_TO_ENABLE=(
     "avahi-daemon.service"
     "cups.service"
+    "flatpak-system-helper.service"
 
 	"smartd.service"
 
