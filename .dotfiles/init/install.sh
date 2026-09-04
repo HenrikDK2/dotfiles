@@ -150,7 +150,7 @@ usermod -s /usr/bin/fish root
 echo "Done"
 
 section "Configuring virsh to autostart"
-virsh net-autostart default
+source $SCRIPT_DIR/lib/scripts/virsh.sh
 
 section "Bootloader"
 source $SCRIPT_DIR/lib/scripts/bootloader.sh
