@@ -1,6 +1,16 @@
 #!/bin/bash
 
-systemctl is-active --quiet libvirtd.service || systemctl start libvirtd.service; 
-systemctl is-active --quiet virtlogd.service || systemctl start virtlogd.service;
+systemctl is-active --quiet libvirtd.service || systemctl start libvirtd.service
+systemctl is-active --quiet virtlogd.service || systemctl start virtlogd.service
+
+if virt-host-validate qemu 2>&1 | grep -q "QEMU: Checking for hardware virtualization.*FAIL"; then
+    yad \
+        --title="Virtualization Unavailable" \
+        --width=380 \
+        --height=200 \
+        --text="<b>Hardware virtualization is unavailable.</b>\n\nEnable Intel VT-x or AMD-V in your BIOS/UEFI settings." \
+        --image=dialog-warning \
+        --button="OK:0" &
+fi
 
 exec /usr/bin/virt-manager
