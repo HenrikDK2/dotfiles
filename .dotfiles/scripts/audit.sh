@@ -168,21 +168,21 @@ pacnew_files=$(find /etc -type f \( -name "*.pacnew" -o -name "*.pacsave" \) 2>/
 format_section "Pacnew/Pacsave files found" "$pacnew_files"
 
 # ClamAV scan issues
-clamav_results=""
-clamav_logs=("/var/log/clamav/clamd.log" "/var/log/clamav/clamonacc.log")
+if command -v clamscan >/dev/null; then
+    clamav_results=""
+    clamav_logs=("/var/log/clamav/clamd.log" "/var/log/clamav/clamonacc.log")
 
-for log in "${clamav_logs[@]}"; do
-    infected_lines=$(grep -i -E "infected|FOUND" "$log" 2>/dev/null)
+    for log in "${clamav_logs[@]}"; do
+        infected_lines=$(grep -i -E "infected|FOUND" "$log" 2>/dev/null)
 
-    if [[ -n $infected_lines ]]; then
-        if [[ -n $clamav_results ]]; then
-            clamav_results+=$'\n\n'
+        if [[ -n $infected_lines ]]; then
+            [[ -n $clamav_results ]] && clamav_results+=$'\n\n'
+            clamav_results+="$infected_lines"
         fi
-        clamav_results+="$infected_lines"
-    fi
-done
+    done
 
-format_section "ClamAV scan results" "$clamav_results"
+    format_section "ClamAV scan results" "$clamav_results"
+fi
 
 if [[ $DISABLE_NOTIFICATIONS == false && ${#NOTIFY_MESSAGES[@]} -gt 0 ]]; then
     combined_message="System issues detected:"
