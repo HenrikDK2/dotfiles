@@ -50,7 +50,7 @@ get_sensitive_reason() {
 			return
 			;;
 
-		/etc/localtime|/etc/hosts)
+		/etc/localtime|/etc/hosts|/etc/machine-id|/var/lib/dbus/machine-id)
 			echo "Privacy"
 			return
 			;;
