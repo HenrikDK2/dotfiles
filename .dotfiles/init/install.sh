@@ -193,6 +193,7 @@ find /etc \( -name "*.pacnew" -o -name "*.pacsave" \) -print0 | xargs -0 rm -f
 echo "Done."
 
 section "Fixing permissions"
+chown -R "$USERNAME:$USERNAME" "$HOME"
 chmod 440 /etc/sudoers.d/config
 echo "Done."
 
