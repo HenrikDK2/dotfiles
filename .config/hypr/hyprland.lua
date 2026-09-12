@@ -7,7 +7,7 @@ hl.monitor({
     mode = "preferred",
     position = "auto",
     scale = "auto",
-    vrr = 1,
+    vrr = 0,
 })
 
 hl.config({

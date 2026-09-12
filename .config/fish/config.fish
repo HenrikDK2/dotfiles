@@ -82,6 +82,7 @@ function zerotier-cli
 
     if not systemctl is-active --quiet $service
         sudo systemctl start $service
+        sleep 1
     end
 
     sudo zerotier-cli $argv
