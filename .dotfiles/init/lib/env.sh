@@ -91,6 +91,7 @@ PACKAGES=(
     "npm"
     "polkit"
     "polkit-gnome"
+    "gnome-keyring"
     "rofi"
     "rofi-calc"
     "smartmontools"

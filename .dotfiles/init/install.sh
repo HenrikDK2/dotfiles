@@ -149,9 +149,6 @@ usermod -s /usr/bin/fish $USERNAME
 usermod -s /usr/bin/fish root
 echo "Done"
 
-section "Configuring virsh to autostart"
-source $SCRIPT_DIR/lib/scripts/virsh.sh
-
 section "Bootloader"
 source $SCRIPT_DIR/lib/scripts/bootloader.sh
 
