@@ -3,46 +3,155 @@
 file="$ZED_FILE"
 name=$(basename "${file%.*}")
 ext="${file##*.}"
+dir=$(dirname "$file")
+base=$(basename "$file")
 tmp=$(mktemp -d)
-trap 'rm -rf "$tmp"' EXIT
 
-echo "[running $(basename "$file")]"
+trap 'rm -rf "$tmp"' EXIT
+echo "[running $base]"
+
+run_local() {
+    cd "$dir" || exit 1
+    "$@"
+}
 
 case "$ext" in
-    c)          gcc "$file" -o "$tmp/$name" && "$tmp/$name" ;;
-    cpp|cc|cxx) g++ "$file" -o "$tmp/$name" && "$tmp/$name" ;;
-    rs)         rustc "$file" -o "$tmp/$name" && "$tmp/$name" ;;
-    pas)        fpc "$file" -o"$tmp/$name" >/dev/null 2>&1 && "$tmp/$name" ;;
+    c)
+        mapfile -t files < <(find "$dir" -maxdepth 1 -type f -name '*.c' -print)
+        gcc "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
+        ;;
 
-    py)         python3 "$file" ;;
-    js|mjs|cjs) node "$file" ;;
-    ts)         command -v tsx >/dev/null && tsx "$file" || ts-node "$file" ;;
-    rb)         ruby "$file" ;;
-    php)        php "$file" ;;
-    pl)         perl "$file" ;;
-    swift)      swift "$file" ;;
-    dart)       dart run "$file" ;;
-    lua)        lua "$file" ;;
-    r|R)        Rscript "$file" ;;
-    sh)         bash "$file" ;;
-    bash)       bash "$file" ;;
-    zsh)        zsh "$file" ;;
-    hs)         runghc "$file" ;;
-    jl)         julia "$file" ;;
-    ex|exs)     elixir "$file" ;;
-    erl)        escript "$file" ;;
-    scala)      scala "$file" ;;
+    cpp|cc|cxx)
+        mapfile -t files < <(
+            find "$dir" -maxdepth 1 -type f \
+                \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' \) -print
+        )
+        g++ "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
+        ;;
+
+    rs)
+        if [ -f "$dir/Cargo.toml" ]; then
+            cargo run --manifest-path "$dir/Cargo.toml"
+        else
+            rustc "$file" -o "$tmp/$name" && "$tmp/$name"
+        fi
+        ;;
+
+    pas)
+        fpc -Fu"$dir" -FE"$tmp" -FU"$tmp" "$file" >/dev/null 2>&1 &&
+            "$tmp/$name"
+        ;;
+
+    py)
+        PYTHONPATH="$dir${PYTHONPATH:+:$PYTHONPATH}" run_local python3 "$base"
+        ;;
+
+    js|mjs|cjs)
+        run_local node "$base"
+        ;;
+
+    ts)
+        cd "$dir" || exit 1
+        if command -v tsx >/dev/null 2>&1; then
+            tsx "$base"
+        elif command -v ts-node >/dev/null 2>&1; then
+            ts-node "$base"
+        else
+            echo "Error: neither tsx nor ts-node is installed"
+            exit 1
+        fi
+        ;;
+
+    rb)
+        run_local ruby "$base"
+        ;;
+
+    php)
+        run_local php "$base"
+        ;;
+
+    pl)
+        PERL5LIB="$dir${PERL5LIB:+:$PERL5LIB}" run_local perl "$base"
+        ;;
+
+    swift)
+        if [ -f "$dir/Package.swift" ]; then
+            run_local swift run
+        else
+            mapfile -t files < <(find "$dir" -maxdepth 1 -type f -name '*.swift' -print)
+            swiftc "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
+        fi
+        ;;
+
+    dart)
+        run_local dart run "$base"
+        ;;
+
+    lua)
+        LUA_PATH="$dir/?.lua;$dir/?/init.lua;;" run_local lua "$base"
+        ;;
+
+    r|R)
+        run_local Rscript "$base"
+        ;;
+
+    sh|bash)
+        run_local bash "$base"
+        ;;
+
+    zsh)
+        run_local zsh "$base"
+        ;;
+
+    hs)
+        run_local runghc "$base"
+        ;;
+
+    jl)
+        run_local julia "$base"
+        ;;
+
+    ex|exs)
+        if [ -f "$dir/mix.exs" ]; then
+            run_local mix run "$base"
+        else
+            run_local elixir "$base"
+        fi
+        ;;
+
+    erl)
+        run_local escript "$base"
+        ;;
+
+    scala)
+        run_local scala "$base"
+        ;;
 
     java)
-        javac -d "$tmp" "$file" && java -cp "$tmp" "$name"
+        mapfile -t files < <(find "$dir" -maxdepth 1 -type f -name '*.java' -print)
+        javac -d "$tmp" "${files[@]}" && java -cp "$tmp" "$name"
         ;;
 
     kt)
-        kotlinc "$file" -include-runtime -d "$tmp/$name.jar" &&
+        mapfile -t files < <(find "$dir" -maxdepth 1 -type f -name '*.kt' -print)
+        kotlinc "${files[@]}" -include-runtime -d "$tmp/$name.jar" &&
             java -jar "$tmp/$name.jar"
         ;;
 
-    kts)        kotlinc -script "$file" ;;
-    cs)         dotnet script "$file" ;;
-    *)          echo "No runner for .$ext"; exit 1 ;;
+    kts)
+        run_local kotlinc -script "$base"
+        ;;
+
+    cs)
+        if compgen -G "$dir/*.csproj" >/dev/null; then
+            run_local dotnet run
+        else
+            dotnet script "$file"
+        fi
+        ;;
+
+    *)
+        echo "No runner for .$ext"
+        exit 1
+        ;;
 esac
