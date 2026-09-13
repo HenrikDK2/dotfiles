@@ -8,6 +8,7 @@ base=$(basename "$file")
 tmp=$(mktemp -d)
 
 trap 'rm -rf "$tmp"' EXIT
+
 echo "[running $base]"
 
 run_local() {
@@ -17,21 +18,24 @@ run_local() {
 
 case "$ext" in
     c)
-        mapfile -t files < <(find "$dir" -maxdepth 1 -type f -name '*.c' -print)
+        mapfile -t files < <(
+            find "$dir" -type f -name '*.c' -print
+        )
         gcc "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
         ;;
 
     cpp|cc|cxx)
         mapfile -t files < <(
-            find "$dir" -maxdepth 1 -type f \
-                \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' \) -print
+            find "$dir" -type f \
+                \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' \) \
+                -print
         )
         g++ "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
         ;;
 
     rs)
         if [ -f "$dir/Cargo.toml" ]; then
-            cargo run --manifest-path "$dir/Cargo.toml"
+            run_local cargo run --manifest-path "$dir/Cargo.toml"
         else
             rustc "$file" -o "$tmp/$name" && "$tmp/$name"
         fi
@@ -51,11 +55,10 @@ case "$ext" in
         ;;
 
     ts)
-        cd "$dir" || exit 1
         if command -v tsx >/dev/null 2>&1; then
-            tsx "$base"
+            run_local tsx "$base"
         elif command -v ts-node >/dev/null 2>&1; then
-            ts-node "$base"
+            run_local ts-node "$base"
         else
             echo "Error: neither tsx nor ts-node is installed"
             exit 1
@@ -78,7 +81,9 @@ case "$ext" in
         if [ -f "$dir/Package.swift" ]; then
             run_local swift run
         else
-            mapfile -t files < <(find "$dir" -maxdepth 1 -type f -name '*.swift' -print)
+            mapfile -t files < <(
+                find "$dir" -type f -name '*.swift' -print
+            )
             swiftc "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
         fi
         ;;
@@ -88,7 +93,8 @@ case "$ext" in
         ;;
 
     lua)
-        LUA_PATH="$dir/?.lua;$dir/?/init.lua;;" run_local lua "$base"
+        LUA_PATH="$dir/?.lua;$dir/?/init.lua;$dir/?/?.lua;;" \
+            run_local lua "$base"
         ;;
 
     r|R)
@@ -128,13 +134,20 @@ case "$ext" in
         ;;
 
     java)
-        mapfile -t files < <(find "$dir" -maxdepth 1 -type f -name '*.java' -print)
-        javac -d "$tmp" "${files[@]}" && java -cp "$tmp" "$name"
+        mapfile -t files < <(
+            find "$dir" -type f -name '*.java' -print
+        )
+        javac -d "$tmp" "${files[@]}" &&
+            java -cp "$tmp" "$name"
         ;;
 
     kt)
-        mapfile -t files < <(find "$dir" -maxdepth 1 -type f -name '*.kt' -print)
-        kotlinc "${files[@]}" -include-runtime -d "$tmp/$name.jar" &&
+        mapfile -t files < <(
+            find "$dir" -type f -name '*.kt' -print
+        )
+        kotlinc "${files[@]}" \
+            -include-runtime \
+            -d "$tmp/$name.jar" &&
             java -jar "$tmp/$name.jar"
         ;;
 
@@ -146,7 +159,7 @@ case "$ext" in
         if compgen -G "$dir/*.csproj" >/dev/null; then
             run_local dotnet run
         else
-            dotnet script "$file"
+            run_local dotnet script "$base"
         fi
         ;;
 
