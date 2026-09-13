@@ -1,0 +1,9 @@
+[
+	{
+		"label": "run file",
+		"command": "bash ~/.config/zed/run.sh",
+		"use_new_terminal": false,
+		"allow_concurrent_runs": false,
+		"reveal": "always",
+	},
+]

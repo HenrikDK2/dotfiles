@@ -86,6 +86,8 @@
 
 !.config/zed
 !.config/zed/keymap.json
+!.config/zed/tasks.json
+!.config/zed/run.sh
 !.config/zed/settings.json
 !.config/zed/snippets
 !.config/zed/snippets/*
