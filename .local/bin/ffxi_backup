@@ -3,11 +3,8 @@
 readonly FFXI_DIR="$HOME/Games/steamapps/common/FFXIPAL"
 readonly BACKUP_DIR="$HOME/FFXI_BACKUP"
 readonly PREFIX_DIR="$HOME/Games/steamapps/compatdata/230350/pfx"
-readonly REGISTRY_FILE="$PREFIX_DIR/system.reg"
 readonly BACKUP_ARCHIVE="$HOME/FFXI_BACKUP.7z"
-
 readonly POL_DIR="SquareEnix/FINAL FANTASY XI"
-readonly REGISTRY_PREFIX="PlayOnlineEU\\\\SquareEnix"
 
 if [ ! -d "$FFXI_DIR" ]; then
 	echo "FFXI isn't installed"
@@ -46,41 +43,6 @@ for tools in "$FFXI_DIR/$POL_DIR"/Tools*; do
 		cp -rf "$tools" "$BACKUP_DIR/$POL_DIR/"
 	fi
 done
-
-# ----------------------------------------------------------------------
-# Backup registry
-# ----------------------------------------------------------------------
-
-if [ -f "$REGISTRY_FILE" ]; then
-
-	awk '
-	BEGIN {
-		print "Windows Registry Editor Version 5.00"
-		print ""
-	}
-
-	$0 ~ /^\[/ {
-		if ($0 ~ /PlayOnlineEU\\\\SquareEnix/) {
-			print $0
-			keep=1
-		} else {
-			keep=0
-		}
-		next
-	}
-
-	keep {
-		print
-	}
-	' "$REGISTRY_FILE" \
-	> "$BACKUP_DIR/ffxi-regedit-backup.reg"
-
-	echo "Registry backup created."
-
-else
-	echo "WARNING: system.reg not found:"
-	echo "$REGISTRY_FILE"
-fi
 
 # ----------------------------------------------------------------------
 # Generate installer
@@ -132,7 +94,6 @@ fi
 # ----------------------------------------------------------------------
 
 if [ -d "$SCRIPT_DIR/$POL_DIR" ]; then
-
 	mkdir -p "$FFXI_DIR/$POL_DIR"
 
 	for tools in "$SCRIPT_DIR/$POL_DIR"/Tools*; do
@@ -141,85 +102,6 @@ if [ -d "$SCRIPT_DIR/$POL_DIR" ]; then
 		fi
 	done
 
-fi
-
-# ----------------------------------------------------------------------
-# Restore registry
-#
-# Only add registry sections that don't already exist.
-# ----------------------------------------------------------------------
-
-if [ -f "$REGISTRY_BACKUP" ]; then
-
-	if [ ! -f "$REGISTRY_FILE" ]; then
-		echo "system.reg doesn't exist."
-		echo "Creating it from the backup..."
-
-		mkdir -p "$(dirname "$REGISTRY_FILE")"
-
-		cp "$REGISTRY_BACKUP" "$REGISTRY_FILE"
-
-	else
-
-		echo "Merging FFXI registry settings..."
-
-		TEMP_REGISTRY="$(mktemp)"
-
-		awk -v backup="$REGISTRY_BACKUP" '
-		BEGIN {
-			while ((getline line < backup) > 0) {
-				backup_lines[++n] = line
-
-				if (line ~ /^\[/) {
-					key = line
-					sub(/^\[/, "", key)
-					sub(/\]$/, "", key)
-					backup_keys[key] = 1
-				}
-			}
-			close(backup)
-
-			in_backup = 0
-		}
-
-		# Existing registry section
-		$0 ~ /^\[/ {
-			key = $0
-			sub(/^\[/, "", key)
-			sub(/\]$/, "", key)
-
-			if (backup_keys[key]) {
-				skip = 1
-			} else {
-				skip = 0
-			}
-		}
-
-		# Don't copy sections which are already present.
-		skip {
-			next
-		}
-
-		{
-			print
-		}
-
-		END {
-			print ""
-			print "; FFXI registry settings restored by FFXI backup installer"
-			print ""
-
-			for (i = 1; i <= n; i++) {
-				print backup_lines[i]
-			}
-		}
-		' "$REGISTRY_FILE" > "$TEMP_REGISTRY"
-
-		mv "$TEMP_REGISTRY" "$REGISTRY_FILE"
-
-	fi
-
-	echo "Registry settings restored."
 fi
 
 echo -e "\n FFXI backup installation complete."
