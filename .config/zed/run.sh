@@ -16,21 +16,56 @@ run_local() {
     "$@"
 }
 
+run_meson() {
+    local build_dir="$dir/build"
+
+    if [ ! -d "$build_dir" ]; then
+        echo "[meson] configuring..."
+        meson setup "$build_dir" || exit 1
+    fi
+
+    echo "[meson] building..."
+    meson compile -C "$build_dir" || exit 1
+
+    # Find the executable produced by Meson.
+    local executable
+    executable=$(find "$build_dir" -maxdepth 2 -type f -executable \
+        ! -name '*.so' \
+        ! -name '*.a' \
+        | head -n 1)
+
+    if [ -z "$executable" ]; then
+        echo "Error: could not find Meson executable"
+        exit 1
+    fi
+
+    echo "[meson] running $(basename "$executable")"
+    "$executable"
+}
+
 case "$ext" in
     c)
-        mapfile -t files < <(
-            find "$dir" -type f -name '*.c' -print
-        )
-        gcc "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
+        if [ -f "$dir/meson.build" ]; then
+            run_meson
+        else
+            mapfile -t files < <(
+                find "$dir" -type f -name '*.c' -print
+            )
+            gcc "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
+        fi
         ;;
 
     cpp|cc|cxx)
-        mapfile -t files < <(
-            find "$dir" -type f \
-                \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' \) \
-                -print
-        )
-        g++ "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
+        if [ -f "$dir/meson.build" ]; then
+            run_meson
+        else
+            mapfile -t files < <(
+                find "$dir" -type f \
+                    \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' \) \
+                    -print
+            )
+            g++ "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
+        fi
         ;;
 
     rs)
