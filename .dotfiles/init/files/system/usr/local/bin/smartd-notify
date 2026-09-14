@@ -51,9 +51,6 @@ else
     drive_name="$device_name"
 fi
 
-# One single warning for all SMART problems
-
-
 # Send notification to the first active graphical session
 notify_user() {
     local key value session user uid gid active type
