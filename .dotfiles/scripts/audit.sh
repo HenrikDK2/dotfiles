@@ -89,7 +89,9 @@ filter_journalctl() {
         "nm-openvpn\\[.*\\]: TLS Error: TLS key negotiation failed to occur within 60 seconds \\(check your network connectivity\\)"
         "nm-openvpn\\[.*\\]: TLS handshake failed"
         "TDX not supported by the host platform"
-
+        "usb .*: device not accepting address [0-9]+, error -71"
+        "usb .*: unable to enumerate USB device"
+	
         # Issues caused by auditd system service not liking soft-reboot
         "Job for auditd\\.service failed"
         "journalctl -xeu auditd\\.service"
@@ -101,15 +103,6 @@ filter_journalctl() {
         "auditd\\[.*\\]: Unable to set initial audit startup state"
         "auditd\\[.*\\]: Cannot daemonize"
     )
-
-    # If hardware virtualization is unavailable, the virtlogd socket
-    # warnings are expected and should not be reported as journal errors.
-    if virt-host-validate qemu 2>&1 | grep -q "QEMU: Checking for hardware virtualization.*FAIL"; then
-        patterns+=(
-            "virtlogd\\.socket: Socket service virtlogd\\.service not loaded, refusing\\."
-            "Failed to listen on libvirt logging daemon socket\\."
-        )
-    fi
 
     local pattern
     printf -v pattern '%s|' "${patterns[@]}"

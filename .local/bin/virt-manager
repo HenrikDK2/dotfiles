@@ -1,5 +1,16 @@
 #!/bin/bash
 
+if [ ! -d "/dev/kvm" ]; then
+    yad \
+        --title="Virtualization Not Enabled" \
+        --image="dialog-error" \
+        --text="CPU virtualization is disabled. \n\nEnable Intel VT-x or AMD-V/SVM in your BIOS/UEFI." \
+        --width=350 \
+        --button="OK:0"
+
+    exit 1
+fi
+
 systemctl is-active --quiet libvirtd.service || systemctl start libvirtd.service
 systemctl is-active --quiet virtlogd.service || systemctl start virtlogd.service
 exec /usr/bin/virt-manager
