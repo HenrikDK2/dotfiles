@@ -1,0 +1,8 @@
+[Unit]
+Description=Rescan smartd after USB disk %i is connected
+After=smartd.service
+Requires=smartd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl kill -s HUP smartd.service

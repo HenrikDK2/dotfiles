@@ -1,0 +1,94 @@
+#!/bin/bash
+
+device="${SMARTD_DEVICE:-unknown}"
+
+# Only notify for a failed SMART self-check.
+if [[ "${SMARTD_FAILTYPE:-}" != "Health" && "${SMARTD_FAILTYPE:-}" != "SelfCheck" ]]; then
+    logger -t smartd-notify "Ignoring SMART event: failtype=${SMARTD_FAILTYPE:-unknown}"
+    exit 0
+fi
+
+# Get clean device name
+device_name="$device"
+if [[ "$device_name" =~ ^(.*[^[:space:]])[[:space:]]*\[[^]]*\][[:space:]]*$ ]]; then
+    device_name="${BASH_REMATCH[1]}"
+fi
+
+# Get vendor and model from udev
+udev_info=$(udevadm info --query=property --name="$device" 2>/dev/null)
+
+while IFS='=' read -r key value; do
+    case "$key" in
+        ID_VENDOR_FROM_DATABASE) [[ -z "$vendor" ]] && vendor=$value ;;
+        ID_VENDOR)              [[ -z "$vendor" ]] && vendor=$value ;;
+        ID_MODEL_FROM_DATABASE) [[ -z "$model" ]] && model=$value ;;
+        ID_MODEL)               [[ -z "$model" ]] && model=$value ;;
+    esac
+done <<< "$udev_info"
+
+# Clean udev values
+vendor=${vendor//_/ }
+model=${model//_/ }
+
+# Fallback to SMART information if udev didn't provide a model
+if [[ -z "$model" ]]; then
+    smart_info="${SMARTD_DEVICEINFO:-}"
+    while IFS= read -r line; do
+        case "$line" in
+            *"Device Model:"*) model="${line#*Device Model: }"; break ;;
+            *"Model Number:"*) model="${line#*Model Number: }"; break ;;
+        esac
+    done <<< "$smart_info"
+    model="${model%"${model##*[![:space:]]}"}"
+fi
+
+# Build friendly drive name
+if [[ -n "$vendor" && -n "$model" ]]; then
+    drive_name="$vendor $model"
+elif [[ -n "$model" ]]; then
+    drive_name="$model"
+else
+    drive_name="$device_name"
+fi
+
+# One single warning for all SMART problems
+
+
+# Send notification to the first active graphical session
+notify_user() {
+    local key value session user uid gid active type
+    
+    local title="⚠️ $drive_name ($device_name)" 
+    local body="SMART self-check failed. This drive may fail soon. \n\n<b>BACK UP DATA NOW!</b>"
+
+    while read -r session _; do
+        active=
+        type=
+        user=
+
+        while IFS='=' read -r key value; do
+            case "$key" in
+                Active) active=$value ;;
+                Type)   type=$value ;;
+                Name)   user=$value ;;
+            esac
+        done < <(loginctl show-session "$session" -p Active -p Type -p Name 2>/dev/null)
+
+        [[ "$active" == "yes" && "$type" =~ ^(x11|wayland)$ && -n "$user" ]] || continue
+
+        uid=$(id -u "$user") || continue
+        gid=$(id -g "$user") || continue
+
+        setpriv --reuid="$uid" --regid="$gid" --init-groups \
+            env DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" DISPLAY=:0 \
+            notify-send --app-name="Drive Health" --urgency=critical "$title" "$body"
+
+        logger -t smartd-notify "Drive warning sent to $user: $device ($drive_name)"
+        return 0
+    done < <(loginctl list-sessions --no-legend 2>/dev/null)
+
+    logger -t smartd-notify "No graphical session for drive warning: $device"
+    return 1
+}
+
+notify_user
