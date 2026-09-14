@@ -18,6 +18,7 @@ run_local() {
 
 run_meson() {
     local build_dir="$dir/build"
+    local executable="$build_dir/FeatherBar"
 
     if [ ! -d "$build_dir" ]; then
         echo "[meson] configuring..."
@@ -27,19 +28,12 @@ run_meson() {
     echo "[meson] building..."
     meson compile -C "$build_dir" || exit 1
 
-    # Find the executable produced by Meson.
-    local executable
-    executable=$(find "$build_dir" -maxdepth 2 -type f -executable \
-        ! -name '*.so' \
-        ! -name '*.a' \
-        | head -n 1)
-
-    if [ -z "$executable" ]; then
-        echo "Error: could not find Meson executable"
+    if [ ! -x "$executable" ]; then
+        echo "Error: could not find executable: $executable"
         exit 1
     fi
 
-    echo "[meson] running $(basename "$executable")"
+    echo "[meson] running $executable"
     "$executable"
 }
 
