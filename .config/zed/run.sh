@@ -20,8 +20,10 @@ run_meson() {
     local build_dir="$dir/build"
     local executable="$build_dir/FeatherBar"
 
-    if [ ! -d "$build_dir" ]; then
+    if ! meson setup --reconfigure "$build_dir" >/dev/null 2>&1; then
         echo "[meson] configuring..."
+
+        rm -rf "$build_dir"
         meson setup "$build_dir" || exit 1
     fi
 
