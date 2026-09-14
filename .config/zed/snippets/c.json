@@ -1,0 +1,13 @@
+{
+	"Boilerplate": {
+		"prefix": "!",
+		"body": [
+			"#include <stdio.h>",
+			"",
+			"int main() {",
+			"  ${1:printf(\"Hello World\");}$0",
+			"}"
+		],
+		"description": "Standard C boilerplate"
+	}
+}
