@@ -18,24 +18,77 @@ run_local() {
     "$@"
 }
 
+# Find meson.build by walking up from the file's directory.
+find_meson_root() {
+    local current="$dir"
+
+    while [ "$current" != "/" ]; do
+        if [ -f "$current/meson.build" ]; then
+            echo "$current"
+            return 0
+        fi
+
+        current="$(dirname "$current")"
+    done
+
+    # Also check /
+    if [ -f "/meson.build" ]; then
+        echo "/"
+        return 0
+    fi
+
+    return 1
+}
+
 run_meson() {
-    local build_dir="$dir/build"
+    local meson_root
+    local build_dir
     local executable
 
-    if ! meson setup --reconfigure "$build_dir" >/dev/null 2>&1; then
+    meson_root="$(find_meson_root)" || {
+        echo "Error: could not find meson.build"
+        exit 1
+    }
+
+    build_dir="$meson_root/build"
+
+    if [ ! -d "$build_dir" ] || [ ! -f "$build_dir/build.ninja" ]; then
         echo "[meson] configuring..."
         rm -rf "$build_dir"
-        meson setup "$build_dir" || exit 1
+        meson setup "$build_dir" "$meson_root" || exit 1
+    else
+        # Reconfigure an existing build directory.
+        if ! meson setup --reconfigure "$build_dir" "$meson_root" >/dev/null 2>&1; then
+            echo "[meson] reconfiguring..."
+            rm -rf "$build_dir"
+            meson setup "$build_dir" "$meson_root" || exit 1
+        fi
     fi
 
     echo "[meson] building..."
     meson compile -C "$build_dir" || exit 1
 
     executable=$(meson introspect --targets "$build_dir" |
-        jq -r '[.[] | select(.type == "executable") | .filename[0]] | first')
+        jq -r '
+            [.[] |
+             select(.type == "executable") |
+             .filename[0]] |
+            first // empty
+        ')
 
-    if [ -z "$executable" ] || [ ! -x "$executable" ]; then
-        echo "Error: could not find executable"
+    if [ -z "$executable" ]; then
+        echo "Error: could not find executable target"
+        exit 1
+    fi
+
+    # Meson may return a relative executable path.
+    if [ "${executable#/}" = "$executable" ]; then
+        executable="$build_dir/$executable"
+    fi
+
+    if [ ! -x "$executable" ]; then
+        echo "Error: executable does not exist or is not executable:"
+        echo "  $executable"
         exit 1
     fi
 
@@ -49,7 +102,8 @@ run_compiled() {
     local output="$tmp/$name"
     local files=()
 
-    if [ -f "$dir/meson.build" ]; then
+    # Look for meson.build anywhere above the source file.
+    if find_meson_root >/dev/null 2>&1; then
         run_meson
         return
     fi

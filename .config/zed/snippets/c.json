@@ -9,5 +9,18 @@
 			"}"
 		],
 		"description": "Standard C boilerplate"
+	},
+
+	"Header Boilerplate": {
+		"prefix": "!header",
+		"body": [
+			"#ifndef ${1:FOO}_H",
+			"#define ${1:FOO}_H",
+			"",
+			"${0}",
+			"",
+			"#endif"
+		],
+		"description": "C/C++ Header boilerplate"
 	}
 }
