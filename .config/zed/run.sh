@@ -1,10 +1,12 @@
 #!/bin/bash
 
 file="$ZED_FILE"
-name=$(basename "${file%.*}")
+name="${file##*/}"
+name="${name%.*}"
 ext="${file##*.}"
-dir=$(dirname "$file")
-base=$(basename "$file")
+dir="${file%/*}"
+[ "$dir" = "$file" ] && dir=.
+base="${file##*/}"
 tmp=$(mktemp -d)
 
 trap 'rm -rf "$tmp"' EXIT
@@ -18,11 +20,10 @@ run_local() {
 
 run_meson() {
     local build_dir="$dir/build"
-    local executable="$build_dir/FeatherBar"
+    local executable
 
     if ! meson setup --reconfigure "$build_dir" >/dev/null 2>&1; then
         echo "[meson] configuring..."
-
         rm -rf "$build_dir"
         meson setup "$build_dir" || exit 1
     fi
@@ -30,8 +31,11 @@ run_meson() {
     echo "[meson] building..."
     meson compile -C "$build_dir" || exit 1
 
-    if [ ! -x "$executable" ]; then
-        echo "Error: could not find executable: $executable"
+    executable=$(meson introspect --targets "$build_dir" |
+        jq -r '[.[] | select(.type == "executable") | .filename[0]] | first')
+
+    if [ -z "$executable" ] || [ ! -x "$executable" ]; then
+        echo "Error: could not find executable"
         exit 1
     fi
 
@@ -39,29 +43,31 @@ run_meson() {
     "$executable"
 }
 
+run_compiled() {
+    local compiler="$1"
+    local pattern="$2"
+    local output="$tmp/$name"
+    local files=()
+
+    if [ -f "$dir/meson.build" ]; then
+        run_meson
+        return
+    fi
+
+    while IFS= read -r -d '' file; do
+        files+=("$file")
+    done < <(find "$dir" -type f \( $pattern \) -print0)
+
+    "$compiler" "${files[@]}" -o "$output" && "$output"
+}
+
 case "$ext" in
     c)
-        if [ -f "$dir/meson.build" ]; then
-            run_meson
-        else
-            mapfile -t files < <(
-                find "$dir" -type f -name '*.c' -print
-            )
-            gcc "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
-        fi
+        run_compiled gcc '-name *.c'
         ;;
 
     cpp|cc|cxx)
-        if [ -f "$dir/meson.build" ]; then
-            run_meson
-        else
-            mapfile -t files < <(
-                find "$dir" -type f \
-                    \( -name '*.cpp' -o -name '*.cc' -o -name '*.cxx' \) \
-                    -print
-            )
-            g++ "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
-        fi
+        run_compiled g++ '-name *.cpp -o -name *.cc -o -name *.cxx'
         ;;
 
     rs)
@@ -112,10 +118,7 @@ case "$ext" in
         if [ -f "$dir/Package.swift" ]; then
             run_local swift run
         else
-            mapfile -t files < <(
-                find "$dir" -type f -name '*.swift' -print
-            )
-            swiftc "${files[@]}" -o "$tmp/$name" && "$tmp/$name"
+            run_compiled swiftc '-name *.swift'
         fi
         ;;
 
@@ -165,21 +168,17 @@ case "$ext" in
         ;;
 
     java)
-        mapfile -t files < <(
-            find "$dir" -type f -name '*.java' -print
-        )
-        javac -d "$tmp" "${files[@]}" &&
-            java -cp "$tmp" "$name"
+        run_compiled javac '-name *.java'
         ;;
 
     kt)
-        mapfile -t files < <(
-            find "$dir" -type f -name '*.kt' -print
-        )
-        kotlinc "${files[@]}" \
-            -include-runtime \
-            -d "$tmp/$name.jar" &&
-            java -jar "$tmp/$name.jar"
+        local_jar="$tmp/$name.jar"
+        files=()
+        while IFS= read -r -d '' file; do
+            files+=("$file")
+        done < <(find "$dir" -type f -name '*.kt' -print0)
+        kotlinc "${files[@]}" -include-runtime -d "$local_jar" &&
+            java -jar "$local_jar"
         ;;
 
     kts)

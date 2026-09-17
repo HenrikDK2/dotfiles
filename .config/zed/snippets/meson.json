@@ -1,0 +1,51 @@
+{
+	"Meson C Project": {
+		"prefix": "!meson-c",
+		"body": [
+			"project(",
+			"\t'${1:my-project}',",
+			"\t'c',",
+			"\tversion: '${2:0.1.0}',",
+			")",
+			"",
+			"# deps = [dependency('<target_src>')]",
+			"",
+			"sources = files(",
+			"\t'main.c',",
+			")",
+			"",
+			"executable(",
+			"\tmeson.project_name(),",
+			"\tsources,",
+			"\t# dependencies: deps,",
+			"\tinstall: true,",
+			")"
+		],
+		"description": "Meson C Project Template"
+	},
+	"Meson C++ Project": {
+		"prefix": "!meson-cpp",
+		"body": [
+			"project(",
+			"\t'${1:my-project}',",
+			"\t'cpp',",
+			"\tversion: '${2:0.1.0}',",
+			"\tdefault_options: ['cpp_std=c++20'],",
+			")",
+			"",
+			"# deps = [dependency('<target_src>')]",
+			"",
+			"sources = files(",
+			"\t'main.cpp',",
+			")",
+			"",
+			"executable(",
+			"\tmeson.project_name(),",
+			"\tsources,",
+			"\t# dependencies: deps,",
+			"\tinstall: true,",
+			")"
+		],
+		"description": "Meson C++ Project Template"
+	}
+}
