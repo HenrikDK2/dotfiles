@@ -107,6 +107,7 @@ PACKAGES=(
     "swaybg"
     "unrar"
     "unzip"
+    "uncrustify"
     "waybar"
     "xdg-desktop-portal-hyprland"
     "xdg-desktop-portal-gtk" # xdg-desktop-portal-hyprland doesn't offer a fileChooser

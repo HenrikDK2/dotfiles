@@ -2,7 +2,7 @@
 !README.md
 !.hidden
 !.gitignore
-!.clang-format
+!.uncrustify.cfg
 
 !.bashrc
 !.bash_profile

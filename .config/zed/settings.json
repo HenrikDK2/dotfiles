@@ -1,18 +1,18 @@
 {
 	"cli_default_open_behavior": "existing_window",
 	"outline_panel": {
-		"dock": "left"
+		"dock": "left",
 	},
 	"collaboration_panel": {
-		"dock": "left"
+		"dock": "left",
 	},
 	"agent": {
 		"dock": "right",
 		"favorite_models": [],
-		"model_parameters": []
+		"model_parameters": [],
 	},
 	"git_panel": {
-		"dock": "left"
+		"dock": "left",
 	},
 	"disable_ai": true,
 	"ui_font_weight": 500.0,
@@ -21,7 +21,7 @@
 	"icon_theme": "Material Icon Theme",
 	"telemetry": {
 		"diagnostics": false,
-		"metrics": false
+		"metrics": false,
 	},
 	"ui_font_size": 20.0,
 	"buffer_font_size": 20.0,
@@ -38,16 +38,33 @@
 		"enabled": false,
 		"show_type_hints": false,
 		"show_parameter_hints": false,
-		"show_other_hints": false
+		"show_other_hints": false,
 	},
 	"diagnostics": {
 		"inline": {
-			"enabled": true
-		}
+			"enabled": true,
+		},
 	},
 	"git": {
 		"inline_blame": {
-			"enabled": false
-		}
-	}
+			"enabled": false,
+		},
+	},
+
+	"languages": {
+		"C": {
+			"format_on_save": "on",
+			"formatter": {
+				"external": {
+					"command": "uncrustify",
+					"arguments": [
+						"-c",
+						".uncrustify.cfg",
+						"--assume",
+						"{buffer_path}",
+					],
+				},
+			},
+		},
+	},
 }
