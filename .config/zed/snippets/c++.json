@@ -1,0 +1,26 @@
+{
+	"Boilerplate": {
+		"prefix": "!",
+		"body": [
+			"#include <stdio.h>",
+			"",
+			"int main() {",
+			"  ${1:printf(\"Hello World\");}$0",
+			"}"
+		],
+		"description": "Standard C boilerplate"
+	},
+
+	"Header Boilerplate": {
+		"prefix": "!header",
+		"body": [
+			"#ifndef ${1:FOO}_H",
+			"#define ${1:FOO}_H",
+			"",
+			"${0}",
+			"",
+			"#endif"
+		],
+		"description": "C/C++ Header boilerplate"
+	}
+}
